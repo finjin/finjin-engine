@@ -1,0 +1,51 @@
+//Copyright (c) 2017 Finjin
+//
+//This file is part of Finjin Engine (finjin-engine).
+//
+//Finjin Engine is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+//This Source Code Form is subject to the terms of the Mozilla Public
+//License, v. 2.0. If a copy of the MPL was not distributed with this
+//file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+#pragma once
+
+
+//Includes---------------------------------------------------------------------
+#include "finjin/common/CommandLineArgsProcessor.hpp"
+#include "finjin/common/Error.hpp"
+#include "finjin/common/Path.hpp"
+#include "finjin/common/Settings.hpp"
+#include "OSWindowDefs.hpp"
+
+
+//Classes----------------------------------------------------------------------
+namespace Finjin { namespace Engine {
+
+    using namespace Finjin::Common;
+
+    class ApplicationSettings
+    {
+    public:
+        ApplicationSettings();
+        
+        void ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
+        
+    public:
+        Setting<Path> additionalReadApplicationAssetsDirectory; //Additional directory for ApplicationFileSystem::READ_APPLICATION_ASSETS
+        Setting<OSWindowDimension> windowWidth;
+        Setting<OSWindowDimension> windowHeight;
+        Setting<OSWindowDimension> fullScreenWidth;
+        Setting<OSWindowDimension> fullScreenHeight;
+        Setting<bool> isFullScreen;
+        Setting<bool> isFullScreenExclusive;
+        Setting<bool> vsync;
+        Setting<bool> useAccelerometer;
+        Setting<bool> useSystemBackButton;
+        Setting<bool> updateWhenNotFocused;
+    };
+
+} }

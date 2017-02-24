@@ -1,0 +1,621 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5b8ecab8-f1b0-4090-8e1f-fd7c0351dc15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal">
+      <UniqueIdentifier>{551e6738-457e-42ce-9a0e-710dae23a61d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\gpu">
+      <UniqueIdentifier>{56c6b9e4-0bbc-471f-80fd-5f81b9cf0169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\gpu\vulkan">
+      <UniqueIdentifier>{b654ffd7-8ca7-42dd-ad6e-350cc07705a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\input">
+      <UniqueIdentifier>{8b227e36-761d-42ef-a1e6-f82f652d7af0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\sound">
+      <UniqueIdentifier>{9218ff86-9fa8-40e9-bd98-12ddacb9ddf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\input\androidinput">
+      <UniqueIdentifier>{15411872-b19a-4538-9add-0c9b88e98136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\sound\opensles">
+      <UniqueIdentifier>{6b1b9d8e-158a-4628-8c58-f5f22d0db929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\app">
+      <UniqueIdentifier>{cef67e65-648b-41f9-8b0e-b4faa300feab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{f52811e7-25b3-4e60-9f3e-369391dbf9b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\application">
+      <UniqueIdentifier>{7fe40f4e-1637-4af9-8100-6524e0db6450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\file-formats">
+      <UniqueIdentifier>{eebe36d5-cebc-4eb2-95a4-1f860f47a2c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\gpu">
+      <UniqueIdentifier>{e3873cd1-c709-4b99-9425-743702488d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\input">
+      <UniqueIdentifier>{3fb9049e-3ca3-4792-b983-ebb724013e3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\platform">
+      <UniqueIdentifier>{a2ac7b2c-6469-44c7-bb7c-43c8225163c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\sound">
+      <UniqueIdentifier>{6fa6c2ff-cd2c-4105-b8fc-bd7e63c2666c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\utilities">
+      <UniqueIdentifier>{34ce64e4-e8b8-4ef7-af56-eee14301cc5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\app\android">
+      <UniqueIdentifier>{74368581-160d-424f-8ea6-d8edde91eb64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\assets">
+      <UniqueIdentifier>{c706842a-617a-496b-8796-c6b213e8ab55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\application-viewport">
+      <UniqueIdentifier>{69c93d21-d9ce-44b6-a9f1-a629413668ea}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp">
+      <Filter>Source Files\common\file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewport.cpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportDescription.cpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportsController.cpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\FlyingCameraInputBindings.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\InputComponents.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\InputConstants.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\InputCoordinate.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\Application_General.cpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationDelegate.cpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationSettings.cpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\SoundFormat.cpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\InputSource.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\JobPipelineStage.cpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\PlatformCapabilities_General.cpp">
+      <Filter>Source Files\common\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputContext.cpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputDevice.cpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputSystem.cpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidKeyboard.cpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidMouse.cpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidAccelerometer.cpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidGameController.cpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESListener.cpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundBuffer.cpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundSource.cpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSystem.cpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESAdapterDescription.cpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESContext.cpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuDescription.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.cpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.cpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.cpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.cpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\FinjinPrecompiled.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\PlatformCapabilities.cpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\Application.cpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\GenericGpuNumericStructs.cpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\GpuContextCommonSettings.cpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\SoundContextCommonSettings.cpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\InputContextCommonSettings.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetPath.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetFileReader.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetReadQueue.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetClassFileReader.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetReadHandle.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\WindowBounds.cpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\WindowSize.cpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportDelegate.cpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\VRGameControllerInputBindings.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\StringTable.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\MemorySettings.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\Asset.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetReference.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyNames.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentChunkNames.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\FinjinSceneReader.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\UserDataTypes.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetCountsSettings.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\FinjinSceneAssets.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\Camera.cpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ShaderFeatures.cpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ShaderFeatureFlag.cpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp">
+      <Filter>Source Files\common\file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewport.hpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportCommonSettings.hpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportDescription.hpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportsController.hpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\EventCollection.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\FlyingCameraInputBindings.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputBindings.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputBindingsSerializer.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputComponents.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputConstants.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputContextCommonSettings.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputCoordinate.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputDeviceSerializer.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationDelegate.hpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationSettings.hpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\SoundContextCommonSettings.hpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\SoundFormat.hpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\SoundGroup.hpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\SoundSorter.hpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\SoundSourceCommon.hpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputSource.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\JobPipelineStage.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\PointerType.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonSettings.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\PlatformCapabilities.hpp">
+      <Filter>Source Files\common\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidGameController.hpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputContext.hpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputDevice.hpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputSystem.hpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidKeyboard.hpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidMouse.hpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidAccelerometer.hpp">
+      <Filter>Source Files\internal\input\androidinput</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESContext.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESListener.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundBuffer.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundGroup.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundSource.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundSourceVoice.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSystem.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESUtilities.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESAdapterDescription.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESAdapterID.hpp">
+      <Filter>Source Files\internal\sound\opensles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanNamePointers.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPrimaryQueues.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanQueueFamilyIndexes.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSurfaceFormats.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDepthBuffer.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuDescription.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuContext.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuDescription.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuID.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuSystem.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputContext.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputSystem.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterDescription.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterID.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundContext.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundSystem.hpp">
+      <Filter>Source Files\internal\app\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\FinjinPrecompiled.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\FinjinEngineLibrary.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\GpuSystemCommonSettings.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\InputSystemCommonSettings.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\SoundSystemCommonSettings.hpp">
+      <Filter>Source Files\common\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\GpuSerializers.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\GenericGpuNumericStructs.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetPath.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetFileReader.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetReadQueue.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Asset.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetClassFileReader.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetReadHandle.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\OSWindowDefs.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\OSWindowEventListener.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\WindowBounds.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\WindowSize.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportDelegate.hpp">
+      <Filter>Source Files\common\application-viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\VRGameControllerInputBindings.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\StringTable.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationFileSystem.hpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationNameFormat.hpp">
+      <Filter>Source Files\common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\MemorySettings.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetClass.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetReference.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyNames.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentChunkNames.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\FinjinSceneReader.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\UserDataTypes.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetHandle.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetCountsSettings.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\FinjinSceneAssets.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Camera.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\PerFrameObjectAllocator.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ShaderFeatures.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ShaderFeatureFlag.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\AssetCreationCapability.hpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ContextEventInfo.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\CameraState.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\LightState.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,43 @@
+//Copyright (c) 2017 Finjin
+//
+//This file is part of Finjin Engine (finjin-engine).
+//
+//Finjin Engine is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+//This Source Code Form is subject to the terms of the Mozilla Public
+//License, v. 2.0. If a copy of the MPL was not distributed with this
+//file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+#pragma once
+
+
+//Includes---------------------------------------------------------------------
+#include "XAudio2Includes.hpp"
+
+
+//Classes----------------------------------------------------------------------
+namespace Finjin { namespace Engine {
+
+    class XAudio2Context;
+
+    class XAudio2ListenerImpl
+    {
+    public:
+        XAudio2ListenerImpl()
+        {
+            this->context = nullptr;
+
+            FINJIN_ZERO_ITEM(this->x3dCone);
+            FINJIN_ZERO_ITEM(this->x3dListener);
+        }
+
+        XAudio2Context* context;
+        bool invalidated;
+        X3DAUDIO_LISTENER x3dListener;
+        X3DAUDIO_CONE x3dCone;
+    };
+
+} }

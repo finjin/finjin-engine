@@ -1,0 +1,992 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6508AFBC1E34C70700EB826E /* AssetCountsSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6508AFB71E34C70700EB826E /* AssetCountsSettings.cpp */; };
+		6508AFBD1E34C70700EB826E /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6508AFB81E34C70700EB826E /* Camera.cpp */; };
+		6508AFBE1E34C70700EB826E /* FinjinSceneAssets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6508AFB91E34C70700EB826E /* FinjinSceneAssets.cpp */; };
+		6508AFBF1E34C70700EB826E /* FinjinSceneReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6508AFBA1E34C70700EB826E /* FinjinSceneReader.cpp */; };
+		6508AFC21E34C7D600EB826E /* UserDataTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6508AFC11E34C7D600EB826E /* UserDataTypes.cpp */; };
+		650FA33D1D361E1200535D8D /* GpuContextCommonSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3391D361E1200535D8D /* GpuContextCommonSettings.cpp */; };
+		650FA33E1D361E1200535D8D /* InputContextCommonSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA33A1D361E1200535D8D /* InputContextCommonSettings.cpp */; };
+		650FA3401D361E1200535D8D /* SoundContextCommonSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA33C1D361E1200535D8D /* SoundContextCommonSettings.cpp */; };
+		650FA3551D37379200535D8D /* GenericGpuNumericStructs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3511D37379200535D8D /* GenericGpuNumericStructs.cpp */; };
+		650FA3D61D5BA0C400535D8D /* AssetClassFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3C31D5BA0C400535D8D /* AssetClassFileReader.cpp */; };
+		650FA3DA1D5BA0C400535D8D /* AssetReadHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3C91D5BA0C400535D8D /* AssetReadHandle.cpp */; };
+		650FA3DC1D5BA0C400535D8D /* AssetReadQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3CB1D5BA0C400535D8D /* AssetReadQueue.cpp */; };
+		650FA3E81D5BA26C00535D8D /* StringTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3E61D5BA26C00535D8D /* StringTable.cpp */; };
+		650FA3EB1D5BACDE00535D8D /* ApplicationDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3EA1D5BACDE00535D8D /* ApplicationDelegate.cpp */; };
+		650FA3EE1D5BAD2F00535D8D /* ApplicationViewportDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA3EC1D5BAD2F00535D8D /* ApplicationViewportDelegate.cpp */; };
+		650FA4581D5BB90F00535D8D /* Application_General.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA4571D5BB90F00535D8D /* Application_General.cpp */; };
+		650FA45A1D5BB9C700535D8D /* ApplicationViewportsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA4591D5BB9C700535D8D /* ApplicationViewportsController.cpp */; };
+		650FA4601D5BBA7200535D8D /* ApplicationViewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA45F1D5BBA7200535D8D /* ApplicationViewport.cpp */; };
+		650FA4661D5BBB0B00535D8D /* WindowSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 650FA4651D5BBB0B00535D8D /* WindowSize.cpp */; };
+		651282B11D0B60C60041C324 /* ApplicationViewportDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282701D0B60C60041C324 /* ApplicationViewportDescription.cpp */; };
+		651282B61D0B60C60041C324 /* FinjinPrecompiled.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282751D0B60C60041C324 /* FinjinPrecompiled.cpp */; };
+		651282BA1D0B60C60041C324 /* FlyingCameraInputBindings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282791D0B60C60041C324 /* FlyingCameraInputBindings.cpp */; };
+		651282BF1D0B60C60041C324 /* InputComponents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6512827E1D0B60C60041C324 /* InputComponents.cpp */; };
+		651282C11D0B60C60041C324 /* InputConstants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282801D0B60C60041C324 /* InputConstants.cpp */; };
+		651282C41D0B60C60041C324 /* InputCoordinate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282831D0B60C60041C324 /* InputCoordinate.cpp */; };
+		651282C81D0B60C60041C324 /* InputSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282871D0B60C60041C324 /* InputSource.cpp */; };
+		651282CB1D0B60C60041C324 /* JobPipelineStage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6512828A1D0B60C60041C324 /* JobPipelineStage.cpp */; };
+		651282D01D0B60C60041C324 /* PlatformCapabilities_General.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6512828F1D0B60C60041C324 /* PlatformCapabilities_General.cpp */; };
+		651282D51D0B60C60041C324 /* PVRReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282941D0B60C60041C324 /* PVRReader.cpp */; };
+		651282D81D0B60C60041C324 /* SoundFormat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651282971D0B60C60041C324 /* SoundFormat.cpp */; };
+		651282DD1D0B60C60041C324 /* StandardGameControllerInputBindings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6512829C1D0B60C60041C324 /* StandardGameControllerInputBindings.cpp */; };
+		651282DF1D0B60C60041C324 /* WAVReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6512829E1D0B60C60041C324 /* WAVReader.cpp */; };
+		651283031D0B62A60041C324 /* ApplicationGlobals.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282EC1D0B62A60041C324 /* ApplicationGlobals.mm */; };
+		651283061D0B62A60041C324 /* DisplayInfo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282EF1D0B62A60041C324 /* DisplayInfo.mm */; };
+		651283081D0B62A60041C324 /* FinjinNSApplicationDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282F11D0B62A60041C324 /* FinjinNSApplicationDelegate.mm */; };
+		6512830A1D0B62A60041C324 /* FinjinNSView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282F31D0B62A60041C324 /* FinjinNSView.mm */; };
+		6512830C1D0B62A60041C324 /* FinjinNSViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282F51D0B62A60041C324 /* FinjinNSViewController.mm */; };
+		6512830F1D0B62A60041C324 /* FinjinNSWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282F81D0B62A60041C324 /* FinjinNSWindowController.mm */; };
+		651283131D0B62A60041C324 /* OSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282FC1D0B62A60041C324 /* OSWindow.mm */; };
+		651283141D0B62A60041C324 /* PlatformCapabilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282FD1D0B62A60041C324 /* PlatformCapabilities.mm */; };
+		651283191D0B62A60041C324 /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283021D0B62A60041C324 /* Application.mm */; };
+		6512832D1D0B62D80041C324 /* AAPLObjModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512831B1D0B62D80041C324 /* AAPLObjModel.mm */; };
+		651283331D0B62D80041C324 /* MetalDevices.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283211D0B62D80041C324 /* MetalDevices.mm */; };
+		651283351D0B62D80041C324 /* MetalGpuContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283231D0B62D80041C324 /* MetalGpuContext.mm */; };
+		651283371D0B62D80041C324 /* MetalImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283251D0B62D80041C324 /* MetalImageUtilities.mm */; };
+		651283381D0B62D80041C324 /* MetalMathUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651283261D0B62D80041C324 /* MetalMathUtilities.cpp */; };
+		6512833B1D0B62D80041C324 /* MetalSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283291D0B62D80041C324 /* MetalSystem.mm */; };
+		651283471D0B63020041C324 /* MacOSInputContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512833F1D0B63020041C324 /* MacOSInputContext.mm */; };
+		651283491D0B63020041C324 /* MacOSInputSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283411D0B63020041C324 /* MacOSInputSystem.mm */; };
+		6512834B1D0B63020041C324 /* MacOSKeyboard.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283431D0B63020041C324 /* MacOSKeyboard.mm */; };
+		6512834D1D0B63020041C324 /* MacOSMouse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283451D0B63020041C324 /* MacOSMouse.mm */; };
+		651283571D0B63250041C324 /* GCInputGameController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283511D0B63250041C324 /* GCInputGameController.mm */; };
+		651283591D0B63250041C324 /* GCInputSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283531D0B63250041C324 /* GCInputSystem.mm */; };
+		6512836D1D0B63500041C324 /* AVAudioEngineSoundAdapterDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512835B1D0B63500041C324 /* AVAudioEngineSoundAdapterDescription.mm */; };
+		651283701D0B63500041C324 /* AVAudioEngineSoundBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512835E1D0B63500041C324 /* AVAudioEngineSoundBuffer.mm */; };
+		651283731D0B63500041C324 /* AVAudioEngineSoundContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283611D0B63500041C324 /* AVAudioEngineSoundContext.mm */; };
+		651283751D0B63500041C324 /* AVAudioEngineSoundContextImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283631D0B63500041C324 /* AVAudioEngineSoundContextImpl.mm */; };
+		651283781D0B63500041C324 /* AVAudioEngineSoundListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283661D0B63500041C324 /* AVAudioEngineSoundListener.mm */; };
+		6512837A1D0B63500041C324 /* AVAudioEngineSoundSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283681D0B63500041C324 /* AVAudioEngineSoundSource.mm */; };
+		6512837D1D0B63500041C324 /* AVAudioEngineSoundSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512836B1D0B63500041C324 /* AVAudioEngineSoundSystem.mm */; };
+		651283991D0B74630041C324 /* ApplicationSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651283981D0B74630041C324 /* ApplicationSettings.cpp */; };
+		6512884D1D0CCB180041C324 /* MetalGpuDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512884B1D0CCB180041C324 /* MetalGpuDescription.mm */; };
+		651288641D137C930041C324 /* WindowBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651288621D137C930041C324 /* WindowBounds.cpp */; };
+		6512887E1D241ACE0041C324 /* AssetPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6512887A1D241ACE0041C324 /* AssetPath.cpp */; };
+		651288801D241ACE0041C324 /* AssetFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6512887C1D241ACE0041C324 /* AssetFileReader.cpp */; };
+		651288A91D2B0DB40041C324 /* MetalGpuContextImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288A51D2B0DB40041C324 /* MetalGpuContextImpl.mm */; };
+		651288AB1D2B0DB40041C324 /* MetalSystemImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288A71D2B0DB40041C324 /* MetalSystemImpl.mm */; };
+		651288CD1D2B115C0041C324 /* MetalGpuContextSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288C81D2B115C0041C324 /* MetalGpuContextSettings.mm */; };
+		651288CF1D2B115C0041C324 /* MetalJobPipelineStage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288CA1D2B115C0041C324 /* MetalJobPipelineStage.mm */; };
+		651288D31D2B119A0041C324 /* MetalSystemSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288D11D2B119A0041C324 /* MetalSystemSettings.mm */; };
+		651288F31D2B2BFB0041C324 /* OSWindowImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288F11D2B2BFB0041C324 /* OSWindowImpl.mm */; };
+		65430DD01DF1B66D00588409 /* StandardAssetDocumentChunkNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCA1DF1B66D00588409 /* StandardAssetDocumentChunkNames.cpp */; };
+		65430DD21DF1B66D00588409 /* StandardAssetDocumentPropertyNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCC1DF1B66D00588409 /* StandardAssetDocumentPropertyNames.cpp */; };
+		65430DD41DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCE1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp */; };
+		65430E6A1DF9AF5D00588409 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E671DF9AF5D00588409 /* Asset.cpp */; };
+		65430E6B1DF9AF5D00588409 /* AssetReference.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E681DF9AF5D00588409 /* AssetReference.cpp */; };
+		657AA1641E420EE8004ADA22 /* ShaderFeatures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */; };
+		657AA16E1E44AACE004ADA22 /* ShaderFeatureFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */; };
+		657AA1791E47FA21004ADA22 /* AssetCreationCapability.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 657AA1781E47FA21004ADA22 /* AssetCreationCapability.hpp */; };
+		65C860051D90F3DD00348F9E /* MemorySettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C860011D90F3DD00348F9E /* MemorySettings.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6508AFA71E34C66600EB826E /* AssetCountsSettings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetCountsSettings.hpp; path = ../../src/finjin/engine/AssetCountsSettings.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFA81E34C66600EB826E /* AssetHandle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetHandle.hpp; path = ../../src/finjin/engine/AssetHandle.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFA91E34C66600EB826E /* Camera.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Camera.hpp; path = ../../src/finjin/engine/Camera.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFAA1E34C66600EB826E /* FinjinSceneAssets.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FinjinSceneAssets.hpp; path = ../../src/finjin/engine/FinjinSceneAssets.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFAB1E34C66600EB826E /* FinjinSceneReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FinjinSceneReader.hpp; path = ../../src/finjin/engine/FinjinSceneReader.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFAD1E34C66600EB826E /* PerFrameObjectAllocator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = PerFrameObjectAllocator.hpp; path = ../../src/finjin/engine/PerFrameObjectAllocator.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFAE1E34C66600EB826E /* UserDataTypes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = UserDataTypes.hpp; path = ../../src/finjin/engine/UserDataTypes.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFB71E34C70700EB826E /* AssetCountsSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetCountsSettings.cpp; path = ../../src/finjin/engine/AssetCountsSettings.cpp; sourceTree = SOURCE_ROOT; };
+		6508AFB81E34C70700EB826E /* Camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = ../../src/finjin/engine/Camera.cpp; sourceTree = SOURCE_ROOT; };
+		6508AFB91E34C70700EB826E /* FinjinSceneAssets.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FinjinSceneAssets.cpp; path = ../../src/finjin/engine/FinjinSceneAssets.cpp; sourceTree = SOURCE_ROOT; };
+		6508AFBA1E34C70700EB826E /* FinjinSceneReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FinjinSceneReader.cpp; path = ../../src/finjin/engine/FinjinSceneReader.cpp; sourceTree = SOURCE_ROOT; };
+		6508AFBB1E34C70700EB826E /* FinjinSceneTypeNames.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FinjinSceneTypeNames.hpp; path = ../../src/finjin/engine/FinjinSceneTypeNames.hpp; sourceTree = SOURCE_ROOT; };
+		6508AFC11E34C7D600EB826E /* UserDataTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UserDataTypes.cpp; path = ../../src/finjin/engine/UserDataTypes.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3391D361E1200535D8D /* GpuContextCommonSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GpuContextCommonSettings.cpp; path = ../../src/finjin/engine/GpuContextCommonSettings.cpp; sourceTree = SOURCE_ROOT; };
+		650FA33A1D361E1200535D8D /* InputContextCommonSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InputContextCommonSettings.cpp; path = ../../src/finjin/engine/InputContextCommonSettings.cpp; sourceTree = SOURCE_ROOT; };
+		650FA33B1D361E1200535D8D /* ResourcePoolDescriptor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ResourcePoolDescriptor.hpp; path = ../../src/finjin/engine/ResourcePoolDescriptor.hpp; sourceTree = SOURCE_ROOT; };
+		650FA33C1D361E1200535D8D /* SoundContextCommonSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SoundContextCommonSettings.cpp; path = ../../src/finjin/engine/SoundContextCommonSettings.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3511D37379200535D8D /* GenericGpuNumericStructs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GenericGpuNumericStructs.cpp; path = ../../src/finjin/engine/GenericGpuNumericStructs.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3521D37379200535D8D /* GenericGpuNumericStructs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GenericGpuNumericStructs.hpp; path = ../../src/finjin/engine/GenericGpuNumericStructs.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3531D37379200535D8D /* GpuSerializers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuSerializers.hpp; path = ../../src/finjin/engine/GpuSerializers.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3541D37379200535D8D /* GpuSystemCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuSystemCommonSettings.hpp; path = ../../src/finjin/engine/GpuSystemCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3C11D5BA0C400535D8D /* AssetClass.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetClass.hpp; path = ../../src/finjin/engine/AssetClass.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3C21D5BA0C400535D8D /* Asset.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Asset.hpp; path = ../../src/finjin/engine/Asset.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3C31D5BA0C400535D8D /* AssetClassFileReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetClassFileReader.cpp; path = ../../src/finjin/engine/AssetClassFileReader.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3C41D5BA0C400535D8D /* AssetClassFileReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetClassFileReader.hpp; path = ../../src/finjin/engine/AssetClassFileReader.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3C91D5BA0C400535D8D /* AssetReadHandle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetReadHandle.cpp; path = ../../src/finjin/engine/AssetReadHandle.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3CA1D5BA0C400535D8D /* AssetReadHandle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetReadHandle.hpp; path = ../../src/finjin/engine/AssetReadHandle.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3CB1D5BA0C400535D8D /* AssetReadQueue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetReadQueue.cpp; path = ../../src/finjin/engine/AssetReadQueue.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3CC1D5BA0C400535D8D /* AssetReadQueue.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetReadQueue.hpp; path = ../../src/finjin/engine/AssetReadQueue.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3E61D5BA26C00535D8D /* StringTable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StringTable.cpp; path = ../../src/finjin/engine/StringTable.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3E71D5BA26C00535D8D /* StringTable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = StringTable.hpp; path = ../../src/finjin/engine/StringTable.hpp; sourceTree = SOURCE_ROOT; };
+		650FA3EA1D5BACDE00535D8D /* ApplicationDelegate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ApplicationDelegate.cpp; path = ../../src/finjin/engine/ApplicationDelegate.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3EC1D5BAD2F00535D8D /* ApplicationViewportDelegate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ApplicationViewportDelegate.cpp; path = ../../src/finjin/engine/ApplicationViewportDelegate.cpp; sourceTree = SOURCE_ROOT; };
+		650FA3ED1D5BAD2F00535D8D /* ApplicationViewportDelegate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationViewportDelegate.hpp; path = ../../src/finjin/engine/ApplicationViewportDelegate.hpp; sourceTree = SOURCE_ROOT; };
+		650FA44D1D5BB37400535D8D /* InputSystemCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputSystemCommonSettings.hpp; path = ../../src/finjin/engine/InputSystemCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
+		650FA44E1D5BB37400535D8D /* SoundSystemCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundSystemCommonSettings.hpp; path = ../../src/finjin/engine/SoundSystemCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
+		650FA4571D5BB90F00535D8D /* Application_General.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Application_General.cpp; path = ../../src/finjin/engine/Application_General.cpp; sourceTree = SOURCE_ROOT; };
+		650FA4591D5BB9C700535D8D /* ApplicationViewportsController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ApplicationViewportsController.cpp; path = ../../src/finjin/engine/ApplicationViewportsController.cpp; sourceTree = SOURCE_ROOT; };
+		650FA45F1D5BBA7200535D8D /* ApplicationViewport.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ApplicationViewport.cpp; path = ../../src/finjin/engine/ApplicationViewport.cpp; sourceTree = SOURCE_ROOT; };
+		650FA4651D5BBB0B00535D8D /* WindowSize.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WindowSize.cpp; path = ../../src/finjin/engine/WindowSize.cpp; sourceTree = SOURCE_ROOT; };
+		650FA4781D61406500535D8D /* ApplicationFileSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ApplicationFileSystem.hpp; path = ../../src/finjin/engine/ApplicationFileSystem.hpp; sourceTree = SOURCE_ROOT; };
+		650FA4791D61406500535D8D /* ApplicationNameFormat.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ApplicationNameFormat.hpp; path = ../../src/finjin/engine/ApplicationNameFormat.hpp; sourceTree = SOURCE_ROOT; };
+		6512824A1D0B5E4A0041C324 /* libfinjin-engine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libfinjin-engine.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6512826D1D0B60C60041C324 /* ApplicationViewport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationViewport.hpp; path = ../../src/finjin/engine/ApplicationViewport.hpp; sourceTree = SOURCE_ROOT; };
+		6512826F1D0B60C60041C324 /* ApplicationViewportCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationViewportCommonSettings.hpp; path = ../../src/finjin/engine/ApplicationViewportCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
+		651282701D0B60C60041C324 /* ApplicationViewportDescription.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ApplicationViewportDescription.cpp; path = ../../src/finjin/engine/ApplicationViewportDescription.cpp; sourceTree = SOURCE_ROOT; };
+		651282711D0B60C60041C324 /* ApplicationViewportDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationViewportDescription.hpp; path = ../../src/finjin/engine/ApplicationViewportDescription.hpp; sourceTree = SOURCE_ROOT; };
+		651282731D0B60C60041C324 /* ApplicationViewportsController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationViewportsController.hpp; path = ../../src/finjin/engine/ApplicationViewportsController.hpp; sourceTree = SOURCE_ROOT; };
+		651282751D0B60C60041C324 /* FinjinPrecompiled.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FinjinPrecompiled.cpp; path = ../../src/finjin/engine/FinjinPrecompiled.cpp; sourceTree = SOURCE_ROOT; };
+		651282761D0B60C60041C324 /* FinjinPrecompiled.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FinjinPrecompiled.hpp; path = ../../src/finjin/engine/FinjinPrecompiled.hpp; sourceTree = SOURCE_ROOT; };
+		651282771D0B60C60041C324 /* EventCollection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = EventCollection.hpp; path = ../../src/finjin/engine/EventCollection.hpp; sourceTree = SOURCE_ROOT; };
+		651282781D0B60C60041C324 /* FinjinEngineLibrary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FinjinEngineLibrary.hpp; path = ../../src/finjin/engine/FinjinEngineLibrary.hpp; sourceTree = SOURCE_ROOT; };
+		651282791D0B60C60041C324 /* FlyingCameraInputBindings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FlyingCameraInputBindings.cpp; path = ../../src/finjin/engine/FlyingCameraInputBindings.cpp; sourceTree = SOURCE_ROOT; };
+		6512827A1D0B60C60041C324 /* FlyingCameraInputBindings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FlyingCameraInputBindings.hpp; path = ../../src/finjin/engine/FlyingCameraInputBindings.hpp; sourceTree = SOURCE_ROOT; };
+		6512827B1D0B60C60041C324 /* GpuContextCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuContextCommonSettings.hpp; path = ../../src/finjin/engine/GpuContextCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
+		6512827C1D0B60C60041C324 /* InputBindings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputBindings.hpp; path = ../../src/finjin/engine/InputBindings.hpp; sourceTree = SOURCE_ROOT; };
+		6512827D1D0B60C60041C324 /* InputBindingsSerializer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputBindingsSerializer.hpp; path = ../../src/finjin/engine/InputBindingsSerializer.hpp; sourceTree = SOURCE_ROOT; };
+		6512827E1D0B60C60041C324 /* InputComponents.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InputComponents.cpp; path = ../../src/finjin/engine/InputComponents.cpp; sourceTree = SOURCE_ROOT; };
+		6512827F1D0B60C60041C324 /* InputComponents.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputComponents.hpp; path = ../../src/finjin/engine/InputComponents.hpp; sourceTree = SOURCE_ROOT; };
+		651282801D0B60C60041C324 /* InputConstants.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InputConstants.cpp; path = ../../src/finjin/engine/InputConstants.cpp; sourceTree = SOURCE_ROOT; };
+		651282811D0B60C60041C324 /* InputConstants.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputConstants.hpp; path = ../../src/finjin/engine/InputConstants.hpp; sourceTree = SOURCE_ROOT; };
+		651282821D0B60C60041C324 /* InputContextCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputContextCommonSettings.hpp; path = ../../src/finjin/engine/InputContextCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
+		651282831D0B60C60041C324 /* InputCoordinate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InputCoordinate.cpp; path = ../../src/finjin/engine/InputCoordinate.cpp; sourceTree = SOURCE_ROOT; };
+		651282841D0B60C60041C324 /* InputCoordinate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputCoordinate.hpp; path = ../../src/finjin/engine/InputCoordinate.hpp; sourceTree = SOURCE_ROOT; };
+		651282851D0B60C60041C324 /* InputDeviceSerializer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputDeviceSerializer.hpp; path = ../../src/finjin/engine/InputDeviceSerializer.hpp; sourceTree = SOURCE_ROOT; };
+		651282871D0B60C60041C324 /* InputSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InputSource.cpp; path = ../../src/finjin/engine/InputSource.cpp; sourceTree = SOURCE_ROOT; };
+		651282881D0B60C60041C324 /* InputSource.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputSource.hpp; path = ../../src/finjin/engine/InputSource.hpp; sourceTree = SOURCE_ROOT; };
+		6512828A1D0B60C60041C324 /* JobPipelineStage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = JobPipelineStage.cpp; path = ../../src/finjin/engine/JobPipelineStage.cpp; sourceTree = SOURCE_ROOT; };
+		6512828B1D0B60C60041C324 /* JobPipelineStage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = JobPipelineStage.hpp; path = ../../src/finjin/engine/JobPipelineStage.hpp; sourceTree = SOURCE_ROOT; };
+		6512828D1D0B60C60041C324 /* OSWindowDefs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = OSWindowDefs.hpp; path = ../../src/finjin/engine/OSWindowDefs.hpp; sourceTree = SOURCE_ROOT; };
+		6512828E1D0B60C60041C324 /* OSWindowEventListener.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = OSWindowEventListener.hpp; path = ../../src/finjin/engine/OSWindowEventListener.hpp; sourceTree = SOURCE_ROOT; };
+		6512828F1D0B60C60041C324 /* PlatformCapabilities_General.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PlatformCapabilities_General.cpp; path = ../../src/finjin/engine/PlatformCapabilities_General.cpp; sourceTree = SOURCE_ROOT; };
+		651282901D0B60C60041C324 /* PlatformCapabilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PlatformCapabilities.hpp; path = ../../src/finjin/engine/PlatformCapabilities.hpp; sourceTree = SOURCE_ROOT; };
+		651282911D0B60C60041C324 /* PointerType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PointerType.hpp; path = ../../src/finjin/engine/PointerType.hpp; sourceTree = SOURCE_ROOT; };
+		651282941D0B60C60041C324 /* PVRReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PVRReader.cpp; path = ../../src/finjin/engine/PVRReader.cpp; sourceTree = SOURCE_ROOT; };
+		651282951D0B60C60041C324 /* PVRReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PVRReader.hpp; path = ../../src/finjin/engine/PVRReader.hpp; sourceTree = SOURCE_ROOT; };
+		651282961D0B60C60041C324 /* SoundContextCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundContextCommonSettings.hpp; path = ../../src/finjin/engine/SoundContextCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
+		651282971D0B60C60041C324 /* SoundFormat.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SoundFormat.cpp; path = ../../src/finjin/engine/SoundFormat.cpp; sourceTree = SOURCE_ROOT; };
+		651282981D0B60C60041C324 /* SoundFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundFormat.hpp; path = ../../src/finjin/engine/SoundFormat.hpp; sourceTree = SOURCE_ROOT; };
+		651282991D0B60C60041C324 /* SoundGroup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundGroup.hpp; path = ../../src/finjin/engine/SoundGroup.hpp; sourceTree = SOURCE_ROOT; };
+		6512829A1D0B60C60041C324 /* SoundSorter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundSorter.hpp; path = ../../src/finjin/engine/SoundSorter.hpp; sourceTree = SOURCE_ROOT; };
+		6512829B1D0B60C60041C324 /* SoundSourceCommon.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundSourceCommon.hpp; path = ../../src/finjin/engine/SoundSourceCommon.hpp; sourceTree = SOURCE_ROOT; };
+		6512829C1D0B60C60041C324 /* StandardGameControllerInputBindings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StandardGameControllerInputBindings.cpp; path = ../../src/finjin/engine/StandardGameControllerInputBindings.cpp; sourceTree = SOURCE_ROOT; };
+		6512829D1D0B60C60041C324 /* StandardGameControllerInputBindings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = StandardGameControllerInputBindings.hpp; path = ../../src/finjin/engine/StandardGameControllerInputBindings.hpp; sourceTree = SOURCE_ROOT; };
+		6512829E1D0B60C60041C324 /* WAVReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WAVReader.cpp; path = ../../src/finjin/engine/WAVReader.cpp; sourceTree = SOURCE_ROOT; };
+		6512829F1D0B60C60041C324 /* WAVReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = WAVReader.hpp; path = ../../src/finjin/engine/WAVReader.hpp; sourceTree = SOURCE_ROOT; };
+		651282A11D0B60C60041C324 /* Application.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Application.hpp; path = ../../src/finjin/engine/Application.hpp; sourceTree = SOURCE_ROOT; };
+		651282A41D0B60C60041C324 /* ApplicationDelegate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationDelegate.hpp; path = ../../src/finjin/engine/ApplicationDelegate.hpp; sourceTree = SOURCE_ROOT; };
+		651282A71D0B60C60041C324 /* ApplicationSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationSettings.hpp; path = ../../src/finjin/engine/ApplicationSettings.hpp; sourceTree = SOURCE_ROOT; };
+		651282A91D0B60C60041C324 /* WindowSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = WindowSize.hpp; path = ../../src/finjin/engine/WindowSize.hpp; sourceTree = SOURCE_ROOT; };
+		651282EC1D0B62A60041C324 /* ApplicationGlobals.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ApplicationGlobals.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/ApplicationGlobals.mm; sourceTree = SOURCE_ROOT; };
+		651282ED1D0B62A60041C324 /* ApplicationGlobals.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ApplicationGlobals.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/ApplicationGlobals.hpp; sourceTree = SOURCE_ROOT; };
+		651282EE1D0B62A60041C324 /* DisplayInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DisplayInfo.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/DisplayInfo.hpp; sourceTree = SOURCE_ROOT; };
+		651282EF1D0B62A60041C324 /* DisplayInfo.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = DisplayInfo.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/DisplayInfo.mm; sourceTree = SOURCE_ROOT; };
+		651282F01D0B62A60041C324 /* FinjinNSApplicationDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FinjinNSApplicationDelegate.h; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSApplicationDelegate.h; sourceTree = SOURCE_ROOT; };
+		651282F11D0B62A60041C324 /* FinjinNSApplicationDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = FinjinNSApplicationDelegate.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSApplicationDelegate.mm; sourceTree = SOURCE_ROOT; };
+		651282F21D0B62A60041C324 /* FinjinNSView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FinjinNSView.h; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSView.h; sourceTree = SOURCE_ROOT; };
+		651282F31D0B62A60041C324 /* FinjinNSView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = FinjinNSView.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSView.mm; sourceTree = SOURCE_ROOT; };
+		651282F41D0B62A60041C324 /* FinjinNSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FinjinNSViewController.h; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSViewController.h; sourceTree = SOURCE_ROOT; };
+		651282F51D0B62A60041C324 /* FinjinNSViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = FinjinNSViewController.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSViewController.mm; sourceTree = SOURCE_ROOT; };
+		651282F61D0B62A60041C324 /* FinjinNSViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FinjinNSViewDelegate.h; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSViewDelegate.h; sourceTree = SOURCE_ROOT; };
+		651282F71D0B62A60041C324 /* FinjinNSWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FinjinNSWindowController.h; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSWindowController.h; sourceTree = SOURCE_ROOT; };
+		651282F81D0B62A60041C324 /* FinjinNSWindowController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = FinjinNSWindowController.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinNSWindowController.mm; sourceTree = SOURCE_ROOT; };
+		651282F91D0B62A60041C324 /* InputContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputContext.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/InputContext.hpp; sourceTree = SOURCE_ROOT; };
+		651282FA1D0B62A60041C324 /* InputSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = InputSystem.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/InputSystem.hpp; sourceTree = SOURCE_ROOT; };
+		651282FB1D0B62A60041C324 /* OSWindow.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = OSWindow.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/OSWindow.hpp; sourceTree = SOURCE_ROOT; };
+		651282FC1D0B62A60041C324 /* OSWindow.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = OSWindow.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/OSWindow.mm; sourceTree = SOURCE_ROOT; };
+		651282FD1D0B62A60041C324 /* PlatformCapabilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = PlatformCapabilities.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/PlatformCapabilities.mm; sourceTree = SOURCE_ROOT; };
+		651282FE1D0B62A60041C324 /* SoundAdapterDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundAdapterDescription.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/SoundAdapterDescription.hpp; sourceTree = SOURCE_ROOT; };
+		651282FF1D0B62A60041C324 /* SoundAdapterID.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundAdapterID.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/SoundAdapterID.hpp; sourceTree = SOURCE_ROOT; };
+		651283001D0B62A60041C324 /* SoundContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundContext.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/SoundContext.hpp; sourceTree = SOURCE_ROOT; };
+		651283011D0B62A60041C324 /* SoundSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundSystem.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/SoundSystem.hpp; sourceTree = SOURCE_ROOT; };
+		651283021D0B62A60041C324 /* Application.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/Application.mm; sourceTree = SOURCE_ROOT; };
+		6512831A1D0B62D80041C324 /* AAPLObjModel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AAPLObjModel.hpp; path = ../../src/finjin/engine/internal/gpu/metal/AAPLObjModel.hpp; sourceTree = SOURCE_ROOT; };
+		6512831B1D0B62D80041C324 /* AAPLObjModel.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AAPLObjModel.mm; path = ../../src/finjin/engine/internal/gpu/metal/AAPLObjModel.mm; sourceTree = SOURCE_ROOT; };
+		6512831C1D0B62D80041C324 /* GpuContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuContext.hpp; path = ../../src/finjin/engine/internal/gpu/metal/GpuContext.hpp; sourceTree = SOURCE_ROOT; };
+		6512831D1D0B62D80041C324 /* GpuDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuDescription.hpp; path = ../../src/finjin/engine/internal/gpu/metal/GpuDescription.hpp; sourceTree = SOURCE_ROOT; };
+		6512831E1D0B62D80041C324 /* GpuID.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuID.hpp; path = ../../src/finjin/engine/internal/gpu/metal/GpuID.hpp; sourceTree = SOURCE_ROOT; };
+		6512831F1D0B62D80041C324 /* GpuSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuSystem.hpp; path = ../../src/finjin/engine/internal/gpu/metal/GpuSystem.hpp; sourceTree = SOURCE_ROOT; };
+		651283201D0B62D80041C324 /* MetalDevices.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalDevices.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalDevices.hpp; sourceTree = SOURCE_ROOT; };
+		651283211D0B62D80041C324 /* MetalDevices.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalDevices.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalDevices.mm; sourceTree = SOURCE_ROOT; };
+		651283221D0B62D80041C324 /* MetalGpuContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalGpuContext.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContext.hpp; sourceTree = SOURCE_ROOT; };
+		651283231D0B62D80041C324 /* MetalGpuContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalGpuContext.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContext.mm; sourceTree = SOURCE_ROOT; };
+		651283241D0B62D80041C324 /* MetalImageUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalImageUtilities.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalImageUtilities.hpp; sourceTree = SOURCE_ROOT; };
+		651283251D0B62D80041C324 /* MetalImageUtilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalImageUtilities.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalImageUtilities.mm; sourceTree = SOURCE_ROOT; };
+		651283261D0B62D80041C324 /* MetalMathUtilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetalMathUtilities.cpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalMathUtilities.cpp; sourceTree = SOURCE_ROOT; };
+		651283271D0B62D80041C324 /* MetalMathUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalMathUtilities.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalMathUtilities.hpp; sourceTree = SOURCE_ROOT; };
+		651283281D0B62D80041C324 /* MetalSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalSystem.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystem.hpp; sourceTree = SOURCE_ROOT; };
+		651283291D0B62D80041C324 /* MetalSystem.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalSystem.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystem.mm; sourceTree = SOURCE_ROOT; };
+		6512832A1D0B62D80041C324 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = ../../src/finjin/engine/internal/gpu/metal/Shaders.metal; sourceTree = SOURCE_ROOT; };
+		6512832B1D0B62D80041C324 /* SharedGpuStructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SharedGpuStructures.h; path = ../../src/finjin/engine/internal/gpu/metal/SharedGpuStructures.h; sourceTree = SOURCE_ROOT; };
+		6512833E1D0B63020041C324 /* MacOSInputContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MacOSInputContext.hpp; path = ../../src/finjin/engine/internal/input/macosinput/MacOSInputContext.hpp; sourceTree = SOURCE_ROOT; };
+		6512833F1D0B63020041C324 /* MacOSInputContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MacOSInputContext.mm; path = ../../src/finjin/engine/internal/input/macosinput/MacOSInputContext.mm; sourceTree = SOURCE_ROOT; };
+		651283401D0B63020041C324 /* MacOSInputSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MacOSInputSystem.hpp; path = ../../src/finjin/engine/internal/input/macosinput/MacOSInputSystem.hpp; sourceTree = SOURCE_ROOT; };
+		651283411D0B63020041C324 /* MacOSInputSystem.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MacOSInputSystem.mm; path = ../../src/finjin/engine/internal/input/macosinput/MacOSInputSystem.mm; sourceTree = SOURCE_ROOT; };
+		651283421D0B63020041C324 /* MacOSKeyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MacOSKeyboard.hpp; path = ../../src/finjin/engine/internal/input/macosinput/MacOSKeyboard.hpp; sourceTree = SOURCE_ROOT; };
+		651283431D0B63020041C324 /* MacOSKeyboard.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MacOSKeyboard.mm; path = ../../src/finjin/engine/internal/input/macosinput/MacOSKeyboard.mm; sourceTree = SOURCE_ROOT; };
+		651283441D0B63020041C324 /* MacOSMouse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MacOSMouse.hpp; path = ../../src/finjin/engine/internal/input/macosinput/MacOSMouse.hpp; sourceTree = SOURCE_ROOT; };
+		651283451D0B63020041C324 /* MacOSMouse.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MacOSMouse.mm; path = ../../src/finjin/engine/internal/input/macosinput/MacOSMouse.mm; sourceTree = SOURCE_ROOT; };
+		651283501D0B63250041C324 /* GCInputGameController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GCInputGameController.hpp; path = ../../src/finjin/engine/internal/input/gcinput/GCInputGameController.hpp; sourceTree = SOURCE_ROOT; };
+		651283511D0B63250041C324 /* GCInputGameController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = GCInputGameController.mm; path = ../../src/finjin/engine/internal/input/gcinput/GCInputGameController.mm; sourceTree = SOURCE_ROOT; };
+		651283521D0B63250041C324 /* GCInputSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GCInputSystem.hpp; path = ../../src/finjin/engine/internal/input/gcinput/GCInputSystem.hpp; sourceTree = SOURCE_ROOT; };
+		651283531D0B63250041C324 /* GCInputSystem.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = GCInputSystem.mm; path = ../../src/finjin/engine/internal/input/gcinput/GCInputSystem.mm; sourceTree = SOURCE_ROOT; };
+		6512835A1D0B63500041C324 /* AVAudioEngineSoundAdapterDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundAdapterDescription.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundAdapterDescription.hpp; sourceTree = SOURCE_ROOT; };
+		6512835B1D0B63500041C324 /* AVAudioEngineSoundAdapterDescription.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundAdapterDescription.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundAdapterDescription.mm; sourceTree = SOURCE_ROOT; };
+		6512835C1D0B63500041C324 /* AVAudioEngineSoundAdapterID.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundAdapterID.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundAdapterID.hpp; sourceTree = SOURCE_ROOT; };
+		6512835D1D0B63500041C324 /* AVAudioEngineSoundBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundBuffer.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBuffer.hpp; sourceTree = SOURCE_ROOT; };
+		6512835E1D0B63500041C324 /* AVAudioEngineSoundBuffer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundBuffer.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBuffer.mm; sourceTree = SOURCE_ROOT; };
+		6512835F1D0B63500041C324 /* AVAudioEngineSoundBufferImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundBufferImpl.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBufferImpl.hpp; sourceTree = SOURCE_ROOT; };
+		651283601D0B63500041C324 /* AVAudioEngineSoundContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundContext.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundContext.hpp; sourceTree = SOURCE_ROOT; };
+		651283611D0B63500041C324 /* AVAudioEngineSoundContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundContext.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundContext.mm; sourceTree = SOURCE_ROOT; };
+		651283621D0B63500041C324 /* AVAudioEngineSoundContextImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundContextImpl.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundContextImpl.hpp; sourceTree = SOURCE_ROOT; };
+		651283631D0B63500041C324 /* AVAudioEngineSoundContextImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundContextImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundContextImpl.mm; sourceTree = SOURCE_ROOT; };
+		651283641D0B63500041C324 /* AVAudioEngineSoundGroup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundGroup.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundGroup.hpp; sourceTree = SOURCE_ROOT; };
+		651283651D0B63500041C324 /* AVAudioEngineSoundListener.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundListener.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundListener.hpp; sourceTree = SOURCE_ROOT; };
+		651283661D0B63500041C324 /* AVAudioEngineSoundListener.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundListener.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundListener.mm; sourceTree = SOURCE_ROOT; };
+		651283671D0B63500041C324 /* AVAudioEngineSoundSource.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundSource.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSource.hpp; sourceTree = SOURCE_ROOT; };
+		651283681D0B63500041C324 /* AVAudioEngineSoundSource.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundSource.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSource.mm; sourceTree = SOURCE_ROOT; };
+		651283691D0B63500041C324 /* AVAudioEngineSoundSourceImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundSourceImpl.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSourceImpl.hpp; sourceTree = SOURCE_ROOT; };
+		6512836A1D0B63500041C324 /* AVAudioEngineSoundSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AVAudioEngineSoundSystem.hpp; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSystem.hpp; sourceTree = SOURCE_ROOT; };
+		6512836B1D0B63500041C324 /* AVAudioEngineSoundSystem.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundSystem.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSystem.mm; sourceTree = SOURCE_ROOT; };
+		651283901D0B6F780041C324 /* GpuContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GpuContext.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/GpuContext.hpp; sourceTree = SOURCE_ROOT; };
+		651283911D0B6F780041C324 /* GpuDescription.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GpuDescription.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/GpuDescription.hpp; sourceTree = SOURCE_ROOT; };
+		651283921D0B6F780041C324 /* GpuID.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GpuID.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/GpuID.hpp; sourceTree = SOURCE_ROOT; };
+		651283931D0B6F780041C324 /* GpuSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GpuSystem.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/GpuSystem.hpp; sourceTree = SOURCE_ROOT; };
+		651283981D0B74630041C324 /* ApplicationSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ApplicationSettings.cpp; path = ../../src/finjin/engine/ApplicationSettings.cpp; sourceTree = SOURCE_ROOT; };
+		6512884A1D0CCB180041C324 /* MetalGpuDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalGpuDescription.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuDescription.hpp; sourceTree = SOURCE_ROOT; };
+		6512884B1D0CCB180041C324 /* MetalGpuDescription.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalGpuDescription.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuDescription.mm; sourceTree = SOURCE_ROOT; };
+		651288621D137C930041C324 /* WindowBounds.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WindowBounds.cpp; path = ../../src/finjin/engine/WindowBounds.cpp; sourceTree = SOURCE_ROOT; };
+		651288631D137C930041C324 /* WindowBounds.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = WindowBounds.hpp; path = ../../src/finjin/engine/WindowBounds.hpp; sourceTree = SOURCE_ROOT; };
+		6512887A1D241ACE0041C324 /* AssetPath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetPath.cpp; path = ../../src/finjin/engine/AssetPath.cpp; sourceTree = SOURCE_ROOT; };
+		6512887B1D241ACE0041C324 /* AssetPath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetPath.hpp; path = ../../src/finjin/engine/AssetPath.hpp; sourceTree = SOURCE_ROOT; };
+		6512887C1D241ACE0041C324 /* AssetFileReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetFileReader.cpp; path = ../../src/finjin/engine/AssetFileReader.cpp; sourceTree = SOURCE_ROOT; };
+		6512887D1D241ACE0041C324 /* AssetFileReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetFileReader.hpp; path = ../../src/finjin/engine/AssetFileReader.hpp; sourceTree = SOURCE_ROOT; };
+		651288A41D2B0DB40041C324 /* MetalGpuContextImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalGpuContextImpl.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContextImpl.hpp; sourceTree = SOURCE_ROOT; };
+		651288A51D2B0DB40041C324 /* MetalGpuContextImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalGpuContextImpl.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContextImpl.mm; sourceTree = SOURCE_ROOT; };
+		651288A61D2B0DB40041C324 /* MetalSystemImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalSystemImpl.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystemImpl.hpp; sourceTree = SOURCE_ROOT; };
+		651288A71D2B0DB40041C324 /* MetalSystemImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalSystemImpl.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystemImpl.mm; sourceTree = SOURCE_ROOT; };
+		651288C71D2B115C0041C324 /* MetalGpuContextSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalGpuContextSettings.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContextSettings.hpp; sourceTree = SOURCE_ROOT; };
+		651288C81D2B115C0041C324 /* MetalGpuContextSettings.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalGpuContextSettings.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContextSettings.mm; sourceTree = SOURCE_ROOT; };
+		651288C91D2B115C0041C324 /* MetalJobPipelineStage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalJobPipelineStage.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalJobPipelineStage.hpp; sourceTree = SOURCE_ROOT; };
+		651288CA1D2B115C0041C324 /* MetalJobPipelineStage.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalJobPipelineStage.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalJobPipelineStage.mm; sourceTree = SOURCE_ROOT; };
+		651288D01D2B119A0041C324 /* MetalSystemSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalSystemSettings.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystemSettings.hpp; sourceTree = SOURCE_ROOT; };
+		651288D11D2B119A0041C324 /* MetalSystemSettings.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalSystemSettings.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystemSettings.mm; sourceTree = SOURCE_ROOT; };
+		651288EE1D2B13460041C324 /* MetalIncludes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MetalIncludes.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalIncludes.hpp; sourceTree = SOURCE_ROOT; };
+		651288F01D2B2BFB0041C324 /* OSWindowImpl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = OSWindowImpl.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/OSWindowImpl.hpp; sourceTree = SOURCE_ROOT; };
+		651288F11D2B2BFB0041C324 /* OSWindowImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = OSWindowImpl.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/OSWindowImpl.mm; sourceTree = SOURCE_ROOT; };
+		65430DCA1DF1B66D00588409 /* StandardAssetDocumentChunkNames.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StandardAssetDocumentChunkNames.cpp; path = ../../src/finjin/engine/StandardAssetDocumentChunkNames.cpp; sourceTree = SOURCE_ROOT; };
+		65430DCB1DF1B66D00588409 /* StandardAssetDocumentChunkNames.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = StandardAssetDocumentChunkNames.hpp; path = ../../src/finjin/engine/StandardAssetDocumentChunkNames.hpp; sourceTree = SOURCE_ROOT; };
+		65430DCC1DF1B66D00588409 /* StandardAssetDocumentPropertyNames.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StandardAssetDocumentPropertyNames.cpp; path = ../../src/finjin/engine/StandardAssetDocumentPropertyNames.cpp; sourceTree = SOURCE_ROOT; };
+		65430DCD1DF1B66D00588409 /* StandardAssetDocumentPropertyNames.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = StandardAssetDocumentPropertyNames.hpp; path = ../../src/finjin/engine/StandardAssetDocumentPropertyNames.hpp; sourceTree = SOURCE_ROOT; };
+		65430DCE1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StandardAssetDocumentPropertyValues.cpp; path = ../../src/finjin/engine/StandardAssetDocumentPropertyValues.cpp; sourceTree = SOURCE_ROOT; };
+		65430DCF1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = StandardAssetDocumentPropertyValues.hpp; path = ../../src/finjin/engine/StandardAssetDocumentPropertyValues.hpp; sourceTree = SOURCE_ROOT; };
+		65430E671DF9AF5D00588409 /* Asset.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Asset.cpp; path = ../../src/finjin/engine/Asset.cpp; sourceTree = SOURCE_ROOT; };
+		65430E681DF9AF5D00588409 /* AssetReference.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetReference.cpp; path = ../../src/finjin/engine/AssetReference.cpp; sourceTree = SOURCE_ROOT; };
+		65430E691DF9AF5D00588409 /* AssetReference.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetReference.hpp; path = ../../src/finjin/engine/AssetReference.hpp; sourceTree = SOURCE_ROOT; };
+		6552804D1E39EDB00057B5A4 /* MetalRenderTarget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MetalRenderTarget.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalRenderTarget.hpp; sourceTree = SOURCE_ROOT; };
+		657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatures.cpp; path = ../../src/finjin/engine/ShaderFeatures.cpp; sourceTree = SOURCE_ROOT; };
+		657AA1631E420EE8004ADA22 /* ShaderFeatures.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ShaderFeatures.hpp; path = ../../src/finjin/engine/ShaderFeatures.hpp; sourceTree = SOURCE_ROOT; };
+		657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatureFlag.cpp; path = ../../src/finjin/engine/ShaderFeatureFlag.cpp; sourceTree = SOURCE_ROOT; };
+		657AA16D1E44AACE004ADA22 /* ShaderFeatureFlag.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ShaderFeatureFlag.hpp; path = ../../src/finjin/engine/ShaderFeatureFlag.hpp; sourceTree = SOURCE_ROOT; };
+		657AA1781E47FA21004ADA22 /* AssetCreationCapability.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetCreationCapability.hpp; path = ../../src/finjin/engine/AssetCreationCapability.hpp; sourceTree = SOURCE_ROOT; };
+		65C860011D90F3DD00348F9E /* MemorySettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MemorySettings.cpp; path = ../../src/finjin/engine/MemorySettings.cpp; sourceTree = SOURCE_ROOT; };
+		65C860021D90F3DD00348F9E /* MemorySettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MemorySettings.hpp; path = ../../src/finjin/engine/MemorySettings.hpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		651282471D0B5E4A0041C324 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		650FA3BE1D5B9FAB00535D8D /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				65430E671DF9AF5D00588409 /* Asset.cpp */,
+				650FA3C21D5BA0C400535D8D /* Asset.hpp */,
+				650FA3C11D5BA0C400535D8D /* AssetClass.hpp */,
+				650FA3C31D5BA0C400535D8D /* AssetClassFileReader.cpp */,
+				650FA3C41D5BA0C400535D8D /* AssetClassFileReader.hpp */,
+				6508AFB71E34C70700EB826E /* AssetCountsSettings.cpp */,
+				6508AFA71E34C66600EB826E /* AssetCountsSettings.hpp */,
+				657AA1781E47FA21004ADA22 /* AssetCreationCapability.hpp */,
+				6508AFA81E34C66600EB826E /* AssetHandle.hpp */,
+				6512887A1D241ACE0041C324 /* AssetPath.cpp */,
+				6512887B1D241ACE0041C324 /* AssetPath.hpp */,
+				6512887C1D241ACE0041C324 /* AssetFileReader.cpp */,
+				6512887D1D241ACE0041C324 /* AssetFileReader.hpp */,
+				650FA3C91D5BA0C400535D8D /* AssetReadHandle.cpp */,
+				650FA3CA1D5BA0C400535D8D /* AssetReadHandle.hpp */,
+				650FA3CB1D5BA0C400535D8D /* AssetReadQueue.cpp */,
+				650FA3CC1D5BA0C400535D8D /* AssetReadQueue.hpp */,
+				65430E681DF9AF5D00588409 /* AssetReference.cpp */,
+				65430E691DF9AF5D00588409 /* AssetReference.hpp */,
+				6508AFB91E34C70700EB826E /* FinjinSceneAssets.cpp */,
+				6508AFAA1E34C66600EB826E /* FinjinSceneAssets.hpp */,
+				6508AFBA1E34C70700EB826E /* FinjinSceneReader.cpp */,
+				6508AFAB1E34C66600EB826E /* FinjinSceneReader.hpp */,
+				6508AFBB1E34C70700EB826E /* FinjinSceneTypeNames.hpp */,
+				65C860011D90F3DD00348F9E /* MemorySettings.cpp */,
+				65C860021D90F3DD00348F9E /* MemorySettings.hpp */,
+				6508AFAD1E34C66600EB826E /* PerFrameObjectAllocator.hpp */,
+				65430DCA1DF1B66D00588409 /* StandardAssetDocumentChunkNames.cpp */,
+				65430DCB1DF1B66D00588409 /* StandardAssetDocumentChunkNames.hpp */,
+				65430DCC1DF1B66D00588409 /* StandardAssetDocumentPropertyNames.cpp */,
+				65430DCD1DF1B66D00588409 /* StandardAssetDocumentPropertyNames.hpp */,
+				65430DCE1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp */,
+				65430DCF1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.hpp */,
+				650FA3E61D5BA26C00535D8D /* StringTable.cpp */,
+				650FA3E71D5BA26C00535D8D /* StringTable.hpp */,
+				6508AFC11E34C7D600EB826E /* UserDataTypes.cpp */,
+				6508AFAE1E34C66600EB826E /* UserDataTypes.hpp */,
+			);
+			name = assets;
+			sourceTree = "<group>";
+		};
+		651282411D0B5E4A0041C324 = {
+			isa = PBXGroup;
+			children = (
+				6512824C1D0B5E4A0041C324 /* Source Files */,
+				6512824B1D0B5E4A0041C324 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6512824B1D0B5E4A0041C324 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6512824A1D0B5E4A0041C324 /* libfinjin-engine.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6512824C1D0B5E4A0041C324 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				651282601D0B60540041C324 /* common */,
+				651282561D0B60000041C324 /* internal */,
+				651282751D0B60C60041C324 /* FinjinPrecompiled.cpp */,
+				651282761D0B60C60041C324 /* FinjinPrecompiled.hpp */,
+				651282781D0B60C60041C324 /* FinjinEngineLibrary.hpp */,
+			);
+			name = "Source Files";
+			path = "finjine-engine-lib";
+			sourceTree = "<group>";
+		};
+		651282561D0B60000041C324 /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				6512825F1D0B60480041C324 /* app */,
+				6512825A1D0B60200041C324 /* gpu */,
+				651282591D0B601B0041C324 /* input */,
+				651282581D0B60140041C324 /* sound */,
+			);
+			name = internal;
+			sourceTree = "<group>";
+		};
+		651282581D0B60140041C324 /* sound */ = {
+			isa = PBXGroup;
+			children = (
+				6512825E1D0B60420041C324 /* avaudioengine */,
+			);
+			name = sound;
+			sourceTree = "<group>";
+		};
+		651282591D0B601B0041C324 /* input */ = {
+			isa = PBXGroup;
+			children = (
+				6512825D1D0B603C0041C324 /* gcinput */,
+				6512825C1D0B602B0041C324 /* macosinput */,
+			);
+			name = input;
+			sourceTree = "<group>";
+		};
+		6512825A1D0B60200041C324 /* gpu */ = {
+			isa = PBXGroup;
+			children = (
+				6512825B1D0B60260041C324 /* metal */,
+			);
+			name = gpu;
+			sourceTree = "<group>";
+		};
+		6512825B1D0B60260041C324 /* metal */ = {
+			isa = PBXGroup;
+			children = (
+				6512831A1D0B62D80041C324 /* AAPLObjModel.hpp */,
+				6512831B1D0B62D80041C324 /* AAPLObjModel.mm */,
+				6512831C1D0B62D80041C324 /* GpuContext.hpp */,
+				6512831D1D0B62D80041C324 /* GpuDescription.hpp */,
+				6512831E1D0B62D80041C324 /* GpuID.hpp */,
+				6512831F1D0B62D80041C324 /* GpuSystem.hpp */,
+				651283201D0B62D80041C324 /* MetalDevices.hpp */,
+				651283211D0B62D80041C324 /* MetalDevices.mm */,
+				651283221D0B62D80041C324 /* MetalGpuContext.hpp */,
+				651283231D0B62D80041C324 /* MetalGpuContext.mm */,
+				651288A41D2B0DB40041C324 /* MetalGpuContextImpl.hpp */,
+				651288A51D2B0DB40041C324 /* MetalGpuContextImpl.mm */,
+				651288C71D2B115C0041C324 /* MetalGpuContextSettings.hpp */,
+				651288C81D2B115C0041C324 /* MetalGpuContextSettings.mm */,
+				6512884A1D0CCB180041C324 /* MetalGpuDescription.hpp */,
+				6512884B1D0CCB180041C324 /* MetalGpuDescription.mm */,
+				651283241D0B62D80041C324 /* MetalImageUtilities.hpp */,
+				651283251D0B62D80041C324 /* MetalImageUtilities.mm */,
+				651288EE1D2B13460041C324 /* MetalIncludes.hpp */,
+				651288C91D2B115C0041C324 /* MetalJobPipelineStage.hpp */,
+				651288CA1D2B115C0041C324 /* MetalJobPipelineStage.mm */,
+				651283261D0B62D80041C324 /* MetalMathUtilities.cpp */,
+				651283271D0B62D80041C324 /* MetalMathUtilities.hpp */,
+				6552804D1E39EDB00057B5A4 /* MetalRenderTarget.hpp */,
+				651283281D0B62D80041C324 /* MetalSystem.hpp */,
+				651283291D0B62D80041C324 /* MetalSystem.mm */,
+				651288A61D2B0DB40041C324 /* MetalSystemImpl.hpp */,
+				651288A71D2B0DB40041C324 /* MetalSystemImpl.mm */,
+				651288D01D2B119A0041C324 /* MetalSystemSettings.hpp */,
+				651288D11D2B119A0041C324 /* MetalSystemSettings.mm */,
+				6512832A1D0B62D80041C324 /* Shaders.metal */,
+				6512832B1D0B62D80041C324 /* SharedGpuStructures.h */,
+			);
+			name = metal;
+			sourceTree = "<group>";
+		};
+		6512825C1D0B602B0041C324 /* macosinput */ = {
+			isa = PBXGroup;
+			children = (
+				6512833E1D0B63020041C324 /* MacOSInputContext.hpp */,
+				6512833F1D0B63020041C324 /* MacOSInputContext.mm */,
+				651283401D0B63020041C324 /* MacOSInputSystem.hpp */,
+				651283411D0B63020041C324 /* MacOSInputSystem.mm */,
+				651283421D0B63020041C324 /* MacOSKeyboard.hpp */,
+				651283431D0B63020041C324 /* MacOSKeyboard.mm */,
+				651283441D0B63020041C324 /* MacOSMouse.hpp */,
+				651283451D0B63020041C324 /* MacOSMouse.mm */,
+			);
+			name = macosinput;
+			sourceTree = "<group>";
+		};
+		6512825D1D0B603C0041C324 /* gcinput */ = {
+			isa = PBXGroup;
+			children = (
+				651283501D0B63250041C324 /* GCInputGameController.hpp */,
+				651283511D0B63250041C324 /* GCInputGameController.mm */,
+				651283521D0B63250041C324 /* GCInputSystem.hpp */,
+				651283531D0B63250041C324 /* GCInputSystem.mm */,
+			);
+			name = gcinput;
+			sourceTree = "<group>";
+		};
+		6512825E1D0B60420041C324 /* avaudioengine */ = {
+			isa = PBXGroup;
+			children = (
+				6512835A1D0B63500041C324 /* AVAudioEngineSoundAdapterDescription.hpp */,
+				6512835B1D0B63500041C324 /* AVAudioEngineSoundAdapterDescription.mm */,
+				6512835C1D0B63500041C324 /* AVAudioEngineSoundAdapterID.hpp */,
+				6512835D1D0B63500041C324 /* AVAudioEngineSoundBuffer.hpp */,
+				6512835E1D0B63500041C324 /* AVAudioEngineSoundBuffer.mm */,
+				6512835F1D0B63500041C324 /* AVAudioEngineSoundBufferImpl.hpp */,
+				651283601D0B63500041C324 /* AVAudioEngineSoundContext.hpp */,
+				651283611D0B63500041C324 /* AVAudioEngineSoundContext.mm */,
+				651283621D0B63500041C324 /* AVAudioEngineSoundContextImpl.hpp */,
+				651283631D0B63500041C324 /* AVAudioEngineSoundContextImpl.mm */,
+				651283641D0B63500041C324 /* AVAudioEngineSoundGroup.hpp */,
+				651283651D0B63500041C324 /* AVAudioEngineSoundListener.hpp */,
+				651283661D0B63500041C324 /* AVAudioEngineSoundListener.mm */,
+				651283671D0B63500041C324 /* AVAudioEngineSoundSource.hpp */,
+				651283681D0B63500041C324 /* AVAudioEngineSoundSource.mm */,
+				651283691D0B63500041C324 /* AVAudioEngineSoundSourceImpl.hpp */,
+				6512836A1D0B63500041C324 /* AVAudioEngineSoundSystem.hpp */,
+				6512836B1D0B63500041C324 /* AVAudioEngineSoundSystem.mm */,
+			);
+			name = avaudioengine;
+			sourceTree = "<group>";
+		};
+		6512825F1D0B60480041C324 /* app */ = {
+			isa = PBXGroup;
+			children = (
+				651282611D0B60610041C324 /* macos */,
+			);
+			name = app;
+			sourceTree = "<group>";
+		};
+		651282601D0B60540041C324 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				651282691D0B608C0041C324 /* application */,
+				651282621D0B60660041C324 /* application-viewport */,
+				650FA3BE1D5B9FAB00535D8D /* assets */,
+				651282681D0B60860041C324 /* file-formats */,
+				651282671D0B60820041C324 /* gpu */,
+				651282661D0B607C0041C324 /* input */,
+				651282651D0B60760041C324 /* platform */,
+				651282641D0B60710041C324 /* sound */,
+				651282631D0B606C0041C324 /* utilities */,
+			);
+			name = common;
+			sourceTree = "<group>";
+		};
+		651282611D0B60610041C324 /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				651283021D0B62A60041C324 /* Application.mm */,
+				651282EC1D0B62A60041C324 /* ApplicationGlobals.mm */,
+				651282ED1D0B62A60041C324 /* ApplicationGlobals.hpp */,
+				651282EE1D0B62A60041C324 /* DisplayInfo.hpp */,
+				651282EF1D0B62A60041C324 /* DisplayInfo.mm */,
+				651282F01D0B62A60041C324 /* FinjinNSApplicationDelegate.h */,
+				651282F11D0B62A60041C324 /* FinjinNSApplicationDelegate.mm */,
+				651282F21D0B62A60041C324 /* FinjinNSView.h */,
+				651282F31D0B62A60041C324 /* FinjinNSView.mm */,
+				651282F41D0B62A60041C324 /* FinjinNSViewController.h */,
+				651282F51D0B62A60041C324 /* FinjinNSViewController.mm */,
+				651282F61D0B62A60041C324 /* FinjinNSViewDelegate.h */,
+				651282F71D0B62A60041C324 /* FinjinNSWindowController.h */,
+				651282F81D0B62A60041C324 /* FinjinNSWindowController.mm */,
+				651283901D0B6F780041C324 /* GpuContext.hpp */,
+				651283911D0B6F780041C324 /* GpuDescription.hpp */,
+				651283921D0B6F780041C324 /* GpuID.hpp */,
+				651283931D0B6F780041C324 /* GpuSystem.hpp */,
+				651282F91D0B62A60041C324 /* InputContext.hpp */,
+				651282FA1D0B62A60041C324 /* InputSystem.hpp */,
+				651282FB1D0B62A60041C324 /* OSWindow.hpp */,
+				651282FC1D0B62A60041C324 /* OSWindow.mm */,
+				651288F01D2B2BFB0041C324 /* OSWindowImpl.hpp */,
+				651288F11D2B2BFB0041C324 /* OSWindowImpl.mm */,
+				651282FD1D0B62A60041C324 /* PlatformCapabilities.mm */,
+				651282FE1D0B62A60041C324 /* SoundAdapterDescription.hpp */,
+				651282FF1D0B62A60041C324 /* SoundAdapterID.hpp */,
+				651283001D0B62A60041C324 /* SoundContext.hpp */,
+				651283011D0B62A60041C324 /* SoundSystem.hpp */,
+			);
+			name = macos;
+			sourceTree = "<group>";
+		};
+		651282621D0B60660041C324 /* application-viewport */ = {
+			isa = PBXGroup;
+			children = (
+				650FA45F1D5BBA7200535D8D /* ApplicationViewport.cpp */,
+				6512826D1D0B60C60041C324 /* ApplicationViewport.hpp */,
+				6512826F1D0B60C60041C324 /* ApplicationViewportCommonSettings.hpp */,
+				650FA3EC1D5BAD2F00535D8D /* ApplicationViewportDelegate.cpp */,
+				650FA3ED1D5BAD2F00535D8D /* ApplicationViewportDelegate.hpp */,
+				651282701D0B60C60041C324 /* ApplicationViewportDescription.cpp */,
+				651282711D0B60C60041C324 /* ApplicationViewportDescription.hpp */,
+				650FA4591D5BB9C700535D8D /* ApplicationViewportsController.cpp */,
+				651282731D0B60C60041C324 /* ApplicationViewportsController.hpp */,
+			);
+			name = "application-viewport";
+			sourceTree = "<group>";
+		};
+		651282631D0B606C0041C324 /* utilities */ = {
+			isa = PBXGroup;
+			children = (
+				6508AFB81E34C70700EB826E /* Camera.cpp */,
+				6508AFA91E34C66600EB826E /* Camera.hpp */,
+				651282771D0B60C60041C324 /* EventCollection.hpp */,
+				6512828A1D0B60C60041C324 /* JobPipelineStage.cpp */,
+				6512828B1D0B60C60041C324 /* JobPipelineStage.hpp */,
+				6512828D1D0B60C60041C324 /* OSWindowDefs.hpp */,
+				6512828E1D0B60C60041C324 /* OSWindowEventListener.hpp */,
+				650FA33B1D361E1200535D8D /* ResourcePoolDescriptor.hpp */,
+				651288621D137C930041C324 /* WindowBounds.cpp */,
+				651288631D137C930041C324 /* WindowBounds.hpp */,
+				650FA4651D5BBB0B00535D8D /* WindowSize.cpp */,
+				651282A91D0B60C60041C324 /* WindowSize.hpp */,
+			);
+			name = utilities;
+			sourceTree = "<group>";
+		};
+		651282641D0B60710041C324 /* sound */ = {
+			isa = PBXGroup;
+			children = (
+				650FA33C1D361E1200535D8D /* SoundContextCommonSettings.cpp */,
+				651282961D0B60C60041C324 /* SoundContextCommonSettings.hpp */,
+				651282971D0B60C60041C324 /* SoundFormat.cpp */,
+				651282981D0B60C60041C324 /* SoundFormat.hpp */,
+				651282991D0B60C60041C324 /* SoundGroup.hpp */,
+				6512829A1D0B60C60041C324 /* SoundSorter.hpp */,
+				6512829B1D0B60C60041C324 /* SoundSourceCommon.hpp */,
+				650FA44E1D5BB37400535D8D /* SoundSystemCommonSettings.hpp */,
+			);
+			name = sound;
+			sourceTree = "<group>";
+		};
+		651282651D0B60760041C324 /* platform */ = {
+			isa = PBXGroup;
+			children = (
+				6512828F1D0B60C60041C324 /* PlatformCapabilities_General.cpp */,
+				651282901D0B60C60041C324 /* PlatformCapabilities.hpp */,
+			);
+			name = platform;
+			sourceTree = "<group>";
+		};
+		651282661D0B607C0041C324 /* input */ = {
+			isa = PBXGroup;
+			children = (
+				651282791D0B60C60041C324 /* FlyingCameraInputBindings.cpp */,
+				6512827A1D0B60C60041C324 /* FlyingCameraInputBindings.hpp */,
+				6512827C1D0B60C60041C324 /* InputBindings.hpp */,
+				6512827D1D0B60C60041C324 /* InputBindingsSerializer.hpp */,
+				6512827E1D0B60C60041C324 /* InputComponents.cpp */,
+				6512827F1D0B60C60041C324 /* InputComponents.hpp */,
+				651282801D0B60C60041C324 /* InputConstants.cpp */,
+				651282811D0B60C60041C324 /* InputConstants.hpp */,
+				650FA33A1D361E1200535D8D /* InputContextCommonSettings.cpp */,
+				651282821D0B60C60041C324 /* InputContextCommonSettings.hpp */,
+				651282831D0B60C60041C324 /* InputCoordinate.cpp */,
+				651282841D0B60C60041C324 /* InputCoordinate.hpp */,
+				651282851D0B60C60041C324 /* InputDeviceSerializer.hpp */,
+				651282871D0B60C60041C324 /* InputSource.cpp */,
+				651282881D0B60C60041C324 /* InputSource.hpp */,
+				650FA44D1D5BB37400535D8D /* InputSystemCommonSettings.hpp */,
+				651282911D0B60C60041C324 /* PointerType.hpp */,
+				6512829C1D0B60C60041C324 /* StandardGameControllerInputBindings.cpp */,
+				6512829D1D0B60C60041C324 /* StandardGameControllerInputBindings.hpp */,
+			);
+			name = input;
+			sourceTree = "<group>";
+		};
+		651282671D0B60820041C324 /* gpu */ = {
+			isa = PBXGroup;
+			children = (
+				650FA3511D37379200535D8D /* GenericGpuNumericStructs.cpp */,
+				650FA3521D37379200535D8D /* GenericGpuNumericStructs.hpp */,
+				650FA3391D361E1200535D8D /* GpuContextCommonSettings.cpp */,
+				6512827B1D0B60C60041C324 /* GpuContextCommonSettings.hpp */,
+				650FA3531D37379200535D8D /* GpuSerializers.hpp */,
+				650FA3541D37379200535D8D /* GpuSystemCommonSettings.hpp */,
+				657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */,
+				657AA1631E420EE8004ADA22 /* ShaderFeatures.hpp */,
+				657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */,
+				657AA16D1E44AACE004ADA22 /* ShaderFeatureFlag.hpp */,
+			);
+			name = gpu;
+			sourceTree = "<group>";
+		};
+		651282681D0B60860041C324 /* file-formats */ = {
+			isa = PBXGroup;
+			children = (
+				651282941D0B60C60041C324 /* PVRReader.cpp */,
+				651282951D0B60C60041C324 /* PVRReader.hpp */,
+				6512829E1D0B60C60041C324 /* WAVReader.cpp */,
+				6512829F1D0B60C60041C324 /* WAVReader.hpp */,
+			);
+			name = "file-formats";
+			sourceTree = "<group>";
+		};
+		651282691D0B608C0041C324 /* application */ = {
+			isa = PBXGroup;
+			children = (
+				651282A11D0B60C60041C324 /* Application.hpp */,
+				650FA4571D5BB90F00535D8D /* Application_General.cpp */,
+				650FA3EA1D5BACDE00535D8D /* ApplicationDelegate.cpp */,
+				651282A41D0B60C60041C324 /* ApplicationDelegate.hpp */,
+				650FA4781D61406500535D8D /* ApplicationFileSystem.hpp */,
+				650FA4791D61406500535D8D /* ApplicationNameFormat.hpp */,
+				651283981D0B74630041C324 /* ApplicationSettings.cpp */,
+				651282A71D0B60C60041C324 /* ApplicationSettings.hpp */,
+			);
+			name = application;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		651282481D0B5E4A0041C324 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				657AA1791E47FA21004ADA22 /* AssetCreationCapability.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		651282491D0B5E4A0041C324 /* finjin-engine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 651282531D0B5E4A0041C324 /* Build configuration list for PBXNativeTarget "finjin-engine" */;
+			buildPhases = (
+				651282461D0B5E4A0041C324 /* Sources */,
+				651282471D0B5E4A0041C324 /* Frameworks */,
+				651282481D0B5E4A0041C324 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "finjin-engine";
+			productName = "finjine-engine-lib";
+			productReference = 6512824A1D0B5E4A0041C324 /* libfinjin-engine.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		651282421D0B5E4A0041C324 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = Finjin;
+				TargetAttributes = {
+					651282491D0B5E4A0041C324 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+				};
+			};
+			buildConfigurationList = 651282451D0B5E4A0041C324 /* Build configuration list for PBXProject "finjin-engine-lib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 651282411D0B5E4A0041C324;
+			productRefGroup = 6512824B1D0B5E4A0041C324 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				651282491D0B5E4A0041C324 /* finjin-engine */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		651282461D0B5E4A0041C324 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				657AA16E1E44AACE004ADA22 /* ShaderFeatureFlag.cpp in Sources */,
+				657AA1641E420EE8004ADA22 /* ShaderFeatures.cpp in Sources */,
+				6508AFC21E34C7D600EB826E /* UserDataTypes.cpp in Sources */,
+				6508AFBC1E34C70700EB826E /* AssetCountsSettings.cpp in Sources */,
+				6508AFBD1E34C70700EB826E /* Camera.cpp in Sources */,
+				6508AFBE1E34C70700EB826E /* FinjinSceneAssets.cpp in Sources */,
+				6508AFBF1E34C70700EB826E /* FinjinSceneReader.cpp in Sources */,
+				65430E6A1DF9AF5D00588409 /* Asset.cpp in Sources */,
+				65430E6B1DF9AF5D00588409 /* AssetReference.cpp in Sources */,
+				65430DD01DF1B66D00588409 /* StandardAssetDocumentChunkNames.cpp in Sources */,
+				65430DD21DF1B66D00588409 /* StandardAssetDocumentPropertyNames.cpp in Sources */,
+				65430DD41DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp in Sources */,
+				65C860051D90F3DD00348F9E /* MemorySettings.cpp in Sources */,
+				650FA4661D5BBB0B00535D8D /* WindowSize.cpp in Sources */,
+				650FA4601D5BBA7200535D8D /* ApplicationViewport.cpp in Sources */,
+				650FA45A1D5BB9C700535D8D /* ApplicationViewportsController.cpp in Sources */,
+				650FA4581D5BB90F00535D8D /* Application_General.cpp in Sources */,
+				650FA3EE1D5BAD2F00535D8D /* ApplicationViewportDelegate.cpp in Sources */,
+				650FA3EB1D5BACDE00535D8D /* ApplicationDelegate.cpp in Sources */,
+				650FA3E81D5BA26C00535D8D /* StringTable.cpp in Sources */,
+				650FA3D61D5BA0C400535D8D /* AssetClassFileReader.cpp in Sources */,
+				6512887E1D241ACE0041C324 /* AssetPath.cpp in Sources */,
+				651288801D241ACE0041C324 /* AssetFileReader.cpp in Sources */,
+				650FA3DA1D5BA0C400535D8D /* AssetReadHandle.cpp in Sources */,
+				650FA3DC1D5BA0C400535D8D /* AssetReadQueue.cpp in Sources */,
+				650FA3551D37379200535D8D /* GenericGpuNumericStructs.cpp in Sources */,
+				650FA33D1D361E1200535D8D /* GpuContextCommonSettings.cpp in Sources */,
+				650FA33E1D361E1200535D8D /* InputContextCommonSettings.cpp in Sources */,
+				650FA3401D361E1200535D8D /* SoundContextCommonSettings.cpp in Sources */,
+				651288F31D2B2BFB0041C324 /* OSWindowImpl.mm in Sources */,
+				651288D31D2B119A0041C324 /* MetalSystemSettings.mm in Sources */,
+				651288A91D2B0DB40041C324 /* MetalGpuContextImpl.mm in Sources */,
+				651288CD1D2B115C0041C324 /* MetalGpuContextSettings.mm in Sources */,
+				651288CF1D2B115C0041C324 /* MetalJobPipelineStage.mm in Sources */,
+				651288AB1D2B0DB40041C324 /* MetalSystemImpl.mm in Sources */,
+				651288641D137C930041C324 /* WindowBounds.cpp in Sources */,
+				6512884D1D0CCB180041C324 /* MetalGpuDescription.mm in Sources */,
+				651283991D0B74630041C324 /* ApplicationSettings.cpp in Sources */,
+				6512836D1D0B63500041C324 /* AVAudioEngineSoundAdapterDescription.mm in Sources */,
+				651283701D0B63500041C324 /* AVAudioEngineSoundBuffer.mm in Sources */,
+				651283731D0B63500041C324 /* AVAudioEngineSoundContext.mm in Sources */,
+				651283751D0B63500041C324 /* AVAudioEngineSoundContextImpl.mm in Sources */,
+				651283781D0B63500041C324 /* AVAudioEngineSoundListener.mm in Sources */,
+				6512837A1D0B63500041C324 /* AVAudioEngineSoundSource.mm in Sources */,
+				6512837D1D0B63500041C324 /* AVAudioEngineSoundSystem.mm in Sources */,
+				651283571D0B63250041C324 /* GCInputGameController.mm in Sources */,
+				651283591D0B63250041C324 /* GCInputSystem.mm in Sources */,
+				651283471D0B63020041C324 /* MacOSInputContext.mm in Sources */,
+				651283491D0B63020041C324 /* MacOSInputSystem.mm in Sources */,
+				6512834B1D0B63020041C324 /* MacOSKeyboard.mm in Sources */,
+				6512834D1D0B63020041C324 /* MacOSMouse.mm in Sources */,
+				6512832D1D0B62D80041C324 /* AAPLObjModel.mm in Sources */,
+				651283331D0B62D80041C324 /* MetalDevices.mm in Sources */,
+				651283351D0B62D80041C324 /* MetalGpuContext.mm in Sources */,
+				651283371D0B62D80041C324 /* MetalImageUtilities.mm in Sources */,
+				651283381D0B62D80041C324 /* MetalMathUtilities.cpp in Sources */,
+				6512833B1D0B62D80041C324 /* MetalSystem.mm in Sources */,
+				651283031D0B62A60041C324 /* ApplicationGlobals.mm in Sources */,
+				651283061D0B62A60041C324 /* DisplayInfo.mm in Sources */,
+				651283081D0B62A60041C324 /* FinjinNSApplicationDelegate.mm in Sources */,
+				6512830A1D0B62A60041C324 /* FinjinNSView.mm in Sources */,
+				6512830C1D0B62A60041C324 /* FinjinNSViewController.mm in Sources */,
+				6512830F1D0B62A60041C324 /* FinjinNSWindowController.mm in Sources */,
+				651283131D0B62A60041C324 /* OSWindow.mm in Sources */,
+				651283141D0B62A60041C324 /* PlatformCapabilities.mm in Sources */,
+				651283191D0B62A60041C324 /* Application.mm in Sources */,
+				651282B11D0B60C60041C324 /* ApplicationViewportDescription.cpp in Sources */,
+				651282B61D0B60C60041C324 /* FinjinPrecompiled.cpp in Sources */,
+				651282BA1D0B60C60041C324 /* FlyingCameraInputBindings.cpp in Sources */,
+				651282BF1D0B60C60041C324 /* InputComponents.cpp in Sources */,
+				651282C11D0B60C60041C324 /* InputConstants.cpp in Sources */,
+				651282C41D0B60C60041C324 /* InputCoordinate.cpp in Sources */,
+				651282C81D0B60C60041C324 /* InputSource.cpp in Sources */,
+				651282CB1D0B60C60041C324 /* JobPipelineStage.cpp in Sources */,
+				651282D01D0B60C60041C324 /* PlatformCapabilities_General.cpp in Sources */,
+				651282D51D0B60C60041C324 /* PVRReader.cpp in Sources */,
+				651282D81D0B60C60041C324 /* SoundFormat.cpp in Sources */,
+				651282DD1D0B60C60041C324 /* StandardGameControllerInputBindings.cpp in Sources */,
+				651282DF1D0B60C60041C324 /* WAVReader.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		651282511D0B5E4A0041C324 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		651282521D0B5E4A0041C324 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		651282541D0B5E4A0041C324 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"~/finjin-3rd-party/cpp/boost",
+					"~/finjin-3rd-party/cpp/eigen",
+					"../../../../../finjin-common/cpp/library/include",
+					../../src,
+					../../src/finjin/engine/internal/app/macos,
+					../../src/finjin/engine/internal,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		651282551D0B5E4A0041C324 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"~/finjin-3rd-party/cpp/boost",
+					"~/finjin-3rd-party/cpp/eigen",
+					"../../../../../finjin-common/cpp/library/include",
+					../../src,
+					../../src/finjin/engine/internal/app/macos,
+					../../src/finjin/engine/internal,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		651282451D0B5E4A0041C324 /* Build configuration list for PBXProject "finjin-engine-lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				651282511D0B5E4A0041C324 /* Debug */,
+				651282521D0B5E4A0041C324 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		651282531D0B5E4A0041C324 /* Build configuration list for PBXNativeTarget "finjin-engine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				651282541D0B5E4A0041C324 /* Debug */,
+				651282551D0B5E4A0041C324 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 651282421D0B5E4A0041C324 /* Project object */;
+}

@@ -1,0 +1,2204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="common" projectFiles="true">
+        <logicalFolder name="f1" displayName="application" projectFiles="true">
+          <itemPath>../../src/finjin/engine/Application.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationDelegate.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationDelegate.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationFileSystem.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationNameFormat.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationSettings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/Application_General.cpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f8" displayName="application-viewport" projectFiles="true">
+          <itemPath>../../src/finjin/engine/ApplicationViewport.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewport.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewportCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewportDelegate.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewportDelegate.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewportDescription.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewportDescription.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewportsController.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ApplicationViewportsController.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f9" displayName="assets" projectFiles="true">
+          <itemPath>../../src/finjin/engine/Asset.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/Asset.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetClass.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetClassFileReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetClassFileReader.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetCountsSettings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetCountsSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetFileReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetFileReader.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetHandle.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetPath.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetPath.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetReadHandle.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetReadHandle.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetReadQueue.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetReadQueue.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetReference.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetReference.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/FinjinSceneAssets.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/FinjinSceneAssets.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/FinjinSceneReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/FinjinSceneReader.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/FinjinSceneTypeNames.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/MemorySettings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/MemorySettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardAssetDocumentChunkNames.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardAssetDocumentChunkNames.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardAssetDocumentPropertyNames.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardAssetDocumentPropertyNames.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardAssetDocumentPropertyValues.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardAssetDocumentPropertyValues.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/StringTable.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/StringTable.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/UserDataTypes.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/UserDataTypes.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="file-formats" projectFiles="true">
+          <itemPath>../../src/finjin/engine/WAVReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/WAVReader.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="gpu" projectFiles="true">
+          <itemPath>../../src/finjin/engine/GenericGpuNumericStructs.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/GenericGpuNumericStructs.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/GpuContextCommonSettings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/GpuContextCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/GpuSerializers.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/GpuSystemCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ShaderFeatures.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ShaderFeatures.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="input" projectFiles="true">
+          <itemPath>../../src/finjin/engine/FlyingCameraInputBindings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/FlyingCameraInputBindings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputBindings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputBindingsSerializer.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputComponents.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputComponents.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputConstants.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputConstants.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputContextCommonSettings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputContextCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputCoordinate.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputCoordinate.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputDeviceSerializer.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputSource.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/InputSource.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/PointerType.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardGameControllerInputBindings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/StandardGameControllerInputBindings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/VRGameControllerInputBindings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/VRGameControllerInputBindings.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f5" displayName="platform" projectFiles="true">
+          <itemPath>../../src/finjin/engine/PlatformCapabilities.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/PlatformCapabilities_General.cpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f6" displayName="sound" projectFiles="true">
+          <itemPath>../../src/finjin/engine/SoundContextCommonSettings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/SoundContextCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/SoundFormat.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/SoundFormat.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/SoundGroup.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/SoundSorter.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/SoundSourceCommon.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f7" displayName="utilities" projectFiles="true">
+          <itemPath>../../src/finjin/engine/Camera.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/Camera.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/EventCollection.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/JobPipelineStage.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/JobPipelineStage.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/OSWindowDefs.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/OSWindowEventListener.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/PerFrameObjectAllocator.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/WindowBounds.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/WindowBounds.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/WindowSize.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/WindowSize.hpp</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f10" displayName="vr" projectFiles="true">
+          <itemPath>../../src/finjin/engine/VRContextCommonSettings.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/VRContextCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/VRSystemCommonSettings.hpp</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="internal" projectFiles="true">
+        <logicalFolder name="f1" displayName="app" projectFiles="true">
+          <logicalFolder name="f1" displayName="linux" projectFiles="true">
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/Application.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/ApplicationGlobals.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/ApplicationGlobals.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/DisplayInfo.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/DisplayInfo.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/FinjinMain.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/FinjinMain.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/GpuContext.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/GpuDescription.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/GpuID.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/GpuSystem.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/InputContext.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/InputSystem.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/OSWindow.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/OSWindow.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/PlatformCapabilities.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/SoundAdapterDescription.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/SoundAdapterID.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/SoundContext.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/SoundSystem.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/XcbConnection.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/XcbConnection.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/XcbWindow.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/app/linux/finjin/engine/XcbWindow.hpp</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="f1" displayName="gpu" projectFiles="true">
+          <logicalFolder name="f1" displayName="vulkan" projectFiles="true">
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanDepthBuffer.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanNamePointers.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.hpp</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="input" projectFiles="true">
+          <logicalFolder name="f1" displayName="linuxinput" projectFiles="true">
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxGameController.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxGameController.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxInputContext.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxInputContext.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxKeyboard.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxKeyboard.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxMouse.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/input/linuxinput/LinuxMouse.hpp</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="sound" projectFiles="true">
+          <logicalFolder name="f1" displayName="openal" projectFiles="true">
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALAdapterDescription.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALAdapterDescription.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALAdapterID.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALContext.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALContext.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALContextImpl.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALContextImpl.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALEffect.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALEffect.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALEffectSlot.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALEffectSlot.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALExtensions.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALExtensions.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALFilter.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALFilter.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALIncludes.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALListener.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALListener.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALSoundBuffer.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALSoundBuffer.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALSoundGroup.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALSoundSource.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALSoundSource.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALSystem.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/OpenALSystem.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/sound/openal/efx-copy.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <itemPath>../../src/finjin/engine/FinjinEngineLibrary.hpp</itemPath>
+      <itemPath>../../src/finjin/engine/FinjinPrecompiled.cpp</itemPath>
+      <itemPath>../../src/finjin/engine/FinjinPrecompiled.hpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <architecture>2</architecture>
+          <standard>11</standard>
+          <incDir>
+            <pElem>/home/derek/Downloads/VulkanSDK/1.0.13.0/x86_64/include</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/boost</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/eigen</pElem>
+            <pElem>../../../../../finjin-common/cpp/library/include</pElem>
+            <pElem>../../src</pElem>
+            <pElem>../../src/finjin/engine</pElem>
+            <pElem>../../src/finjin/engine/internal/app/linux</pElem>
+            <pElem>../../src/finjin/engine/internal</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>VK_NO_PROTOTYPES</Elem>
+            <Elem>VK_USE_PLATFORM_XCB_KHR</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+        </ccTool>
+        <archiverTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libfinjin-engine.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="../../src/finjin/engine/Application.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationDelegate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationDelegate.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationFileSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationNameFormat.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewport.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewport.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDelegate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDelegate.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDescription.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportsController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportsController.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Application_General.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Asset.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Asset.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetClass.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetClassFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetClassFileReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetCountsSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetCountsSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetFileReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetHandle.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetPath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetPath.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadHandle.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadHandle.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadQueue.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadQueue.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReference.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReference.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Camera.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Camera.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/EventCollection.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinEngineLibrary.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinPrecompiled.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinPrecompiled.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneAssets.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneAssets.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneTypeNames.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FlyingCameraInputBindings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FlyingCameraInputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericGpuNumericStructs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericGpuNumericStructs.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuSerializers.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuSystemCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputBindingsSerializer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputComponents.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputComponents.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputConstants.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputConstants.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputCoordinate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputCoordinate.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputDeviceSerializer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputSource.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/JobPipelineStage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/JobPipelineStage.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/MemorySettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/MemorySettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/OSWindowDefs.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/OSWindowEventListener.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PerFrameObjectAllocator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PlatformCapabilities.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PlatformCapabilities_General.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PointerType.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatures.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatures.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundFormat.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundFormat.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundGroup.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundSorter.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundSourceCommon.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentChunkNames.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentChunkNames.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyNames.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyNames.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyValues.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyValues.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardGameControllerInputBindings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardGameControllerInputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StringTable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StringTable.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/UserDataTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/UserDataTypes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRGameControllerInputBindings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRGameControllerInputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRSystemCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WAVReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WAVReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowBounds.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowBounds.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowSize.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowSize.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/Application.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/ApplicationGlobals.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/ApplicationGlobals.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/DisplayInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/DisplayInfo.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/FinjinMain.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/FinjinMain.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuID.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/InputContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/InputSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/OSWindow.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/OSWindow.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/PlatformCapabilities.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundAdapterDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundAdapterID.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbConnection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbConnection.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbWindow.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbWindow.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDepthBuffer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanNamePointers.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxGameController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxGameController.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputContext.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxKeyboard.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxKeyboard.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxMouse.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxMouse.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALAdapterDescription.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALAdapterDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALAdapterID.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContext.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContextImpl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContextImpl.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffect.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffect.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffectSlot.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffectSlot.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALExtensions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALExtensions.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALFilter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALFilter.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALIncludes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALListener.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALListener.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundBuffer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundBuffer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundGroup.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundSource.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/efx-copy.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <architecture>2</architecture>
+          <standard>11</standard>
+          <incDir>
+            <pElem>/home/derek/Downloads/VulkanSDK/1.0.13.0/x86_64/include</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/boost</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/eigen</pElem>
+            <pElem>../../../../../finjin-common/cpp/library/include</pElem>
+            <pElem>../../src</pElem>
+            <pElem>../../src/finjin/engine</pElem>
+            <pElem>../../src/finjin/engine/internal/app/linux</pElem>
+            <pElem>../../src/finjin/engine/internal</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>VK_NO_PROTOTYPES</Elem>
+            <Elem>VK_USE_PLATFORM_XCB_KHR</Elem>
+          </preprocessorList>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libfinjin-engine.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="../../src/finjin/engine/Application.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationDelegate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationDelegate.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationFileSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationNameFormat.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewport.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewport.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDelegate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDelegate.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDescription.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportsController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ApplicationViewportsController.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Application_General.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Asset.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Asset.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetClass.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetClassFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetClassFileReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetCountsSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetCountsSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetFileReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetFileReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetHandle.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetPath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetPath.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadHandle.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadHandle.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadQueue.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReadQueue.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReference.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetReference.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Camera.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/Camera.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/EventCollection.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinEngineLibrary.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinPrecompiled.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinPrecompiled.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneAssets.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneAssets.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FinjinSceneTypeNames.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FlyingCameraInputBindings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/FlyingCameraInputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericGpuNumericStructs.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericGpuNumericStructs.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuSerializers.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GpuSystemCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputBindingsSerializer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputComponents.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputComponents.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputConstants.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputConstants.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputCoordinate.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputCoordinate.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputDeviceSerializer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/InputSource.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/JobPipelineStage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/JobPipelineStage.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/MemorySettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/MemorySettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/OSWindowDefs.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/OSWindowEventListener.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PerFrameObjectAllocator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PlatformCapabilities.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PlatformCapabilities_General.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PointerType.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatures.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatures.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundFormat.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundFormat.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundGroup.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundSorter.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/SoundSourceCommon.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentChunkNames.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentChunkNames.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyNames.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyNames.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyValues.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardAssetDocumentPropertyValues.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardGameControllerInputBindings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StandardGameControllerInputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StringTable.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/StringTable.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/UserDataTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/UserDataTypes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRContextCommonSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRContextCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRGameControllerInputBindings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRGameControllerInputBindings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/VRSystemCommonSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WAVReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WAVReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowBounds.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowBounds.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowSize.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/WindowSize.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/Application.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/ApplicationGlobals.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/ApplicationGlobals.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/DisplayInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/DisplayInfo.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/FinjinMain.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/FinjinMain.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuID.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/GpuSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/InputContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/InputSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/OSWindow.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/OSWindow.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/PlatformCapabilities.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundAdapterDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundAdapterID.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/SoundSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbConnection.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbConnection.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbWindow.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/app/linux/finjin/engine/XcbWindow.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDepthBuffer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanNamePointers.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxGameController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxGameController.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputContext.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxKeyboard.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxKeyboard.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxMouse.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/input/linuxinput/LinuxMouse.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALAdapterDescription.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALAdapterDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALAdapterID.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContext.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContext.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContextImpl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALContextImpl.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffect.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffect.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffectSlot.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALEffectSlot.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALExtensions.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALExtensions.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALFilter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALFilter.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALIncludes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALListener.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALListener.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundBuffer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundBuffer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundGroup.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundSource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSoundSource.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/OpenALSystem.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/sound/openal/efx-copy.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

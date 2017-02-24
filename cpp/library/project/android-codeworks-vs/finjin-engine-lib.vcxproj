@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="NsightTegraProject">
+    <NsightTegraProjectRevisionNumber>11</NsightTegraProjectRevisionNumber>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Tegra-Android">
+      <Configuration>Debug</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Tegra-Android">
+      <Configuration>Release</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shipping|Tegra-Android">
+      <Configuration>Shipping</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewport.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportDelegate.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportDescription.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportsController.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\Asset.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetClassFileReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetCountsSettings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetPath.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetFileReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetReference.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetReadHandle.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetReadQueue.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\Camera.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\FinjinSceneAssets.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\FinjinSceneReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\GenericGpuNumericStructs.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\GpuContextCommonSettings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\InputContextCommonSettings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\PlatformCapabilities.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\Application.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\FinjinPrecompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">FinjinPrecompiled.cpp</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">FinjinPrecompiled.cpp</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">FinjinPrecompiled.cpp</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\FlyingCameraInputBindings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\InputComponents.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\InputConstants.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\InputCoordinate.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\InputSource.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuDescription.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidAccelerometer.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidGameController.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputContext.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputDevice.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputSystem.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidKeyboard.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidMouse.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESAdapterDescription.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESContext.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESListener.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundBuffer.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundSource.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSystem.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\JobPipelineStage.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\MemorySettings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\PlatformCapabilities_General.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ShaderFeatureFlag.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ShaderFeatures.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\SoundContextCommonSettings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\SoundFormat.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentChunkNames.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyNames.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\StringTable.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\UserDataTypes.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\VRGameControllerInputBindings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\WindowBounds.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\Application_General.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationDelegate.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ApplicationSettings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\WindowSize.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\finjin\engine\AssetClass.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationFileSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationNameFormat.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewport.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportCommonSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportDelegate.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportDescription.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportsController.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\Asset.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetClassFileReader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetCountsSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetCreationCapability.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetHandle.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetPath.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetFileReader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetReference.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetReadHandle.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\AssetReadQueue.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\Camera.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\CameraState.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ContextEventInfo.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\FinjinSceneAssets.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\FinjinSceneReader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\GenericGpuNumericStructs.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\GpuSerializers.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\GpuSystemCommonSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputSystemCommonSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuDescription.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuID.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterDescription.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterID.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\FinjinPrecompiled.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\EventCollection.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\FinjinEngineLibrary.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\FlyingCameraInputBindings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputBindings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputBindingsSerializer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputComponents.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputConstants.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputContextCommonSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputCoordinate.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputDeviceSerializer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\InputSource.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDepthBuffer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuDescription.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanNamePointers.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPrimaryQueues.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanQueueFamilyIndexes.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSurfaceFormats.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidAccelerometer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidGameController.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputDevice.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidInputSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidKeyboard.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidMouse.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESAdapterDescription.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESAdapterID.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESListener.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundBuffer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundGroup.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundSource.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundSourceVoice.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESUtilities.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\JobPipelineStage.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\LightState.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\MemorySettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\OSWindowDefs.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\OSWindowEventListener.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\PerFrameObjectAllocator.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\PlatformCapabilities.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\PointerType.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ShaderFeatureFlag.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ShaderFeatures.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\SoundContextCommonSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\SoundFormat.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\SoundGroup.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\SoundSorter.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\SoundSourceCommon.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\SoundSystemCommonSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentChunkNames.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyNames.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\StringTable.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\UserDataTypes.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\VRGameControllerInputBindings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\WindowBounds.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationDelegate.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ApplicationSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\WindowSize.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{64AFD5DD-5729-4539-B473-5DEBEE3BFC0E}</ProjectGuid>
+    <RootNamespace>finjin_engine_lib</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-23</AndroidTargetAPI>
+    <AndroidMinAPI>android-23</AndroidMinAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-23</AndroidTargetAPI>
+    <AndroidMinAPI>android-23</AndroidMinAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <AndroidTargetAPI>android-23</AndroidTargetAPI>
+    <AndroidMinAPI>android-23</AndroidMinAPI>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">
+    <TargetName>libfinjin-engine</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">
+    <TargetName>libfinjin-engine</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">
+    <TargetName>libfinjin-engine</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>
+      </CppLanguageStandard>
+      <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.13.0\Include;C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <GccExceptionHandling>true</GccExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>FinjinPrecompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>
+      </CppLanguageStandard>
+      <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.13.0\Include;C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <GccExceptionHandling>true</GccExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>FinjinPrecompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">
+    <ClCompile>
+      <CppLanguageStandard>
+      </CppLanguageStandard>
+      <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.13.0\Include;C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <GccExceptionHandling>true</GccExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>FinjinPrecompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
