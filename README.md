@@ -14,10 +14,10 @@ The Finjin engine is a multiplatform 3D simulation engine suitable for use in th
   * When will this project be ready for production use? Sometime in 2017.
   
 ## Project Dependencies
-* finjin-common
+* [finjin-common](https://github.com/finjin/finjin-common)
 
 ## Documentation
-* finjin-documentation
+* [finjin-documentation](https://github.com/finjin/finjin-documentation)
 
 ## Repository Structure
 ```
