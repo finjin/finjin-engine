@@ -2,7 +2,7 @@
 The Finjin engine is a multiplatform 3D simulation engine suitable for use in the creation of games and other interactive 3D applications.
 
 ## Features
-  * Natively supports all major desktop and mobile operating systems.
+  * Natively supports Windows (Win32 and UWP), with support for other desktop and mobile operating systems coming soon.
   * Driven by a multithreaded job and rendering system that automatically scales work across all CPU cores.
   * Utilizes the newest 3D graphics interfaces for improved graphics performance.
   * Supports multiple windows across multiple monitors.
