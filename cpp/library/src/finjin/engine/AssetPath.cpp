@@ -14,6 +14,7 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "AssetPath.hpp"
+#include "finjin/common/BitArray.hpp"
 #include "finjin/common/DebugLog.hpp"
 
 using namespace Finjin::Common;

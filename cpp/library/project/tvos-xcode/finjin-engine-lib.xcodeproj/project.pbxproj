@@ -84,6 +84,7 @@
 		65430E651DF9AE5400588409 /* AssetReference.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E621DF9AE5400588409 /* AssetReference.cpp */; };
 		657AA1601E420EBA004ADA22 /* ShaderFeatures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA15E1E420EBA004ADA22 /* ShaderFeatures.cpp */; };
 		657AA1721E44AAFE004ADA22 /* ShaderFeatureFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA1701E44AAFE004ADA22 /* ShaderFeatureFlag.cpp */; };
+		65CCE90C1E6216740028F91B /* AssetClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65CCE90B1E6216740028F91B /* AssetClass.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -298,6 +299,9 @@
 		657AA1701E44AAFE004ADA22 /* ShaderFeatureFlag.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatureFlag.cpp; path = ../../src/finjin/engine/ShaderFeatureFlag.cpp; sourceTree = SOURCE_ROOT; };
 		657AA1711E44AAFE004ADA22 /* ShaderFeatureFlag.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ShaderFeatureFlag.hpp; path = ../../src/finjin/engine/ShaderFeatureFlag.hpp; sourceTree = SOURCE_ROOT; };
 		657AA17A1E47FA43004ADA22 /* AssetCreationCapability.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetCreationCapability.hpp; path = ../../src/finjin/engine/AssetCreationCapability.hpp; sourceTree = SOURCE_ROOT; };
+		65CCE90B1E6216740028F91B /* AssetClass.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetClass.cpp; path = ../../src/finjin/engine/AssetClass.cpp; sourceTree = SOURCE_ROOT; };
+		65CCE9131E625A800028F91B /* CameraState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CameraState.hpp; path = ../../src/finjin/engine/CameraState.hpp; sourceTree = SOURCE_ROOT; };
+		65CCE9141E625A800028F91B /* LightState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LightState.hpp; path = ../../src/finjin/engine/LightState.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -316,6 +320,7 @@
 			children = (
 				65430E611DF9AE5400588409 /* Asset.cpp */,
 				650FA40F1D5BB0B700535D8D /* Asset.hpp */,
+				65CCE90B1E6216740028F91B /* AssetClass.cpp */,
 				650FA4301D5BB28000535D8D /* AssetClass.hpp */,
 				650FA4311D5BB28000535D8D /* AssetClassFileReader.cpp */,
 				650FA4321D5BB28000535D8D /* AssetClassFileReader.hpp */,
@@ -500,9 +505,11 @@
 			children = (
 				6508AFF21E358A4000EB826E /* Camera.cpp */,
 				6508AFF31E358A4000EB826E /* Camera.hpp */,
+				65CCE9131E625A800028F91B /* CameraState.hpp */,
 				6512851B1D0B818E0041C324 /* EventCollection.hpp */,
 				6512852D1D0B818E0041C324 /* JobPipelineStage.cpp */,
 				6512852E1D0B818E0041C324 /* JobPipelineStage.hpp */,
+				65CCE9141E625A800028F91B /* LightState.hpp */,
 				651285301D0B818E0041C324 /* OSWindowDefs.hpp */,
 				651285311D0B818E0041C324 /* OSWindowEventListener.hpp */,
 				6508AFF81E358A4000EB826E /* PerFrameObjectAllocator.hpp */,
@@ -749,6 +756,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65CCE90C1E6216740028F91B /* AssetClass.cpp in Sources */,
 				657AA1721E44AAFE004ADA22 /* ShaderFeatureFlag.cpp in Sources */,
 				657AA1601E420EBA004ADA22 /* ShaderFeatures.cpp in Sources */,
 				6508AFFB1E358A4000EB826E /* AssetCountsSettings.cpp in Sources */,

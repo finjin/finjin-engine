@@ -15,12 +15,10 @@
 
 
 //Includes---------------------------------------------------------------------
-#include "finjin/common/BitArray.hpp"
 #include "finjin/common/ByteOrder.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/EnumValues.hpp"
 #include "finjin/common/Error.hpp"
-#include "finjin/common/FileOperationTypes.hpp"
 #include "finjin/common/LayoutDirection.hpp"
 #include "finjin/common/Path.hpp"
 #include "finjin/engine/AssetClass.hpp"
@@ -47,7 +45,7 @@ namespace Finjin { namespace Engine {
         SCREEN_DENSITY, //ldpi, mdpi, hdpi, xhdpi, nodpi, tvdpi, anydpi
         CPU_ARCHITECTURE, //cpu_<arch>. Example: cpu_x86, cpu_x64, cpu_arm32, cpu_arm64, etc...
         CPU_BYTE_ORDER, //bigendian, littleendian
-        OPERATING_SYSTEM, //windows, macos, ios, tvos, carplay, linux...
+        OPERATING_SYSTEM, //windows, macos, ios, tvos, carplay, linux, android ...
         OPERATING_SYSTEM_VERSION, //v_1_0, v_14, etc...
         APPLICATION_PLATFORM, //win32, uwp
         GPU_SYSTEM, //d3d12, vulkan, metal

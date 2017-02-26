@@ -6942,13 +6942,13 @@ void FinjinCommonDataChunkReaderCallbacksState::Create(const FinjinCommonDataChu
         }
 
         auto allZero = true;
-        for (size_t i = 0; i < settings.assetCountsByClass.size(); i++)
+        for (size_t i = 0; i < settings.assetCounts.size(); i++)
         {
-            if (settings.assetCountsByClass[i] > 0)
+            if (settings.assetCounts[i] > 0)
             {
                 allZero = false;
 
-                if (!this->assetBucketsByClass[i].assetHandlesByName.Create(settings.assetCountsByClass[i], settings.assetCountsByClass[i], settings.allocator, settings.allocator))
+                if (!this->assetBucketsByClass[i].assetHandlesByName.Create(settings.assetCounts[i], settings.assetCounts[i], settings.allocator, settings.allocator))
                 {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create assets by name lookup for '%1%'.", AssetClassUtilities::ToString(i)));
                     return;

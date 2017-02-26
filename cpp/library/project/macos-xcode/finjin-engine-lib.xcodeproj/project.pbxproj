@@ -85,8 +85,10 @@
 		65430E6B1DF9AF5D00588409 /* AssetReference.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E681DF9AF5D00588409 /* AssetReference.cpp */; };
 		657AA1641E420EE8004ADA22 /* ShaderFeatures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */; };
 		657AA16E1E44AACE004ADA22 /* ShaderFeatureFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */; };
-		657AA1791E47FA21004ADA22 /* AssetCreationCapability.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 657AA1781E47FA21004ADA22 /* AssetCreationCapability.hpp */; };
 		65C860051D90F3DD00348F9E /* MemorySettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C860011D90F3DD00348F9E /* MemorySettings.cpp */; };
+		65CCE9081E6214F30028F91B /* AssetClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65CCE9071E6214F30028F91B /* AssetClass.cpp */; };
+		65CCE90F1E625A230028F91B /* CameraState.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 65CCE90D1E625A230028F91B /* CameraState.hpp */; };
+		65CCE9101E625A230028F91B /* LightState.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 65CCE90E1E625A230028F91B /* LightState.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -294,6 +296,9 @@
 		657AA1781E47FA21004ADA22 /* AssetCreationCapability.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetCreationCapability.hpp; path = ../../src/finjin/engine/AssetCreationCapability.hpp; sourceTree = SOURCE_ROOT; };
 		65C860011D90F3DD00348F9E /* MemorySettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MemorySettings.cpp; path = ../../src/finjin/engine/MemorySettings.cpp; sourceTree = SOURCE_ROOT; };
 		65C860021D90F3DD00348F9E /* MemorySettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MemorySettings.hpp; path = ../../src/finjin/engine/MemorySettings.hpp; sourceTree = SOURCE_ROOT; };
+		65CCE9071E6214F30028F91B /* AssetClass.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetClass.cpp; path = ../../src/finjin/engine/AssetClass.cpp; sourceTree = SOURCE_ROOT; };
+		65CCE90D1E625A230028F91B /* CameraState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CameraState.hpp; path = ../../src/finjin/engine/CameraState.hpp; sourceTree = SOURCE_ROOT; };
+		65CCE90E1E625A230028F91B /* LightState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LightState.hpp; path = ../../src/finjin/engine/LightState.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -312,6 +317,7 @@
 			children = (
 				65430E671DF9AF5D00588409 /* Asset.cpp */,
 				650FA3C21D5BA0C400535D8D /* Asset.hpp */,
+				65CCE9071E6214F30028F91B /* AssetClass.cpp */,
 				650FA3C11D5BA0C400535D8D /* AssetClass.hpp */,
 				650FA3C31D5BA0C400535D8D /* AssetClassFileReader.cpp */,
 				650FA3C41D5BA0C400535D8D /* AssetClassFileReader.hpp */,
@@ -587,9 +593,11 @@
 			children = (
 				6508AFB81E34C70700EB826E /* Camera.cpp */,
 				6508AFA91E34C66600EB826E /* Camera.hpp */,
+				65CCE90D1E625A230028F91B /* CameraState.hpp */,
 				651282771D0B60C60041C324 /* EventCollection.hpp */,
 				6512828A1D0B60C60041C324 /* JobPipelineStage.cpp */,
 				6512828B1D0B60C60041C324 /* JobPipelineStage.hpp */,
+				65CCE90E1E625A230028F91B /* LightState.hpp */,
 				6512828D1D0B60C60041C324 /* OSWindowDefs.hpp */,
 				6512828E1D0B60C60041C324 /* OSWindowEventListener.hpp */,
 				650FA33B1D361E1200535D8D /* ResourcePoolDescriptor.hpp */,
@@ -701,7 +709,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				657AA1791E47FA21004ADA22 /* AssetCreationCapability.hpp in Headers */,
+				65CCE90F1E625A230028F91B /* CameraState.hpp in Headers */,
+				65CCE9101E625A230028F91B /* LightState.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,6 +770,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65CCE9081E6214F30028F91B /* AssetClass.cpp in Sources */,
 				657AA16E1E44AACE004ADA22 /* ShaderFeatureFlag.cpp in Sources */,
 				657AA1641E420EE8004ADA22 /* ShaderFeatures.cpp in Sources */,
 				6508AFC21E34C7D600EB826E /* UserDataTypes.cpp in Sources */,

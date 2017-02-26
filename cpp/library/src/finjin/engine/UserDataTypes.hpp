@@ -741,7 +741,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<PropertyInstance*> propertyInstances;
     };
 
-    class ASSET_CLASS(UserDataTypes) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(UserDataTypes) : public AllocatedClass
     {
     public:
         using Super = AllocatedClass;

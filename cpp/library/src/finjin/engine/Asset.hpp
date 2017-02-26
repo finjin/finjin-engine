@@ -19,14 +19,13 @@
 #include "finjin/engine/AssetClass.hpp"
 
 
+//Macros-----------------------------------------------------------------------
+#define FINJIN_ASSET_CLASS(cls) cls //Macro used to mark classes. Does nothing except make it easy to search through code
+
+
 //Classes----------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    using namespace Finjin::Common;    
-
-    //Macro used to mark classes. Does nothing except make it easy to search through code
-    #define ASSET_CLASS(cls) cls
-    
     //Generic pointer to corresponding "hardware" asset, if there is one
     typedef void VoidHardwareAsset;
     

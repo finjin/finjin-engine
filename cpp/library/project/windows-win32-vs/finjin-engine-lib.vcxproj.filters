@@ -903,5 +903,8 @@
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12Light.cpp">
       <Filter>Source Files\internal\gpu\d3d12\resources</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\AssetClass.cpp">
+      <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

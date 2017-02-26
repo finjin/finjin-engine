@@ -189,6 +189,7 @@
     <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportDescription.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportsController.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\Asset.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetClass.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetClassFileReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetCountsSettings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetPath.cpp" />

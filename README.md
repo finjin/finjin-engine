@@ -8,7 +8,7 @@ The Finjin engine is a multiplatform 3D simulation engine suitable for use in th
   * Supports multiple windows across multiple monitors.
   * Accepts inputs from a variety of input devices using a configuraton-driven input binding system.
   
-## Quick FAQ
+## Mini FAQ
   * Is this project functional? Yes.
   * Is this project ready for production use? No.
   * When will this project be ready for production use? Sometime in 2017.

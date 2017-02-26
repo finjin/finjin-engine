@@ -23,7 +23,7 @@ using namespace Finjin::Engine;
 //Implementation---------------------------------------------------------------
 AssetCountsSettings::AssetCountsSettings()
 {
-    for (auto& item : this->countsByClass)
+    for (auto& item : this->assetCounts)
         item = 0;
 }
 
@@ -49,7 +49,7 @@ void AssetCountsSettings::ParseSettings(const ByteBufferReader& configFileBuffer
                     return;
                 }
                 
-                this->countsByClass[assetClass] = Convert::ToInteger(value.ToString(), this->countsByClass[assetClass]);
+                this->assetCounts[assetClass] = Convert::ToInteger(value.ToString(), this->assetCounts[assetClass]);
                 
                 break;
             }

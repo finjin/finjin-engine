@@ -35,7 +35,7 @@ namespace Finjin { namespace Engine {
         void ParseSettings(const ByteBufferReader& configFileBuffer, const Path& assetFilePath, Error& error);
 
     public:
-        EnumValues<AssetClass, AssetClass::COUNT, size_t> countsByClass;
+        EnumValues<AssetClass, AssetClass::COUNT, size_t> assetCounts;
     };
 
 } }

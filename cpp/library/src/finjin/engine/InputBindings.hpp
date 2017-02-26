@@ -256,7 +256,7 @@ namespace Finjin { namespace Engine {
      * that is passed to AddAction().
      */
     template <typename Actions, size_t maxBindings = 100>
-    class ASSET_CLASS(InputBindings)
+    class FINJIN_ASSET_CLASS(InputBindings)
     {
     public:
         using InputActionID = int;

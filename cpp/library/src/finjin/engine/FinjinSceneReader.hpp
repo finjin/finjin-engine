@@ -151,7 +151,7 @@ namespace Finjin { namespace Engine {
         {
             this->allocator = nullptr;
 
-            for (auto& count : assetCountsByClass)
+            for (auto& count : assetCounts)
                 count = 0;
 
             this->cacheFullFilePaths = true;
@@ -163,7 +163,7 @@ namespace Finjin { namespace Engine {
 
         Allocator* allocator; //Used to allocate new objects, buffers, etc, while reading a file
 
-        EnumValues<AssetClass, AssetClass::COUNT, size_t> assetCountsByClass; //At least one must be set to > 0 in order for initialization to succeed
+        EnumValues<AssetClass, AssetClass::COUNT, size_t> assetCounts; //At least one must be set to > 0 in order for initialization to succeed
 
         bool cacheFullFilePaths; //Indicates whether full file paths will be cached when keeping track of which file paths have been encountered. If false, hashes are used
         bool createFilesToLoadQueue; //Indicates whether a queue of file names that should be loaded will be created and maintained

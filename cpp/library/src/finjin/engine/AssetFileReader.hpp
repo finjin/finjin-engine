@@ -15,6 +15,7 @@
 
 
 //Includes---------------------------------------------------------------------
+#include "finjin/common/BitArray.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/VirtualFileSystemOperationQueue.hpp"
 #include "finjin/engine/AssetPath.hpp"

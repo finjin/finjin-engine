@@ -439,10 +439,10 @@ void Application::Initialize(Error& error)
     //Read and process boot files
     if (this->applicationDelegate->GetBootFileNameCount() > 0)
     {
-        for (size_t i = 0; i < this->applicationDelegate->GetBootFileNameCount(); i++)
+        for (size_t fileIndex = 0; fileIndex < this->applicationDelegate->GetBootFileNameCount(); fileIndex++)
         {
             auto required = false;
-            auto& bootFileName = this->applicationDelegate->GetBootFileName(i, required);
+            auto& bootFileName = this->applicationDelegate->GetBootFileName(fileIndex, required);
 
             //Boot files are read from the assets file system
             auto result = this->fileSystems[ApplicationFileSystem::READ_APPLICATION_ASSETS].Read(bootFileName, this->configFileBuffer);
@@ -722,15 +722,15 @@ void Application::Initialize(Error& error)
     }
 
     //Generic application settings
-    for (size_t i = 0; i < this->applicationDelegate->GetSettingsFileNameCount(); i++)
+    for (size_t fileIndex = 0; fileIndex < this->applicationDelegate->GetSettingsFileNameCount(); fileIndex++)
     {
         auto required = false;
-        auto& settingsFileName = this->applicationDelegate->GetSettingsFileName(i, required);
+        auto& settingsFileName = this->applicationDelegate->GetSettingsFileName(fileIndex, required);
 
         auto result = this->assetClassFileReaders[AssetClass::SETTINGS].ReadAsset(this->configFileBuffer, settingsFileName);
         if (result == FileOperationResult::SUCCESS)
         {
-            this->applicationDelegate->ReadSettings(i, this->configFileBuffer, error);
+            this->applicationDelegate->ReadSettings(fileIndex, this->configFileBuffer, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to process '%1%' settings file.", settingsFileName.ToUriString()));
@@ -867,9 +867,9 @@ void Application::Initialize(Error& error)
             FINJIN_SET_ERROR(error, "Failed to assign camel case name to working main thread name.");
             return;
         }
-        if (this->mainThreadName.append("MainThread").HasError())
+        if (this->mainThreadName.append("-main-thread").HasError())
         {
-            FINJIN_SET_ERROR(error, "Failed to append 'MainThread' to working main thread name.");
+            FINJIN_SET_ERROR(error, "Failed to append '-main-thread' to working main thread name.");
             return;
         }
         ThisThread::SetName(this->mainThreadName);
@@ -1099,8 +1099,8 @@ void Application::WindowClosing(OSWindow* osWindow)
 
 bool Application::WindowOnDropFiles(OSWindow* osWindow, const Path* fileNames, size_t count)
 {
-    for (size_t i = 0; i < count; i++)
-        FINJIN_DEBUG_LOG_INFO("Dropped: %1%", fileNames[i]);
+    for (size_t droppedFileIndex = 0; droppedFileIndex < count; droppedFileIndex++)
+        FINJIN_DEBUG_LOG_INFO("Dropped: %1%", fileNames[droppedFileIndex]);
     
     osWindow->Raise();
 

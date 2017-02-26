@@ -164,7 +164,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<int32_t> int32Values;
     };
 
-    class ASSET_CLASS(FinjinTexture) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinTexture) : public AllocatedClass
     {
     public:
         FinjinTexture(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -177,7 +177,7 @@ namespace Finjin { namespace Engine {
         VoidHardwareAsset* gpuTexture;
     };
 
-    class ASSET_CLASS(FinjinSound) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinSound) : public AllocatedClass
     {
     public:
         FinjinSound(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -188,7 +188,7 @@ namespace Finjin { namespace Engine {
         ByteBuffer fileBytes;
     };
     
-    class ASSET_CLASS(FinjinShader) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinShader) : public AllocatedClass
     {
     public:
         FinjinShader(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -275,7 +275,7 @@ namespace Finjin { namespace Engine {
     template <typename T>
     using QuerySceneObjectsResult = IntrusiveSingleListResult<QuerySceneObjectsList<T> >;
 
-    class ASSET_CLASS(FinjinMaterial) : public FinjinSceneObjectBase
+    class FINJIN_ASSET_CLASS(FinjinMaterial) : public FinjinSceneObjectBase
     {
     public:
         FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinMaterial, FinjinSceneObjectBase)
@@ -366,7 +366,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<FinjinMeshSkeletonBone*> childBonePointers;
     };
 
-    class ASSET_CLASS(FinjinMeshSkeletonAnimation) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinMeshSkeletonAnimation) : public AllocatedClass
     {
     public:
         FinjinMeshSkeletonAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -390,7 +390,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<Bone> bones;
     };
 
-    class ASSET_CLASS(FinjinMeshSkeleton) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinMeshSkeleton) : public AllocatedClass
     {
     public:
         FinjinMeshSkeleton(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -406,7 +406,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<AssetHandle<Animation> > animationHandles;
     };
 
-    class ASSET_CLASS(FinjinMeshMorphAnimation) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinMeshMorphAnimation) : public AllocatedClass
     {
     public:
         FinjinMeshMorphAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -431,7 +431,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<Subanimation> subanimations;
     };
 
-    class ASSET_CLASS(FinjinMeshPoseAnimation) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinMeshPoseAnimation) : public AllocatedClass
     {
     public:
         FinjinMeshPoseAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -456,7 +456,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<Subanimation> subanimations;
     };
 
-    class ASSET_CLASS(FinjinMesh) : public FinjinSceneObjectBase
+    class FINJIN_ASSET_CLASS(FinjinMesh) : public FinjinSceneObjectBase
     {
     public:
         FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinMesh, FinjinSceneObjectBase)
@@ -657,7 +657,7 @@ namespace Finjin { namespace Engine {
         ShaderFeatureFlag gpuMeshFlags;
     };
     
-    class ASSET_CLASS(FinjinPrefab) : public FinjinSceneObjectBase
+    class FINJIN_ASSET_CLASS(FinjinPrefab) : public FinjinSceneObjectBase
     {
     public:
         FinjinPrefab(Allocator* allocator) : FinjinSceneObjectBase(allocator)
@@ -745,7 +745,7 @@ namespace Finjin { namespace Engine {
         VoidHardwareAsset* gpuLight;
     };
 
-    class ASSET_CLASS(FinjinNodeAnimation) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(FinjinNodeAnimation) : public AllocatedClass
     {
     public:
         FinjinNodeAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -942,7 +942,7 @@ namespace Finjin { namespace Engine {
         AllocatedVector<FinjinSceneNode*> sceneNodes;
     };
 
-    class ASSET_CLASS(FinjinScene) : public FinjinSceneObjectBase
+    class FINJIN_ASSET_CLASS(FinjinScene) : public FinjinSceneObjectBase
     {
     public:
         using Super = FinjinSceneObjectBase;

@@ -29,7 +29,7 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class ASSET_CLASS(StringTable) : public AllocatedClass
+    class FINJIN_ASSET_CLASS(StringTable) : public AllocatedClass
     {
     public:
         enum { MAX_INSTANCES = 2 };
