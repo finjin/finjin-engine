@@ -34,7 +34,7 @@
     <Filter Include="Source Files\common\application">
       <UniqueIdentifier>{7fe40f4e-1637-4af9-8100-6524e0db6450}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\common\file-formats">
+    <Filter Include="Source Files\common\external-file-formats">
       <UniqueIdentifier>{eebe36d5-cebc-4eb2-95a4-1f860f47a2c9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\common\gpu">
@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\ApplicationViewport.cpp">
       <Filter>Source Files\common\application-viewport</Filter>
@@ -279,7 +279,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\ApplicationViewport.hpp">
       <Filter>Source Files\common\application-viewport</Filter>

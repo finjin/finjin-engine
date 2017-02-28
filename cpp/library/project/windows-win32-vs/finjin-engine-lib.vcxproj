@@ -159,7 +159,7 @@
     <ClInclude Include="..\..\src\finjin\engine\PerFrameObjectAllocator.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\PlatformCapabilities.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\PointerType.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\ResourcePoolDescriptor.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ResourcePoolDescription.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ShaderFeatureFlag.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ShaderFeatures.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\SoundContextCommonSettings.hpp" />

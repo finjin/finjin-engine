@@ -115,7 +115,7 @@
 		6508B0081E358B1900EB826E /* FinjinSceneTypeNames.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FinjinSceneTypeNames.hpp; path = ../../src/finjin/engine/FinjinSceneTypeNames.hpp; sourceTree = SOURCE_ROOT; };
 		650FA3491D36210400535D8D /* GpuContextCommonSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GpuContextCommonSettings.cpp; path = ../../src/finjin/engine/GpuContextCommonSettings.cpp; sourceTree = SOURCE_ROOT; };
 		650FA34A1D36210400535D8D /* InputContextCommonSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = InputContextCommonSettings.cpp; path = ../../src/finjin/engine/InputContextCommonSettings.cpp; sourceTree = SOURCE_ROOT; };
-		650FA34B1D36210400535D8D /* ResourcePoolDescriptor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ResourcePoolDescriptor.hpp; path = ../../src/finjin/engine/ResourcePoolDescriptor.hpp; sourceTree = SOURCE_ROOT; };
+		650FA34B1D36210400535D8D /* ResourcePoolDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ResourcePoolDescription.hpp; path = ../../src/finjin/engine/ResourcePoolDescription.hpp; sourceTree = SOURCE_ROOT; };
 		650FA34C1D36210400535D8D /* SoundContextCommonSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SoundContextCommonSettings.cpp; path = ../../src/finjin/engine/SoundContextCommonSettings.cpp; sourceTree = SOURCE_ROOT; };
 		650FA3591D3737E300535D8D /* GenericGpuNumericStructs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GenericGpuNumericStructs.cpp; path = ../../src/finjin/engine/GenericGpuNumericStructs.cpp; sourceTree = SOURCE_ROOT; };
 		650FA35A1D3737E300535D8D /* GenericGpuNumericStructs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GenericGpuNumericStructs.hpp; path = ../../src/finjin/engine/GenericGpuNumericStructs.hpp; sourceTree = SOURCE_ROOT; };
@@ -430,7 +430,7 @@
 				6512850D1D0B81670041C324 /* application */,
 				651285061D0B813C0041C324 /* application-viewport */,
 				650FA3BF1D5B9FB800535D8D /* assets */,
-				6512850C1D0B815F0041C324 /* file-formats */,
+				6512850C1D0B815F0041C324 /* external-file-formats */,
 				6512850B1D0B815A0041C324 /* gpu */,
 				6512850A1D0B81550041C324 /* input */,
 				651285091D0B814F0041C324 /* platform */,
@@ -513,7 +513,7 @@
 				651285301D0B818E0041C324 /* OSWindowDefs.hpp */,
 				651285311D0B818E0041C324 /* OSWindowEventListener.hpp */,
 				6508AFF81E358A4000EB826E /* PerFrameObjectAllocator.hpp */,
-				650FA34B1D36210400535D8D /* ResourcePoolDescriptor.hpp */,
+				650FA34B1D36210400535D8D /* ResourcePoolDescription.hpp */,
 				6512886A1D137CFB0041C324 /* WindowBounds.cpp */,
 				6512886B1D137CFB0041C324 /* WindowBounds.hpp */,
 				650FA4671D5BBB4900535D8D /* WindowSize.cpp */,
@@ -589,7 +589,7 @@
 			name = gpu;
 			sourceTree = "<group>";
 		};
-		6512850C1D0B815F0041C324 /* file-formats */ = {
+		6512850C1D0B815F0041C324 /* external-file-formats */ = {
 			isa = PBXGroup;
 			children = (
 				651285371D0B818E0041C324 /* PVRReader.cpp */,
@@ -597,7 +597,7 @@
 				651285411D0B818E0041C324 /* WAVReader.cpp */,
 				651285421D0B818E0041C324 /* WAVReader.hpp */,
 			);
-			name = "file-formats";
+			name = "external-file-formats";
 			sourceTree = "<group>";
 		};
 		6512850D1D0B81670041C324 /* application */ = {

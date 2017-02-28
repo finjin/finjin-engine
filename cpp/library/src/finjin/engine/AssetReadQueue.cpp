@@ -232,9 +232,9 @@ void AssetReadQueue::Create(const Settings& settings, Error& error)
     if (this->settings.streamingFormats.empty())
     {
         this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_BINARY);
+        this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_TEXT);
     #if FINJIN_DEBUG
-        this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_CONFIG);
-        this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_TEXT);        
+        this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_CONFIG);        
         this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_JSON);
     #endif
     }

@@ -56,15 +56,15 @@ void SoundContextCommonSettings::SetDefaultSoundSourcePools()
         SoundFormat(1, 2, 44100), //Mono, 16-bit, 44100hz
         SoundFormat(2, 2, 44100) //Stereo, 16-bit, 44100hz
     };
-    static ResourcePoolDescriptor descriptors[soundFormatCount] =
+    static ResourcePoolDescription descriptors[soundFormatCount] =
     {
-        ResourcePoolDescriptor(0, 1), //Mono, 8-bit, 11025hz
-        ResourcePoolDescriptor(1, 1), //Mono, 16-bit, 11025hz
-        ResourcePoolDescriptor(2, 1), //Mono, 8-bit, 22050hz
-        ResourcePoolDescriptor(3, 1), //Mono, 16-bit, 22050hz
-        ResourcePoolDescriptor(4, 1), //Mono, 8-bit, 44100hz
-        ResourcePoolDescriptor(5, 1), //Mono, 16-bit, 44100hz
-        ResourcePoolDescriptor(6, 1) //Stereo, 16-bit, 44100hz
+        ResourcePoolDescription(0, 1), //Mono, 8-bit, 11025hz
+        ResourcePoolDescription(1, 1), //Mono, 16-bit, 11025hz
+        ResourcePoolDescription(2, 1), //Mono, 8-bit, 22050hz
+        ResourcePoolDescription(3, 1), //Mono, 16-bit, 22050hz
+        ResourcePoolDescription(4, 1), //Mono, 8-bit, 44100hz
+        ResourcePoolDescription(5, 1), //Mono, 16-bit, 44100hz
+        ResourcePoolDescription(6, 1) //Stereo, 16-bit, 44100hz
     };
 
     this->soundFormats.assign(formats, soundFormatCount);

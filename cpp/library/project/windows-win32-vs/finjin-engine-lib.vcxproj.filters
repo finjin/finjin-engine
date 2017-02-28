@@ -44,7 +44,7 @@
     <Filter Include="Source Files\common\input">
       <UniqueIdentifier>{1bc522c1-8180-402d-833b-9e8517416796}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\common\file-formats">
+    <Filter Include="Source Files\common\external-file-formats">
       <UniqueIdentifier>{a589c8c9-4788-4d54-abf2-35fca55f089c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\common\gpu">
@@ -245,7 +245,7 @@
       <Filter>Source Files\common\input</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\FlyingCameraInputBindings.hpp">
       <Filter>Source Files\common\input</Filter>
@@ -364,11 +364,11 @@
     <ClInclude Include="..\..\src\finjin\engine\ApplicationViewportDelegate.hpp">
       <Filter>Source Files\common\application-viewport</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\ResourcePoolDescriptor.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\ResourcePoolDescription.hpp">
       <Filter>Source Files\common\utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\DDSReader.hpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12GpuBuffer.hpp">
       <Filter>Source Files\internal\gpu\d3d12\resources</Filter>
@@ -682,7 +682,7 @@
       <Filter>Source Files\common\input</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\FlyingCameraInputBindings.cpp">
       <Filter>Source Files\common\input</Filter>
@@ -757,7 +757,7 @@
       <Filter>Source Files\internal\sound\xaudio2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\DDSReader.cpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12GpuBuffer.cpp">
       <Filter>Source Files\internal\gpu\d3d12\resources</Filter>

@@ -41,7 +41,7 @@
     <Filter Include="Source Files\common\application">
       <UniqueIdentifier>{a9572572-6325-43b7-83f3-4618e1151159}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\common\file-formats">
+    <Filter Include="Source Files\common\external-file-formats">
       <UniqueIdentifier>{cebe5d2f-2fb6-48a4-858e-aeeedf380baf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\common\gpu">
@@ -191,7 +191,7 @@
       <Filter>Source Files\common\input</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\Application.hpp">
       <Filter>Source Files\common\application</Filter>
@@ -284,9 +284,9 @@
       <Filter>Source Files\common\gpu</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\DDSReader.hpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\ResourcePoolDescriptor.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\ResourcePoolDescription.hpp">
       <Filter>Source Files\common\utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12FrameStage.hpp">
@@ -593,7 +593,7 @@
       <Filter>Source Files\common\input</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\Application_General.cpp">
       <Filter>Source Files\common\application</Filter>
@@ -644,7 +644,7 @@
       <Filter>Source Files\common\sound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\DDSReader.cpp">
-      <Filter>Source Files\common\file-formats</Filter>
+      <Filter>Source Files\common\external-file-formats</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12FrameStage.cpp">
       <Filter>Source Files\internal\gpu\d3d12</Filter>

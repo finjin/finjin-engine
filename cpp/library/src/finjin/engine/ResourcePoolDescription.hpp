@@ -17,14 +17,14 @@
 //Classes----------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    struct ResourcePoolDescriptor
+    struct ResourcePoolDescription
     {
-        ResourcePoolDescriptor()
+        ResourcePoolDescription()
         {
             Reset();
         }
 
-        ResourcePoolDescriptor(size_t format, size_t count)
+        ResourcePoolDescription(size_t format, size_t count)
         {
             this->format = format;
             this->count = count;

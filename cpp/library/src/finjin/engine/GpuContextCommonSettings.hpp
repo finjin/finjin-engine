@@ -24,7 +24,7 @@
 #include "finjin/engine/FinjinSceneAssets.hpp"
 #include "finjin/engine/GpuID.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
-#include "finjin/engine/ResourcePoolDescriptor.hpp"
+#include "finjin/engine/ResourcePoolDescription.hpp"
 #include <boost/thread/null_mutex.hpp>
 
 

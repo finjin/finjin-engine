@@ -21,7 +21,7 @@
 #include "finjin/engine/ContextEventInfo.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
 #include "finjin/engine/SoundSourceCommon.hpp"
-#include "finjin/engine/ResourcePoolDescriptor.hpp"
+#include "finjin/engine/ResourcePoolDescription.hpp"
 #include <boost/thread/null_mutex.hpp>
 
 
@@ -272,7 +272,7 @@ namespace Finjin { namespace Engine {
         Distance<float> speedOfSound;
 
         StaticVector<SoundFormat, 16> soundFormats;
-        StaticVector<ResourcePoolDescriptor, 16> soundSourcePools;
+        StaticVector<ResourcePoolDescription, 16> soundSourcePools;
                 
         size_t maxSoundBufferCount;
     };

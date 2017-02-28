@@ -67,7 +67,7 @@
           <itemPath>../../src/finjin/engine/UserDataTypes.cpp</itemPath>
           <itemPath>../../src/finjin/engine/UserDataTypes.hpp</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="file-formats" projectFiles="true">
+        <logicalFolder name="f2" displayName="external-file-formats" projectFiles="true">
           <itemPath>../../src/finjin/engine/WAVReader.cpp</itemPath>
           <itemPath>../../src/finjin/engine/WAVReader.hpp</itemPath>
         </logicalFolder>
