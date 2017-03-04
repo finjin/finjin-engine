@@ -265,8 +265,8 @@ namespace Finjin { namespace Engine {
         static inline value_type& GetReference(T* item) { return (T&)*item; }
         static inline value_type* GetPointer(T* item) { return (T*)item; }
 
-        static inline const value_type& GetConstReference(const T* item) { return (const T*)*item; }
-        static inline const value_type* GetConstPointer(const T* item) { return (const T&*)item; }
+        static inline const value_type& GetConstReference(const T* item) { return (const T&)*item; }
+        static inline const value_type* GetConstPointer(const T* item) { return (const T*)item; }
     }; 
     
     template <typename T>
