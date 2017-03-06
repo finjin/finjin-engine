@@ -397,7 +397,7 @@ void Application::Initialize(Error& error)
     
     for (size_t applicationFileSystemIndex = 0; applicationFileSystemIndex < (size_t)ApplicationFileSystem::COUNT; applicationFileSystemIndex++)
     {
-        auto& fileSystem = this->fileSystems.items[applicationFileSystemIndex];
+        auto& fileSystem = this->fileSystems[applicationFileSystemIndex];
         auto applicationFileSystem = static_cast<ApplicationFileSystem>(applicationFileSystemIndex);
         
         VirtualFileSystem::Settings fileSystemSettings;

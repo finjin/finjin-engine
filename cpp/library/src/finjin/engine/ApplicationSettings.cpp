@@ -21,10 +21,10 @@ using namespace Finjin::Engine;
 
 //Implementation---------------------------------------------------------------
 ApplicationSettings::ApplicationSettings() :
-    windowWidth(640),
-    windowHeight(480),
-    fullScreenWidth(1280),
-    fullScreenHeight(720),
+    windowWidth((OSWindowDimension)640),
+    windowHeight((OSWindowDimension)480),
+    fullScreenWidth((OSWindowDimension)1280),
+    fullScreenHeight((OSWindowDimension)720),
     isFullScreen(false),
     isFullScreenExclusive(false),
     vsync(true),
@@ -38,12 +38,11 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    Utf8String arg;
     for (size_t index = 0; index < argsProcessor.GetCount(); index++)
     {
-        arg = argsProcessor[index];
+        auto& arg = argsProcessor[index];
         
-        if (arg =="-additional-read-application-assets-directory" && index < argsProcessor.GetCount() - 1)
+        if (arg == "-additional-read-application-assets-directory" && index < argsProcessor.GetCount() - 1)
         {
             this->additionalReadApplicationAssetsDirectory = argsProcessor[index + 1];
             
