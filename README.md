@@ -25,7 +25,7 @@ LICENSE.txt               License file.
 README.md                 This file.
 configure.cfg             Source code configuration file. Modify this by hand when you start development for the very first time.
 configure.py              Configuration script. Run this once  when you start development for the very first time.
-config/                   Engine/runtime appication configuration files.
+config/                   Engine/runtime application configuration files.
 cpp/library/              Main source tree.
   project/                IDE project files for targeting different platforms.
   src/finjin/engine/      Implementation and include files.
