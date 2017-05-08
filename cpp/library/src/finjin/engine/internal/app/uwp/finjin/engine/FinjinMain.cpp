@@ -85,6 +85,8 @@ private:
 
 
 //Implementation----------------------------------------------------------------
+
+//ApplicationFrameworkView
 ApplicationFrameworkView::ApplicationFrameworkView(intptr_t _applicationDelegate, Platform::Array<Platform::String^>^ _args) :
     applicationDelegate(reinterpret_cast<ApplicationDelegate*>(_applicationDelegate)),
     args(_args)
@@ -240,8 +242,7 @@ IFrameworkView^ ApplicationFrameworkViewSource::CreateView()
     }
 }
 
-
-//ApplicationFrameworkView------------------------------------------------------
+//Main
 int FinjinMain(ApplicationDelegate* applicationDelegate, Platform::Array<Platform::String^>^ args)
 {
     auto mainSource = ref new ApplicationFrameworkViewSource(reinterpret_cast<intptr_t>(applicationDelegate), args);
