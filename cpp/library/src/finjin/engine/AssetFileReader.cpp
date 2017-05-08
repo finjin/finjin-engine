@@ -15,30 +15,29 @@
 #include "FinjinPrecompiled.hpp"
 #include "AssetFileReader.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 AssetFileReader::AssetFileReader()
 {
     this->fileSystemOperationQueue = nullptr;
-    
+
 }
 
 bool AssetFileReader::Create(Allocator* allocator)
 {
     auto result = true;
-    
+
     result &= this->workingSearchPath.Create(allocator);
 
     this->fileSystemRootDirectoryNames.maximize();
     for (auto& directoryName : this->fileSystemRootDirectoryNames)
         result &= directoryName.Create(allocator);
     this->fileSystemRootDirectoryNames.clear();
-    
+
     result &= this->workingAssetPath.Create(allocator);
-    
+
     return result;
 }
 

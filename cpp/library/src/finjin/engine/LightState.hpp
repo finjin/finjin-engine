@@ -14,15 +14,15 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Angle.hpp"
 #include "finjin/common/Math.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    using namespace Finjin::Common;    
+    using namespace Finjin::Common;
 
     enum class LightType
     {
@@ -33,29 +33,23 @@ namespace Finjin { namespace Engine {
 
     struct LightState
     {
-        LightState() :
-            color(0, 0, 0, 1),            
-            range{ 0, 10000 }
-        {
-            this->worldMatrix.setIdentity();
-            this->inverseWorldMatrix.setIdentity();
-            this->inverseTransposeWorldMatrix.setIdentity();
-            this->isActive = false;
-            this->lightType = LightType::DIRECTIONAL;
-            this->power = 1;
-        }
-        
-        int GetLightTypePriority() const { return (int)this->lightType; }
-        static int GetLightTypePriority(LightType lightType) { return (int)lightType; }
+        LightState();
 
-        MathMatrix44 worldMatrix;
-        MathMatrix44 inverseWorldMatrix; 
-        MathMatrix44 inverseTransposeWorldMatrix;
+        int GetLightTypePriority() const;
+
+        MathVector4& GetWorldPosition(MathVector4& position4) const;
+        MathVector3& GetWorldPosition(MathVector3& position3, MathVector4& position4) const;
+
+        MathVector3& GetWorldDirection(MathVector3& direction3, MathVector4& direction4) const;
+
+        MathMatrix4 worldMatrix;
+        MathMatrix4 inverseWorldMatrix;
+        MathMatrix4 inverseTransposeWorldMatrix;
         bool isActive;
         LightType lightType;
         float power;
         MathVector4 color;
-        float range[2]; //Near/far range                        
+        float range[2]; //Near/far range
         Radians coneRange[2]; //Inner/outer angles
     };
 

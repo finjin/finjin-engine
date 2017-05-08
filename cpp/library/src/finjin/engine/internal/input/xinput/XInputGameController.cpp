@@ -20,13 +20,15 @@
 #include <Windows.h>
 #include <Xinput.h>
 
-#define XINPUT_AXIS_MAGNITUDE 32767
-#define XINPUT_TRIGGER_MAGNITUDE 255
-
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Macros------------------------------------------------------------------------
+#define XINPUT_AXIS_MAGNITUDE 32767
+#define XINPUT_TRIGGER_MAGNITUDE 255
+
+
+//Local functions---------------------------------------------------------------
 static size_t XInputButtonToButtonIndex(WORD xinputButtonCode)
 {
     size_t buttonIndex = 0;
@@ -40,7 +42,7 @@ static size_t XInputButtonToButtonIndex(WORD xinputButtonCode)
 template <size_t count>
 void SetXInputButton(StaticVector<InputButton, count>& buttons, WORD xinputButton, const char* displayName, InputComponentSemantic semantic)
 {
-    auto buttonIndex = XInputButtonToButtonIndex(xinputButton);    
+    auto buttonIndex = XInputButtonToButtonIndex(xinputButton);
     assert(buttonIndex < buttons.size());
     buttons[buttonIndex]
         .SetIndex(buttonIndex)
@@ -52,7 +54,7 @@ void SetXInputButton(StaticVector<InputButton, count>& buttons, WORD xinputButto
 
 template <size_t count>
 void SetXInputAxis(StaticVector<InputAxis, count>& axes, size_t index, float minValue, float maxValue, float deadZone, const char* displayName, InputComponentSemantic semantic)
-{    
+{
     axes[index]
         .SetIndex(index)
         .SetMinMax(minValue, maxValue)
@@ -85,7 +87,7 @@ static Utf8String XInputSubtypeToString(BYTE subtype)
 }
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct XInputGameController::Impl
 {
     Impl()
@@ -116,7 +118,7 @@ struct XInputGameController::Impl
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //XInputGameController
 XInputGameController::XInputGameController() : impl(new Impl)
@@ -125,7 +127,7 @@ XInputGameController::XInputGameController() : impl(new Impl)
 }
 
 XInputGameController::~XInputGameController()
-{    
+{
 }
 
 void XInputGameController::Reset()
@@ -163,10 +165,10 @@ bool XInputGameController::Create(size_t index)
         XInputGetState(static_cast<DWORD>(impl->index), &impl->xinputState);
     }
     else
-    {        
+    {
         FINJIN_ZERO_ITEM(impl->xinputState);
     }
-    
+
     impl->productDescriptor = XInputSubtypeToString(subtype);
 
     impl->instanceDescriptor = impl->productDescriptor;
@@ -174,10 +176,10 @@ bool XInputGameController::Create(size_t index)
     impl->instanceDescriptor += Convert::ToString(index);
 
     //Buttons
-    impl->state.buttons.resize(sizeof(impl->xinputState.Gamepad.wButtons) * 8);    
+    impl->state.buttons.resize(sizeof(impl->xinputState.Gamepad.wButtons) * 8);
 
     //Button codes are irrengularly defined, so initialize all to disabled, then enable one by one
-    for (auto& button : impl->state.buttons) 
+    for (auto& button : impl->state.buttons)
         button.Enable(false);
 
     SetXInputButton(impl->state.buttons, XINPUT_GAMEPAD_A, "A", InputComponentSemantic::ACCEPT);
@@ -194,7 +196,7 @@ bool XInputGameController::Create(size_t index)
     SetXInputButton(impl->state.buttons, XINPUT_GAMEPAD_DPAD_DOWN, "D-pad down", InputComponentSemantic::TOGGLE_DOWN);
     SetXInputButton(impl->state.buttons, XINPUT_GAMEPAD_DPAD_LEFT, "D-pad left", InputComponentSemantic::TOGGLE_LEFT);
     SetXInputButton(impl->state.buttons, XINPUT_GAMEPAD_DPAD_RIGHT, "D-pad right", InputComponentSemantic::TOGGLE_RIGHT);
-    
+
     //Axes
     impl->state.axes.resize(6);
     SetXInputAxis(impl->state.axes, 0, -XINPUT_AXIS_MAGNITUDE, XINPUT_AXIS_MAGNITUDE, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, "Left thumbstick X", InputComponentSemantic::STEER_LEFT_RIGHT);
@@ -258,7 +260,7 @@ void XInputGameController::Update(SimpleTimeDelta elapsedTime, bool isFirstUpdat
         {
             //Became connected
             impl->state.isConnected = true;
-            impl->state.connectionChanged = true;
+            impl->state.connectionChanged = !isFirstUpdate && true;
 
             _AcceptUpdate(isFirstUpdate);
         }
@@ -401,10 +403,10 @@ void XInputGameController::StopHapticFeedback()
 size_t XInputGameController::CreateGameControllers(XInputGameController* gameControllers, size_t gameControllerCount)
 {
     gameControllerCount = std::min(gameControllerCount, (size_t)XUSER_MAX_COUNT);
-    
+
     for (size_t i = 0; i < gameControllerCount; i++)
         gameControllers[i].Create(i);
-    
+
     return gameControllerCount;
 }
 

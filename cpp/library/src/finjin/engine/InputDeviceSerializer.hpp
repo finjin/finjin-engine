@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/ConfigDocumentWriter.hpp"
@@ -26,7 +26,7 @@
 #include "finjin/engine/InputSource.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -51,7 +51,7 @@ namespace Finjin { namespace Engine {
         void Read(const char* text, size_t length, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             ConfigDocumentReader reader;
 
             Utf8StringView sectionName, key, value;
@@ -68,10 +68,10 @@ namespace Finjin { namespace Engine {
                         CommitValues(sectionName, configValues);
 
                         line->GetSectionName(sectionName);
-                            
+
                         break;
                     }
-                    case ConfigDocumentLine::Type::KEY_AND_VALUE: 
+                    case ConfigDocumentLine::Type::KEY_AND_VALUE:
                     {
                         line->GetKey(key);
                         line->GetValue(value);
@@ -114,7 +114,7 @@ namespace Finjin { namespace Engine {
             Utf8StringView restValue;
             Utf8StringView semantic;
             Utf8StringView magnitude;
-            Utf8StringView direction;            
+            Utf8StringView direction;
 
             void Reset()
             {
@@ -147,12 +147,12 @@ namespace Finjin { namespace Engine {
                 }
             }
             else
-            {   
+            {
                 //Try to configure a component by code
                 if (!handled && !configValues.code.empty())
                 {
                     auto code = Convert::ToInteger(configValues.code.ToString(), (int)0);
-                    
+
                     if (sectionName == "key" || sectionName == "button")
                     {
                         auto button = GetButtonByCode(&this->inputDevice, code);
@@ -228,12 +228,12 @@ namespace Finjin { namespace Engine {
                             handled = true;
                         }
                     }
-                }                
+                }
             }
-            
+
             sectionName.clear();
             configValues.Reset();
-        }        
+        }
 
         template <typename ButtonType>
         void CommitButtonValues(ButtonType* button, ConfigValues& configValues)
@@ -299,11 +299,17 @@ namespace Finjin { namespace Engine {
         CONFIG_FILE_PARSE_FAILED
     };
 
+} }
+
+
+//Functions---------------------------------------------------------------------
+namespace Finjin { namespace Engine {
+
     template <typename Device>
     ConfigureInputDeviceResult ConfigureInputDevice
         (
-        Device& device, 
-        const Utf8String& productDescriptor, 
+        Device& device,
+        const Utf8String& productDescriptor,
         AssetClassFileReader& assetReader,
         ByteBuffer& configFileBuffer
         )
@@ -313,11 +319,11 @@ namespace Finjin { namespace Engine {
         configFileName += ".cfg";
         AssetReference configFileAssetRef(FINJIN_ALLOCATOR_NULL);
         configFileAssetRef.ForLocalFile(configFileName);
-        
+
         //Attempt to read the file
         if (assetReader.ReadAsset(configFileBuffer, configFileAssetRef) != FileOperationResult::SUCCESS)
             return ConfigureInputDeviceResult::CONFIG_FILE_READ_FAILED;
-        
+
         //Attempt to deserialize the file into the device
         InputDeviceSerializer<Device> serializer(device);
 
@@ -325,7 +331,7 @@ namespace Finjin { namespace Engine {
         serializer.Read(configFileBuffer, error);
         if (error)
             return ConfigureInputDeviceResult::CONFIG_FILE_PARSE_FAILED;
-        
+
         return ConfigureInputDeviceResult::SUCCESS;
     }
 

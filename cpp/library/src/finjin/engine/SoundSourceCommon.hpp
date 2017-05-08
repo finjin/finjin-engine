@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/EnumBitwise.hpp"
 #include "finjin/engine/SoundFormat.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -35,7 +35,7 @@ namespace Finjin { namespace Engine {
         MEDIUM,
         HIGH
     };
-    
+
     enum class SoundSourceState
     {
         NONE = 0, //If this is the state, the source doesn't have a buffer

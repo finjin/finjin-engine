@@ -14,17 +14,17 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Setting.hpp"
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
-#include "finjin/engine/GpuID.hpp"
 #include "finjin/engine/GpuDescription.hpp"
+#include "finjin/engine/GpuID.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     class ApplicationViewportDescription
@@ -34,22 +34,22 @@ namespace Finjin { namespace Engine {
 
         GpuID desiredGpuID;
         HardwareGpuDescriptions::value_type desiredGpuDescription;
-        
+
         Utf8String internalName; //Internal window name. If not set, a default name will be created
         Utf8String title; //Depending on platform, may or may not be used
         Utf8String subtitle; //Depending on platform, may or may not be used
         Utf8String displayName; //Screen/display name. Only used on Linux
         Setting<OSWindowRect> windowFrame; //Initial window frame
         GpuID gpuID;
-        
+
         //Number of swap chain frames. The value is 'requested' since the the 3D APIs may give more or less
         //This will ultimately affect the maximum amount render buffering
         //2 = double buffer
         //3 = triple buffer
         //...and so on
         //Will be limited to [EngineConstants::MIN_FRAME_BUFFERS, EngineConstants::MAX_FRAME_BUFFERS]
-        size_t requestedFrameCount;
-        
+        size_t requestedFrameBufferCount;
+
         //Number of frames to update before rendering. Increasing this number increases parallelism at the expense of more processing lag
         //Notice that when the application starts, there may be a bit of updating warmup before the rendering starts:
         //  1 (no warmup) = update frame N, render frame N

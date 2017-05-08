@@ -14,17 +14,17 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "XAudio2System.hpp"
-#include "finjin/common/Vector.hpp"
+#include "finjin/common/StaticVector.hpp"
 #include "XAudio2Includes.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct XAudio2System::Impl : public AllocatedClass
 {
     Impl(Allocator* allocator) : AllocatedClass(allocator)
-    {   
+    {
     }
 
     XAudio2System::Settings settings;
@@ -33,7 +33,7 @@ struct XAudio2System::Impl : public AllocatedClass
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 const Utf8String& XAudio2System::GetSystemInternalName()
 {
     static const Utf8String value("xaudio2");
@@ -41,7 +41,7 @@ const Utf8String& XAudio2System::GetSystemInternalName()
 }
 
 XAudio2System::XAudio2System()
-{    
+{
 }
 
 XAudio2System::~XAudio2System()
@@ -99,7 +99,7 @@ XAudio2Context* XAudio2System::CreateContext(const XAudio2Context::Settings& set
 
     auto context = AllocatedClass::NewUnique<XAudio2Context>(impl->settings.allocator, FINJIN_CALLER_ARGUMENTS, this);
     FINJIN_ENGINE_CHECK_CREATED_CONTEXT_NOT_NULL_RETURN(context, error, nullptr);
-    
+
     context->Create(settings, error);
     if (error)
     {

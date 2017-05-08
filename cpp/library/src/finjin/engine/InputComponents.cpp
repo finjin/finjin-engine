@@ -21,7 +21,7 @@
 using namespace Finjin::Engine;
 
 
-//Local variables--------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 template <typename T>
 struct ItemLookup
 {
@@ -29,6 +29,8 @@ struct ItemLookup
     const char* text;
 };
 
+
+//Local variables---------------------------------------------------------------
 static const ItemLookup<InputDeviceClass> inputDeviceClassLowerLookup[] =
 {
     { InputDeviceClass::KEYBOARD, "keyboard" },
@@ -46,22 +48,22 @@ static const ItemLookup<InputDeviceComponent> inputDeviceComponentLookup[] =
     { InputDeviceComponent::MOUSE_BUTTON, "mouse-button" },
     { InputDeviceComponent::MOUSE_RELATIVE_AXIS, "mouse-relative-axis" },
     { InputDeviceComponent::MOUSE_ABSOLUTE_AXIS, "mouse-absolute-axis" },
-    
+
     { InputDeviceComponent::GAME_CONTROLLER_BUTTON, "game-controller-button" },
     { InputDeviceComponent::GAME_CONTROLLER_AXIS, "game-controller-axis" },
     { InputDeviceComponent::GAME_CONTROLLER_POV, "game-controller-pov" },
     { InputDeviceComponent::GAME_CONTROLLER_LOCATOR, "game-controller-locator" },
-    
+
     { InputDeviceComponent::TOUCH_COUNT, "touch-count" },
     { InputDeviceComponent::TOUCH_RELATIVE_AXIS, "touch-relative-axis" },
     { InputDeviceComponent::TOUCH_ABSOLUTE_AXIS, "touch-absolute-axis" },
-    
+
     { InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS, "multitouch-relative-radius" },
     { InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS, "multitouch-relative-axis" },
-    
+
     { InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS, "accelerometer-relative-axis" },
     { InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS, "accelerometer-absolute-axis" },
-    
+
     { InputDeviceComponent::HEADSET_LOCATOR, "headset-locator" }
 };
 
@@ -168,7 +170,7 @@ static const ItemLookup<PovDirection> povDirectionLookup[] =
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 inline bool IsAxisDead(float v, float deadZone)
 {
     return std::abs(v) <= deadZone;
@@ -196,13 +198,13 @@ static void GetMultitouchInfo(InputTouchScreen::Pointer** pointers, size_t point
         y /= floatCount;
 
         //Get average radius
-        float relX;
-        float relY;
+        float relativeX;
+        float relativeY;
         for (size_t i = 0; i < pointerCount; i++)
         {
-            relX = pointers[i]->GetX().GetAbsoluteValue() - x;
-            relY = pointers[i]->GetY().GetAbsoluteValue() - y;
-            pinchRadius += sqrtf(relX * relX + relY * relY);
+            relativeX = pointers[i]->GetX().GetAbsoluteValue() - x;
+            relativeY = pointers[i]->GetY().GetAbsoluteValue() - y;
+            pinchRadius += sqrtf(relativeX * relativeX + relativeY * relativeY);
         }
         pinchRadius /= floatCount;
     }
@@ -213,7 +215,7 @@ static void GetMultitouchInfo(InputTouchScreen::Pointer** pointers, size_t point
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //InputDeviceComponentUtilities
 bool InputDeviceComponentUtilities::IsKeyboard(InputDeviceComponent type)
@@ -223,7 +225,7 @@ bool InputDeviceComponentUtilities::IsKeyboard(InputDeviceComponent type)
 
 bool InputDeviceComponentUtilities::IsMouse(InputDeviceComponent type)
 {
-    return 
+    return
         type == InputDeviceComponent::MOUSE_BUTTON ||
         type == InputDeviceComponent::MOUSE_RELATIVE_AXIS ||
         type == InputDeviceComponent::MOUSE_ABSOLUTE_AXIS
@@ -232,7 +234,7 @@ bool InputDeviceComponentUtilities::IsMouse(InputDeviceComponent type)
 
 bool InputDeviceComponentUtilities::IsGameController(InputDeviceComponent type)
 {
-    return 
+    return
         type == InputDeviceComponent::GAME_CONTROLLER_BUTTON ||
         type == InputDeviceComponent::GAME_CONTROLLER_AXIS ||
         type == InputDeviceComponent::GAME_CONTROLLER_POV ||
@@ -253,7 +255,7 @@ bool InputDeviceComponentUtilities::IsTouchScreen(InputDeviceComponent type)
 
 bool InputDeviceComponentUtilities::IsAccelerometer(InputDeviceComponent type)
 {
-    return 
+    return
         type == InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS ||
         type == InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS
         ;
@@ -309,14 +311,14 @@ InputDeviceClass InputDeviceComponentUtilities::GetDeviceClass(InputDeviceCompon
         {
             return InputDeviceClass::KEYBOARD;
         }
-        
+
         case InputDeviceComponent::MOUSE_BUTTON:
         case InputDeviceComponent::MOUSE_RELATIVE_AXIS:
         case InputDeviceComponent::MOUSE_ABSOLUTE_AXIS:
         {
             return InputDeviceClass::MOUSE;
         }
-        
+
         case InputDeviceComponent::GAME_CONTROLLER_BUTTON:
         case InputDeviceComponent::GAME_CONTROLLER_AXIS:
         case InputDeviceComponent::GAME_CONTROLLER_POV:
@@ -324,7 +326,7 @@ InputDeviceClass InputDeviceComponentUtilities::GetDeviceClass(InputDeviceCompon
         {
             return InputDeviceClass::GAME_CONTROLLER;
         }
-        
+
         case InputDeviceComponent::TOUCH_COUNT:
         case InputDeviceComponent::TOUCH_RELATIVE_AXIS:
         case InputDeviceComponent::TOUCH_ABSOLUTE_AXIS:
@@ -333,7 +335,7 @@ InputDeviceClass InputDeviceComponentUtilities::GetDeviceClass(InputDeviceCompon
         {
             return InputDeviceClass::TOUCH_SCREEN;
         }
-        
+
         case InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS:
         case InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS:
         {
@@ -396,7 +398,7 @@ InputDeviceComponentClass InputDeviceComponentUtilities::GetDeviceComponentClass
         {
             return InputDeviceComponentClass::LOCATOR;
         }
-        
+
         default: return InputDeviceComponentClass::NONE;
     }
 }
@@ -512,16 +514,21 @@ void InputAxis::Reset(bool isConstructing)
     this->processing = InputAxisProcessing::NONE;
 
     this->isEnabled = true;
-    this->previousValue.Reset(0);
-    this->value.Reset(0);
+    this->previousValue.Reset(0.0f);
+    this->value.Reset(0.0f);
     this->changed = false;
 }
 
 void InputAxis::Update(float value, bool isFirstUpdate)
 {
-    //FINJIN_DEBUG_LOG_INFO("Entering InputAxis::Update(%1%)", value);
-    //if (this->semantic == InputComponentSemantic::MOVE_LEFT_RIGHT || this->semantic == InputComponentSemantic::MOVE_UP_DOWN)
-        //FINJIN_DEBUG_LOG_INFO("Axis value: %1%, rest: %2%", value, this->restValue);
+    /*auto showInfo = false;
+    if (this->semantic == InputComponentSemantic::MOVE_LEFT_RIGHT)
+    {
+        FINJIN_DEBUG_LOG_INFO("Entering InputAxis::Update(%1%)", value);
+        showInfo = true;
+
+        FINJIN_DEBUG_LOG_INFO("Axis value: %1%, rest: %2%", value, this->restValue);
+    }*/
 
     if (this->isEnabled)
     {
@@ -532,7 +539,7 @@ void InputAxis::Update(float value, bool isFirstUpdate)
             else if (value > 0)
                 value = 1;
         }
-        
+
         if (isFirstUpdate)
         {
             if (NoneSet(this->processing & InputAxisProcessing::IS_ABSOLUTE))
@@ -541,7 +548,7 @@ void InputAxis::Update(float value, bool isFirstUpdate)
                 value = 0;
             }
         }
-        else 
+        else
         {
             if (AnySet(this->processing & InputAxisProcessing::IS_ABSOLUTE))
             {
@@ -575,17 +582,17 @@ void InputAxis::Update(float value, bool isFirstUpdate)
             {
                 value = (value - this->restValue) / (this->maxValue - this->restValue);
                 //if (showInfo)
-                    //std::cout << "Normzlied to: " << value << std::endl;
+                    //std::cout << "Normalized to: " << value << std::endl;
             }
         }
-        
+
         if (isFirstUpdate)
         {
             //if (showInfo)
                 //std::cout << "First update" << std::endl;
             //First update
             this->changed = false;
-            this->previousValue.Reset(0);
+            this->previousValue.Reset(0.0f);
             this->value = value;
         }
         else if (!this->changed)
@@ -595,7 +602,7 @@ void InputAxis::Update(float value, bool isFirstUpdate)
             //First change
             this->previousValue = this->value;
             this->changed |= value != this->value.value;
-            this->value = value;            
+            this->value = value;
         }
         else
         {
@@ -605,7 +612,7 @@ void InputAxis::Update(float value, bool isFirstUpdate)
             //Multiple changes in a single frame's update
             if (AnySet(this->processing & InputAxisProcessing::ACCUMULATE_MULTIPLE_CHANGES))
             {
-                //Accumulate 
+                //Accumulate
                 this->value.value += value;
             }
             else
@@ -624,7 +631,8 @@ void InputAxis::Update(float value, bool isFirstUpdate)
         }
     }
 
-    //FINJIN_DEBUG_LOG_INFO("Leaving InputAxis::Update(%1%)", value);
+    //if (showInfo)
+        //FINJIN_DEBUG_LOG_INFO("Leaving InputAxis::Update(%1%)", value);
 }
 
 bool InputAxis::Changed() const
@@ -635,11 +643,11 @@ bool InputAxis::Changed() const
 void InputAxis::ClearChanged()
 {
     this->changed = false;
-    
+
     if (AnySet(this->processing & InputAxisProcessing::REST_ON_CLEAR_CHANGES))
     {
-        this->previousValue.Reset(0);
-        this->value = 0;
+        this->previousValue.Reset(0.0f);
+        this->value = 0.0f;
     }
 }
 
@@ -772,15 +780,15 @@ bool InputAxis::HasCode() const
     return this->code != InputSource::NO_COMPONENT_CODE;
 }
 
-int InputAxis::GetCode() const 
-{ 
-    return this->code; 
+int InputAxis::GetCode() const
+{
+    return this->code;
 }
 
 InputAxis& InputAxis::SetCode(int code)
-{ 
-    this->code = code; 
-    return *this; 
+{
+    this->code = code;
+    return *this;
 }
 
 const Utf8String& InputAxis::GetDisplayName() const
@@ -880,8 +888,8 @@ void InputButton::Update(bool pressedDown, bool isFirstUpdate)
         else
         {
             this->previousValue = this->value;
-            this->changed |= this->value != pressedDown;            
-        }        
+            this->changed |= this->value != pressedDown;
+        }
         this->value = pressedDown;
     }
 }
@@ -893,13 +901,20 @@ bool InputButton::Changed() const
 
 void InputButton::ClearChanged()
 {
-    if (AnySet(this->processing & InputButtonProcessing::REST_ON_CLEAR_CHANGES))
+    if (AnySet(this->processing & InputButtonProcessing::EVENT_DRIVEN))
+    {
+        this->previousValue = value;
+        this->changed = false;
+    }
+    else if (AnySet(this->processing & InputButtonProcessing::REST_ON_CLEAR_CHANGES))
     {
         if (this->value)
         {
             this->value = false;
             this->changed = true;
         }
+        else
+            this->changed = false;
     }
     else
         this->changed = false;
@@ -1020,7 +1035,7 @@ void InputPov::Reset(bool isConstructing)
 
     this->isEnabled = true;
     this->previousValue.Reset(PovDirection::CENTERED);
-    this->value = PovDirection::CENTERED;    
+    this->value = PovDirection::CENTERED;
     this->changed = false;
 }
 
@@ -1046,7 +1061,7 @@ void InputPov::Update(long povValue, bool isFirstUpdate)
         {
             this->previousValue.Reset(PovDirection::CENTERED);
             this->changed = false;
-        }            
+        }
         else
         {
             this->previousValue = this->value;
@@ -1075,7 +1090,7 @@ bool InputPov::IsFirstDown(bool strict) const
 {
     if (!this->previousValue.IsSet() && this->value != PovDirection::CENTERED)
         return true;
-    
+
     if (strict)
         return this->previousValue.value == PovDirection::CENTERED && this->value != PovDirection::CENTERED;
     else
@@ -1194,7 +1209,7 @@ void InputLocator::Reset(bool isConstructing)
     this->semantic = InputComponentSemantic::NONE;
 
     this->isEnabled = true;
-    
+
     this->orientationMatrix.setIdentity();
     this->position.SetMeters(MathVector3::Zero());
     this->velocity.SetMeters(MathVector3::Zero());
@@ -1202,19 +1217,19 @@ void InputLocator::Reset(bool isConstructing)
 
 void InputLocator::GetOrientationMatrix33(float* result)
 {
-    GetMathData(result, this->orientationMatrix);
+    GetMatrixAsArray(result, this->orientationMatrix);
 }
 
 void InputLocator::GetPositionVector3(float* result, DistanceUnitType distanceUnitType)
 {
     auto positionMeters = this->position.ToUnit(distanceUnitType);
-    GetMathData(result, positionMeters);
+    GetVectorAsArray(result, positionMeters);
 }
 
 void InputLocator::GetVelocityVector3(float* result, DistanceUnitType distanceUnitType)
 {
     auto velocityMeters = this->velocity.ToUnit(distanceUnitType);
-    GetMathData(result, velocityMeters);
+    GetVectorAsArray(result, velocityMeters);
 }
 
 size_t InputLocator::GetIndex() const
@@ -1292,11 +1307,11 @@ void InputTouchScreen::Pointer::Reset(bool isConstructing)
     this->pointerType = PointerType::NONE;
 
     this->isEnabled = false;
-    
+
     this->contact.Reset();
     for (auto& axis : this->axes)
         axis.Reset();
-    
+
     this->contact.SetDisplayName("Contact");
     this->axes[0].SetIndex(0).SetProcessing(InputAxisProcessing::IS_ABSOLUTE).SetDisplayName("X");
     this->axes[1].SetIndex(1).SetProcessing(InputAxisProcessing::IS_ABSOLUTE).SetDisplayName("Y");
@@ -1421,12 +1436,12 @@ void InputTouchScreen::Reset(bool isConstructing)
 {
     this->index = 0;
     this->displayName.clear();
-    
+
     this->isConnected = true;
-    
+
     this->previousTouchCount.Reset(0);
     this->touchCount = 0;
-    
+
     for (size_t i = 0; i < this->allPointers.size(); i++)
         this->allPointers[i].Reset();
     this->pointers.clear();
@@ -1447,9 +1462,9 @@ InputTouchScreen::Pointer* InputTouchScreen::ConnectPointer(PointerType pointerT
             pointer->pointerType = pointerType;
 
             pointer->isEnabled = true;
-            
-            this->pointers.push_back(pointer);            
-            
+
+            this->pointers.push_back(pointer);
+
             return pointer;
         }
     }

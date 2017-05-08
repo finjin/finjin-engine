@@ -14,18 +14,17 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "D3D12Includes.hpp"
-#include "finjin/common/AllocatedVector.hpp"
+//Includes----------------------------------------------------------------------
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
 #include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include "D3D12Utilities.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     class D3D12GpuBuffer
@@ -37,11 +36,11 @@ namespace Finjin { namespace Engine {
         bool CreateVertexBuffer(FinjinMesh::VertexBuffer& meshAssetVertexBuffer, GpuInputFormatStruct* inputFormat, Allocator* allocator, ID3D12Device* device, Error& error);
         void Destroy();
 
-        bool Upload(ID3D12GraphicsCommandList* cmdList);
+        bool Upload(ID3D12GraphicsCommandList* commandList);
 
     public:
         uint8_t* cpuPointer;
-        AllocatedVector<uint8_t> cpu;
+        DynamicVector<uint8_t> cpu;
         Microsoft::WRL::ComPtr<ID3D12Resource> gpu;
         Microsoft::WRL::ComPtr<ID3D12Resource> uploader;
         size_t elementStride; //Bytes from one element to the next
@@ -58,20 +57,8 @@ namespace Finjin { namespace Engine {
         void Create(ID3D12Device* device, const GpuRenderingConstantBufferStruct& bufferStruct, size_t instanceCount, Error& error);
         void Destroy();
 
-        ID3D12Resource* GetResource() const;
-        
-    private:
-        Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-    };
-
-    class D3D12GpuRenderingStructuredBufferResource : public GpuRenderingStructuredBuffer
-    {
-    public:
-        D3D12GpuRenderingStructuredBufferResource();
-        ~D3D12GpuRenderingStructuredBufferResource();
-
-        void Create(ID3D12Device* device, const GpuRenderingStructuredBufferStruct& bufferStruct, size_t instanceCount, Error& error);
-        void Destroy();
+        void StartWrites();
+        void FinishWrites();
 
         ID3D12Resource* GetResource() const;
 

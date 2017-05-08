@@ -19,13 +19,12 @@
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/Version.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 using namespace Windows::UI::Core;
 using namespace Windows::ApplicationModel::Core;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static Utf8String GetWindowsInternalVersion()
 {
     auto deviceFamilyVersion = Windows::System::Profile::AnalyticsInfo::VersionInfo->DeviceFamilyVersion;
@@ -35,16 +34,16 @@ static Utf8String GetWindowsInternalVersion()
     auto minor = (version & 0x0000FFFF00000000ull) >> 32;
     auto build = (version & 0x00000000FFFF0000ull) >> 16;
     auto revision = (version & 0x000000000000FFFFull);
-    
+
     Utf8String internalVersion;
     internalVersion += Convert::ToString(major);
     internalVersion += ".";
-    internalVersion += Convert::ToString(minor);    
+    internalVersion += Convert::ToString(minor);
     return internalVersion;
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 void Application::InitializeGlobals(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
@@ -58,7 +57,7 @@ void Application::InitializeGlobals(Error& error)
     }
 
     //One application window
-    this->maxWindows = 1; 
+    this->maxWindows = 1;
 
     //Window properties
     this->canCloseWindowsInternally = false;
@@ -73,7 +72,7 @@ void Application::InitializeGlobals(Error& error)
     //Language/country
     Utf8String languageAndCountry = Windows::Globalization::ApplicationLanguages::Languages->GetAt(0)->Data();
     SetLanguageAndCountry(languageAndCountry);
-    
+
     //Operating system properties
     this->operatingSystemInternalName = "windows";
     this->operatingSystemInternalVersion = GetWindowsInternalVersion();
@@ -84,7 +83,7 @@ void Application::InitializeGlobals(Error& error)
 void Application::CreateSystems(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //Input--------------------
     this->inputSystem.Create(this->inputSystemSettings, error);
     if (error)
@@ -129,10 +128,10 @@ bool Application::MainLoop(Error& error)
 
         //Handled queued messages---------------
         CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(processOption);
-        
+
         //Perform update----------------------
         if (!this->appViewportsController.empty())
-        {   
+        {
             for (size_t appWindowIndex = 0; appWindowIndex < this->appViewportsController.size(); appWindowIndex++)
             {
                 auto& appViewport = this->appViewportsController[appWindowIndex];
@@ -168,14 +167,14 @@ bool Application::MainLoop(Error& error)
                 processOption = CoreProcessEventsOption::ProcessOneIfPresent;
             }
         }
-        
+
         if (this->appViewportsController.empty())
         {
             processOption = CoreProcessEventsOption::ProcessUntilQuit;
             CoreApplication::Exit();
         }
     }
-    
+
     return true;
 }
 
@@ -187,7 +186,7 @@ void Application::ReportError(const Error& error)
 void Application::ShowTheCursor()
 {
     for (auto& appViewport : this->appViewportsController)
-        appViewport->GetOSWindow()->ShowTheCursor();    
+        appViewport->GetOSWindow()->ShowTheCursor();
 }
 
 void Application::HideTheCursor()

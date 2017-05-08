@@ -22,20 +22,20 @@ using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static bool IsWindowsVersion(DWORD major, DWORD minor)
 {
     OSVERSIONINFOEXW osVersion = {};
     osVersion.dwOSVersionInfoSize = sizeof(osVersion);
     osVersion.dwMajorVersion = major;
     osVersion.dwMinorVersion = minor;
-    
+
     DWORD typeMask = VER_MAJORVERSION | VER_MINORVERSION;
-    
+
     DWORDLONG condition = 0;
     VER_SET_CONDITION(condition, VER_MAJORVERSION, VER_EQUAL);
     VER_SET_CONDITION(condition, VER_MINORVERSION, VER_EQUAL);
-    
+
     return VerifyVersionInfoW(&osVersion, typeMask, condition) ? true : false;
 }
 
@@ -53,7 +53,7 @@ static bool IsWindowsVersion(DWORD major, DWORD minor, BYTE productType)
     VER_SET_CONDITION(condition, VER_MAJORVERSION, VER_EQUAL);
     VER_SET_CONDITION(condition, VER_MINORVERSION, VER_EQUAL);
     VER_SET_CONDITION(condition, VER_PRODUCT_TYPE, VER_EQUAL);
-    
+
     return VerifyVersionInfoW(&osVersion, typeMask, condition) ? true : false;
 }
 
@@ -103,7 +103,7 @@ static const char* GetWindowsInternalVersion()
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 void Application::InitializeGlobals(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
@@ -120,12 +120,12 @@ void Application::InitializeGlobals(Error& error)
     DWORD defaultLayout;
     if (GetProcessDefaultLayout(&defaultLayout) && defaultLayout == LAYOUT_RTL)
         this->layoutDirection = LayoutDirection::RIGHT_TO_LEFT;
-    
+
     //Language/country
     const ULONG LANGUAGE_BUFFER_LENGTH = 100;
     wchar_t languageBufferW[LANGUAGE_BUFFER_LENGTH];
     ULONG languageBufferLength = LANGUAGE_BUFFER_LENGTH;
-    ULONG languageCount = 0;    
+    ULONG languageCount = 0;
     Utf8String languageAndCountry;
     if (GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &languageCount, languageBufferW, &languageBufferLength) && languageCount > 0)
         languageAndCountry.assign(languageBufferW);
@@ -141,15 +141,18 @@ void Application::InitializeGlobals(Error& error)
     if (FINJIN_DEBUG)
     {
         this->applicationGlobals.hasConsole = AllocConsole() == TRUE;
-        freopen("CONOUT$", "w", stdout);
-        freopen("CONIN$", "r", stdin);
+        if (this->applicationGlobals.hasConsole)
+        {
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONIN$", "r", stdin);
+        }
     }
 }
 
 void Application::CreateSystems(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //Input
     this->inputSystem.Create(this->inputSystemSettings, error);
     if (error)
@@ -174,7 +177,7 @@ void Application::CreateSystems(Error& error)
         return;
     }
 
-#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE        
+#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     //VR
     this->vrSystem.Create(this->vrSystemSettings, error);
     if (error)
@@ -190,24 +193,24 @@ void Application::CreateSystems(Error& error)
 bool Application::MainLoop(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     auto exitMainLoop = false;
     while (!exitMainLoop && !this->appViewportsController.empty())
     {
         //Get focus state of all windows---------
         auto focusState = this->appViewportsController.StartFocusUpdate();
-        
+
         //Handle queued messages-----------------
         if (!focusState.anyHadFocus && !this->applicationDelegate->GetApplicationSettings().updateWhenNotFocused)
             WaitMessage();
-        
+
         MSG msg;
         while (PeekMessageW(&msg, nullptr, 0U, 0U, PM_REMOVE))
         {
             TranslateMessage(&msg);
             DispatchMessageW(&msg);
         }
-        
+
         //Perform update----------------------
         if (!this->appViewportsController.empty())
         {
@@ -235,7 +238,7 @@ bool Application::MainLoop(Error& error)
             }
         }
     }
-    
+
     return true;
 }
 
@@ -245,7 +248,7 @@ void Application::ReportError(const Error& error)
 
     if (this->applicationGlobals.hasConsole)
         FINJIN_DEBUG_LOG_ERROR("%1%", errorString);
-    
+
     OSWindow::ShowErrorMessage(errorString, this->applicationDelegate->GetName(ApplicationNameFormat::DISPLAY));
 }
 

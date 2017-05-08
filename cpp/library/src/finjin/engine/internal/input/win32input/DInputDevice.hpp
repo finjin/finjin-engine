@@ -14,13 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Chrono.hpp"
-#include "finjin/common/Vector.hpp"
+#include "finjin/common/Path.hpp"
 #include "finjin/common/Uuid.hpp"
 #include "finjin/common/VirtualFileSystem.hpp"
-#include "finjin/common/Path.hpp"
 #include "finjin/engine/InputSource.hpp"
 #include "DInputDeviceConfiguration.hpp"
 #include "DInputDeviceComponents.hpp"
@@ -31,7 +30,7 @@ using IDInput = IDirectInput8*;
 using IDInputDevice = IDirectInputDevice8*;
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -40,13 +39,13 @@ namespace Finjin { namespace Engine {
     struct DInputDeviceState : public InputDeviceState<Button, Axis, Pov, maxButtonCount, maxAxisCount, maxPovCount>
     {
         DInputDeviceState()
-        {            
+        {
         }
 
         template <typename DeviceType>
         bool GetState(DeviceType device, State& state)
         {
-            memset(&state, 0, sizeof(State));
+            FINJIN_ZERO_MEMORY(&state, sizeof(State));
 
             auto result = false;
             if (device != nullptr)
@@ -71,7 +70,7 @@ namespace Finjin { namespace Engine {
         {
             State state;
             auto gotState = GetState(device, state);
-            
+
             Update(state, gotState, componentClasses, isFirstUpdate);
         }
 
@@ -118,7 +117,7 @@ namespace Finjin { namespace Engine {
     class Win32InputContext;
 
     class DInputDevice
-    {    
+    {
     public:
         DInputDevice();
         virtual ~DInputDevice();
@@ -134,7 +133,7 @@ namespace Finjin { namespace Engine {
 
     public:
         Win32InputContext* context;
-        IDInputDevice dinputDevice;    
+        IDInputDevice dinputDevice;
         DIDEVCAPS dinputCapabilities;
         DInputDeviceConfiguration config;
         Utf8String displayName;

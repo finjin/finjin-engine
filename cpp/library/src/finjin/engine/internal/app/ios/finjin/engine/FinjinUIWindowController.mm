@@ -11,15 +11,16 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinUIWindowController.h"
 #import "FinjinUIViewController.h"
 
+
+//Implementation----------------------------------------------------------------
 @class FinjinUIViewController;
 @class FinjinUIView;
 
-
-//Implementation---------------------------------------------------------------
 @interface FinjinUIWindowController ()
 @end
 
@@ -40,15 +41,15 @@
 + (FinjinUIWindowController*)createFromWindowFrame:(CGRect)frameRect withScreen:(UIScreen*)screen
 {
     auto fullScreenRect = [UIScreen mainScreen].bounds;
-    
+
     FinjinUIWindowController* windowController = [[FinjinUIWindowController alloc] init];
     windowController.window = [[UIWindow alloc] initWithFrame:fullScreenRect];
-    
+
     FinjinUIViewController* viewController = [[FinjinUIViewController alloc] init];
     viewController.preferredContentSize = fullScreenRect.size;
-        
+
     windowController.window.rootViewController = viewController;
-    
+
     return windowController;
 }
 

@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/EventCollection.hpp"
 #include "finjin/engine/InputBindings.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class VRGameControllerEvents : public EventCollectionFlags<>
@@ -29,15 +29,15 @@ namespace Finjin { namespace Engine {
         {
             ACCEPT,
             CANCEL,
-            
+
             SETTINGS,
-            
+
             SYSTEM_HOME,
 
             GAS,
 
             TOGGLE,
-            
+
             MOVE,
             MOVE_TOGGLE,
 
@@ -46,7 +46,7 @@ namespace Finjin { namespace Engine {
 
             LOCATOR
         };
-        
+
         VRGameControllerEvents()
         {
             Reset();
@@ -62,7 +62,7 @@ namespace Finjin { namespace Engine {
             this->look[0] = this->look[1] = 0;
             FINJIN_ZERO_ITEM(this->locator);
         }
-        
+
     public:
         float gas; //Trigger
         float toggle[2]; //D-pad x/y, if there's a d-pad and an analog stick
@@ -74,15 +74,13 @@ namespace Finjin { namespace Engine {
     class VRGameControllerInputBindings : public InputBindings<VRGameControllerEvents>
     {
     public:
-        static const Utf8String DEFAULT_BINDINGS_FILE_NAME;
-        
         enum //InputActionID
         {
             ACCEPT,
             CANCEL,
-            
+
             SETTINGS,
-            
+
             SYSTEM_HOME,
 
             GAS,
@@ -91,7 +89,7 @@ namespace Finjin { namespace Engine {
             TOGGLE_DOWN,
             TOGGLE_LEFT,
             TOGGLE_RIGHT,
-            
+
             MOVE_UP,
             MOVE_DOWN,
             MOVE_LEFT,
@@ -106,9 +104,11 @@ namespace Finjin { namespace Engine {
 
             LOCATOR
         };
-        
+
     public:
         VRGameControllerInputBindings();
+
+        static const Utf8String& GetDefaultBindingsFileName();
 
     protected:
         void ProcessInputAction

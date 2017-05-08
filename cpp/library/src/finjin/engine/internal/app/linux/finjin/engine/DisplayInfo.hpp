@@ -14,30 +14,30 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
 #include <xcb/xcb.h>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class DisplayInfo
     {
-    public:    
+    public:
         DisplayInfo();
 
     public:
-        size_t index;        
+        size_t index;
         bool isPrimary;
         OSWindowRect frame;
         OSWindowRect clientFrame;
-        Utf8String name;     
-        
+        Utf8String name;
+
         xcb_window_t root;
     };
 
@@ -45,14 +45,14 @@ namespace Finjin { namespace Engine {
     {
     public:
         DisplayInfos();
-        
+
         void Enumerate();
 
         void SortLeftToRight();
 
         const DisplayInfo* GetByName(const Utf8String& name) const;
-        
+
         bool isXineramaActive;
-    };    
+    };
 
 } }

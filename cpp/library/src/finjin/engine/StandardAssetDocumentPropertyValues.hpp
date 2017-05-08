@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #if defined(FINJIN_EXPORTER)
     #include <wx/string.h>
     typedef wxString FinjinChunkPropertyString;
@@ -22,8 +22,8 @@
     typedef const char* FinjinChunkPropertyString;
 #endif
 
-    
-//Classes----------------------------------------------------------------------
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     struct StandardAssetDocumentPropertyValues
@@ -70,7 +70,7 @@ namespace Finjin { namespace Engine {
         struct IndexBufferType
         {
             static const FinjinChunkPropertyString UINT16;
-            static const FinjinChunkPropertyString UINT32;            
+            static const FinjinChunkPropertyString UINT32;
         };
 
         struct LightType

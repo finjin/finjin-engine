@@ -15,11 +15,10 @@
 #include "FinjinPrecompiled.hpp"
 #include "AssetClass.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 Utf8String AssetClassUtilities::ToString(size_t index, bool directoryName)
 {
     Utf8String result;
@@ -72,7 +71,7 @@ AssetClass AssetClassUtilities::ParseFromExtension(const Utf8String& extension)
         if (extension.EndsWith(ToString(i)))
             return (AssetClass)i;
     }
-    
+
     return AssetClass::COUNT;
 }
 

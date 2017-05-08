@@ -14,14 +14,14 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "DInputKeyboard.hpp"
+#include "finjin/engine/OSWindow.hpp"
 #include "DInputDevice.hpp"
 #include "Win32InputContext.hpp"
-#include "finjin/engine/OSWindow.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct DInputKeyboard::Impl : public DInputDevice
 {
     enum { MAX_DINPUT_BUTTON_COUNT = 256 }; //Should be <= KeyboardConstants::MAX_BUTTON_COUNT
@@ -33,7 +33,7 @@ struct DInputKeyboard::Impl : public DInputDevice
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, void* data)
 {
     auto keyboard = static_cast<DInputKeyboard*>(data);
@@ -58,7 +58,7 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
             case DIK_RIGHT: inputSemantic = InputComponentSemantic::TOGGLE_RIGHT; break;
             case DIK_RETURN: inputSemantic = InputComponentSemantic::ACCEPT; break;
             case DIK_ESCAPE: inputSemantic = InputComponentSemantic::CANCEL; break;
-            case DIK_F1: inputSemantic = InputComponentSemantic::SETTINGS; break;            
+            case DIK_F1: inputSemantic = InputComponentSemantic::SETTINGS; break;
         }
 
         DInputButton button;
@@ -71,14 +71,14 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
         button.dinputOffset = did->dwOfs;
         impl->state.buttons.push_back(button);
     }
-    
+
     return DIENUM_CONTINUE;
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 DInputKeyboard::DInputKeyboard() : impl(new Impl)
-{    
+{
 }
 
 DInputKeyboard::~DInputKeyboard()
@@ -99,18 +99,18 @@ void DInputKeyboard::Create(Win32InputContext* context, const DInputDeviceConfig
 
     //Set device cooperative level
     if (FAILED(impl->dinputDevice->SetCooperativeLevel(static_cast<HWND>(context->GetSettings().osWindow->GetWindowHandle()), DISCL_EXCLUSIVE | DISCL_FOREGROUND | DISCL_NOWINKEY)))
-    {    
+    {
         Destroy();
 
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to set DirectInput cooperative level for keyboard '%1%'", config.GetDebugName()));
         return;
     }
-        
+
     //Set data format for keyboard using DirectInput constant
     if (FAILED(impl->dinputDevice->SetDataFormat(&c_dfDIKeyboard)))
-    {    
+    {
         Destroy();
-        
+
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to set DirectInput data format for keyboard '%1%'", config.GetDebugName()));
         return;
     }

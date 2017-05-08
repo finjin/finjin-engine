@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/EnumBitwise.hpp"
 #include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -61,45 +61,44 @@ namespace Finjin { namespace Engine {
 
     struct InputScreenConstants
     {
-        enum { MAX_INPUT_SCREENS = 2 }; //2 screens for input (like on PS Vita, for example)        
+        enum { MAX_INPUT_SCREENS = 2 }; //2 screens for input (like on PS Vita, for example)
     };
 
     struct InputPointerConstants
     {
-        enum { MAX_INPUT_POINTERS = 10 + MouseConstants::MAX_MICE }; //10 fingers + whatever mice, if we decide to treat the mice as pointers    
+        enum { MAX_INPUT_POINTERS = 10 + MouseConstants::MAX_MICE }; //10 fingers + whatever mice, if we decide to treat the mice as pointers
     };
 
-    //InputTriggerFlag
     enum class InputTriggerFlag : uint32_t
     {
         NONE = 0,
 
         /** The event should only be triggered when the input is pressed  */
-        PRESSED = 0x1,
+        PRESSED = 1 << 0,
 
         /** The event can be triggered continuously.*/
-        HOLDING = 0x2,
+        HOLDING = 1 << 1,
 
         /** The event should only be triggered when the input is released */
-        RELEASED = 0x4,
+        RELEASED = 1 << 2,
 
         /**
         * Diagonal POV directions are considered to be part horizontal, part vertical
         * If this is specified, do not specify InputTriggerFlag::POV_STRONG
         */
-        POV_WEAK = 0x200,
+        POV_WEAK = 1 << 3,
 
         /**
         * Each POV direction is considered to be distinct
         * If this is specified, do not specify InputTriggerFlag::POV_WEAK
         */
-        POV_STRONG = 0x400,
+        POV_STRONG = 1 << 4,
 
         /**
         * Indicates single touch actions are allowed to be added even if there is a multitouch input event in effect.
         * If this is NOT specified, single touch actions will not be added if there is a multitouch input event.
         */
-        TOUCH_ALLOWED_WITH_MULTITOUCH = 0x800
+        TOUCH_ALLOWED_WITH_MULTITOUCH = 1 << 5
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputTriggerFlag)
 

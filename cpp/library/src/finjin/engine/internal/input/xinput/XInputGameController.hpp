@@ -14,15 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/engine/InputComponents.hpp"
-#include "finjin/common/Vector.hpp"
-#include "finjin/common/Utf8String.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Utf8String.hpp"
+#include "finjin/engine/InputComponents.hpp"
 #include "finjin/engine/InputSource.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -46,19 +45,19 @@ namespace Finjin { namespace Engine {
         bool GetConnectionChanged() const;
 
         size_t GetIndex() const;
-        
+
         const Utf8String& GetDisplayName() const;
         void SetDisplayName(const Utf8String& value);
 
         InputDeviceSemantic GetSemantic() const;
         void SetSemantic(InputDeviceSemantic value);
-        
+
         const Utf8String& GetProductDescriptor() const;
         const Utf8String& GetInstanceDescriptor() const;
-        
+
         size_t GetAxisCount() const;
         InputAxis* GetAxis(size_t axisIndex);
-        
+
         size_t GetButtonCount() const;
         InputButton* GetButton(size_t buttonIndex);
 
@@ -70,7 +69,7 @@ namespace Finjin { namespace Engine {
 
         void AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count);
         void StopHapticFeedback();
-        
+
         static size_t CreateGameControllers(XInputGameController* gameControllers, size_t gameControllerCount);
         static size_t UpdateGameControllers(SimpleTimeDelta elapsedTime, XInputGameController* gameControllers, size_t gameControllerCount);
 
@@ -81,7 +80,7 @@ namespace Finjin { namespace Engine {
         void _AcceptUpdate(bool isFirstUpdate);
 
         void _SetForce();
-        
+
     private:
         struct Impl;
         std::unique_ptr<Impl> impl;

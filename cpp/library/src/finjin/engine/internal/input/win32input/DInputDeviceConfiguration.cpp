@@ -16,13 +16,12 @@
 #include "DInputDeviceConfiguration.hpp"
 #include <dinput.h>
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 DInputDeviceConfiguration::DInputDeviceConfiguration()
-{    
+{
 }
 
 DInputDeviceConfiguration::DInputDeviceConfiguration(const void* voidDDI)
@@ -34,10 +33,10 @@ DInputDeviceConfiguration::DInputDeviceConfiguration(const void* voidDDI)
 
     this->productDescriptor = this->productGuid.ToString();
     this->instanceDescriptor = this->instanceGuid.ToString();
-    
+
     this->instanceName = ddi->tszInstanceName;
     this->productName = ddi->tszProductName;
-    
+
     this->type = ddi->dwDevType;
 }
 

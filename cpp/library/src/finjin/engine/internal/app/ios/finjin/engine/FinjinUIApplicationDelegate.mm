@@ -11,6 +11,7 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinUIApplicationDelegate.h"
 #include "finjin/common/AppleUtilities.hpp"
@@ -18,21 +19,20 @@
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/DefaultAllocator.hpp"
 #include "finjin/common/PassthroughSystemAllocator.hpp"
-#include "finjin/engine/ApplicationDelegate.hpp"
 #include "finjin/engine/Application.hpp"
+#include "finjin/engine/ApplicationDelegate.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation--------------------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 @implementation FinjinUIApplicationDelegate
 {
     DefaultAllocator<PassthroughSystemAllocator> _defaultAllocator;
 
     CADisplayLink* _tickTimer;
     Finjin::Common::Error _tickError;
-    
+
     std::unique_ptr<Finjin::Engine::ApplicationDelegate> _applicationDelegate;
     std::unique_ptr<Application> _app;
 }
@@ -60,7 +60,7 @@ using namespace Finjin::Engine;
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
     FINJIN_DECLARE_ERROR(error);
-    
+
     //Create application-----------------------------------------------------
     auto allocator = _applicationDelegate->GetAllocator();
     _app = AllocatedClass::NewUnique<Application>(allocator, FINJIN_CALLER_ARGUMENTS, _applicationDelegate.release());
@@ -72,24 +72,24 @@ using namespace Finjin::Engine;
     if (error)
     {
         _app->Destroy();
-    
+
         _app->ReportError(error);
-            
+
         return YES;
     }
-    
+
     //Start main loop timer--------------------------------------------------
     [self startTimer];
-    
+
     return YES;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication*)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    
+
     FINJIN_DECLARE_ERROR(error);
-    
+
     _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::RESUME), error);
     if (error)
     {
@@ -104,9 +104,9 @@ using namespace Finjin::Engine;
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     [self stopTimer];
-    
+
     FINJIN_DECLARE_ERROR(error);
-    
+
     _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::PAUSE), error);
     if (error)
     {
@@ -118,13 +118,13 @@ using namespace Finjin::Engine;
 - (void)applicationWillTerminate:(UIApplication*)application
 {
     [self stopTimer];
-    
+
     if (_app != nullptr)
     {
         _app->Destroy();
         _app.reset();
     }
-    
+
     _applicationDelegate.reset();
 }
 
@@ -142,7 +142,7 @@ using namespace Finjin::Engine;
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
     FINJIN_DECLARE_ERROR(error);
-    
+
     _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::LOW_MEMORY_WARNING), error);
     if (error)
     {
@@ -175,16 +175,16 @@ using namespace Finjin::Engine;
     if (!_tickError)
     {
         FINJIN_ERROR_METHOD_START(_tickError);
-        
+
         @autoreleasepool
         {
             _app->Tick(_tickError);
         }
-        
+
         if (_tickError)
         {
             FINJIN_DEBUG_LOG_INFO("Failed to tick: %1%", _tickError.ToString());
-            
+
             [self stopTimer];
         }
     }

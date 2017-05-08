@@ -19,11 +19,10 @@
 #include "D3D12GpuOutput.hpp"
 #include "finjin/common/Math.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static size_t Difference(size_t a, size_t b)
 {
     if (a > b)
@@ -46,7 +45,7 @@ static float ResolutionDifference(const D3D12DisplayMode& a, const D3D12DisplayM
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 bool D3D12GpuOutput::FindBestDisplayMode(D3D12DisplayMode& result, const D3D12DisplayMode& desired) const
 {
     //Try to find exact match

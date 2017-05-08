@@ -14,11 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/EnumBitwise.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -58,24 +58,11 @@ namespace Finjin { namespace Engine {
 
     struct RenderShaderFeatureFlags
     {
-        RenderShaderFeatureFlags()
-        {
-            this->environmentFlags = ShaderFeatureFlag::NONE;
-            this->renderingFlags = ShaderFeatureFlag::NONE;
-            this->shaderFeatureFlagsMask = ShaderFeatureFlag::ALL;
-            this->additionalShaderFeatureFlags = ShaderFeatureFlag::NONE;
-        }
-        
-        ShaderFeatureFlag ForMaterialMapsAndMesh(ShaderFeatureFlag materialMapFlags, ShaderFeatureFlag meshFlags) const
-        {
-            return ((materialMapFlags | meshFlags | this->environmentFlags | this->renderingFlags) & this->shaderFeatureFlagsMask) | this->additionalShaderFeatureFlags;
-        }
+        RenderShaderFeatureFlags();
 
-        static const RenderShaderFeatureFlags& GetDefault()
-        {
-            static const RenderShaderFeatureFlags value;
-            return value;
-        }
+        ShaderFeatureFlag ForMaterialMapsAndMesh(ShaderFeatureFlag materialMapFlags, ShaderFeatureFlag meshFlags) const;
+
+        static const RenderShaderFeatureFlags& GetDefault();
 
         ShaderFeatureFlag environmentFlags;
         ShaderFeatureFlag renderingFlags;

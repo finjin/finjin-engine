@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/EnumBitwise.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/AssetFileReader.hpp"
@@ -24,11 +24,11 @@
 #include <boost/thread/null_mutex.hpp>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class OSWindow;
-    
+
     using namespace Finjin::Common;
 
     struct InputEvent
@@ -57,10 +57,10 @@ namespace Finjin { namespace Engine {
         ContextEventInfo eventInfo;
     };
 
-    class InputEvents : public AllocatedVector<InputEvent>
+    class InputEvents : public DynamicVector<InputEvent>
     {
     public:
-        using Super = AllocatedVector<InputEvent>;
+        using Super = DynamicVector<InputEvent>;
 
         using iterator = Super::iterator;
         using const_iterator = Super::const_iterator;
@@ -102,7 +102,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = PerFrameObjectAllocator<InputCommand, boost::null_mutex>;
-        
+
         using iterator = Super::iterator;
         using const_iterator = Super::const_iterator;
 
@@ -125,7 +125,7 @@ namespace Finjin { namespace Engine {
             command->force = force;
 
             this->commands.push_back(command);
-            
+
             return true;
         }
 
@@ -141,7 +141,7 @@ namespace Finjin { namespace Engine {
             command->deviceIndex = deviceIndex;
 
             this->commands.push_back(command);
-            
+
             return true;
         }
     };
@@ -160,7 +160,7 @@ namespace Finjin { namespace Engine {
         void HandleTopLevelSetting(const Utf8StringView& key, const Utf8StringView& value, Error& error);
 
         void* applicationHandle;
-        OSWindow* osWindow;        
+        OSWindow* osWindow;
         AssetFileReader* assetFileReader;
         AssetPathSelector initialAssetFileSelector;
         AssetReferences<EngineConstants::MAX_CONTEXT_SETTINGS_FILES> settingsFileNames; //Usually "sound-context.cfg"

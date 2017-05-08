@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ScreenOrientation.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
@@ -22,20 +22,20 @@
 #include "GpuDescription.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class DisplayInfo
     {
-    public:    
+    public:
         DisplayInfo();
 
     public:
-        size_t index;        
+        size_t index;
         bool isPrimary;
-        float density;        
+        float density;
         bool hasSmallScreen; //Indicates a small screen device, like a phone
         bool hasTouchScreen; //Indicates whether a touch screen is able to be used
         bool usesScreenEdgePadding; //Indicates whether screen edge padding should be used. Necessary for devices that display on a TV
@@ -55,6 +55,6 @@ namespace Finjin { namespace Engine {
         void SortLeftToRight();
 
         const DisplayInfo* GetByName(const Utf8String& name) const;
-    };    
+    };
 
 } }

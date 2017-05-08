@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Path.hpp"
 #include "finjin/common/StreamingFileFormat.hpp"
 #include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -44,7 +44,7 @@ namespace Finjin { namespace Engine {
         SOUND, //Exported by FinjinExporter
         STRING_TABLE,
         TEXTURE, //Exported by FinjinExporter
-        USER_DATA_TYPES, 
+        USER_DATA_TYPES,
 
         COUNT
     };
@@ -56,7 +56,7 @@ namespace Finjin { namespace Engine {
 
         static void ToString(Utf8String& result, size_t index, bool directoryName = false);
         static void ToString(Utf8String& result, AssetClass value, bool directoryName = false);
-        
+
         template <typename T>
         static AssetClass Parse(const T& value)
         {
@@ -72,13 +72,13 @@ namespace Finjin { namespace Engine {
         static AssetClass ParseFromExtension(const Utf8String& extension);
 
         static bool IsHandwrittenExtension(const Utf8String& extension);
-        
+
         static Utf8String ToHandwrittenString(AssetClass assetClass);
-        
+
         static Utf8String ToDirectoryName(AssetClass value);
         static void ToDirectoryName(Utf8String& result, AssetClass value);
-        
+
         static void FixObjectName(Path& fileName);
     };
-    
+
 } }

@@ -14,9 +14,9 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/vr/openvr/OpenVRContext.hpp"
 namespace Finjin { namespace Engine {
     using VRContext = OpenVRContext;
-    using VRContextSettings = OpenVRContextSettings;    
+    using VRContextSettings = OpenVRContextSettings;
 } }

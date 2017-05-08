@@ -23,7 +23,7 @@
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
+//Static initialization---------------------------------------------------------
 const FinjinChunkName StandardAssetDocumentChunkNames::ATTENUATION("attenuation", FinjinUuid(0x43df5f02, 0xe054, 0x4427, 0x98, 0x3e, 0xcd, 0xd5, 0x75, 0xe3, 0xda, 0x18)); //43DF5F02-E054-4427-983E-CDD575E3DA18
 const FinjinChunkName StandardAssetDocumentChunkNames::BONE("bone", FinjinUuid(0x9544ad72, 0x8604, 0x4cd4, 0xaa, 0x97, 0x21, 0x54, 0xdb, 0x6e, 0xc2, 0xc5)); //9544AD72-8604-4CD4-AA97-2154DB6EC2C5
 const FinjinChunkName StandardAssetDocumentChunkNames::BONES("bones", FinjinUuid(0xcd7ca0c, 0xf81b, 0x4281, 0x92, 0x74, 0x4e, 0x27, 0x61, 0x7d, 0xbf, 0x1f)); //0CD7CA0C-F81B-4281-9274-4E27617DBF1F

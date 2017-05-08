@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
@@ -23,11 +23,11 @@
 #include "D3D12Utilities.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class D3D12Mesh
     {
     public:
@@ -43,20 +43,23 @@ namespace Finjin { namespace Engine {
             D3D12Mesh* mesh;
 
             UINT vertexBufferIndex;
-            UINT indexCount;
             UINT startIndexLocation;
-            INT baseVertexLocation;
-            
+            UINT indexCount;
+            UINT baseVertexLocation;
+            UINT vertexCount;
+
             D3D12GpuBuffer vertexBuffer;
             D3D12GpuBuffer indexBuffer;
-            
+
             D3D12_PRIMITIVE_TOPOLOGY primitiveType;
         };
 
         D3D12Mesh(Allocator* allocator);
 
+        void Destroy();
+
         void HandleCreationFailure();
-        void DisposeUploaders();
+        void ReleaseUploaders();
 
         D3D12_VERTEX_BUFFER_VIEW GetSharedVertexBufferView(UINT vertexBufferIndex) const;
         D3D12_INDEX_BUFFER_VIEW GetSharedIndexBufferView() const;
@@ -68,12 +71,12 @@ namespace Finjin { namespace Engine {
         FinjinMesh* finjinMesh;
 
         D3D12GpuBuffer sharedIndexBuffer;
-        AllocatedVector<D3D12GpuBuffer> sharedVertexBuffers;
+        DynamicVector<D3D12GpuBuffer> sharedVertexBuffers;
 
-        AllocatedVector<Submesh> submeshes;
+        DynamicVector<Submesh> submeshes;
 
         size_t isResidentCountdown;
         D3D12Mesh* waitingToBeResidentNext;
     };
-    
+
 } }

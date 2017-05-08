@@ -19,10 +19,10 @@
 using namespace Finjin::Engine;
 
 
-//Implemmentation--------------------------------------------------------------
+//Implemmentation---------------------------------------------------------------
 
 //FinjinSceneObjectBase
-FINJIN_IMPLEMENT_ABSTRACT_BASE_CLASS_DESCRIPTION(FinjinSceneObjectBase, "finjin.scene.object-base");
+FINJIN_IMPLEMENT_ABSTRACT_BASE_TYPE_DESCRIPTION(FinjinSceneObjectBase, "finjin.scene.object-base");
 
 FinjinSceneObjectBase::FinjinSceneObjectBase(Allocator* allocator) : AllocatedClass(allocator), FinjinSceneObjectBaseState(allocator)
 {
@@ -34,7 +34,7 @@ FinjinSceneObjectBase::~FinjinSceneObjectBase()
 
 
 //FinjinSceneMovableObject
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinSceneMovableObject, "finjin.scene.movable-object");
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinSceneMovableObject, "finjin.scene.movable-object");
 
 FinjinSceneMovableObject::FinjinSceneMovableObject(Allocator* allocator) : Super(allocator)
 {
@@ -48,7 +48,7 @@ FinjinSceneMovableObject::~FinjinSceneMovableObject()
 
 
 //FinjinSceneRenderableMovableObject
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinSceneRenderableMovableObject, "finjin.scene.renderable-movable-object");
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinSceneRenderableMovableObject, "finjin.scene.renderable-movable-object");
 
 FinjinSceneRenderableMovableObject::FinjinSceneRenderableMovableObject(Allocator* allocator) :
     Super(allocator),
@@ -66,32 +66,33 @@ FinjinSceneRenderableMovableObject::~FinjinSceneRenderableMovableObject()
 
 
 //FinjinSceneObjectEntity
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinSceneObjectEntity, FINJIN_SCENE_ENTITY_TYPE_NAME)
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinSceneObjectEntity, FINJIN_SCENE_ENTITY_TYPE_NAME)
 
 FinjinSceneObjectEntity::FinjinSceneObjectEntity(Allocator* allocator) : Super(allocator), meshHandle(allocator)
-{    
+{
 }
 
 //FinjinSceneObjectCamera
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinSceneObjectCamera, FINJIN_SCENE_CAMERA_TYPE_NAME)
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinSceneObjectCamera, FINJIN_SCENE_CAMERA_TYPE_NAME)
 
 FinjinSceneObjectCamera::FinjinSceneObjectCamera(Allocator* allocator) : Super(allocator)
 {
 }
 
 CameraState& FinjinSceneObjectCamera::Evaluate(size_t frameStageIndex, size_t updateSequence, const SceneNodeState& sceneNodeState)
-{ 
+{
     auto& result = this->frameStages[frameStageIndex];
 
-    result = *this; 
+    result = *this;
     result.worldMatrix = sceneNodeState.worldMatrix * this->transform;
     result.inverseWorldMatrix = result.worldMatrix.inverse();
+    result.inverseTransposeWorldMatrix = result.inverseWorldMatrix.transpose();
 
     return result;
 }
 
 //FinjinSceneObjectLight
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinSceneObjectLight, FINJIN_SCENE_LIGHT_TYPE_NAME)
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinSceneObjectLight, FINJIN_SCENE_LIGHT_TYPE_NAME)
 
 FinjinSceneObjectLight::FinjinSceneObjectLight(Allocator* allocator) : Super(allocator)
 {
@@ -111,7 +112,7 @@ LightState& FinjinSceneObjectLight::Evaluate(size_t frameStageIndex, size_t upda
 }
 
 //FinjinSceneNode
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinSceneNode, FINJIN_SCENE_NODE_TYPE_NAME);
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinSceneNode, FINJIN_SCENE_NODE_TYPE_NAME);
 
 FinjinSceneNode::FinjinSceneNode(Allocator* allocator) : Super(allocator), prefabHandle(allocator)
 {
@@ -158,16 +159,16 @@ FinjinSceneNodeVisibility FinjinSceneNode::EvaluateVisibility(FinjinSceneNodeVis
     return defaultVisibility;
 }
 
-void FinjinSceneNode::EvaluateTransform(MathMatrix44& result) const
+void FinjinSceneNode::EvaluateTransform(MathMatrix4& result) const
 {
     result = this->transform;
-    
+
     for (auto parent = this->parentNodePointer; parent != nullptr; parent = parent->parentNodePointer)
         result = parent->transform * result;
 }
 
 //FinjinMesh
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinMesh, FINJIN_MESH_TYPE_NAME);
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinMesh, FINJIN_MESH_TYPE_NAME);
 
 //FinjinMaterial
-FINJIN_IMPLEMENT_ALLOCATED_CLASS_DESCRIPTION(FinjinMaterial, FINJIN_MATERIAL_TYPE_NAME);
+FINJIN_IMPLEMENT_ALLOCATED_TYPE_DESCRIPTION(FinjinMaterial, FINJIN_MATERIAL_TYPE_NAME);

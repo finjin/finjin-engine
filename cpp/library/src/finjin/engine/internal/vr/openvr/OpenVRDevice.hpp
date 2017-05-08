@@ -14,18 +14,18 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
-#include "finjin/common/Error.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Error.hpp"
 #include "finjin/engine/InputComponents.hpp"
 #include "finjin/engine/VRContextCommonSettings.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     struct OpenVRDeviceImpl;
 
     class OpenVRDevice
@@ -70,5 +70,5 @@ namespace Finjin { namespace Engine {
     private:
         std::unique_ptr<OpenVRDeviceImpl> impl;
     };
-    
+
 } }

@@ -11,10 +11,13 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #import <UIKit/UIKit.h>
 #import "FinjinUIView.h"
 #import <GameController/GCController.h>
 
+
+//Types-------------------------------------------------------------------------
 #if TARGET_OS_TV
 @interface FinjinUIViewController : GCEventViewController
 #else

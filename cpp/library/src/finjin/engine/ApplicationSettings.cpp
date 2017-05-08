@@ -19,7 +19,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 ApplicationSettings::ApplicationSettings() :
     windowWidth((OSWindowDimension)640),
     windowHeight((OSWindowDimension)480),
@@ -41,11 +41,11 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
     for (size_t index = 0; index < argsProcessor.GetCount(); index++)
     {
         auto& arg = argsProcessor[index];
-        
+
         if (arg == "-additional-read-application-assets-directory" && index < argsProcessor.GetCount() - 1)
         {
             this->additionalReadApplicationAssetsDirectory = argsProcessor[index + 1];
-            
+
             index++;
         }
         else if (arg == "-full-screen")
@@ -55,7 +55,7 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
         if (arg == "-full-screen-exclusive")
         {
             this->isFullScreen = true;
-            this->isFullScreenExclusive = true;            
+            this->isFullScreenExclusive = true;
         }
         else if (arg == "-vsync")
             this->vsync = true;
@@ -68,9 +68,9 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'window-width' value '%1%'.", argsProcessor[index + 1]));
                 return;
             }
-            
+
             this->windowWidth = static_cast<OSWindowDimension>(width);
-            
+
             index++;
         }
         else if (arg == "-window-height" && index < argsProcessor.GetCount() - 1)
@@ -84,7 +84,7 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
             }
 
             this->windowHeight = static_cast<OSWindowDimension>(height);
-            
+
             index++;
         }
         else if (arg == "-full-screen-width" && index < argsProcessor.GetCount() - 1)
@@ -98,7 +98,7 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
             }
 
             this->fullScreenWidth = static_cast<OSWindowDimension>(width);
-                               
+
             index++;
         }
         else if (arg == "-full-screen-height" && index < argsProcessor.GetCount() - 1)
@@ -112,8 +112,8 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
             }
 
             this->fullScreenHeight = static_cast<OSWindowDimension>(height);
-            
+
             index++;
         }
-    }        
+    }
 }

@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/DataChunkReaderCallbacks.hpp"
 #include "finjin/common/Error.hpp"
@@ -26,9 +26,9 @@
 #include "finjin/engine/StandardAssetDocumentPropertyNames.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     /*
@@ -62,7 +62,7 @@ namespace Finjin { namespace Engine {
         {
             if (this->translateType != nullptr)
                 return this->translateType(typeName);
-            
+
             return ValueOrError<void>();
         }
 
@@ -141,7 +141,7 @@ namespace Finjin { namespace Engine {
 
 
     //Readers-----------------------
-    
+
     class FinjinSceneReader;
     class FinjinCommonDataChunkReaderCallbacksState;
 
@@ -163,7 +163,7 @@ namespace Finjin { namespace Engine {
 
         Allocator* allocator; //Used to allocate new objects, buffers, etc, while reading a file
 
-        EnumValues<AssetClass, AssetClass::COUNT, size_t> assetCounts; //At least one must be set to > 0 in order for initialization to succeed
+        EnumArray<AssetClass, AssetClass::COUNT, size_t> assetCounts; //At least one must be set to > 0 in order for initialization to succeed
 
         bool cacheFullFilePaths; //Indicates whether full file paths will be cached when keeping track of which file paths have been encountered. If false, hashes are used
         bool createFilesToLoadQueue; //Indicates whether a queue of file names that should be loaded will be created and maintained
@@ -187,13 +187,13 @@ namespace Finjin { namespace Engine {
         const FinjinCommonDataChunkReaderCallbacksState* GetRootState() const;
 
         template <typename T>
-        void RecordAssetHandle(AssetHandle<T>* assetHandle, Error& error) 
-        { 
-            FINJIN_ERROR_METHOD_START(error); 
-            
+        void RecordAssetHandle(AssetHandle<T>* assetHandle, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
             RecordAssetHandle((AssetHandle<void>*)assetHandle, TypeToAssetInfo<T>::GetAssetClass(), TypeToAssetInfo<T>::RequiresInternalDependencyResolution(), error);
-            if (error) 
-                FINJIN_SET_ERROR_NO_MESSAGE(error); 
+            if (error)
+                FINJIN_SET_ERROR_NO_MESSAGE(error);
         }
 
         void HandleEncounteredAssetFilePath(const AssetReference& assetRef, AssetClass assetClass, Error& error);
@@ -270,15 +270,15 @@ namespace Finjin { namespace Engine {
             auto result = assetBucket.newAssetHandles.SpliceFront((size_t)-1, continuePred, &count);
             return NewAssetsResult<T>((AssetHandle<T>*)result.head, count);
         }
-        
+
     private:
         void RecordAssetHandle(AssetHandle<void>* assetHandle, AssetClass assetClass, bool requiresInternalDependencyResolution, Error& error);
 
     public:
         FinjinCommonDataChunkReaderCallbacksState* parentState;
-        
+
         Allocator* allocator; //Used to allocate new objects, buffers, etc, while reading a file
-        
+
         FinjinSceneReaderController* controller;
 
         template <typename T>
@@ -307,16 +307,16 @@ namespace Finjin { namespace Engine {
                 this->allocatedHead = nullptr;
             }
 
-            AllocatedUnorderedMap<Utf8String, AssetHandle<void>*> assetHandlesByName; //Maps an object name to an AssetHandle
+            DynamicUnorderedMap<Utf8String, AssetHandle<void>*> assetHandlesByName; //Maps an object name to an AssetHandle
             AssetHandle<void>* internalDependencyHead;
             AssetHandle<void>* allocatedHead;
             IntrusiveSingleList<AssetHandle<void>, AssetHandleAllocatedNextAccessor<AssetHandle<void>>> newAssetHandles;
         };
-        EnumValues<AssetClass, AssetClass::COUNT, AssetBucket> assetBucketsByClass;
+        EnumArray<AssetClass, AssetClass::COUNT, AssetBucket> assetBucketsByClass;
 
-        AllocatedEncounteredSet<Path> encounteredFilePaths;
-        
-        AllocatedQueue<Path> filesToLoad;
+        DynamicEncounteredSet<Path> encounteredFilePaths;
+
+        DynamicQueue<Path> filesToLoad;
 
         bool createOptimizedLookups;
     };
@@ -368,7 +368,7 @@ namespace Finjin { namespace Engine {
 
             //Add asset holder to beginning of allocated list
             auto& allocatedHead = rootState->assetBucketsByClass[TypeToAssetInfo<T>::GetAssetClass()].allocatedHead;
-            
+
             this->assetHandle->allocatedNext = (AssetHandle<T>*)allocatedHead;
             allocatedHead = (AssetHandle<void>*)this->assetHandle;
         }
@@ -437,7 +437,7 @@ namespace Finjin { namespace Engine {
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinMeshDataChunkReaderCallbacksState;
-        
+
         FinjinMeshDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
@@ -451,7 +451,7 @@ namespace Finjin { namespace Engine {
 
     //Skeleton reader-------------
     using FinjinMeshSkeletonDataChunkReaderCallbacksState = FinjinNonEmbeddedReaderCallbacksState<FinjinMeshSkeleton>;
-    
+
     class FinjinMeshSkeletonDataChunkReaderCallbacks : public FinjinBaseDataChunkReaderCallbacks<FinjinMeshSkeletonDataChunkReaderCallbacksState, 8>
     {
     public:
@@ -472,14 +472,14 @@ namespace Finjin { namespace Engine {
 
     //Material reader-------------
     using FinjinMaterialDataChunkReaderCallbacksState = FinjinNonEmbeddedReaderCallbacksState<FinjinMaterial>;
-    
+
     class FinjinMaterialDataChunkReaderCallbacks : public FinjinBaseDataChunkReaderCallbacks<FinjinMaterialDataChunkReaderCallbacksState, 3>
     {
     public:
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinMaterialDataChunkReaderCallbacksState;
-        
+
         FinjinMaterialDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
@@ -493,20 +493,20 @@ namespace Finjin { namespace Engine {
 
     //Prefab reader-------------
     using FinjinPrefabDataChunkReaderCallbacksState = FinjinNonEmbeddedReaderCallbacksState<FinjinPrefab>;
-    
+
     class FinjinPrefabDataChunkReaderCallbacks : public FinjinBaseDataChunkReaderCallbacks<FinjinPrefabDataChunkReaderCallbacksState, 21>
     {
     public:
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinPrefabDataChunkReaderCallbacksState;
-        
+
         FinjinPrefabDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
 
         Settings& GetSettings();
-        
+
     private:
         Settings settings;
     };
@@ -521,7 +521,7 @@ namespace Finjin { namespace Engine {
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinNodeAnimationDataChunkReaderCallbacksState;
-        
+
         FinjinNodeAnimationDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
@@ -542,7 +542,7 @@ namespace Finjin { namespace Engine {
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinSkeletonAnimationDataChunkReaderCallbacksState;
-        
+
         FinjinSkeletonAnimationDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
@@ -563,7 +563,7 @@ namespace Finjin { namespace Engine {
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinMorphAnimationDataChunkReaderCallbacksState;
-        
+
         FinjinMorphAnimationDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
@@ -577,14 +577,14 @@ namespace Finjin { namespace Engine {
 
     //Pose animation reader-------------
     using FinjinPoseAnimationDataChunkReaderCallbacksState = FinjinNonEmbeddedReaderCallbacksState<FinjinMeshPoseAnimation>;
-    
+
     class FinjinPoseAnimationDataChunkReaderCallbacks : public FinjinBaseDataChunkReaderCallbacks<FinjinPoseAnimationDataChunkReaderCallbacksState, 5>
     {
     public:
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinPoseAnimationDataChunkReaderCallbacksState;
-        
+
         FinjinPoseAnimationDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
@@ -598,20 +598,20 @@ namespace Finjin { namespace Engine {
 
     //Scene reader-------------
     using FinjinSceneDataChunkReaderCallbacksState = FinjinNonEmbeddedReaderCallbacksState<FinjinScene>;
-    
+
     class FinjinSceneDataChunkReaderCallbacks : public FinjinBaseDataChunkReaderCallbacks<FinjinSceneDataChunkReaderCallbacksState, 114>
     {
     public:
         using Super = FinjinBaseDataChunkReaderCallbacks;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
         using State = FinjinSceneDataChunkReaderCallbacksState;
-        
+
         FinjinSceneDataChunkReaderCallbacks() {}
 
         void Create(const Settings& settings, Error& error);
 
         Settings& GetSettings();
-        
+
     private:
         Settings settings;
     };
@@ -619,7 +619,7 @@ namespace Finjin { namespace Engine {
 
     //Handwritten user data types
     using HandwrittenUserDataTypesReaderState = FinjinNonEmbeddedReaderCallbacksState<UserDataTypes>;
-    
+
     class HandwrittenUserDataTypesReader
     {
     public:
@@ -628,12 +628,12 @@ namespace Finjin { namespace Engine {
 
         using State = HandwrittenUserDataTypesReaderState;
         using Settings = FinjinCommonDataChunkReaderCallbacksSettings;
-        
+
         void Create(const Settings& settings, Error& error);
         void Destroy();
 
         Settings& GetSettings();
-        
+
         void Parse(const AssetReference& assetRef, const Path& filePath, State& state, const ByteBufferReader& bytes, Error& error);
 
     private:
@@ -728,7 +728,7 @@ namespace Finjin { namespace Engine {
         AssetReference workingAssetRef;
         Path workingPath;
     };
-    
+
     //Controller---------------
     enum class AssetCollisionResolution
     {
@@ -784,7 +784,7 @@ namespace Finjin { namespace Engine {
         HandwrittenUserDataTypesReaderState handwrittenUserDataTypesReaderState;
         HandwrittenStringsReaderState handwrittenStringsReaderState;
         FinjinTextureReaderState textureReaderState;
-        FinjinSoundReaderState soundReaderState;        
+        FinjinSoundReaderState soundReaderState;
     };
 
     class FinjinSceneReader : public FinjinSceneReaderController
@@ -797,7 +797,7 @@ namespace Finjin { namespace Engine {
         FinjinSceneReader& operator = (FinjinSceneReader&& other) = delete;
 
         using State = FinjinSceneReaderState;
-        
+
         struct Settings : FinjinCommonDataChunkReaderCallbacksSettings
         {
             Settings()
@@ -811,14 +811,14 @@ namespace Finjin { namespace Engine {
             }
 
             AssetReadQueue* assetReadQueue;
-            EnumValues<AssetClass, AssetClass::COUNT, AssetClassFileReader>* assetClassFileReaders;
+            EnumArray<AssetClass, AssetClass::COUNT, AssetClassFileReader>* assetClassFileReaders;
 
             State* state;
 
             size_t maxQueuedFiles;
 
             StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS> externalTextureExtensions; //Texture file extensions without a leading dot
-            StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS> externalSoundExtensions; //Sound file extensions without a leading dot            
+            StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS> externalSoundExtensions; //Sound file extensions without a leading dot
         };
 
         FinjinSceneReader(Allocator* allocator);
@@ -840,7 +840,7 @@ namespace Finjin { namespace Engine {
         SetStateResult SetState(FinjinSceneReader::State* state);
 
         void RequestRead(const AssetReference* assetRefs, size_t count, Error& error);
-        
+
         template <typename... Args>
         void RequestReadLocalFiles(Error& error, const Args&... args)
         {
@@ -896,7 +896,7 @@ namespace Finjin { namespace Engine {
                 }
             }, fileFormat).SetAssetReference(assetRef, (*this->settings.assetClassFileReaders)[assetClass]);
         }
-    
+
         template <typename Reader, typename State>
         void CreateFullParseAssetRequest(const AssetReference& assetRef, AssetClass assetClass, Reader& reader, State& state)
         {
@@ -922,10 +922,10 @@ namespace Finjin { namespace Engine {
                 }
             }).SetAssetReference(assetRef, (*this->settings.assetClassFileReaders)[assetClass]);
         }
-        
+
     public:
         Settings settings;
-        
+
         UserDataClassPropertyPointers userDataClassPropertiesLookup;
 
         size_t filesLoaded;
@@ -935,8 +935,8 @@ namespace Finjin { namespace Engine {
         AssetReference workingAssetRef;
         AssetReadRequest workingAssetRequest;
 
-        AllocatedQueue<AssetReadHandle> assetReadHandleQueue;
-        
+        DynamicQueue<AssetReadHandle> assetReadHandleQueue;
+
         bool createdCallbacks;
 
         FinjinSceneDataChunkReaderCallbacks sceneCallbacks;
@@ -951,7 +951,7 @@ namespace Finjin { namespace Engine {
         HandwrittenUserDataTypesReader handwrittenUserDataTypesReader;
         HandwrittenStringsReader handwrittenStringsReader;
         FinjinTextureReader textureReader;
-        FinjinSoundReader soundReader;        
+        FinjinSoundReader soundReader;
     };
 
 } }

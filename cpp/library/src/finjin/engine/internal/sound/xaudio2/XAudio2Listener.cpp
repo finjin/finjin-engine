@@ -19,7 +19,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 XAudio2Listener::XAudio2Listener() : impl(new XAudio2ListenerImpl)
 {
     SetDefaults();
@@ -40,10 +40,10 @@ void XAudio2Listener::SetDefaults()
 {
     Set
         (
-        0, 0, 0,
-        0, 0, 0,
-        0, 0, -1,
-        0, 1, 0
+        MathVector3::Zero(),
+        MathVector3::Zero(),
+        MathVector3(0, 0, -1),
+        MathVector3(0, 1, 0)
         );
 
     SetConeAngle(Radians(0), Radians(X3DAUDIO_2PI / 4));
@@ -66,73 +66,57 @@ void XAudio2Listener::MakeOmnidirectional()
 
 void XAudio2Listener::Set
     (
-    float x, float y, float z,
-    float vx, float vy, float vz,
-    float directionx, float directiony, float directionz,
-    float upx, float upy, float upz
-    ) 
+    const MathVector3& position,
+    const MathVector3& velocity,
+    const MathVector3& direction,
+    const MathVector3& up
+    )
 {
-    SetPosition(x, y, z);
-    SetVelocity(vx, vy, vz);
-    SetOrientation(directionx, directiony, directionz, upx, upy, upz);
+    SetPosition(position);
+    SetVelocity(velocity);
+    SetOrientation(direction, up);
 }
 
-void XAudio2Listener::GetOrientation
-    (
-    float& directionx, float& directiony, float& directionz,
-    float& upx, float& upy, float& upz
-    ) const 
+void XAudio2Listener::GetOrientation(MathVector3& direction, MathVector3& up) const
 {
-    directionx = impl->x3dListener.OrientFront.x;
-    directiony = impl->x3dListener.OrientFront.y;
-    directionz = impl->x3dListener.OrientFront.z;
-    upx = impl->x3dListener.OrientTop.x;
-    upy = impl->x3dListener.OrientTop.y;
-    upz = impl->x3dListener.OrientTop.z;
+    direction = MathVector3(impl->x3dListener.OrientFront.x, impl->x3dListener.OrientFront.y, impl->x3dListener.OrientFront.z);
+    up = MathVector3(impl->x3dListener.OrientTop.x, impl->x3dListener.OrientTop.y, impl->x3dListener.OrientTop.z);
 }
 
-void XAudio2Listener::SetOrientation
-    (
-    float directionx, float directiony, float directionz,
-    float upx, float upy, float upz
-    ) 
+void XAudio2Listener::SetOrientation(const MathVector3& direction, const MathVector3& up)
 {
-    impl->x3dListener.OrientFront.x = directionx;
-    impl->x3dListener.OrientFront.y = directiony;
-    impl->x3dListener.OrientFront.z = directionz;
-    impl->x3dListener.OrientTop.x = upx;
-    impl->x3dListener.OrientTop.y = upy;
-    impl->x3dListener.OrientTop.z = upz;    
+    impl->x3dListener.OrientFront.x = direction(0);
+    impl->x3dListener.OrientFront.y = direction(1);
+    impl->x3dListener.OrientFront.z = direction(2);
+    impl->x3dListener.OrientTop.x = up(0);
+    impl->x3dListener.OrientTop.y = up(1);
+    impl->x3dListener.OrientTop.z = up(2);
     impl->invalidated = true;
 }
 
-void XAudio2Listener::GetPosition(float& x, float& y, float& z) const
+void XAudio2Listener::GetPosition(MathVector3& value) const
 {
-    x = impl->x3dListener.Position.x;
-    y = impl->x3dListener.Position.y;
-    z = impl->x3dListener.Position.z;
+    value = MathVector3(impl->x3dListener.Position.x, impl->x3dListener.Position.y, impl->x3dListener.Position.z);
 }
 
-void XAudio2Listener::SetPosition(float x, float y, float z)
+void XAudio2Listener::SetPosition(const MathVector3& value)
 {
-    impl->x3dListener.Position.x = x;
-    impl->x3dListener.Position.y = y;
-    impl->x3dListener.Position.z = z;        
+    impl->x3dListener.Position.x = value(0);
+    impl->x3dListener.Position.y = value(1);
+    impl->x3dListener.Position.z = value(2);
     impl->invalidated = true;
 }
 
-void XAudio2Listener::GetVelocity(float& x, float& y, float& z) const 
+void XAudio2Listener::GetVelocity(MathVector3& value) const
 {
-    x = impl->x3dListener.Velocity.x;
-    y = impl->x3dListener.Velocity.y;
-    z = impl->x3dListener.Velocity.z;
+    value = MathVector3(impl->x3dListener.Velocity.x, impl->x3dListener.Velocity.y, impl->x3dListener.Velocity.z);
 }
 
-void XAudio2Listener::SetVelocity(float x, float y, float z)
+void XAudio2Listener::SetVelocity(const MathVector3& value)
 {
-    impl->x3dListener.Velocity.x = x;
-    impl->x3dListener.Velocity.y = y;
-    impl->x3dListener.Velocity.z = z;
+    impl->x3dListener.Velocity.x = value(0);
+    impl->x3dListener.Velocity.y = value(1);
+    impl->x3dListener.Velocity.z = value(2);
     impl->invalidated = true;
 }
 

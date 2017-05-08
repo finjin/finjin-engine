@@ -14,8 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/sound/opensles/OpenSLESAdapterID.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using SoundAdapterID = OpenSLESAdapterID;
 } }

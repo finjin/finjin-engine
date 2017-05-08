@@ -14,23 +14,23 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "DInputMouse.hpp"
-#include "DInputDevice.hpp"
-#include "Win32InputContext.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/engine/OSWindow.hpp"
+#include "DInputDevice.hpp"
+#include "Win32InputContext.hpp"
 
 using DInputMouseState = DIMOUSESTATE2;
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct DInputMouse::Impl : public DInputDevice
-{    
+{
     DInputDeviceState<DInputMouseState, DInputButton, DInputAxis, DInputPov, MouseConstants::MAX_BUTTON_COUNT, MouseConstants::MAX_AXIS_COUNT> state;
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, void* data)
 {
     auto mouse = static_cast<DInputMouse*>(data);
@@ -42,7 +42,7 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
             return DIENUM_CONTINUE; //Skip
 
         auto buttonIndex = impl->state.buttons.size();
-        
+
         auto inputSemantic = InputComponentSemantic::NONE;
         switch (impl->state.buttons.size())
         {
@@ -66,7 +66,7 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
     {
         if (impl->state.axes.full())
             return DIENUM_CONTINUE; //Skip
-        
+
         auto inputSemantic = InputComponentSemantic::NONE;
         auto inputProcessing = InputAxisProcessing::NONE;
 
@@ -76,14 +76,14 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
         if (IsEqualGUID(did->guidType, GUID_XAxis))
         {
             dinputOffset = DIMOFS_X;
-            inputSemantic = InputComponentSemantic::MOVE_LEFT_RIGHT;            
+            inputSemantic = InputComponentSemantic::MOVE_LEFT_RIGHT;
             inputProcessing = InputAxisProcessing::IS_ABSOLUTE;
             inputCode = DIMOFS_X;
         }
         else if (IsEqualGUID(did->guidType, GUID_YAxis))
         {
             dinputOffset = DIMOFS_Y;
-            inputSemantic = InputComponentSemantic::MOVE_UP_DOWN;            
+            inputSemantic = InputComponentSemantic::MOVE_UP_DOWN;
             inputProcessing = InputAxisProcessing::IS_ABSOLUTE;
             inputCode = DIMOFS_Y;
         }
@@ -112,7 +112,7 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
         axis.dinputOffset = dinputOffset;
         impl->state.axes.push_back(axis);
     }
-    
+
     return DIENUM_CONTINUE;
 }
 
@@ -128,7 +128,7 @@ static OSWindowPosition GetMousePosition(OSWindow* osWindow)
             auto windowRect = osWindow->GetRect();
             result.x = cursorPosition.x - windowRect.x;
             result.y = cursorPosition.y - windowRect.y;
-        }   
+        }
         else
         {
             result.x = cursorPosition.x;
@@ -140,7 +140,7 @@ static OSWindowPosition GetMousePosition(OSWindow* osWindow)
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 DInputMouse::DInputMouse() : impl(new Impl)
 {
 }
@@ -160,15 +160,15 @@ void DInputMouse::Create(Win32InputContext* context, const DInputDeviceConfigura
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create DirectInput mouse '%1%'", config.GetDebugName()));
         return;
     }
-    
-    //Set device cooperative level        
+
+    //Set device cooperative level
     if (FAILED(impl->dinputDevice->SetCooperativeLevel(static_cast<HWND>(context->GetSettings().osWindow->GetWindowHandle()), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
     {
         Destroy();
 
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to set DirectInput cooperative level for mouse '%1%'", config.GetDebugName()));
         return;
-    }            
+    }
 
     //Set data format for mouse using DirectInput constants
     if (FAILED(impl->dinputDevice->SetDataFormat(&c_dfDIMouse2)))
@@ -178,7 +178,7 @@ void DInputMouse::Create(Win32InputContext* context, const DInputDeviceConfigura
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to set DirectInput data format for mouse '%1%'", config.GetDebugName()));
         return;
     }
-    
+
     //Enumerate and components of the device
     impl->dinputDevice->EnumObjects(EnumComponentsCallback, this, DIDFT_ALL);
 }
@@ -189,7 +189,7 @@ void DInputMouse::Destroy()
 }
 
 void DInputMouse::Update(SimpleTimeDelta elapsedTime, bool isFirstUpdate)
-{    
+{
     DInputMouseState dinputState;
     auto gotState = impl->state.GetState(impl->dinputDevice, dinputState);
     if (gotState)
@@ -205,7 +205,7 @@ void DInputMouse::Update(SimpleTimeDelta elapsedTime, bool isFirstUpdate)
                 case InputComponentSemantic::TOGGLE_UP_DOWN: axis.Update(RoundToFloat(*reinterpret_cast<LONG*>(stateBytes + axis.dinputOffset)) / (float)WHEEL_DELTA * MouseConstants::WHEEL_STEP_SIZE, isFirstUpdate); break;
                 default: axis.Update(RoundToFloat(*reinterpret_cast<LONG*>(stateBytes + axis.dinputOffset)), isFirstUpdate); break;
             }
-        }            
+        }
     }
 
     impl->state.Update(dinputState, gotState, InputDeviceComponentClass::BUTTON, isFirstUpdate);

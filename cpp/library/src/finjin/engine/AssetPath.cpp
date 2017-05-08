@@ -17,11 +17,10 @@
 #include "finjin/common/BitArray.hpp"
 #include "finjin/common/DebugLog.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static bool GetLanguageAndCountry(const Utf8StringView& componentString, Utf8StringView& language, Utf8StringView& region)
 {
     auto underscoreIndex = componentString.find('_');
@@ -39,8 +38,8 @@ static bool GetLanguageAndCountry(const Utf8StringView& componentString, Utf8Str
 static Utf8String GetCpuArchitectureInternalString()
 {
     Utf8String s;
-        
-#if FINJIN_TARGET_CPU == FINJIN_TARGET_CPU_TYPE_ARM    
+
+#if FINJIN_TARGET_CPU == FINJIN_TARGET_CPU_ARM
     //CPU
     s += "arm";
 
@@ -52,7 +51,7 @@ static Utf8String GetCpuArchitectureInternalString()
     #else
         #error Invalid bits!
     #endif
-#elif FINJIN_TARGET_CPU == FINJIN_TARGET_CPU_TYPE_INTEL
+#elif FINJIN_TARGET_CPU == FINJIN_TARGET_CPU_INTEL
     //CPU
     #if FINJIN_TARGET_CPU_BITS == 32
         s = "x86";
@@ -213,7 +212,11 @@ static bool IsGpuShaderModel(const Utf8StringView& componentString)
 
 static bool IsPreferredTextureFormat(const Utf8StringView& componentString)
 {
-    return componentString.StartsWith("gputex_");
+    return
+        componentString == "astc" ||
+        componentString == "etc2" ||
+        componentString == "bc"
+        ;
 }
 
 static bool IsSoundSystem(const Utf8StringView& componentString)
@@ -246,7 +249,7 @@ static bool IsInputSystem(const Utf8StringView& componentString)
 {
     return
         componentString == "win32input" ||
-        componentString == "uwpinput" || 
+        componentString == "uwpinput" ||
         componentString == "iosinput" ||
         componentString == "macosinput" ||
         componentString == "linuxinput"
@@ -272,14 +275,11 @@ static bool IsVRSystem(const Utf8StringView& componentString)
 
 static bool IsVRApi(const Utf8StringView& componentString)
 {
-    return
-        componentString == "openvr" ||
-        componentString == "oculusvr"
-        ;
+    return componentString == "openvr";
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //AssetPath
 AssetPath& AssetPath::operator = (const AssetPath& other)
@@ -320,7 +320,7 @@ void AssetPath::Create(AssetClass assetClass, const Path& _fullName, size_t offs
         FINJIN_SET_ERROR(error, "Failed to assign full name.");
         return;
     }
-    
+
     if (!prefix.empty())
     {
         if (this->components[AssetPathComponent::ASSET_CLASS_DIRECTORY_NAME].value.assign(this->fullName.begin() + offset, prefix.length()).HasError())
@@ -454,17 +454,17 @@ void AssetPath::ProcessComponent(const Utf8StringView& componentString, AssetPat
     {
         lastType = AssetPathComponent::INPUT_DEVICE_TYPE;
         this->components[lastType].value = componentString;
-    }    
+    }
     else if (lastType < AssetPathComponent::INPUT_DEVICE_DESCRIPTOR && IsInputDeviceDescriptor(componentString))
     {
         lastType = AssetPathComponent::INPUT_DEVICE_DESCRIPTOR;
         this->components[lastType].value = componentString;
-    }    
+    }
     else if (lastType < AssetPathComponent::INPUT_SYSTEM && IsInputSystem(componentString))
     {
         lastType = AssetPathComponent::INPUT_SYSTEM;
         this->components[lastType].value = componentString;
-    }    
+    }
     else if (lastType < AssetPathComponent::INPUT_API && IsInputApi(componentString))
     {
         lastType = AssetPathComponent::INPUT_API;
@@ -519,10 +519,10 @@ AssetPathSelector::AssetPathSelector(Allocator* allocator)
 bool AssetPathSelector::Create(Allocator* allocator)
 {
     auto result = true;
-    
+
     for (auto& component : this->components)
         result &= component.value.Create(allocator);
-    
+
     return result;
 }
 
@@ -554,7 +554,7 @@ void AssetPathSelector::Set(AssetPathComponent type, const Utf8String& value)
         case AssetPathComponent::GPU_SYSTEM: SetPreformatted(type, value); break;
         case AssetPathComponent::GPU_FEATURE_LEVEL: SetSafeLowerAscii(type, "gpufeature_", value); break;
         case AssetPathComponent::GPU_SHADER_MODEL: SetSafeLowerAscii(type, "gpusm_", value); break;
-        case AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT: SetSafeLowerAscii(type, "gputex_", value); break;
+        case AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT: SetPreformatted(type, value); break; //SetSafeLowerAscii(type, "gputex_", value); break;
         case AssetPathComponent::GPU_MODEL: SetSafeLowerAscii(type, "gpu_", value); break;
         case AssetPathComponent::SOUND_SYSTEM: SetPreformatted(type, value); break;
         case AssetPathComponent::INPUT_DEVICE_TYPE: SetSafeLowerAlphaNumeric(type, "", value); break;
@@ -565,7 +565,7 @@ void AssetPathSelector::Set(AssetPathComponent type, const Utf8String& value)
         case AssetPathComponent::VR_API: SetPreformatted(type, value); break;
         case AssetPathComponent::DEVICE_MODEL: SetSafeLowerAlphaNumeric(type, "device_", value); break;
         default: break;
-    }    
+    }
 }
 
 void AssetPathSelector::Set(AssetPathComponent type, ByteOrder value)
@@ -574,7 +574,7 @@ void AssetPathSelector::Set(AssetPathComponent type, ByteOrder value)
     {
         case AssetPathComponent::CPU_BYTE_ORDER: SetPreformatted(type, value == ByteOrder::LITTLE ? "littleendian" : "bigendian"); break;
         default: break;
-    }    
+    }
 }
 
 void AssetPathSelector::Set(AssetPathComponent type, LayoutDirection value)
@@ -583,7 +583,7 @@ void AssetPathSelector::Set(AssetPathComponent type, LayoutDirection value)
     {
         case AssetPathComponent::LAYOUT_DIRECTION: SetPreformatted(type, value == LayoutDirection::LEFT_TO_RIGHT ? "ldltr" : "ldrtl"); break;
         default: break;
-    }    
+    }
 }
 
 void AssetPathSelector::SetAssetClassDirectoryName(AssetClass assetClass)
@@ -642,12 +642,13 @@ void AssetPathSelector::SetSafeLowerAscii(AssetPathComponent type, const char* p
         component.value.ReplaceAll('.', '_');
         component.value.ReplaceAll('-', '_');
         component.value.ReplaceAll("(r)", "");
+        component.value.ReplaceAll("(tm)", "");
     }
 
     //FINJIN_DEBUG_LOG_INFO("safe lower ascii: %1%", component.value);
 }
 
-void AssetPathSelector::SetSafeLowerAlphaNumeric(AssetPathComponent type, const char* prefix, const Utf8String& value) 
+void AssetPathSelector::SetSafeLowerAlphaNumeric(AssetPathComponent type, const char* prefix, const Utf8String& value)
 {
     if (type == AssetPathComponent::NONE)
         return;
@@ -703,7 +704,7 @@ bool AssetPathSelector::Accepts(const AssetPath& name) const
 const AssetPath* AssetPathSelector::SelectBest(const AssetPath* names, size_t count) const
 {
     BitArray<EngineConstants::MAX_MATCHING_ASSET_NAMES> invalidNames;
-    
+
     size_t invalidCount = 0;
     return SelectBest(names, count, invalidNames, invalidCount);
 }

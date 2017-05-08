@@ -14,11 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
-#include "finjin/common/ClassDescription.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Math.hpp"
+#include "finjin/common/TypeDescription.hpp"
 #include "finjin/engine/AssetClass.hpp"
 #include "finjin/engine/AssetHandle.hpp"
 #include "finjin/engine/CameraState.hpp"
@@ -28,8 +28,8 @@
 #include "finjin/engine/StringTable.hpp"
 #include "finjin/engine/UserDataTypes.hpp"
 
-    
-//Classes----------------------------------------------------------------------
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class FinjinSceneNode;
@@ -40,32 +40,32 @@ namespace Finjin { namespace Engine {
         LINE_LIST,
         POINT_LIST
     };
-    
+
     enum class FinjinTextureAddressMode
     {
         CLAMP,
         MIRROR,
         WRAP
     };
-    
+
     enum class FinjinCullMode
     {
         NORMAL,
         NONE //No culling
     };
-    
+
     enum class FinjinPolygonMode
     {
         SOLID,
         WIREFRAME
     };
-    
+
     enum class FinjinShadingMode
     {
         SMOOTH,
         FLAT
     };
-    
+
     enum class FinjinTransparency
     {
         NONE,
@@ -73,13 +73,13 @@ namespace Finjin { namespace Engine {
         FILTER,
         SUBTRACTIVE
     };
-    
+
     enum class FinjinTextureAlpha
     {
         STANDARD,
         PREMULTIPLIED
     };
-    
+
     enum class FinjinSceneNodeVisibility
     {
         DEFAULT,
@@ -88,22 +88,22 @@ namespace Finjin { namespace Engine {
         TREE_VISIBLE,
         TREE_HIDDEN
     };
-    
+
     enum class FinjinIndexBufferType
     {
         UINT16,
         UINT32
     };
-    
+
     struct AmbientLightState
     {
         AmbientLightState() : color(0, 0, 0, 1)
-        {            
+        {
         }
 
         MathVector4 color;
     };
-    
+
     class AmbientLight : public AmbientLightState
     {
     public:
@@ -121,11 +121,11 @@ namespace Finjin { namespace Engine {
     struct SceneNodeState
     {
         FinjinSceneNodeVisibility visibility;
-        MathMatrix44 worldMatrix;
-        MathMatrix44 inverseWorldMatrix;
-        MathMatrix44 inverseTransposeWorldMatrix;
+        MathMatrix4 worldMatrix;
+        MathMatrix4 inverseWorldMatrix;
+        MathMatrix4 inverseTransposeWorldMatrix;
     };
-    
+
     struct FinjinVertexElementFormat
     {
         FinjinVertexElementFormat()
@@ -151,7 +151,17 @@ namespace Finjin { namespace Engine {
                 return this->floatValues.data();
             else if (!this->int32Values.empty())
                 return this->int32Values.data();
-            
+
+            return nullptr;
+        }
+
+        const void* data() const
+        {
+            if (!this->floatValues.empty())
+                return this->floatValues.data();
+            else if (!this->int32Values.empty())
+                return this->int32Values.data();
+
             return nullptr;
         }
 
@@ -160,11 +170,16 @@ namespace Finjin { namespace Engine {
             return static_cast<uint8_t*>(data());
         }
 
-        AllocatedVector<float> floatValues;
-        AllocatedVector<int32_t> int32Values;
+        const uint8_t* GetBytes() const
+        {
+            return static_cast<const uint8_t*>(data());
+        }
+
+        DynamicVector<float> floatValues;
+        DynamicVector<int32_t> int32Values;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinTexture) : public AllocatedClass
+    FINJIN_ASSET_CLASS class FinjinTexture : public AllocatedClass
     {
     public:
         FinjinTexture(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -177,7 +192,7 @@ namespace Finjin { namespace Engine {
         VoidHardwareAsset* gpuTexture;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinSound) : public AllocatedClass
+    FINJIN_ASSET_CLASS class FinjinSound : public AllocatedClass
     {
     public:
         FinjinSound(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -187,8 +202,8 @@ namespace Finjin { namespace Engine {
         Utf8String name;
         ByteBuffer fileBytes;
     };
-    
-    class FINJIN_ASSET_CLASS(FinjinShader) : public AllocatedClass
+
+    FINJIN_ASSET_CLASS class FinjinShader : public AllocatedClass
     {
     public:
         FinjinShader(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -232,11 +247,11 @@ namespace Finjin { namespace Engine {
                 TimeDuration time;
                 Utf8String content;
             };
-            AllocatedVector<Key> keys;
+            DynamicVector<Key> keys;
         };
-        AllocatedVector<NoteTrack> noteTracks;
+        DynamicVector<NoteTrack> noteTracks;
 
-        AllocatedVector<uint8_t> flags;
+        DynamicVector<uint8_t> flags;
 
         FinjinSceneObjectBaseState* queryNext;
     };
@@ -244,7 +259,7 @@ namespace Finjin { namespace Engine {
     class FinjinSceneObjectBase : public AllocatedClass, public FinjinSceneObjectBaseState
     {
     public:
-        FINJIN_DECLARE_ABSTRACT_BASE_CLASS_DESCRIPTION(FinjinSceneObjectBase)
+        FINJIN_DECLARE_ABSTRACT_BASE_TYPE_DESCRIPTION(FinjinSceneObjectBase)
 
         FinjinSceneObjectBase(Allocator* allocator);
         virtual ~FinjinSceneObjectBase();
@@ -267,18 +282,18 @@ namespace Finjin { namespace Engine {
 
         static inline const value_type& GetConstReference(const T* item) { return (const T&)*item; }
         static inline const value_type* GetConstPointer(const T* item) { return (const T*)item; }
-    }; 
-    
+    };
+
     template <typename T>
     using QuerySceneObjectsList = IntrusiveSingleList<T, QuerySceneObjectAccessor<T> >;
 
     template <typename T>
     using QuerySceneObjectsResult = IntrusiveSingleListResult<QuerySceneObjectsList<T> >;
 
-    class FINJIN_ASSET_CLASS(FinjinMaterial) : public FinjinSceneObjectBase
+    FINJIN_ASSET_CLASS class FinjinMaterial : public FinjinSceneObjectBase
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinMaterial, FinjinSceneObjectBase)
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinMaterial, FinjinSceneObjectBase)
 
         FinjinMaterial(Allocator* allocator) :
             Super(allocator),
@@ -310,7 +325,7 @@ namespace Finjin { namespace Engine {
         FinjinPolygonMode polygonMode;
         FinjinShadingMode shadingMode;
         FinjinTransparency transparency;
-        
+
         struct Map
         {
             Map(Allocator* allocator) :
@@ -341,18 +356,18 @@ namespace Finjin { namespace Engine {
             MathVector3 textureOffset;
             float amount;
             FinjinTextureAddressMode textureAddressMode[3];
-            
+
             size_t gpuMaterialMapIndex; //Index into D3D12Material maps that corresponds to this map
             size_t gpuBufferTextureIndexElementID; //ElementID (index) into shader constant or structured buffer for 'texture index'
             size_t gpuBufferAmountElementID; //ElementID (index) into shader constant or structured buffer for 'amount'
             ShaderFeatureFlag gpuMaterialMapFlag; //Single flag identifying this map's shader usage
         };
-        AllocatedVector<Map> maps;
+        DynamicVector<Map> maps;
 
         VoidHardwareAsset* gpuMaterial;
         ShaderFeatureFlag gpuMapFlags;
     };
-    
+
     class FinjinMeshSkeletonBone
     {
     public:
@@ -363,10 +378,10 @@ namespace Finjin { namespace Engine {
 
         Utf8String name;
         FinjinMeshSkeletonBone* parentBonePointer;
-        AllocatedVector<FinjinMeshSkeletonBone*> childBonePointers;
+        DynamicVector<FinjinMeshSkeletonBone*> childBonePointers;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinMeshSkeletonAnimation) : public AllocatedClass
+    FINJIN_ASSET_CLASS class FinjinMeshSkeletonAnimation : public AllocatedClass
     {
     public:
         FinjinMeshSkeletonAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -383,14 +398,14 @@ namespace Finjin { namespace Engine {
             struct Key
             {
                 TimeDuration time;
-                MathMatrix44 m44;
+                MathMatrix4 m44;
             };
-            AllocatedVector<Key> keys;
+            DynamicVector<Key> keys;
         };
-        AllocatedVector<Bone> bones;
+        DynamicVector<Bone> bones;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinMeshSkeleton) : public AllocatedClass
+    FINJIN_ASSET_CLASS class FinjinMeshSkeleton : public AllocatedClass
     {
     public:
         FinjinMeshSkeleton(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -398,15 +413,15 @@ namespace Finjin { namespace Engine {
         }
 
         Utf8String name;
-        
+
         using Bone = FinjinMeshSkeletonBone;
-        AllocatedVector<Bone> bones;
+        DynamicVector<Bone> bones;
 
         using Animation = FinjinMeshSkeletonAnimation;
-        AllocatedVector<AssetHandle<Animation> > animationHandles;
+        DynamicVector<AssetHandle<Animation> > animationHandles;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinMeshMorphAnimation) : public AllocatedClass
+    FINJIN_ASSET_CLASS class FinjinMeshMorphAnimation : public AllocatedClass
     {
     public:
         FinjinMeshMorphAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -419,19 +434,19 @@ namespace Finjin { namespace Engine {
         struct Subanimation
         {
             size_t submeshIndex;
-            AllocatedVector<FinjinVertexElementFormat> formatElements;
+            DynamicVector<FinjinVertexElementFormat> formatElements;
             struct Key
             {
                 TimeDuration time;
                 size_t vertexCount;
-                AllocatedVector<FinjinVertexElementChannel> channels;
+                DynamicVector<FinjinVertexElementChannel> channels;
             };
-            AllocatedVector<Key> keys;
+            DynamicVector<Key> keys;
         };
-        AllocatedVector<Subanimation> subanimations;
+        DynamicVector<Subanimation> subanimations;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinMeshPoseAnimation) : public AllocatedClass
+    FINJIN_ASSET_CLASS class FinjinMeshPoseAnimation : public AllocatedClass
     {
     public:
         FinjinMeshPoseAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -448,19 +463,19 @@ namespace Finjin { namespace Engine {
             struct Key
             {
                 TimeDuration time;
-                AllocatedVector<float> influences;
-                AllocatedVector<size_t> submeshIndexes;
+                DynamicVector<float> influences;
+                DynamicVector<size_t> submeshIndexes;
             };
-            AllocatedVector<Key> keys;
+            DynamicVector<Key> keys;
         };
-        AllocatedVector<Subanimation> subanimations;
+        DynamicVector<Subanimation> subanimations;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinMesh) : public FinjinSceneObjectBase
+    FINJIN_ASSET_CLASS class FinjinMesh : public FinjinSceneObjectBase
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinMesh, FinjinSceneObjectBase)
-            
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinMesh, FinjinSceneObjectBase)
+
         FinjinMesh(Allocator* allocator) :
             Super(allocator),
             typeName(allocator),
@@ -471,7 +486,7 @@ namespace Finjin { namespace Engine {
         }
 
         Utf8String typeName;
-                
+
         struct BoundingVolume
         {
             BoundingVolume()
@@ -486,7 +501,7 @@ namespace Finjin { namespace Engine {
             float radius;
         };
         BoundingVolume boundingVolume;
-        
+
         struct IndexBuffer
         {
             IndexBuffer()
@@ -506,12 +521,22 @@ namespace Finjin { namespace Engine {
 
             void* data()
             {
-                return !this->uint16s.empty() ? (void*)this->uint16s.data() : (void*)this->uint32s.data();
+                return !this->uint16s.empty() ? static_cast<void*>(this->uint16s.data()) : static_cast<void*>(this->uint32s.data());
+            }
+
+            const void* data() const
+            {
+                return !this->uint16s.empty() ? static_cast<const void*>(this->uint16s.data()) : static_cast<const void*>(this->uint32s.data());
             }
 
             uint8_t* GetBytes()
             {
                 return static_cast<uint8_t*>(data());
+            }
+
+            const uint8_t* GetBytes() const
+            {
+                return static_cast<const uint8_t*>(data());
             }
 
             size_t GetByteCount() const
@@ -525,8 +550,8 @@ namespace Finjin { namespace Engine {
             }
 
             FinjinIndexBufferType type;
-            AllocatedVector<uint16_t> uint16s;
-            AllocatedVector<uint32_t> uint32s;
+            DynamicVector<uint16_t> uint16s;
+            DynamicVector<uint32_t> uint32s;
         };
 
         struct VertexBuffer
@@ -547,18 +572,65 @@ namespace Finjin { namespace Engine {
 
                 for (auto& element : this->formatElements)
                     count += NumericStructElementTypeUtilities::GetSimpleTypeSizeInBytes(element.type);
-                
+
                 return count;
             }
 
+            template <typename Bytes>
+            bool Interleave(Bytes& interleaved) const
+            {
+                //Resize buffer
+                auto interleavedByteCount = GetVertexSize() * this->vertexCount;
+                if (interleaved.resize(interleavedByteCount) < interleavedByteCount)
+                    return false;
+
+                //Interleave
+                return Interleave(interleaved.data(), interleavedByteCount);
+            }
+
+            bool Interleave(void* interleavedBytes, size_t maxInterleavedByteCount) const
+            {
+                //Validate size
+                auto vertexSize = GetVertexSize();
+                auto interleavedByteCount = vertexSize * this->vertexCount;
+                if (interleavedByteCount > maxInterleavedByteCount)
+                    return false;
+
+                //Convert the channel-based data into a single interleaved stream
+                //Iterate on each channel....
+                size_t interleavedChannelElementOffset = 0;
+                for (size_t channelIndex = 0; channelIndex < this->channels.size(); channelIndex++)
+                {
+                    auto& channel = this->channels[channelIndex];
+                    auto channelBytes = channel.GetBytes();
+
+                    auto& formatElement = this->formatElements[channelIndex]; //Each format corresponds to a channel
+                    auto elementSize = NumericStructElementTypeUtilities::GetSimpleTypeSizeInBytes(formatElement.type);
+
+                    //Copy each value from the channel to the interleaved vertex stream
+                    auto interleavedVertex = static_cast<uint8_t*>(interleavedBytes) + interleavedChannelElementOffset;
+                    for (size_t vertexIndex = 0; vertexIndex < this->vertexCount; vertexIndex++)
+                    {
+                        FINJIN_COPY_MEMORY(interleavedVertex, channelBytes, elementSize); //Copy to interleaved vertex
+                        interleavedVertex += vertexSize; //Advanced to next interleaved vertex
+                        channelBytes += elementSize; //Advance to next value in channel
+                    }
+
+                    //Advance to next element in interleaved vertex
+                    interleavedChannelElementOffset += elementSize;
+                }
+
+                return true;
+            }
+
             Utf8String formatName;
-            AllocatedVector<FinjinVertexElementFormat> formatElements;
+            DynamicVector<FinjinVertexElementFormat> formatElements;
             size_t vertexCount;
-            AllocatedVector<FinjinVertexElementChannel> channels;
+            DynamicVector<FinjinVertexElementChannel> channels;
         };
-        
+
         IndexBuffer indexBuffer;
-        AllocatedVector<VertexBuffer> vertexBuffers;
+        DynamicVector<VertexBuffer> vertexBuffers;
 
         struct BufferRange
         {
@@ -593,11 +665,11 @@ namespace Finjin { namespace Engine {
             }
 
             Utf8String name;
-            
+
             AssetHandle<FinjinMaterial> materialHandle;
-            
+
             FinjinPrimitiveType primitiveType;
-            
+
             IndexBuffer indexBuffer;
             IndexBufferRange indexBufferRange;
 
@@ -617,79 +689,79 @@ namespace Finjin { namespace Engine {
                     this->weight = 0;
                 }
             };
-            AllocatedVector<VertexBoneAssignment> vertexBoneAssignments;
+            DynamicVector<VertexBoneAssignment> vertexBoneAssignments;
         };
-        AllocatedVector<Submesh> submeshes;
-        
+        DynamicVector<Submesh> submeshes;
+
         AssetHandle<FinjinMeshSkeleton> skeletonHandle;
-        
+
         using MorphAnimation = FinjinMeshMorphAnimation;
-        AllocatedVector<AssetHandle<MorphAnimation> > morphAnimationHandles;
-        
+        DynamicVector<AssetHandle<MorphAnimation> > morphAnimationHandles;
+
         struct Pose
         {
             struct Subpose
             {
                 size_t submeshIndex;
-                AllocatedVector<FinjinVertexElementFormat> formatElements;
-                AllocatedVector<size_t> indexValues;
-                AllocatedVector<FinjinVertexElementChannel> channels;
+                DynamicVector<FinjinVertexElementFormat> formatElements;
+                DynamicVector<size_t> indexValues;
+                DynamicVector<FinjinVertexElementChannel> channels;
             };
-            AllocatedVector<Subpose> subposes;
+            DynamicVector<Subpose> subposes;
         };
-        AllocatedVector<Pose> poses;
-        
+        DynamicVector<Pose> poses;
+
         using PoseAnimation = FinjinMeshPoseAnimation;
-        AllocatedVector<AssetHandle<PoseAnimation> > poseAnimationHandles;
+        DynamicVector<AssetHandle<PoseAnimation> > poseAnimationHandles;
 
         struct ManualLod
         {
             ManualLod(Allocator* allocator) : meshHandle(allocator), distance(0)
-            {   
+            {
             }
 
             AssetHandle<FinjinMesh> meshHandle;
             float distance;
         };
-        AllocatedVector<ManualLod> manualLods;
+        DynamicVector<ManualLod> manualLods;
 
         VoidHardwareAsset* gpuMesh;
         ShaderFeatureFlag gpuMeshFlags;
     };
-    
-    class FINJIN_ASSET_CLASS(FinjinPrefab) : public FinjinSceneObjectBase
+
+    FINJIN_ASSET_CLASS class FinjinPrefab : public FinjinSceneObjectBase
     {
     public:
         FinjinPrefab(Allocator* allocator) : FinjinSceneObjectBase(allocator)
         {
         }
 
-        AllocatedVector<FinjinSceneNode*> sceneNodes;
+        DynamicVector<FinjinSceneNode*> sceneNodes;
     };
-    
+
 
     class FinjinSceneMovableObject : public FinjinSceneObjectBase
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinSceneMovableObject, FinjinSceneObjectBase)
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinSceneMovableObject, FinjinSceneObjectBase)
 
         FinjinSceneMovableObject(Allocator* allocator);
         ~FinjinSceneMovableObject();
-    
+
     public:
         FinjinSceneNode* parentNodePointer;
-        MathMatrix44 transform;
+        MathMatrix4 transform;
     };
 
     class FinjinSceneRenderableMovableObject : public FinjinSceneMovableObject
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinSceneRenderableMovableObject, FinjinSceneMovableObject)
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinSceneRenderableMovableObject, FinjinSceneMovableObject)
 
         FinjinSceneRenderableMovableObject(Allocator* allocator);
         ~FinjinSceneRenderableMovableObject();
 
-    public:        
+    public:
         size_t renderQueue;
         int32_t renderPriority;
         float renderDistance;
@@ -700,13 +772,13 @@ namespace Finjin { namespace Engine {
     class FinjinSceneObjectEntity : public FinjinSceneRenderableMovableObject
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinSceneObjectEntity, FinjinSceneRenderableMovableObject)
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinSceneObjectEntity, FinjinSceneRenderableMovableObject)
 
         FinjinSceneObjectEntity(Allocator* allocator);
 
     public:
         AssetHandle<FinjinMesh> meshHandle;
-        
+
         struct Subentity
         {
             Subentity(Allocator* allocator) : materialHandle(allocator)
@@ -715,16 +787,16 @@ namespace Finjin { namespace Engine {
 
             AssetHandle<FinjinMaterial> materialHandle;
         };
-        AllocatedVector<Subentity> subentities;
+        DynamicVector<Subentity> subentities;
     };
 
     class FinjinSceneObjectCamera : public FinjinSceneRenderableMovableObject, public CameraState
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinSceneObjectCamera, FinjinSceneRenderableMovableObject)
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinSceneObjectCamera, FinjinSceneRenderableMovableObject)
 
         FinjinSceneObjectCamera(Allocator* allocator);
-        
+
         CameraState& Evaluate(size_t frameStageIndex, size_t updateSequence, const SceneNodeState& sceneNodeState);
 
     public:
@@ -734,10 +806,10 @@ namespace Finjin { namespace Engine {
     class FinjinSceneObjectLight : public FinjinSceneRenderableMovableObject, public LightState
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinSceneObjectLight, FinjinSceneRenderableMovableObject)
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinSceneObjectLight, FinjinSceneRenderableMovableObject)
 
         FinjinSceneObjectLight(Allocator* allocator);
-        
+
         LightState& Evaluate(size_t frameStageIndex, size_t updateSequence, const SceneNodeState& sceneNodeState);
 
     public:
@@ -745,7 +817,7 @@ namespace Finjin { namespace Engine {
         VoidHardwareAsset* gpuLight;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinNodeAnimation) : public AllocatedClass
+    FINJIN_ASSET_CLASS class FinjinNodeAnimation : public AllocatedClass
     {
     public:
         FinjinNodeAnimation(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
@@ -758,7 +830,7 @@ namespace Finjin { namespace Engine {
         bool loop;
         Utf8String name;
         TimeDuration length;
-        
+
         struct Key
         {
             Key()
@@ -768,27 +840,27 @@ namespace Finjin { namespace Engine {
             }
 
             TimeDuration time;
-            MathMatrix44 m44;
+            MathMatrix4 m44;
         };
-        AllocatedVector<Key> keys;
+        DynamicVector<Key> keys;
     };
-    
+
     class FinjinSceneNode : public FinjinSceneMovableObject
     {
     public:
-        FINJIN_DECLARE_CLASS_DESCRIPTION(FinjinSceneNode, FinjinSceneMovableObject)
+        FINJIN_DECLARE_TYPE_DESCRIPTION(FinjinSceneNode, FinjinSceneMovableObject)
 
         FinjinSceneNode(Allocator* allocator);
         ~FinjinSceneNode();
 
         template <typename T = FinjinSceneObjectBaseState>
-        QuerySceneObjectsResult<T> Get(const ClassDescription& classDescription = FINJIN_CLASS_DESCRIPTION(T))
+        QuerySceneObjectsResult<T> Get(const TypeDescription& typeDescription = FINJIN_TYPE_DESCRIPTION(T))
         {
             QuerySceneObjectsResult<T> result;
 
             for (auto object : this->objects)
             {
-                if (object->IsTypeOf(classDescription))
+                if (object->IsTypeOf(typeDescription))
                 {
                     object->queryNext = nullptr;
                     result.push_back((T*)object);
@@ -799,32 +871,32 @@ namespace Finjin { namespace Engine {
         }
 
         SceneNodeState& Evaluate(size_t frameStageIndex, size_t updateSequence);
-        
+
     private:
         FinjinSceneNodeVisibility EvaluateVisibility(FinjinSceneNodeVisibility defaultVisibility = FinjinSceneNodeVisibility::VISIBLE) const;
-        
-        void EvaluateTransform(MathMatrix44& result) const;
-        
+
+        void EvaluateTransform(MathMatrix4& result) const;
+
     public:
         Uuid id;
         FinjinSceneNodeVisibility visibility;
         AssetHandle<FinjinPrefab> prefabHandle;
-        MathMatrix44 transform;
-        AllocatedVector<FinjinSceneObjectBase*> objects;
+        MathMatrix4 transform;
+        DynamicVector<FinjinSceneObjectBase*> objects;
         size_t parentNodeIndex;
         FinjinSceneNode* parentNodePointer;
-        AllocatedVector<FinjinSceneNode*> childNodePointers;
-        AllocatedVector<AssetHandle<FinjinNodeAnimation> > nodeAnimationHandles;
+        DynamicVector<FinjinSceneNode*> childNodePointers;
+        DynamicVector<AssetHandle<FinjinNodeAnimation> > nodeAnimationHandles;
 
         SceneNodeState frameStages[EngineConstants::MAX_FRAME_STAGES];
     };
 
     struct FinjinSceneEnvironment
     {
-        FinjinSceneEnvironment(Allocator* allocator) : 
-            fog(allocator), 
-            shadows(allocator), 
-            backgroundColor(0, 0, 0, 0), 
+        FinjinSceneEnvironment(Allocator* allocator) :
+            fog(allocator),
+            shadows(allocator),
+            backgroundColor(0, 0, 0, 0),
             range{ 0, 0 }
         {
         }
@@ -873,25 +945,25 @@ namespace Finjin { namespace Engine {
             }
 
             Utf8String typeName;
-            MathMatrix44 transform;
+            MathMatrix4 transform;
             bool enable;
             AssetHandle<FinjinMesh> meshHandle;
-            AllocatedVector<AssetHandle<FinjinNodeAnimation> > nodeAnimationHandles;
+            DynamicVector<AssetHandle<FinjinNodeAnimation> > nodeAnimationHandles;
         };
 
         Fog fog;
         Shadows shadows;
-        AllocatedVector<SkyNode> skyNodes;
+        DynamicVector<SkyNode> skyNodes;
     };
-    
+
     class FinjinSubscene : public FinjinSceneObjectBaseState
     {
     public:
         using Super = FinjinSceneObjectBaseState;
 
-        FinjinSubscene(Allocator* allocator) : 
+        FinjinSubscene(Allocator* allocator) :
             Super(allocator),
-            sceneManager(allocator), 
+            sceneManager(allocator),
             environment(allocator)
         {
         }
@@ -903,15 +975,15 @@ namespace Finjin { namespace Engine {
         }
 
         template <typename T = FinjinSceneObjectBaseState>
-        QuerySceneObjectsResult<T> Get(const ClassDescription& classDescription = FINJIN_CLASS_DESCRIPTION(T))
+        QuerySceneObjectsResult<T> Get(const TypeDescription& typeDescription = FINJIN_TYPE_DESCRIPTION(T))
         {
             QuerySceneObjectsResult<T> result;
 
-            if (classDescription.IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneNode)))
+            if (typeDescription.IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneNode)))
             {
                 for (auto node : this->sceneNodes)
                 {
-                    if (node->IsTypeOf(classDescription))
+                    if (node->IsTypeOf(typeDescription))
                     {
                         node->queryNext = nullptr;
                         result.push_back((T*)node);
@@ -924,7 +996,7 @@ namespace Finjin { namespace Engine {
                 {
                     for (auto object : node->objects)
                     {
-                        if (object->IsTypeOf(classDescription))
+                        if (object->IsTypeOf(typeDescription))
                         {
                             object->queryNext = nullptr;
                             result.push_back((T*)object);
@@ -939,10 +1011,10 @@ namespace Finjin { namespace Engine {
     public:
         Utf8String sceneManager;
         FinjinSceneEnvironment environment;
-        AllocatedVector<FinjinSceneNode*> sceneNodes;
+        DynamicVector<FinjinSceneNode*> sceneNodes;
     };
 
-    class FINJIN_ASSET_CLASS(FinjinScene) : public FinjinSceneObjectBase
+    FINJIN_ASSET_CLASS class FinjinScene : public FinjinSceneObjectBase
     {
     public:
         using Super = FinjinSceneObjectBase;
@@ -953,17 +1025,17 @@ namespace Finjin { namespace Engine {
         }
 
         template <typename T = FinjinSceneObjectBaseState>
-        QuerySceneObjectsResult<T> Get(const ClassDescription& classDescription = FINJIN_CLASS_DESCRIPTION(T))
+        QuerySceneObjectsResult<T> Get(const TypeDescription& typeDescription = FINJIN_TYPE_DESCRIPTION(T))
         {
             QuerySceneObjectsResult<T> result;
 
-            if (classDescription.IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneNode)))
+            if (typeDescription.IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneNode)))
             {
                 for (auto& subscene : this->subscenes)
                 {
                     for (auto node : subscene.sceneNodes)
                     {
-                        if (node->IsTypeOf(classDescription))
+                        if (node->IsTypeOf(typeDescription))
                         {
                             node->queryNext = nullptr;
                             result.push_back((T*)node);
@@ -979,7 +1051,7 @@ namespace Finjin { namespace Engine {
                     {
                         for (auto object : node->objects)
                         {
-                            if (object->IsTypeOf(classDescription))
+                            if (object->IsTypeOf(typeDescription))
                             {
                                 object->queryNext = nullptr;
                                 result.push_back((T*)object);
@@ -994,11 +1066,11 @@ namespace Finjin { namespace Engine {
 
         float unitsPerMeter;
 
-        AllocatedVector<FinjinSubscene> subscenes;
-        AllocatedVector<AssetHandle<FinjinPrefab> > prefabHandles;
-        AllocatedVector<AssetHandle<FinjinMesh> > meshHandles;
-        AllocatedVector<AssetHandle<FinjinMaterial> > materialHandles;
-        AllocatedVector<AssetHandle<FinjinTexture> > textureHandles;
+        DynamicVector<FinjinSubscene> subscenes;
+        DynamicVector<AssetHandle<FinjinPrefab> > prefabHandles;
+        DynamicVector<AssetHandle<FinjinMesh> > meshHandles;
+        DynamicVector<AssetHandle<FinjinMaterial> > materialHandles;
+        DynamicVector<AssetHandle<FinjinTexture> > textureHandles;
     };
 
     template <typename T> struct TypeToAssetInfo {};
@@ -1016,5 +1088,5 @@ namespace Finjin { namespace Engine {
     template <> struct TypeToAssetInfo<FinjinShader> { static AssetClass GetAssetClass() { return AssetClass::SHADER; } static bool RequiresInternalDependencyResolution() { return false; } };
     template <> struct TypeToAssetInfo<UserDataTypes> { static AssetClass GetAssetClass() { return AssetClass::USER_DATA_TYPES; } static bool RequiresInternalDependencyResolution() { return true; } };
     template <> struct TypeToAssetInfo<StringTable> { static AssetClass GetAssetClass() { return AssetClass::STRING_TABLE; } static bool RequiresInternalDependencyResolution() { return false; } };
-    
+
 } }

@@ -14,21 +14,21 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteOrder.hpp"
 #include "finjin/common/DebugLog.hpp"
-#include "finjin/common/EnumValues.hpp"
+#include "finjin/common/EnumArray.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/LayoutDirection.hpp"
 #include "finjin/common/Path.hpp"
 #include "finjin/engine/AssetClass.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     enum class AssetPathComponent
     {
         NONE,
@@ -51,7 +51,7 @@ namespace Finjin { namespace Engine {
         GPU_SYSTEM, //d3d12, vulkan, metal
         GPU_FEATURE_LEVEL, //gpufeature_<level>. Example: gpufeature_10_1, etc...
         GPU_SHADER_MODEL, //gpusm_<version>. Example: gpusm_5_1, gpusm_nv_5_1, etc...
-        GPU_PREFERRED_TEXTURE_FORMAT, //gputex_<format>. Example: gputex_dxt, gputex_etc, gputex_etc2, gputex_pvr, gputex_pvr2, gputex_astc, etc...
+        GPU_PREFERRED_TEXTURE_FORMAT, //astc, etc2, bc
         GPU_MODEL, //gpu_<model>. Example: gpu_nvidiagtx980, etc...
         SOUND_SYSTEM, //xaudio2, avaudioengine, opensles, openal
         INPUT_DEVICE_TYPE, //gamecontroller, keyboard, mouse, touchscreen, accelerometer
@@ -59,9 +59,9 @@ namespace Finjin { namespace Engine {
         INPUT_API, //xinput, dinput, gcinput
         INPUT_DEVICE_DESCRIPTOR, //inputdevice_<product descriptor>. Example: inputdevice_4c05c405_0000_0000_0000_504944564944, inputdevice_vid2341_pid1000
         VR_SYSTEM, //win32vr, linuxvr
-        VR_API, //openvr, oculusvr
+        VR_API, //openvr
         DEVICE_MODEL, //The computer on which this application is running. device_<model>. Example: device_nexus6, device_ipad, etc...
-        
+
         COUNT
     };
 
@@ -73,7 +73,7 @@ namespace Finjin { namespace Engine {
         AssetPath& operator = (const AssetPath& other);
 
         bool Create(Allocator* allocator);
-        
+
         void Create
             (
             AssetClass assetClass,
@@ -81,7 +81,7 @@ namespace Finjin { namespace Engine {
             size_t nameOffset, //Offset to the part that contains the actual name of interest. In the case of fullName="app/shaders-d3d12", offset would be 4
             Error& error
             );
-        
+
         const Path& GetFullName() const;
 
         Utf8String ToString() const;
@@ -99,7 +99,7 @@ namespace Finjin { namespace Engine {
             bool empty() const { return this->value.empty(); }
             void clear() { this->value.clear(); }
         };
-        EnumValues<AssetPathComponent, AssetPathComponent::COUNT, Component> components;
+        EnumArray<AssetPathComponent, AssetPathComponent::COUNT, Component> components;
     };
 
     class AssetPathSelector
@@ -108,7 +108,7 @@ namespace Finjin { namespace Engine {
         AssetPathSelector(Allocator* allocator = nullptr);
 
         bool Create(Allocator* allocator);
-        
+
         const Utf8String& Get(AssetPathComponent type) const;
         void Set(AssetPathComponent type, const Utf8String& value);
         void Set(AssetPathComponent type, ByteOrder value);
@@ -127,17 +127,17 @@ namespace Finjin { namespace Engine {
         ValueOrError<void> ToString(Utf8String& result) const;
 
         bool Accepts(const AssetPath& name) const;
-        
+
         const AssetPath* SelectBest(const AssetPath* names, size_t count) const;
 
         template <typename Bits>
         const AssetPath* SelectBest(const AssetPath* names, size_t count, Bits invalidNames, size_t invalidNameCount) const
         {
-            assert(count <= invalidNames.size());            
+            assert(count <= invalidNames.size());
             count = std::min(invalidNames.size(), count);
 
             auto validNameCount = count - invalidNameCount;
-            
+
             //Disqualify all the names that don't have matching selector components
             for (size_t componentIndex = 0; componentIndex < this->components.size(); componentIndex++)
             {
@@ -159,7 +159,7 @@ namespace Finjin { namespace Engine {
                                 //FINJIN_DEBUG_LOG_INFO("Marking name as invalid: %1%", names[otherNameIndex].GetFullName());
 
                                 invalidNames.SetBit(otherNameIndex);
-                                validNameCount--;                                    
+                                validNameCount--;
                             }
                         }
                     }
@@ -206,7 +206,7 @@ namespace Finjin { namespace Engine {
                                     //FINJIN_DEBUG_LOG_INFO("%1% != %2%", component.value, otherComponent.value.ToString());
 
                                     invalidNames.SetBit(otherNameIndex);
-                                    validNameCount--;                                    
+                                    validNameCount--;
                                 }
                                 else
                                 {
@@ -220,7 +220,7 @@ namespace Finjin { namespace Engine {
 
             //FINJIN_DEBUG_LOG_INFO("Valid names remaining: %1%", validNameCount);
 
-            //Ideally at this point validNameCount ==  1 will occur, meaning there was one best name
+            //Ideally at this point validNameCount == 1 will occur, meaning there was one best name
             //However, validNameCount > 1 can occur if the selector was underspecified, or there were duplicates in 'names'
             if (validNameCount > 0)
             {
@@ -241,10 +241,10 @@ namespace Finjin { namespace Engine {
     private:
         void SetPreformatted(AssetPathComponent type, const Utf8String& value);
         void FormatAndSetSize(AssetPathComponent type, const char* prefix, const Utf8String& value);
-        
+
         void SetSafeLowerAscii(AssetPathComponent type, const char* prefix, const Utf8String& value);
         void SetSafeLowerAlphaNumeric(AssetPathComponent type, const char* prefix, const Utf8String& value);
-    
+
     private:
         struct Component
         {
@@ -254,7 +254,7 @@ namespace Finjin { namespace Engine {
             bool operator != (const AssetPath::Component& other) const { return other.value != this->value; }
             bool empty() const { return this->value.empty(); }
         };
-        EnumValues<AssetPathComponent, AssetPathComponent::COUNT, Component> components;
+        EnumArray<AssetPathComponent, AssetPathComponent::COUNT, Component> components;
     };
 
 } }

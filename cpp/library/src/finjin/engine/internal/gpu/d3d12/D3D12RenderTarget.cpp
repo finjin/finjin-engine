@@ -19,11 +19,10 @@
 #include "D3D12RenderTarget.hpp"
 #include "D3D12Utilities.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12RenderTarget::D3D12RenderTarget() :
     depthStencilResource(nullptr),
     renderTargetResourceHeapIndex((size_t)-1),
@@ -78,7 +77,7 @@ void D3D12RenderTarget::DestroySceenSizeDependentResources()
 {
     for (auto& renderTargetResource : this->renderTargetOutputResources)
         renderTargetResource.Reset();
-    
+
     this->depthStencilResource.Reset();
 
     this->renderTargetResourceHeapIndex = (size_t)-1;

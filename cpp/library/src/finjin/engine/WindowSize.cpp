@@ -20,30 +20,30 @@
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
-static bool IsFullScreen(WindowSize::State state)
+//Local functions---------------------------------------------------------------
+static bool IsFullScreen(WindowSizeState state)
 {
-    return state == WindowSize::BORDERLESS_FULLSCREEN || state == WindowSize::EXCLUSIVE_FULLSCREEN;
+    return state == WindowSizeState::BORDERLESS_FULLSCREEN || state == WindowSizeState::EXCLUSIVE_FULLSCREEN;
 }
 
-static bool IsWindowed(WindowSize::State state)
+static bool IsWindowed(WindowSizeState state)
 {
-    return state == WindowSize::WINDOWED_NORMAL || state == WindowSize::WINDOWED_MAXIMIZED;
+    return state == WindowSizeState::WINDOWED_NORMAL || state == WindowSizeState::WINDOWED_MAXIMIZED;
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 WindowSize::WindowSize()
 {
-    this->fullScreenState = BORDERLESS_FULLSCREEN; //EXCLUSIVE_FULLSCREEN;// BORDERLESS_FULLSCREEN;
-    this->windowedState = WINDOWED_NORMAL; //WINDOWED_MAXIMIZED; //WINDOWED_NORMAL;
+    this->fullScreenState = WindowSizeState::BORDERLESS_FULLSCREEN; //EXCLUSIVE_FULLSCREEN;// BORDERLESS_FULLSCREEN;
+    this->windowedState = WindowSizeState::WINDOWED_NORMAL; //WINDOWED_MAXIMIZED; //WINDOWED_NORMAL;
     this->state = this->windowedState;//this->windowedState; //this->fullScreenState;
 
-    this->bounds[WINDOWED_NORMAL].Set(0, 0, 800, 600, WindowBounds::BORDER | WindowBounds::LOCKED);
-    this->bounds[WINDOWED_MAXIMIZED].Set(0, 0, 0, 0, WindowBounds::BORDER | WindowBounds::MAXIMIZED);
-    this->bounds[BORDERLESS_FULLSCREEN].Set(0, 0, 0, 0, 0);
-    this->bounds[EXCLUSIVE_FULLSCREEN].Set(0, 0, 1920, 1080, 0);
-    
+    this->bounds[WindowSizeState::WINDOWED_NORMAL].Set(0, 0, 800, 600, WindowBoundsFlags::BORDER | WindowBoundsFlags::LOCKED);
+    this->bounds[WindowSizeState::WINDOWED_MAXIMIZED].Set(0, 0, 0, 0, WindowBoundsFlags::BORDER | WindowBoundsFlags::MAXIMIZED);
+    this->bounds[WindowSizeState::BORDERLESS_FULLSCREEN].Set(0, 0, 0, 0, WindowBoundsFlags::NONE);
+    this->bounds[WindowSizeState::EXCLUSIVE_FULLSCREEN].Set(0, 0, 1920, 1080, WindowBoundsFlags::NONE);
+
     this->window = nullptr;
     this->applyingToWindow = false;
 }
@@ -55,12 +55,12 @@ bool WindowSize::IsFullScreen() const
 
 bool WindowSize::IsFullScreenExclusive() const
 {
-    return this->state == WindowSize::EXCLUSIVE_FULLSCREEN;
+    return this->state == WindowSizeState::EXCLUSIVE_FULLSCREEN;
 }
 
 bool WindowSize::IsFullScreenBorderless() const
 {
-    return this->state == WindowSize::BORDERLESS_FULLSCREEN;
+    return this->state == WindowSizeState::BORDERLESS_FULLSCREEN;
 }
 
 bool WindowSize::IsWindowed() const
@@ -70,30 +70,30 @@ bool WindowSize::IsWindowed() const
 
 bool WindowSize::IsWindowedNormal() const
 {
-    return this->state == WindowSize::WINDOWED_NORMAL;
+    return this->state == WindowSizeState::WINDOWED_NORMAL;
 }
 
 bool WindowSize::IsWindowedMaximized() const
 {
-    return this->state == WindowSize::WINDOWED_MAXIMIZED;
+    return this->state == WindowSizeState::WINDOWED_MAXIMIZED;
 }
 
-WindowSize::State WindowSize::GetState() const
+WindowSizeState WindowSize::GetState() const
 {
     return this->state;
 }
 
-void WindowSize::SetState(WindowSize::State state)
+void WindowSize::SetState(WindowSizeState state)
 {
     this->state = state;
 }
 
-WindowSize::State WindowSize::GetFullScreenState() const
+WindowSizeState WindowSize::GetFullScreenState() const
 {
     return this->fullScreenState;
 }
 
-bool WindowSize::SetFullScreenState(State value)
+bool WindowSize::SetFullScreenState(WindowSizeState value)
 {
     if (::IsFullScreen(value))
     {
@@ -108,12 +108,12 @@ bool WindowSize::SetFullScreenState(State value)
         return false;
 }
 
-WindowSize::State WindowSize::GetWindowedState() const
+WindowSizeState WindowSize::GetWindowedState() const
 {
     return this->windowedState;
 }
 
-bool WindowSize::SetWindowedState(State value)
+bool WindowSize::SetWindowedState(WindowSizeState value)
 {
     if (::IsWindowed(value))
     {
@@ -160,7 +160,7 @@ void WindowSize::Next(bool applyToWindow)
         FINJIN_DEBUG_LOG_INFO("  Changing to full screen state");
         this->state = this->fullScreenState;
     }
-    
+
     if (applyToWindow)
         window->ApplyWindowSize();
 }
@@ -209,12 +209,12 @@ void WindowSize::SetCurrentBounds(const WindowBounds& bounds)
     this->bounds[this->state] = bounds;
 }
 
-const WindowBounds& WindowSize::GetBounds(State state) const
+const WindowBounds& WindowSize::GetBounds(WindowSizeState state) const
 {
     return this->bounds[state];
 }
 
-void WindowSize::SetBounds(State state, const WindowBounds& bounds)
+void WindowSize::SetBounds(WindowSizeState state, const WindowBounds& bounds)
 {
     this->bounds[state].x = bounds.x;
     this->bounds[state].y = bounds.y;
@@ -254,9 +254,9 @@ void WindowSize::WindowMoved(bool isWindowMaximized)
             {
                 //Possibly break out of maximized state
                 FINJIN_DEBUG_LOG_INFO("Maximized mode changed");
-                SetWindowedState(IsWindowedMaximized() ? WindowSize::WINDOWED_NORMAL : WindowSize::WINDOWED_MAXIMIZED);
+                SetWindowedState(IsWindowedMaximized() ? WindowSizeState::WINDOWED_NORMAL : WindowSizeState::WINDOWED_MAXIMIZED);
             }
-         
+
             if (!IsWindowedMaximized())
             {
                 auto windowRect = this->window->GetRect();
@@ -285,9 +285,9 @@ void WindowSize::WindowResized(bool isWindowMaximized)
             {
                 //Possibly break out of maximized state
                 FINJIN_DEBUG_LOG_INFO("Maximized mode changed");
-                SetWindowedState(IsWindowedMaximized() ? WindowSize::WINDOWED_NORMAL : WindowSize::WINDOWED_MAXIMIZED);
+                SetWindowedState(IsWindowedMaximized() ? WindowSizeState::WINDOWED_NORMAL : WindowSizeState::WINDOWED_MAXIMIZED);
             }
-         
+
             if (!IsWindowedMaximized())
             {
                 auto windowRect = this->window->GetRect();

@@ -14,11 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/sound/openal/OpenALContext.hpp"
 #include "finjin/engine/internal/sound/openal/OpenALSoundSource.hpp"
 #include "finjin/engine/internal/sound/openal/OpenALSoundBuffer.hpp"
 #include "finjin/engine/internal/sound/openal/OpenALSoundGroup.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using SoundContext = OpenALContext;
     using SoundContextSettings = OpenALContext::Settings;

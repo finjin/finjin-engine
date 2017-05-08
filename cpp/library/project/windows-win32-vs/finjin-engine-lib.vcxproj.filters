@@ -89,6 +89,18 @@
     <Filter Include="Source Files\common\assets">
       <UniqueIdentifier>{877855c6-7360-430d-a4ed-e95a295f6b0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\internal\gpu\vulkan\renderers">
+      <UniqueIdentifier>{2ab922e1-e46c-4ca3-b7dd-ad36a2780bfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\gpu\vulkan\resources">
+      <UniqueIdentifier>{2a887709-e3e5-40ec-9d9b-8654f43fd179}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\gpu\vulkan\utilities">
+      <UniqueIdentifier>{c221c7e9-c50b-46c9-b795-314d2c818023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\gpu\vulkan\renderers\static-mesh">
+      <UniqueIdentifier>{15a4e50e-da3b-462d-9bca-f5740eac74c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12GpuContext.hpp">
@@ -103,37 +115,7 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12System.hpp">
       <Filter>Source Files\internal\gpu\d3d12</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanNamePointers.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPrimaryQueues.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanQueueFamilyIndexes.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSurfaceFormats.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDepthBuffer.hpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.hpp">
       <Filter>Source Files\internal\gpu\vulkan</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.hpp">
@@ -297,9 +279,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12FrameBuffer.hpp">
       <Filter>Source Files\internal\gpu\d3d12</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\GpuSerializers.hpp">
-      <Filter>Source Files\common\gpu</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\app\win32\finjin\engine\ApplicationGlobals.hpp">
       <Filter>Source Files\internal\app\win32</Filter>
@@ -577,6 +556,135 @@
     <ClInclude Include="..\..\src\finjin\engine\LightState.hpp">
       <Filter>Source Files\common\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemImpl.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextImpl.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPrimaryQueues.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanQueueFamilyIndexes.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSurfaceFormats.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanIncludes.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanNamePointers.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameStage.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextSettings.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemSettings.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameBuffer.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanRenderTarget.hpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputFormat.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanStaticMeshRenderer.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\renderers\static-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanStaticMeshRendererFrameState.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\renderers\static-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanResources.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMaterial.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMesh.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLight.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTexture.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanShader.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12ShaderType.hpp">
+      <Filter>Source Files\internal\gpu\d3d12\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanShaderType.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\KTXReader.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\gl_format.h">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\TextureDimension.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMemoryResource.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuBuffer.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanBufferView.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPresentModes.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ASTCReader.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\vk_platform.h">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\vulkan.h">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\DXGIIncludes.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\PVRReader.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanRenderableEntity.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDescriptorSetLayout.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineLayout.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipeline.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPushConstant.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDescriptorPool.hpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12GpuContext.cpp">
@@ -588,28 +696,13 @@
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12System.cpp">
       <Filter>Source Files\internal\gpu\d3d12</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.cpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.cpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.cpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.cpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.cpp">
       <Filter>Source Files\internal\gpu\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.cpp">
       <Filter>Source Files\internal\gpu\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuDescription.cpp">
-      <Filter>Source Files\internal\gpu\vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.cpp">
       <Filter>Source Files\internal\gpu\vulkan</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\input\win32input\DInputDevice.cpp">
@@ -905,6 +998,108 @@
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\AssetClass.cpp">
       <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemImpl.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextImpl.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanIncludes.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameStage.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextSettings.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemSettings.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameBuffer.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanRenderTarget.cpp">
+      <Filter>Source Files\internal\gpu\vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputFormat.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanStaticMeshRenderer.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\renderers\static-mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanResources.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMaterial.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMesh.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLight.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTexture.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanShader.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\KTXReader.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\TextureDimension.cpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMemoryResource.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuBuffer.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPresentModes.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPrimaryQueues.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanQueueFamilyIndexes.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSurfaceFormats.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ASTCReader.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\DXGIIncludes.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\PVRReader.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDescriptorSetLayout.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineLayout.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipeline.cpp">
+      <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\LightState.cpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\CameraState.cpp">
+      <Filter>Source Files\common\utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

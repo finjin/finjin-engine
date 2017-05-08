@@ -14,8 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/input/uwpinput/WindowsUWPInputSystem.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using InputSystem = WindowsUWPInputSystem;
 } }

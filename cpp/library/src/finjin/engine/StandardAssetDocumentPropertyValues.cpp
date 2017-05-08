@@ -19,7 +19,7 @@
 using namespace Finjin::Engine;
 
 
-//Macros-----------------------------------------------------------------------
+//Macros------------------------------------------------------------------------
 #if defined(FINJIN_EXPORTER)
     #define FINJIN_CHUNK_PROPERTY_STRING(x) wxT(x)
 #else
@@ -27,7 +27,7 @@ using namespace Finjin::Engine;
 #endif
 
 
-//Static initialization--------------------------------------------------------
+//Static initialization---------------------------------------------------------
 const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::CameraProjection::PERSPECTIVE(FINJIN_CHUNK_PROPERTY_STRING("perspective"));
 const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::CameraProjection::ORTHOGRAPHIC(FINJIN_CHUNK_PROPERTY_STRING("orthographic"));
 
@@ -48,7 +48,7 @@ const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::Transparenc
 const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::FogMode::LINEAR(FINJIN_CHUNK_PROPERTY_STRING("linear"));
 const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::FogMode::EXP(FINJIN_CHUNK_PROPERTY_STRING("exp"));
 const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::FogMode::EXP2(FINJIN_CHUNK_PROPERTY_STRING("exp2"));
-    
+
 const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::IndexBufferType::UINT16(FINJIN_CHUNK_PROPERTY_STRING("uint16"));
 const FinjinChunkPropertyString StandardAssetDocumentPropertyValues::IndexBufferType::UINT32(FINJIN_CHUNK_PROPERTY_STRING("uint32"));
 

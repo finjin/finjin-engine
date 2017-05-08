@@ -14,38 +14,38 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Angle.hpp"
 #include "finjin/common/Math.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    using namespace Finjin::Common;    
+    using namespace Finjin::Common;
+
+    enum class CameraProjectionType
+    {
+        PERSPECTIVE,
+        ORTHOGRAPHIC
+    };
 
     struct CameraState
     {
-        enum class ProjectionType
-        {
-            PERSPECTIVE,
-            ORTHOGRAPHIC
-        };
+        CameraState();
 
-        CameraState() : orthoSize{ 0, 0 }, range{ 0, 0 }
-        {
-            this->worldMatrix.setIdentity();
-            this->inverseWorldMatrix.setIdentity();
+        MathVector4& GetWorldPosition(MathVector4& position4) const;
+        MathVector3& GetWorldPosition(MathVector3& position3, MathVector4& position4) const;
 
-            this->projectionType = ProjectionType::PERSPECTIVE;
-        }
+        MathVector3& GetWorldDirection(MathVector3& direction3, MathVector4& direction4) const;
 
-        MathMatrix44 worldMatrix;
-        MathMatrix44 inverseWorldMatrix;
+        MathMatrix4 worldMatrix;
+        MathMatrix4 inverseWorldMatrix;
+        MathMatrix4 inverseTransposeWorldMatrix;
 
         Radians fovY;
 
-        ProjectionType projectionType;
+        CameraProjectionType projectionType;
 
         float orthoSize[2];
 

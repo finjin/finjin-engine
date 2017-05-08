@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Macros-----------------------------------------------------------------------
+//Macros------------------------------------------------------------------------
 #define FINJIN_SCENE_CAMERA_TYPE_NAME "finjin.scene.viz.camera"
 #define FINJIN_SCENE_LIGHT_TYPE_NAME "finjin.scene.viz.light"
 #define FINJIN_SCENE_ENTITY_TYPE_NAME "finjin.scene.viz.entity"

@@ -23,18 +23,18 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12FrameStage::D3D12FrameStage()
 {
     this->index = 0;
     this->frameBufferIndex = 0;
 
     this->sequenceIndex = 0;
-        
+
     this->elapsedTime = 0;
     this->totalElapsedTime = 0;
 
-    this->renderTarget = nullptr;    
+    this->renderTarget = nullptr;
 }
 
 #endif

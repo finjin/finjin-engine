@@ -18,4 +18,22 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
+RenderShaderFeatureFlags::RenderShaderFeatureFlags()
+{
+    this->environmentFlags = ShaderFeatureFlag::NONE;
+    this->renderingFlags = ShaderFeatureFlag::NONE;
+    this->shaderFeatureFlagsMask = ShaderFeatureFlag::ALL;
+    this->additionalShaderFeatureFlags = ShaderFeatureFlag::NONE;
+}
+
+ShaderFeatureFlag RenderShaderFeatureFlags::ForMaterialMapsAndMesh(ShaderFeatureFlag materialMapFlags, ShaderFeatureFlag meshFlags) const
+{
+    return ((materialMapFlags | meshFlags | this->environmentFlags | this->renderingFlags) & this->shaderFeatureFlagsMask) | this->additionalShaderFeatureFlags;
+}
+
+const RenderShaderFeatureFlags& RenderShaderFeatureFlags::GetDefault()
+{
+    static const RenderShaderFeatureFlags value;
+    return value;
+}

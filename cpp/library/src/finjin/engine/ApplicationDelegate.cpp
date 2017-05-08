@@ -21,13 +21,13 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 ApplicationDelegate::ApplicationDelegate(Allocator* allocator) : AllocatedClass(allocator)
-{    
+{
 }
 
 ApplicationDelegate::~ApplicationDelegate()
-{    
+{
 }
 
 size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSystem) const
@@ -38,7 +38,7 @@ size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSy
         case ApplicationFileSystem::READ_APPLICATION_ASSETS: return 1000;
         case ApplicationFileSystem::READ_USER_DATA: return 100;
         case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA: return 100;
-        case ApplicationFileSystem::READ_WRITE_APPLICATION_DATA: return 50; 
+        case ApplicationFileSystem::READ_WRITE_APPLICATION_DATA: return 50;
         case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA: return 50;
         default: break;
     }
@@ -46,8 +46,14 @@ size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSy
     return 0;
 }
 
-void ApplicationDelegate::ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error)
+ReadCommandLineResult ApplicationDelegate::ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error)
 {
+    return ReadCommandLineResult::SUCCESS;
+}
+
+void ApplicationDelegate::GetCommandLineUsage(Utf8String& usage)
+{
+    usage.clear();
 }
 
 size_t ApplicationDelegate::GetBootFileNameCount() const
@@ -62,28 +68,28 @@ const Path& ApplicationDelegate::GetBootFileName(size_t index, bool& required) c
     return name;
 }
 
-bool ApplicationDelegate::ReadBootFileSection(ConfigDocumentReader& reader, const Utf8StringView& section, Error& error) 
-{ 
-    return false; 
+bool ApplicationDelegate::ReadBootFileSection(ConfigDocumentReader& reader, const Utf8StringView& section, Error& error)
+{
+    return false;
 }
 
 bool ApplicationDelegate::ReadBootFileItem(const Utf8StringView& section, const Utf8StringView& key, const Utf8StringView& value, Error& error)
-{ 
-    return false; 
+{
+    return false;
 }
 
-size_t ApplicationDelegate::GetSettingsFileNameCount() const 
-{ 
-    return 0; 
+size_t ApplicationDelegate::GetSettingsFileNameCount() const
+{
+    return 0;
 }
 
-const AssetReference& ApplicationDelegate::GetSettingsFileName(size_t index, bool& required) const 
-{ 
-    required = false; 
-    return AssetReference::EMPTY;
+const AssetReference& ApplicationDelegate::GetSettingsFileName(size_t index, bool& required) const
+{
+    required = false;
+    return AssetReference::Empty();
 }
 
-void ApplicationDelegate::ReadSettings(size_t index, const ByteBuffer& settingsBuffer, Error& error) 
+void ApplicationDelegate::ReadSettings(size_t index, const ByteBuffer& settingsBuffer, Error& error)
 {
 }
 

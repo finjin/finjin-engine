@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
 #if __APPLE__
@@ -25,14 +25,14 @@ namespace Finjin { namespace Engine {
         using OSWindowCoordinate = float;
         using OSWindowDimension = float;
     #endif
-#elif FINJIN_TARGET_OS_IS_WINDOWS_UWP
+#elif FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
     using OSWindowCoordinate = float;
     using OSWindowDimension = float;
 #else
-    using OSWindowCoordinate = int;
-    using OSWindowDimension = size_t;
+    using OSWindowCoordinate = int32_t;
+    using OSWindowDimension = int32_t;
 #endif
-    
+
     struct OSWindowPosition
     {
         OSWindowCoordinate x;
@@ -48,12 +48,12 @@ namespace Finjin { namespace Engine {
             this->x = x;
             this->y = y;
         }
-        
+
         bool operator == (const OSWindowPosition& other) const
         {
             return this->x == other.x && this->y == other.y;
         }
-        
+
         bool operator != (const OSWindowPosition& other) const
         {
             return !(*this == other);
@@ -128,7 +128,7 @@ namespace Finjin { namespace Engine {
             auto childY = this->y + static_cast<OSWindowCoordinate>(this->height / 2) - static_cast<OSWindowCoordinate>(child.height / 2);
             return OSWindowRect(childX, childY, child.width, child.height);
         }
-        
+
         bool IsEmpty() const
         {
             return this->width == 0 || this->height == 0;
@@ -138,7 +138,7 @@ namespace Finjin { namespace Engine {
         {
             return Contains(pos.x, pos.y);
         }
-        
+
         bool Contains(OSWindowCoordinate x, OSWindowCoordinate y) const
         {
             return
@@ -147,7 +147,7 @@ namespace Finjin { namespace Engine {
                 y >= this->y &&
                 y <= (this->y + this->height);
         }
-        
+
         bool operator == (const OSWindowRect& other) const
         {
             return
@@ -156,7 +156,7 @@ namespace Finjin { namespace Engine {
                 this->width == other.width &&
                 this->height == other.height;
         }
-        
+
         bool operator != (const OSWindowRect& other) const
         {
             return !(*this == other);

@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/GpuSystemCommonSettings.hpp"
 #include <d3dcommon.h>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -28,8 +28,6 @@ namespace Finjin { namespace Engine {
     struct D3D12SystemSettings : GpuSystemCommonSettings
     {
         D3D12SystemSettings();
-
-        void SetMinimumFeatureLevel(const Utf8String& s, Error& error);
 
         Utf8String applicationName;
         enum class SoftwareGpuRequirement

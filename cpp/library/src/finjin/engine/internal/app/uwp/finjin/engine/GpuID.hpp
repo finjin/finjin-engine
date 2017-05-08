@@ -14,8 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/gpu/d3d12/D3D12GpuID.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using GpuID = D3D12GpuID;
 } }

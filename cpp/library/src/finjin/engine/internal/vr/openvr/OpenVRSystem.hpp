@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
-#include "OpenVRSystemSettings.hpp"
 #include "OpenVRContext.hpp"
+#include "OpenVRSystemSettings.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -37,12 +37,12 @@ namespace Finjin { namespace Engine {
 
         void Create(const Settings& settings, Error& error);
         void Destroy();
-        
+
         OpenVRContext* CreateContext(const OpenVRContext::Settings& settings, Error& error);
         void DestroyContext(OpenVRContext* context);
 
         static const Utf8String& GetSystemInternalName();
-        
+
     private:
         struct Impl;
         std::unique_ptr<Impl> impl;

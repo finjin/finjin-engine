@@ -14,11 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Angle.hpp"
+#include "finjin/common/Math.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -38,31 +39,23 @@ namespace Finjin { namespace Engine {
 
         void MakeDirectional();
         void MakeOmnidirectional();
-        
+
         void Set
             (
-            float x, float y, float z,
-            float vx, float vy, float vz,
-            float directionx, float directiony, float directionz,
-            float upx, float upy, float upz
+            const MathVector3& position,
+            const MathVector3& velocity,
+            const MathVector3& direction,
+            const MathVector3& up
             );
 
-        void GetOrientation
-            (
-            float& directionx, float& directiony, float& directionz,
-            float& upx, float& upy, float& upz
-            ) const;
-        void SetOrientation
-            (
-            float directionx, float directiony, float directionz,
-            float upx, float upy, float upz
-            );
+        void GetOrientation(MathVector3& direction, MathVector3& up) const;
+        void SetOrientation(const MathVector3& direction, const MathVector3& up);
 
-        void GetPosition(float& x, float& y, float& z) const;
-        void SetPosition(float x, float y, float z);
-        
-        void GetVelocity(float& x, float& y, float& z) const;
-        void SetVelocity(float x, float y, float z);
+        void GetPosition(MathVector3& value) const;
+        void SetPosition(const MathVector3& value);
+
+        void GetVelocity(MathVector3& value) const;
+        void SetVelocity(const MathVector3& value);
 
         void Commit(bool force = false);
 

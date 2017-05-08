@@ -14,9 +14,9 @@
 #pragma once
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     enum class D3D12RendererType
     {
         STATIC_MESH,

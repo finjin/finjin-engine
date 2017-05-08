@@ -11,9 +11,12 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #import <Cocoa/Cocoa.h>
 #import "FinjinNSView.h"
 
+
+//Types-------------------------------------------------------------------------
 @interface FinjinNSViewController : NSViewController
 
 @end

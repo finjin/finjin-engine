@@ -15,15 +15,14 @@
 #include "FinjinPrecompiled.hpp"
 #include "finjin/engine/VRContextCommonSettings.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 VRContextCommonSettings::VRContextCommonSettings(Allocator* allocator) : settingsFileNames(allocator)
 {
     this->assetReader = nullptr;
-    
+
     this->loadStandardRenderModels = true;
 
     this->maxCommandsPerUpdate = EngineConstants::DEFAULT_SUBSYSTEM_COMMANDS_PER_UPDATE;

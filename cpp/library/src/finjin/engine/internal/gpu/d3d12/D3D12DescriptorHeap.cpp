@@ -21,7 +21,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12DescriptorHeap::D3D12DescriptorHeap() : descriptorSize(0)
 {
 }

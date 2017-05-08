@@ -14,11 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Path.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -26,7 +26,7 @@ namespace Finjin { namespace Engine {
     struct ApplicationViewportCommonSettings
     {
         ApplicationViewportCommonSettings()
-        {   
+        {
         }
     };
 

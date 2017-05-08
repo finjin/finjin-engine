@@ -14,15 +14,15 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/ApplicationViewportDelegate.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     class OSWindow;
 
     class ApplicationViewport : public AllocatedClass
@@ -38,7 +38,7 @@ namespace Finjin { namespace Engine {
         void SetDelegate(std::unique_ptr<ApplicationViewportDelegate>&& del);
 
         OSWindow* GetOSWindow();
-        
+
         bool IsMain() const;
         void SetMain(bool value);
 
@@ -49,7 +49,7 @@ namespace Finjin { namespace Engine {
         VRContext* GetVRContext();
         void SetVRContext(std::unique_ptr<VRContext>&& context);
     #endif
-        
+
         InputContext* DetachInputContext();
         InputContext* GetInputContext();
         void SetInputContext(std::unique_ptr<InputContext>&& context);
@@ -57,18 +57,18 @@ namespace Finjin { namespace Engine {
         SoundContext* DetachSoundContext();
         SoundContext* GetSoundContext();
         void SetSoundContext(std::unique_ptr<SoundContext>&& context);
-        
+
         GpuContext* DetachGpuContext();
         GpuContext* GetGpuContext();
         void SetGpuContext(std::unique_ptr<GpuContext>&& context);
 
         void CreateAssetClassFileReaders(AssetFileReader& assetFileReader, const AssetPathSelector& applicationAssetFileSelector, Error& error);
-        EnumValues<AssetClass, AssetClass::COUNT, AssetClassFileReader>& GetAssetClassFileReaders();
+        EnumArray<AssetClass, AssetClass::COUNT, AssetClassFileReader>& GetAssetClassFileReaders();
 
         bool NotifyWindowResized();
-        
+
         void RequestFullScreenToggle();
-        
+
         bool CloseRequested() const;
         void RequestClose();
 
@@ -84,28 +84,28 @@ namespace Finjin { namespace Engine {
         void ApplyFullScreenToggle(bool needsExclusiveToggle, Error& error);
 
         void OnTick(JobSystem& jobSystem, Error& error);
-        void FinishWork(bool continueRendering);
-        
+        void FinishWork(bool continueRendering, bool modifyingRenderTarget);
+
         int Update(JobSystem& jobSystem, Error& error);
-        void FinishFrame(bool continueRendering, size_t presentSyncIntervalOverride, Error& error);
+        void FinishFrame(bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error);
 
         virtual bool StartResizeTargets(Error& error);
         virtual void FinishResizeTargets(Error& error);
-        
+
     private:
         void Init();
-        
+
         void SetOSWindow(std::unique_ptr<OSWindow>&& osWindow);
 
         void ConfigureJobPipeline(size_t renderBuffering, size_t pipelineSize);
         size_t GetJobPipelineSize() const;
         void SetJobPipelineStageData
             (
-            size_t index, 
-            std::unique_ptr<ApplicationViewportUpdateContext>&& updateContext, 
+            size_t index,
+            std::unique_ptr<ApplicationViewportUpdateContext>&& updateContext,
             std::unique_ptr<ApplicationViewportRenderContext>&& renderContext
             );
-        
+
         void ResetUpdateAndRenderingCounters();
 
     private:

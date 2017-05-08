@@ -11,12 +11,13 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinNSView.h"
 #import <QuartzCore/CATransaction.h>
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 @interface FinjinNSView ()
 @end
 
@@ -32,7 +33,7 @@
     {
         [self _finishInit];
     }
-    
+
     return self;
 }
 
@@ -51,7 +52,7 @@
 {
     _metalLayer = [CAMetalLayer layer];
     _metalLayer.framebufferOnly = YES;
-    
+
     self.wantsLayer = YES;
     [self makeBackingLayer];
     [self.layer addSublayer:_metalLayer];
@@ -74,7 +75,7 @@
 - (void)setFrameSize:(NSSize)newSize
 {
     [super setFrameSize:newSize];
-    
+
     [self _syncLayerToViewSize];
 }
 
@@ -301,7 +302,7 @@
         NSPasteboard* pboard = sender.draggingPasteboard;
         if ([self getSupportedDropType:pboard] && (sourceDragMask & NSDragOperationLink))
             return YES;
-        
+
         return NO;
     }
 }
@@ -321,7 +322,7 @@
         NSPasteboard* pboard = sender.draggingPasteboard;
         if ([self getSupportedDropType:pboard] && (sourceDragMask & NSDragOperationLink))
             return NSDragOperationLink;
-        
+
         return NSDragOperationNone;
     }
 }
@@ -349,7 +350,7 @@
                 if ([self isSupportedDroppedFile:file])
                     [supportedFiles addObject:file];
             }
-            
+
             if (supportedFiles.count > 0 &&
                 self.delegate != nullptr &&
                 [self.delegate conformsToProtocol:@protocol(FinjinNSViewDelegate)] &&
@@ -358,10 +359,10 @@
                 id<FinjinNSViewDelegate> del = (id<FinjinNSViewDelegate>)self.delegate;
                 [del droppedFiles:supportedFiles];
             }
-            
+
             return YES;
         }
-        
+
         return NO;
     }
 }
@@ -376,19 +377,19 @@
                 return uti;
         }
     }
-    return nil;
+    return nullptr;
 }
 
 - (bool)isSupportedDroppedFile:(NSString*)fileName
 {
     NSString* fileNameExt = fileName.pathExtension;
-    
+
     for (NSString* extension in self.supportedFileExtensions)
     {
         if ([fileNameExt isEqualToString:extension])
             return true;
     }
-    
+
     return false;
 }
 

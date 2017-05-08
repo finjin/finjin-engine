@@ -14,9 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/Error.hpp"
-#include "finjin/common/Vector.hpp"
+//Includes----------------------------------------------------------------------
 #include "D3D12Texture.hpp"
 #include "D3D12DescriptorHeap.hpp"
 #include "D3D12GpuContext.hpp"
@@ -24,10 +22,12 @@
 #include "D3D12Includes.hpp"
 #include "D3D12GpuDescription.hpp"
 #include "D3D12GpuID.hpp"
+#include "finjin/common/Error.hpp"
+#include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/WindowSize.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -41,7 +41,6 @@ namespace Finjin { namespace Engine {
 
         bool IsDebugEnabled() const;
 
-        //private:
         void EnumerateAdapterOutputs(IDXGIAdapter* adapter, D3D12GpuOutputs& outputs);
 
         void EnumerateHardwareGpus();
@@ -50,7 +49,7 @@ namespace Finjin { namespace Engine {
 
     private:
         void EnumerateDeviceFeatures(ID3D12Device* device, D3D12GpuFeatures& features);
-        
+
     public:
         D3D12SystemSettings settings;
         D3D12HardwareGpuDescriptions hardwareGpuDescriptions;

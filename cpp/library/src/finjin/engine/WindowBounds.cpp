@@ -15,17 +15,16 @@
 #include "FinjinPrecompiled.hpp"
 #include "WindowBounds.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 WindowBounds::WindowBounds()
 {
     this->x = this->y = 0;
     this->width = this->height = 0;
     this->clientWidth = this->clientHeight = 0;
-    this->flags = 0;
+    this->flags = WindowBoundsFlags::NONE;
 }
 
 WindowBounds::WindowBounds(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height, OSWindowDimension clientWidth, OSWindowDimension clientHeight)
@@ -36,10 +35,10 @@ WindowBounds::WindowBounds(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowD
     this->height = height;
     this->clientWidth = clientWidth;
     this->clientHeight = clientHeight;
-    this->flags = 0;
+    this->flags = WindowBoundsFlags::NONE;
 }
 
-void WindowBounds::Set(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height, int flags)
+void WindowBounds::Set(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height, WindowBoundsFlags flags)
 {
     this->x = x;
     this->y = y;
@@ -55,17 +54,17 @@ bool WindowBounds::IsEmpty() const
 
 bool WindowBounds::HasBorder() const
 {
-    return (this->flags & BORDER) != 0;
+    return AnySet(this->flags & WindowBoundsFlags::BORDER);
 }
 
 bool WindowBounds::IsMaximized() const
 {
-    return (this->flags & MAXIMIZED) != 0;
+    return AnySet(this->flags & WindowBoundsFlags::MAXIMIZED);
 }
 
 bool WindowBounds::IsLocked() const
 {
-    return (this->flags & LOCKED) != 0;
+    return AnySet(this->flags & WindowBoundsFlags::LOCKED);
 }
 
 OSWindowDimension WindowBounds::GetClientWidth() const
@@ -76,6 +75,12 @@ OSWindowDimension WindowBounds::GetClientWidth() const
 OSWindowDimension WindowBounds::GetClientHeight() const
 {
     return this->clientHeight > 0 ? this->clientHeight : this->height;
+}
+
+void WindowBounds::LimitClientSize(OSWindowDimension maxWidth, OSWindowDimension maxHeight)
+{
+    this->clientWidth = std::min(this->clientWidth, maxWidth);
+    this->clientHeight = std::min(this->clientHeight, maxHeight);
 }
 
 void WindowBounds::AdjustSize(OSWindowDimension newWidth, OSWindowDimension newHeight)

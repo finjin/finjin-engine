@@ -18,9 +18,8 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 ApplicationGlobals::ApplicationGlobals()
 {
     this->hasConsole = false;
 }
- 

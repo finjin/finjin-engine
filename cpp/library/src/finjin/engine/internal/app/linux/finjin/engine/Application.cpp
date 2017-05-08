@@ -14,86 +14,82 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "finjin/engine/Application.hpp"
+#include "finjin/common/DebugLog.hpp"
 #include "finjin/engine/ApplicationDelegate.hpp"
 #include "finjin/engine/OSWindow.hpp"
-#include "finjin/common/DebugLog.hpp"
 #include <sys/utsname.h>
 #include <langinfo.h>
 #include <stdio.h>
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
-static Utf8String ParseLineValue(char* buff, const char* key)
+//Local functions---------------------------------------------------------------
+static void ParseLineValue(Utf8String& result, char* buff, const char* key)
 {
+    result.clear();
+
     char* begin = strstr(buff, key);
     char* end = begin != nullptr ? strstr(begin, "\n") : nullptr;
-    
-    Utf8String value;
     if (begin != nullptr && end != nullptr)
     {
         begin += strlen(key);
-        value.assign(begin, end);
+        result.assign(begin, end);
     }
-    return value;
 }
 
-static Utf8String GetLinuxName() 
+static void GetLinuxName(Utf8String& operatingSystemName)
 {
-    Utf8String operatingSystemName;
-    
-    FILE* f = fopen("/etc/lsb-release", "rt");
+    operatingSystemName.clear();
+
+    auto f = fopen("/etc/lsb-release", "rt");
     if (f != nullptr)
     {
-        const int buffLength = 1000;
-        char buff[buffLength];
-        int numRead = fread(buff, 1, buffLength - 1, f);
+        char buff[1024];
+        int numRead = fread(buff, 1, sizeof(buff) - 1, f);
         fclose(f);
-        
+
         if (numRead > 0)
         {
             buff[numRead] = 0;
-            
-            Utf8String distribID = ParseLineValue(buff, "DISTRIB_ID="); //Something like "Ubuntu"
-            if (!distribID.empty())
+
+            Utf8String distribPart;
+            ParseLineValue(distribPart, buff, "DISTRIB_ID="); //Something like "Ubuntu"
+            if (!distribPart.empty())
             {
-                operatingSystemName = distribID;
-                
-                Utf8String distribRelease = ParseLineValue(buff, "DISTRIB_RELEASE="); //Something like "15.10"
-                if (!distribRelease.empty())
+                operatingSystemName = distribPart;
+
+                ParseLineValue(distribPart, buff, "DISTRIB_RELEASE="); //Something like "15.10"
+                if (!distribPart.empty())
                 {
                     operatingSystemName += " ";
-                    operatingSystemName += distribRelease;
+                    operatingSystemName += distribPart;
                 }
             }
         }
     }
-    
+
     utsname utsName = {};
     if (uname(&utsName) == 0)
     {
         auto hasDistributionName = !operatingSystemName.empty();
-        
+
         if (hasDistributionName)
-            operatingSystemName += " (";        
+            operatingSystemName += " (";
         operatingSystemName += utsName.sysname;
         operatingSystemName += " ";
-        operatingSystemName += utsName.release;        
+        operatingSystemName += utsName.release;
         if (hasDistributionName)
             operatingSystemName += ")";
     }
-    
-    return operatingSystemName;
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 void Application::InitializeGlobals(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //Set up root file system
     GetFileSystem(ApplicationFileSystem::READ_APPLICATION_ASSETS).AddDirectory(this->standardPaths.applicationBundleDirectory.path, error);
     if (error)
@@ -101,25 +97,25 @@ void Application::InitializeGlobals(Error& error)
         FINJIN_SET_ERROR(error, "Failed to add application assets to file system.");
         return;
     }
-    
+
     //Layout direction: How to determine this?
     //if (right to left)
         //this->layoutDirection = LayoutDirection::RIGHT_TO_LEFT;
-    
+
     //Language
     char* languageAndCountry = getenv("LANG");
     if (languageAndCountry == nullptr)
         languageAndCountry = nl_langinfo(_NL_IDENTIFICATION_LANGUAGE);
     SetLanguageAndCountry(languageAndCountry);
-    
+
     //Operating system
-    this->operatingSystemName = GetLinuxName();
+    GetLinuxName(this->operatingSystemName);
 }
 
 void Application::CreateSystems(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //Input------------------
     this->inputSystem.Create(this->inputSystemSettings, error);
     if (error)
@@ -127,7 +123,7 @@ void Application::CreateSystems(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize input system.");
         return;
     }
-    
+
     //Sound--------------------
     this->soundSystem.Create(this->soundSystemSettings, error);
     if (error)
@@ -135,9 +131,9 @@ void Application::CreateSystems(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize sound system.");
         return;
     }
-    
+
     this->applicationDelegate->OnSoundDevicesEnumerated(this->soundSystem.GetAdapterDescriptions());
-    
+
     //GPU---------------------
     this->gpuSystem.Create(this->gpuSystemSettings, error);
     if (error)
@@ -152,18 +148,18 @@ void Application::CreateSystems(Error& error)
 bool Application::MainLoop(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     bool exitMainLoop = false;
     while (!exitMainLoop && !this->appViewportsController.empty())
     {
         //Get focus state of all windows---------
         auto focusState = this->appViewportsController.StartFocusUpdate();
-        
+
         //Handle queued events-----------------
         if (!focusState.anyHadFocus && !this->applicationDelegate->GetApplicationSettings().updateWhenNotFocused)
-            usleep(100000);         
+            usleep(100000);
         XcbConnection::HandleEvents();
-        
+
         //Perform update----------------------
         if (!this->appViewportsController.empty())
         {
@@ -191,7 +187,7 @@ bool Application::MainLoop(Error& error)
             }
         }
     }
-    
+
     return true;
 }
 
@@ -206,13 +202,13 @@ void Application::ReportError(const Error& error)
 }
 
 void Application::ShowTheCursor()
-{    
+{
     for (auto& appViewport : this->appViewportsController)
         appViewport->GetOSWindow()->ShowTheCursor();
 }
 
 void Application::HideTheCursor()
-{   
+{
     for (auto& appViewport : this->appViewportsController)
         appViewport->GetOSWindow()->HideTheCursor();
 }

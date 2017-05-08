@@ -14,34 +14,35 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/engine/InputContextCommonSettings.hpp"
-#include "../xinput/XInputGameController.hpp"
-#include "DInputGameController.hpp"
-#include "DInputKeyboard.hpp"
-#include "DInputMouse.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/OperationStatus.hpp"
 #include "finjin/common/Path.hpp"
+#include "finjin/engine/InputContextCommonSettings.hpp"
 #include "finjin/engine/InputSource.hpp"
+#include "../xinput/XInputGameController.hpp"
+#include "DInputGameController.hpp"
+#include "DInputKeyboard.hpp"
+#include "DInputMouse.hpp"
 
-//Classes----------------------------------------------------------------------
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class Win32InputSystem;
-    
+
     using namespace Finjin::Common;
 
     class Win32InputContext : public AllocatedClass
-    {    
+    {
     public:
         Win32InputContext(Allocator* allocator, Win32InputSystem* inputSystem);
         ~Win32InputContext();
-        
+
         struct Settings : InputContextCommonSettings
-        {            
+        {
             Settings(Allocator* allocator) : InputContextCommonSettings(allocator)
             {
             }
@@ -50,20 +51,18 @@ namespace Finjin { namespace Engine {
         void Create(const Settings& settings, Error& error);
         void Destroy();
 
-        
-        const OperationStatus& GetInitializationStatus() const;
-        
+
         void GetSelectorComponents(AssetPathSelector& result);
-        
+
         const Settings& GetSettings() const;
         void* GetDInput();
 
         void Update(SimpleTimeDelta elapsedTime, InputDevicePollFlag flags = InputDevicePollFlag::NONE);
-        
+
         void Execute(InputEvents& events, InputCommands& commands, Error& error);
 
         void HandleDeviceChanges();
-        
+
         void HandleApplicationViewportLostFocus();
         void HandleApplicationViewportGainedFocus();
 
@@ -99,7 +98,7 @@ namespace Finjin { namespace Engine {
         const Utf8String& GetMouseProductDescriptor(size_t index) const;
         const Utf8String& GetMouseInstanceDescriptor(size_t index) const;
         InputDeviceSemantic GetMouseSemantic(size_t index) const;
-        
+
         size_t GetKeyboardCount() const;
         DInputKeyboard* GetKeyboard(size_t index);
         bool IsKeyboardConnected(size_t index) const;
@@ -119,7 +118,7 @@ namespace Finjin { namespace Engine {
         {
             switch (deviceClass)
             {
-                case InputDeviceClass::KEYBOARD: 
+                case InputDeviceClass::KEYBOARD:
                 {
                     inputBindings.TranslateKeyboardBindings(deviceIndex, GetKeyboard(deviceIndex));
                     break;
@@ -138,7 +137,7 @@ namespace Finjin { namespace Engine {
                     else
                         inputBindings.TranslateGameControllerBindings(deviceIndex, GetExternalGameController(deviceIndex - GetXInputGameControllerCount() - GetDInputGameControllerCount()));
                     break;
-                }   
+                }
                 case InputDeviceClass::HEADSET:
                 {
                     if (deviceIndex < GetExternalHeadsetCount())
@@ -155,9 +154,9 @@ namespace Finjin { namespace Engine {
             for (size_t index = 0; index < mappingCount; index++)
             {
                 auto& mapping = inputBindings.GetBinding(index);
-                
+
                 auto mappingAllowsSingleTouchWithMultiTouch = AnySet(mapping.triggerCriteria.flags & InputTriggerFlag::TOUCH_ALLOWED_WITH_MULTITOUCH);
-                
+
                 switch (mapping.inputSource.deviceComponent)
                 {
                     case InputDeviceComponent::KEYBOARD_KEY:
@@ -185,7 +184,7 @@ namespace Finjin { namespace Engine {
                             inputBindings.ProcessMouseAbsoluteAxisBinding(mapping, *GetMouse(mapping.inputSource.deviceIndex), actions, elapsedTimeSeconds);
                         break;
                     }
-                    
+
                     case InputDeviceComponent::GAME_CONTROLLER_BUTTON:
                     {
                         if (mapping.inputSource.deviceIndex < GetXInputGameControllerCount())
@@ -227,13 +226,13 @@ namespace Finjin { namespace Engine {
 
                         break;
                     }
-                    
+
                     case InputDeviceComponent::HEADSET_LOCATOR:
                     {
                         if (mapping.inputSource.deviceIndex < GetExternalHeadsetCount())
                             inputBindings.ProcessHeadsetLocatorBinding(mapping, *GetExternalHeadset(mapping.inputSource.deviceIndex), actions, elapsedTimeSeconds);
                         break;
-                    }  
+                    }
                 }
             }
         }
@@ -246,7 +245,7 @@ namespace Finjin { namespace Engine {
                 auto gameControllerCount = GetXInputGameControllerCount();
                 for (size_t i = 0; i < gameControllerCount && !changed.full(); i++)
                     changed.CheckGameController(GetXInputGameController(i), i, filter);
-                
+
                 gameControllerCount = GetDInputGameControllerCount();
                 for (size_t i = 0; i < gameControllerCount && !changed.full(); i++)
                     changed.CheckGameController(GetDInputGameController(i), i, filter);
@@ -270,7 +269,7 @@ namespace Finjin { namespace Engine {
                     changed.CheckMouse(GetMouse(i), i, filter);
             }
         }
-        
+
         struct Impl;
         Impl* GetImpl();
 

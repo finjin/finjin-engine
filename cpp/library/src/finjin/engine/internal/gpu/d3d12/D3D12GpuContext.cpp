@@ -21,25 +21,23 @@
 #include "finjin/common/Math.hpp"
 #include "finjin/common/MemorySize.hpp"
 #include "finjin/engine/OSWindow.hpp"
-#include "finjin/engine/GpuSerializers.hpp"
 #include "D3D12GpuContextImpl.hpp"
 #include "D3D12System.hpp"
 #include "D3D12SystemImpl.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
-D3D12GpuContext::D3D12GpuContext(Allocator* allocator, D3D12System* d3dSystem) : 
-    AllocatedClass(allocator), 
+//Implementation----------------------------------------------------------------
+D3D12GpuContext::D3D12GpuContext(Allocator* allocator, D3D12System* d3dSystem) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<D3D12GpuContextImpl>(allocator, FINJIN_CALLER_ARGUMENTS))
 {
     impl->d3dSystem = d3dSystem;
 }
 
 D3D12GpuContext::~D3D12GpuContext()
-{    
+{
 }
 
 void D3D12GpuContext::Create(const Settings& settings, Error& error)
@@ -58,18 +56,13 @@ void D3D12GpuContext::Destroy()
     impl->Destroy();
 }
 
-const OperationStatus& D3D12GpuContext::GetInitializationStatus() const
-{
-    return impl->initializationStatus;
-}
-
 void D3D12GpuContext::GetSelectorComponents(AssetPathSelector& result)
 {
     result.Set
         (
-        impl->settings.initialAssetFileSelector, 
-        AssetPathComponent::GPU_FEATURE_LEVEL, 
-        AssetPathComponent::GPU_SHADER_MODEL, 
+        impl->settings.initialAssetFileSelector,
+        AssetPathComponent::GPU_FEATURE_LEVEL,
+        AssetPathComponent::GPU_SHADER_MODEL,
         AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT,
         AssetPathComponent::GPU_MODEL
         );
@@ -86,19 +79,33 @@ size_t D3D12GpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
 
     switch (assetClass)
     {
+        case AssetClass::SHADER:
+        {
+            size_t count = 0;
+            for (auto ext : { "cso" })
+            {
+                if (extensions.push_back(ext).HasErrorOrValue(false))
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' extension.", ext));
+                    return count;
+                }
+                count++;
+            }
+            return count;
+        }
         case AssetClass::TEXTURE:
         {
-            if (extensions.push_back("dds").HasErrorOrValue(false))
+            size_t count = 0;
+            for (auto ext : { "dds", "png" })
             {
-                FINJIN_SET_ERROR(error, "Failed to add 'dds' extension.");
-                return 0;
+                if (extensions.push_back(ext).HasErrorOrValue(false))
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' extension.", ext));
+                    return count;
+                }
+                count++;
             }
-            if (extensions.push_back("png").HasErrorOrValue(false))
-            {
-                FINJIN_SET_ERROR(error, "Failed to add 'png' extension.");
-                return 1;
-            }
-            return 2;
+            return count;
         }
     }
 
@@ -112,8 +119,8 @@ AssetCreationCapability D3D12GpuContext::GetAssetCreationCapabilities(AssetClass
         case AssetClass::MATERIAL: return AssetCreationCapability::FRAME_THREAD;
         case AssetClass::MESH: return AssetCreationCapability::TWO_STEP;
         case AssetClass::TEXTURE: return AssetCreationCapability::TWO_STEP;
+        default: return AssetCreationCapability::MAIN_THREAD;
     }
-    return AssetCreationCapability::MAIN_THREAD;
 }
 
 bool D3D12GpuContext::ToggleFullScreenExclusive(Error& error)
@@ -142,21 +149,7 @@ void D3D12GpuContext::FinishResizeTargets(Error& error)
 
     impl->FinishResizeTargets(error);
     if (error)
-        FINJIN_SET_ERROR_NO_MESSAGE(error);    
-}
-
-void D3D12GpuContext::CreateScreenSizeDependentResources(Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    impl->CreateScreenSizeDependentResources(error);
-    if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
-}
-
-void D3D12GpuContext::DestroyScreenSizeDependentResources()
-{
-    impl->DestroyScreenSizeDependentResources();
 }
 
 void D3D12GpuContext::CreateMeshFromMainThread(FinjinMesh& mesh, Error& error)
@@ -207,31 +200,9 @@ D3D12GpuContext::JobPipelineStage& D3D12GpuContext::GetFrameStage(size_t index)
     return impl->frameStages[index];
 }
 
-D3D12GpuContext::JobPipelineStage& D3D12GpuContext::StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime, size_t* frameSequenceIndex)
+D3D12GpuContext::JobPipelineStage& D3D12GpuContext::StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime)
 {
-    auto& frameStage = impl->frameStages[index];
-    
-    //Hold onto current frame buffer index
-    auto frameBufferIndex = impl->nextFrameBufferIndex;
-
-    //Calculate next frame buffer index
-    impl->nextFrameBufferIndex = (impl->nextFrameBufferIndex + 1) % impl->frameBuffers.size();
-
-    //Make sure the buffer has been presented and frame's state can be reused
-    auto& frameBuffer = impl->frameBuffers[frameBufferIndex];
-    impl->BusyWaitForFenceValue(frameBuffer.framePresentCompletedFenceValue);    
-    frameStage.frameBufferIndex = frameBufferIndex;
-
-    frameStage.elapsedTime = elapsedTime;
-
-    frameStage.totalElapsedTime = totalElapsedTime;
-
-    frameStage.sequenceIndex = impl->sequenceIndex++;
-
-    if (frameSequenceIndex != nullptr)
-        *frameSequenceIndex = frameStage.sequenceIndex;
-    
-    return frameStage;
+    return impl->StartFrameStage(index, elapsedTime, totalElapsedTime);
 }
 
 void D3D12GpuContext::StartBackFrameBufferRender(JobPipelineStage& frameStage)
@@ -249,31 +220,24 @@ void D3D12GpuContext::Execute(JobPipelineStage& frameStage, GpuEvents& events, G
 }
 
 void D3D12GpuContext::FinishFrameStage(JobPipelineStage& frameStage)
-{    
+{
     //auto& frameBuffer = impl->frameBuffers[frameStage.frameBufferIndex];
 
     impl->UpdateResourceGpuResidencyStatus();
 }
 
-void D3D12GpuContext::FinishBackFrameBufferRender(JobPipelineStage& frameStage, bool continueRendering, size_t presentSyncIntervalOverride, Error& error)
+void D3D12GpuContext::FinishBackFrameBufferRender(JobPipelineStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto& frameBuffer = impl->frameBuffers[frameStage.frameBufferIndex];
+    impl->FinishBackFrameBufferRender(frameStage, continueRendering, modifyingRenderTarget, presentSyncIntervalOverride, error);
+    if (error)
+        FINJIN_SET_ERROR_NO_MESSAGE(error);
+}
 
-    frameBuffer.ExecuteCommandLists(impl->graphicsCommandQueue.Get());
-    
-    //Swap
-    auto presentSyncInterval = static_cast<UINT>(presentSyncIntervalOverride != (size_t)-1 ? presentSyncIntervalOverride : impl->settings.presentSyncInterval);
-    if (FINJIN_CHECK_HRESULT_FAILED(impl->swapChain->Present(presentSyncInterval, 0)))
-    {
-        FINJIN_SET_ERROR(error, "Failed to present back buffer.");
-        return;
-    }
-
-    frameBuffer.ResetCommandLists();
-
-    frameBuffer.framePresentCompletedFenceValue = impl->EmitFenceValue();    
+void D3D12GpuContext::FlushGpu()
+{
+    impl->FlushGpu();
 }
 
 #endif

@@ -14,16 +14,16 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Error.hpp"
+#include "finjin/engine/DisplayInfo.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
 #include "finjin/engine/OSWindowEventListener.hpp"
-#include "finjin/engine/DisplayInfo.hpp"
 #include "finjin/engine/WindowSize.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -36,7 +36,7 @@ namespace Finjin { namespace Engine {
 
         void Create
             (
-            const Utf8String& internalName, 
+            const Utf8String& internalName,
             const Utf8String& titleOrSubtitle,
             const Utf8String& displayName,
             OSWindowRect rect,
@@ -63,7 +63,7 @@ namespace Finjin { namespace Engine {
         bool IsVisible() const;
 
         bool IsSizeLocked() const;
-        
+
         bool HasFocus() const;
 
         void Raise();
@@ -76,16 +76,16 @@ namespace Finjin { namespace Engine {
         OSWindowRect GetDisplayVisibleRect() const;
 
         OSWindowRect GetRect() const;
-        
+
         OSWindowSize GetClientSize() const;
-                
+
         bool Move(OSWindowCoordinate x, OSWindowCoordinate y);
 
         bool HasWindowHandle() const;
         void ClearSystemWindowHandle();
 
         void* GetWindowHandle() const;
-        
+
         size_t GetWindowEventListenerCount() const;
         OSWindowEventListener* GetWindowEventListener(size_t index);
         void AddWindowEventListener(OSWindowEventListener* listener);
@@ -100,7 +100,7 @@ namespace Finjin { namespace Engine {
         void LimitBounds(WindowBounds& bounds) const;
 
         void Tick() {}
-        
+
         //Android-specific methods------------------------------
         void SetWindowHandle(void* windowHandle);
 

@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "D3D12Includes.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
@@ -22,7 +22,7 @@
 #include "D3D12Texture.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -47,7 +47,7 @@ namespace Finjin { namespace Engine {
 
             COUNT
         };
-        
+
         struct Map
         {
             Map();
@@ -55,13 +55,13 @@ namespace Finjin { namespace Engine {
             FinjinMaterial::Map* finjinMap;
             D3D12Texture* texture;
         };
-                
+
     public:
         FinjinMaterial* finjinMaterial;
 
         size_t gpuBufferIndex; //Index into constant buffer or structured buffer corresponding to this material
 
-        EnumValues<MapIndex, MapIndex::COUNT, Map> maps;
+        EnumArray<MapIndex, MapIndex::COUNT, Map> maps;
 
         bool isFullyResolved; //Indicates whether all resource references have been resolved
     };

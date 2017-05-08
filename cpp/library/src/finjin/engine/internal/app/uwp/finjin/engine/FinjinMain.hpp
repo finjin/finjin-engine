@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/DefaultAllocator.hpp"
 #include "finjin/common/PassthroughSystemAllocator.hpp"
 
 
-//Macros-----------------------------------------------------------------------
-#define FINJIN_ENGINE_IMPLEMENT_MAIN(AppDelegate)\
+//Macros------------------------------------------------------------------------
+#define FINJIN_ENGINE_MAIN(AppDelegate)\
     [Platform::MTAThread]\
     int main(Platform::Array<Platform::String^>^ args)\
     {\

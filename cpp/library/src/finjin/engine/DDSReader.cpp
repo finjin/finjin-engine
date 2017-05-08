@@ -14,42 +14,41 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "DDSReader.hpp"
+#include "finjin/common/ByteOrder.hpp"
 
-#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
-    #include "finjin/engine/internal/gpu/d3d12/D3D12Utilities.hpp"
-    using Microsoft::WRL::ComPtr;
-#endif
-
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Macros-----------------------------------------------------------------------
-#define DDS_HEADER_FLAGS_TEXTURE        0x00001007  //DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT  
-#define DDS_HEADER_FLAGS_MIPMAP         0x00020000  //DDSD_MIPMAPCOUNT 
-#define DDS_HEADER_FLAGS_VOLUME         0x00800000  //DDSD_DEPTH 
-#define DDS_HEADER_FLAGS_PITCH          0x00000008  //DDSD_PITCH 
-#define DDS_HEADER_FLAGS_LINEARSIZE     0x00080000  //DDSD_LINEARSIZE 
+//Macros------------------------------------------------------------------------
+#define FINJIN_DDS_SIGNATURE FINJIN_FOURCC('D', 'D', 'S', ' ') //0x20534444
 
-#define DDS_HEIGHT 0x00000002 //DDSD_HEIGHT 
-#define DDS_WIDTH  0x00000004 //DDSD_WIDTH 
+#define FINJIN_DDS_FOURCC 0x00000004
 
-#define DDS_SURFACE_FLAGS_TEXTURE 0x00001000 //DDSCAPS_TEXTURE 
-#define DDS_SURFACE_FLAGS_MIPMAP  0x00400008 //DDSCAPS_COMPLEX | DDSCAPS_MIPMAP 
-#define DDS_SURFACE_FLAGS_CUBEMAP 0x00000008 //DDSCAPS_COMPLEX 
+#define DDS_HEADER_FLAGS_TEXTURE        0x00001007  //DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT
+#define DDS_HEADER_FLAGS_MIPMAP         0x00020000  //DDSD_MIPMAPCOUNT
+#define DDS_HEADER_FLAGS_VOLUME         0x00800000  //DDSD_DEPTH
+#define DDS_HEADER_FLAGS_PITCH          0x00000008  //DDSD_PITCH
+#define DDS_HEADER_FLAGS_LINEARSIZE     0x00080000  //DDSD_LINEARSIZE
 
-#define DDS_CUBEMAP_POSITIVEX 0x00000600 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEX 
-#define DDS_CUBEMAP_NEGATIVEX 0x00000a00 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEX 
-#define DDS_CUBEMAP_POSITIVEY 0x00001200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEY 
-#define DDS_CUBEMAP_NEGATIVEY 0x00002200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEY 
-#define DDS_CUBEMAP_POSITIVEZ 0x00004200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEZ 
-#define DDS_CUBEMAP_NEGATIVEZ 0x00008200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEZ 
+#define DDS_HEIGHT 0x00000002 //DDSD_HEIGHT
+#define DDS_WIDTH  0x00000004 //DDSD_WIDTH
+
+#define DDS_SURFACE_FLAGS_TEXTURE 0x00001000 //DDSCAPS_TEXTURE
+#define DDS_SURFACE_FLAGS_MIPMAP  0x00400008 //DDSCAPS_COMPLEX | DDSCAPS_MIPMAP
+#define DDS_SURFACE_FLAGS_CUBEMAP 0x00000008 //DDSCAPS_COMPLEX
+
+#define DDS_CUBEMAP_POSITIVEX 0x00000600 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEX
+#define DDS_CUBEMAP_NEGATIVEX 0x00000a00 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEX
+#define DDS_CUBEMAP_POSITIVEY 0x00001200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEY
+#define DDS_CUBEMAP_NEGATIVEY 0x00002200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEY
+#define DDS_CUBEMAP_POSITIVEZ 0x00004200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEZ
+#define DDS_CUBEMAP_NEGATIVEZ 0x00008200 //DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEZ
 
 #define DDS_CUBEMAP_ALLFACES (DDS_CUBEMAP_POSITIVEX | DDS_CUBEMAP_NEGATIVEX | DDS_CUBEMAP_POSITIVEY | DDS_CUBEMAP_NEGATIVEY | DDS_CUBEMAP_POSITIVEZ | DDS_CUBEMAP_NEGATIVEZ)
 
-#define DDS_CUBEMAP 0x00000200 //DDSCAPS2_CUBEMAP 
+#define DDS_CUBEMAP 0x00000200 //DDSCAPS2_CUBEMAP
 
-#define DDS_FLAGS_VOLUME 0x00200000 //DDSCAPS2_VOLUME 
+#define DDS_FLAGS_VOLUME 0x00200000 //DDSCAPS2_VOLUME
 
 #define IS_SAME_BIT_MASK(r, g, b, a) (this->RBitMask == r && this->GBitMask == g && this->BBitMask == b && this->ABitMask == a)
 #define DDS_RGB 0x00000040
@@ -67,10 +66,9 @@ enum DDS_MISC_FLAGS2
 };
 
 
-//Implementation------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //DDSReader::PixelFormat
-#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
 DXGI_FORMAT DDSReader::PixelFormat::GetDXGIFormat() const
 {
     if (this->flags & DDS_RGB)
@@ -140,7 +138,7 @@ DXGI_FORMAT DDSReader::PixelFormat::GetDXGIFormat() const
         {
             if (IS_SAME_BIT_MASK(0x000000ff, 0x00000000, 0x00000000, 0x00000000))
                 return DXGI_FORMAT_R8_UNORM; //D3DX10/11 writes this out as DX10 extension
-            
+
             //No DXGI format maps to IS_SAME_BIT_MASK(0x0f,0x00,0x00,0xf0) aka D3DFMT_A4L4
         }
         else if (this->RGBBitCount == 16)
@@ -164,36 +162,36 @@ DXGI_FORMAT DDSReader::PixelFormat::GetDXGIFormat() const
             return DXGI_FORMAT_BC2_UNORM;
         else if (this->fourCC == FINJIN_FOURCC('D', 'X', 'T', '5'))
             return DXGI_FORMAT_BC3_UNORM;
-        
+
         //While pre-multiplied alpha isn't directly supported by the DXGI formats, they are basically the same as these BC formats
         else if (this->fourCC == FINJIN_FOURCC('D', 'X', 'T', '2'))
             return DXGI_FORMAT_BC2_UNORM;
         else if (this->fourCC == FINJIN_FOURCC('D', 'X', 'T', '4'))
             return DXGI_FORMAT_BC3_UNORM;
-        
+
         else if (this->fourCC == FINJIN_FOURCC('A', 'T', 'I', '1'))
             return DXGI_FORMAT_BC4_UNORM;
         else if (this->fourCC == FINJIN_FOURCC('B', 'C', '4', 'U'))
             return DXGI_FORMAT_BC4_UNORM;
         else if (this->fourCC == FINJIN_FOURCC('B', 'C', '4', 'S'))
             return DXGI_FORMAT_BC4_SNORM;
-        
+
         else if (this->fourCC == FINJIN_FOURCC('A', 'T', 'I', '2'))
             return DXGI_FORMAT_BC5_UNORM;
         else if (this->fourCC == FINJIN_FOURCC('B', 'C', '5', 'U'))
             return DXGI_FORMAT_BC5_UNORM;
         else if (this->fourCC == FINJIN_FOURCC('B', 'C', '5', 'S'))
             return DXGI_FORMAT_BC5_SNORM;
-        
+
         //BC6H and BC7 are written using the "DX10" extended header
         else if (this->fourCC == FINJIN_FOURCC('R', 'G', 'B', 'G'))
             return DXGI_FORMAT_R8G8_B8G8_UNORM;
         else if (this->fourCC == FINJIN_FOURCC('G', 'R', 'G', 'B'))
             return DXGI_FORMAT_G8R8_G8B8_UNORM;
-        
+
         else if (this->fourCC == FINJIN_FOURCC('Y', 'U', 'Y', '2'))
             return DXGI_FORMAT_YUY2;
-        
+
         //Check for D3DFORMAT enums being set here
         switch (this->fourCC)
         {
@@ -210,7 +208,6 @@ DXGI_FORMAT DDSReader::PixelFormat::GetDXGIFormat() const
 
     return DXGI_FORMAT_UNKNOWN;
 }
-#endif
 
 //DDSReader::Header
 DDSReader::AlphaMode DDSReader::Header::GetAlphaMode() const
@@ -220,7 +217,7 @@ DDSReader::AlphaMode DDSReader::Header::GetAlphaMode() const
         if (this->ddspf.fourCC == FINJIN_FOURCC('D', 'X', '1', '0'))
         {
             auto d3d10HeaderExtension = reinterpret_cast<const DDSReader::DX10HeaderExtension*>((const uint8_t*)this + sizeof(DDSReader::Header));
-            
+
             auto mode = static_cast<DDSReader::AlphaMode>(d3d10HeaderExtension->miscFlags2 & DDS_MISC_FLAGS2_ALPHA_MODE_MASK);
             switch (mode)
             {
@@ -272,39 +269,91 @@ bool DDSReader::DX10HeaderExtension::IsCube() const
 //DDSReader
 DDSReader::DDSReader()
 {
-    this->isHeaderDX10 = false;
+    FINJIN_ZERO_ITEM(*this);
 }
 
-DDSReader::ReadHeaderResult DDSReader::ReadHeader(const void* vbytes, size_t byteCount)
+DDSReader::ReadHeaderResult DDSReader::ReadHeader(ByteBufferReader& reader)
 {
-    auto bytes = static_cast<const uint8_t*>(vbytes);
+    using SignatureType = uint32_t;
 
-    if (bytes == 0 || byteCount == 0)
-        return ReadHeaderResult::FAILED_TO_READ_MAGIC_VALUE;
-    
-    auto magicNumber = *reinterpret_cast<const uint32_t*>(bytes);
-    if (magicNumber != FINJIN_DDS_MAGIC)
-        return ReadHeaderResult::INVALID_MAGIC_VALUE;
+    if (reader.size_left() < sizeof(SignatureType))
+        return ReadHeaderResult::FAILED_TO_READ_SIGNATURE;
 
-    auto headerBytes = &bytes[sizeof(uint32_t)];
-    auto header = reinterpret_cast<const Header*>(headerBytes);
+    //Check signature. Note that checking the signature does not modify the reader
+    this->swapBytes = false;
+    auto signature = *reinterpret_cast<const SignatureType*>(reader.data_left());
+    if (signature != FINJIN_DDS_SIGNATURE)
+    {
+        auto signatureByteSwapped = signature;
+        SwapBytes(signatureByteSwapped);
+        if (signatureByteSwapped != FINJIN_DDS_SIGNATURE)
+            return ReadHeaderResult::INVALID_SIGNATURE;
 
-    if (header->size != sizeof(Header))
+        this->swapBytes = true;
+    }
+
+    //Skip signature
+    if (!reader.Skip(sizeof(SignatureType)))
+        return ReadHeaderResult::FAILED_TO_READ_SIGNATURE;
+
+    //Read header
+    if (reader.Read(&this->header, sizeof(this->header)) < sizeof(this->header))
+        return ReadHeaderResult::FAILED_TO_READ_HEADER;
+
+    if (this->swapBytes)
+    {
+        SwapBytes(this->header.size);
+        SwapBytes(this->header.flags);
+        SwapBytes(this->header.height);
+        SwapBytes(this->header.width);
+        SwapBytes(this->header.pitchOrLinearSize);
+        SwapBytes(this->header.depth);
+        SwapBytes(this->header.mipMapCount);
+        SwapBytes(this->header.ddspf.size);
+        SwapBytes(this->header.ddspf.flags);
+        SwapBytes(this->header.ddspf.fourCC);
+        SwapBytes(this->header.ddspf.RGBBitCount);
+        SwapBytes(this->header.ddspf.RBitMask);
+        SwapBytes(this->header.ddspf.GBitMask);
+        SwapBytes(this->header.ddspf.BBitMask);
+        SwapBytes(this->header.ddspf.ABitMask);
+        SwapBytes(this->header.caps);
+        SwapBytes(this->header.caps2);
+        SwapBytes(this->header.caps3);
+        SwapBytes(this->header.caps4);
+    }
+
+    //Check size
+    if (this->header.size != sizeof(Header))
         return ReadHeaderResult::INVALID_HEADER_SIZE;
 
-    if (header->ddspf.size != sizeof(PixelFormat))
+    //Check pixel format size
+    if (this->header.ddspf.size != sizeof(PixelFormat))
         return ReadHeaderResult::INVALID_PIXEL_FORMAT_SIZE;
 
-    FINJIN_COPY_MEMORY(&this->header, header, sizeof(Header));
-
+    //Hold onto DX10 header
     this->isHeaderDX10 = false;
-    if ((header->ddspf.flags & FINJIN_DDS_FOURCC) != 0 && header->ddspf.fourCC == FINJIN_FOURCC('D', 'X', '1', '0'))
+    if ((this->header.ddspf.flags & FINJIN_DDS_FOURCC) != 0 && this->header.ddspf.fourCC == FINJIN_FOURCC('D', 'X', '1', '0'))
     {
-        if (byteCount < (sizeof(Header) + sizeof(uint32_t) + sizeof(DX10HeaderExtension)))
-            return ReadHeaderResult::NO_DXT10_HEADER;
+        if (reader.Read(&this->headerDX10, sizeof(this->headerDX10)) < sizeof(this->headerDX10))
+            return ReadHeaderResult::FAILED_TO_READ_DXT10_HEADER;
+
+        if (this->swapBytes)
+        {
+            SwapBytes(this->headerDX10.dxgiFormat);
+            SwapBytes(this->headerDX10.resourceDimension);
+            SwapBytes(this->headerDX10.miscFlag);
+            SwapBytes(this->headerDX10.arraySize);
+            SwapBytes(this->headerDX10.miscFlags2);
+        }
 
         this->isHeaderDX10 = true;
-        FINJIN_COPY_MEMORY(&this->headerDX10, &headerBytes[sizeof(Header)], sizeof(DX10HeaderExtension));
+    }
+
+    if (this->swapBytes)
+    {
+        //Requiring byte swapping is probably an error, but the caller might be able to handle it.
+        return ReadHeaderResult::IMAGE_BYTE_SWAPPING_REQUIRED;
     }
 
     return DDSReader::ReadHeaderResult::SUCCESS;
@@ -314,20 +363,22 @@ Utf8String DDSReader::GetReadHeaderResultString(ReadHeaderResult result) const
 {
     switch (result)
     {
-        case ReadHeaderResult::FAILED_TO_READ_MAGIC_VALUE: return "No DDS bytes were specified.";
-        case ReadHeaderResult::INVALID_MAGIC_VALUE: return "Invalid DDS magic number.";
+        case ReadHeaderResult::FAILED_TO_READ_SIGNATURE: return "Failed to read DDS signature.";
+        case ReadHeaderResult::INVALID_SIGNATURE: return "Invalid DDS signature.";
+        case ReadHeaderResult::FAILED_TO_READ_HEADER: return "Failed to read header.";
         case ReadHeaderResult::INVALID_HEADER_SIZE: return "Invalid header size.";
         case ReadHeaderResult::INVALID_PIXEL_FORMAT_SIZE: return "Invalid pixel format size.";
-        case ReadHeaderResult::NO_DXT10_HEADER: return "Header indicated a DXT10 header format but no DXT10 header could be found.";
+        case ReadHeaderResult::FAILED_TO_READ_DXT10_HEADER: return "Failed to read DXT10 header.";
+        case ReadHeaderResult::IMAGE_BYTE_SWAPPING_REQUIRED: return "Image byte swapping required.";
         default: return Utf8String::Empty();
     }
 }
 
-void DDSReader::ReadHeader(const void* bytes, size_t byteCount, Error& error)
+void DDSReader::ReadHeader(ByteBufferReader& reader, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto result = ReadHeader(bytes, byteCount);
+    auto result = ReadHeader(reader);
     if (result != ReadHeaderResult::SUCCESS)
         FINJIN_SET_ERROR(error, GetReadHeaderResultString(result));
 }
@@ -343,4 +394,29 @@ const DDSReader::DX10HeaderExtension* DDSReader::GetHeaderDX10Extension() const
         return &this->headerDX10;
     else
         return nullptr;
+}
+
+DXGI_FORMAT DDSReader::GetDXGIFormat() const
+{
+    return this->isHeaderDX10 ? static_cast<DXGI_FORMAT>(this->headerDX10.dxgiFormat) : this->header.ddspf.GetDXGIFormat();
+}
+
+bool DDSReader::IsCube() const
+{
+    return this->header.IsCube() || (this->isHeaderDX10 && this->headerDX10.IsCube());
+}
+
+bool DDSReader::IsArray() const
+{
+    return this->isHeaderDX10 && this->headerDX10.arraySize > 0;
+}
+
+TextureDimension DDSReader::GetDimension() const
+{
+    return TextureDimensionUtilities::Get(this->header.HasHeight() ? this->header.height : 0, this->header.IsVolume(), IsCube(), IsArray());
+}
+
+bool DDSReader::IsImageByteSwapped() const
+{
+    return this->swapBytes;
 }

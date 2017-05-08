@@ -15,8 +15,7 @@
 #include "FinjinPrecompiled.hpp"
 #include "WindowsUWPInputDevice.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------

@@ -18,8 +18,10 @@
 #include "finjin/engine/StandardAssetDocumentChunkNames.hpp"
 #include "finjin/engine/StandardAssetDocumentPropertyValues.hpp"
 
+using namespace Finjin::Engine;
 
-//Macros-----------------------------------------------------------------------
+
+//Macros------------------------------------------------------------------------
 #if FINJIN_DEBUG
     #define PRINT_DATA 0
 #else
@@ -112,19 +114,17 @@
         FINJIN_SET_ERROR(error, "Unable to read object properties. Object is null."); \
         return; \
     } \
-    else if (!obj->IsTypeOf(FINJIN_CLASS_DESCRIPTION(class))) \
+    else if (!obj->IsTypeOf(FINJIN_TYPE_DESCRIPTION(class))) \
     { \
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to read object properties. Object is of type '%1%' but needs to be '%2%'.", obj->GetClassDescription().GetName(), FINJIN_CLASS_DESCRIPTION(class).GetName())); \
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to read object properties. Object is of type '%1%' but needs to be '%2%'.", obj->GetTypeDescription().GetName(), FINJIN_TYPE_DESCRIPTION(class).GetName())); \
         return; \
     } \
     auto typedObj = static_cast<class*>(obj);
 
 #define SORT_USER_DATA_ENUMS_AND_PROPERTIES 0 //Enabling this is helpful for debugging in some scenarios but isn't really necessary in general
 
-using namespace Finjin::Engine;
 
-
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 template <typename T, typename State>
 struct NonEmbeddedAssetHandleChunk
 {
@@ -161,14 +161,14 @@ struct NonEmbeddedAssetGetData
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 #if PRINT_DATA
 static Utf8String Indent(size_t depth)
 {
     return Utf8String(depth, ' ');
 }
 
-static void PRINT_TRANSFORM(size_t depth, const MathMatrix44& value)
+static void PRINT_TRANSFORM(size_t depth, const MathMatrix4& value)
 {
     std::cout << Indent(depth) << "transform: " << value(0, 0) << " " << value(0, 1) << " " << value(0, 2) << " " << value(0, 3) << std::endl
         << Indent(depth) << value(1, 0) << " " << value(1, 1) << " " << value(1, 2) << " " << value(1, 3) << std::endl
@@ -177,7 +177,7 @@ static void PRINT_TRANSFORM(size_t depth, const MathMatrix44& value)
         ;
 }
 #else
-inline void PRINT_TRANSFORM(size_t depth, const MathMatrix44& value)
+inline void PRINT_TRANSFORM(size_t depth, const MathMatrix4& value)
 {
 }
 #endif
@@ -192,7 +192,7 @@ bool ReadStringWithLengthHint(DataChunkReader& reader, DataHeader& dataHeader, S
         if (value.reserve(state.propertyLengthHint).HasError())
         {
             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to reserve '%1%' characters for hinted string.", state.propertyLengthHint));
-            
+
             state.propertyLengthHint = 0;
 
             return false;
@@ -212,7 +212,15 @@ bool ReadStringWithLengthHint(DataChunkReader& reader, DataHeader& dataHeader, S
 }
 
 template <typename Settings, typename State>
-void PrepareToReadChannelValues(AllocatedVector<FinjinVertexElementChannel>& channels, size_t vertexCount, AllocatedVector<FinjinVertexElementFormat>& formatElements, Settings& settings, State& state, Error& error)
+void PrepareToReadChannelValues
+    (
+    DynamicVector<FinjinVertexElementChannel>& channels,
+    size_t vertexCount,
+    DynamicVector<FinjinVertexElementFormat>& formatElements,
+    Settings& settings,
+    State& state,
+    Error& error
+    )
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -258,13 +266,21 @@ void PrepareToReadChannelValues(AllocatedVector<FinjinVertexElementChannel>& cha
 }
 
 template <typename State, typename Settings>
-void ReadChannelValues(FinjinVertexElementChannel& channel, DataChunkReader& reader, DataHeader& dataHeader, State& state, Settings& settings, Error& error)
+void ReadChannelValues
+    (
+    FinjinVertexElementChannel& channel,
+    DataChunkReader& reader,
+    DataHeader& dataHeader,
+    State& state,
+    Settings& settings,
+    Error& error
+    )
 {
     FINJIN_ERROR_METHOD_START(error);
 
     if (dataHeader.IsOnlyOrFirstOccurrence())
         state.bufferValuesRead = 0;
-                
+
     if (!channel.floatValues.empty())
     {
         state.bufferValuesRead += reader.ReadFloats(dataHeader, channel.floatValues.data() + state.bufferValuesRead, channel.floatValues.size() - state.bufferValuesRead, error);
@@ -285,7 +301,16 @@ void ReadChannelValues(FinjinVertexElementChannel& channel, DataChunkReader& rea
 }
 
 template <typename State, typename Callbacks>
-static void ReadFormatElement(FinjinVertexElementFormat& formatElement, ParsedChunkPropertyName& propertyName, DataChunkReader& reader, DataHeader& dataHeader, Callbacks* callbacks, State& state, Error& error)
+static void ReadFormatElement
+    (
+    FinjinVertexElementFormat& formatElement,
+    ParsedChunkPropertyName& propertyName,
+    DataChunkReader& reader,
+    DataHeader& dataHeader,
+    Callbacks* callbacks,
+    State& state,
+    Error& error
+    )
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -330,9 +355,9 @@ static void ReadFormatElement(FinjinVertexElementFormat& formatElement, ParsedCh
 template <typename State, typename Callbacks, typename GetData, typename... BasePattern>
 void AddUserDataMappings
     (
-    Callbacks* callbacks, 
+    Callbacks* callbacks,
     GetData getData, //std::function<void(UserDataClassInstance*&, State&, Error& error)> getData,
-    Error& error, 
+    Error& error,
     const BasePattern&... basePattern
     )
 {
@@ -342,8 +367,8 @@ void AddUserDataMappings
     DataChunkReaderCallbacksChunkMapping<State> mapping;
     if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
     {
-        FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-        return; 
+        FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+        return;
     }
     if (mapping.pattern.Add(StandardAssetDocumentChunkNames::USER_DATA).HasErrorOrValue(false))
     {
@@ -379,7 +404,7 @@ void AddUserDataMappings
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read count property '%1%'.", StandardAssetDocumentPropertyNames::USER_DATA_STRING_PROPERTY_COUNT.name));
                 return;
             }
-        
+
             PRINT_VALUE(state.GetDepth(), "user data string property property count", state.userDataStringPropertyCount);
         }
         else if (propertyName == StandardAssetDocumentPropertyNames::USER_DATA_CLASS_NAME)
@@ -418,82 +443,82 @@ void AddUserDataMappings
                     {
                         switch (prop->type.type)
                         {
-                            case UserDataPrimitiveType::STRING_DATA_TYPE: 
+                            case UserDataPrimitiveType::STRING_DATA_TYPE:
                             {
-                                auto propInstance = AllocatedClass::New<UserDataClassInstance::StringPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
-                                if (propInstance == nullptr)
+                                auto propertyInstance = AllocatedClass::New<UserDataClassInstance::StringPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
+                                if (propertyInstance == nullptr)
                                 {
                                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate string property instance '%1%'.", prop->name));
                                     return;
                                 }
 
-                                userData->propertyInstances.push_back(propInstance);
-                            
+                                userData->propertyInstances.push_back(propertyInstance);
+
                                 break;
                             }
                             case UserDataPrimitiveType::INT_DATA_TYPE:
                             {
-                                auto propInstance = AllocatedClass::New<UserDataClassInstance::IntPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
-                                if (propInstance == nullptr)
+                                auto propertyInstance = AllocatedClass::New<UserDataClassInstance::IntPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
+                                if (propertyInstance == nullptr)
                                 {
                                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate int property instance '%1%'.", prop->name));
                                     return;
                                 }
-                            
-                                userData->propertyInstances.push_back(propInstance);
-                            
+
+                                userData->propertyInstances.push_back(propertyInstance);
+
                                 break;
                             }
                             case UserDataPrimitiveType::FLOAT_DATA_TYPE:
                             {
-                                auto propInstance = AllocatedClass::New<UserDataClassInstance::FloatPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
-                                if (propInstance == nullptr)
+                                auto propertyInstance = AllocatedClass::New<UserDataClassInstance::FloatPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
+                                if (propertyInstance == nullptr)
                                 {
                                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate float property instance '%1%'.", prop->name));
                                     return;
                                 }
-                            
-                                userData->propertyInstances.push_back(propInstance);
-                            
+
+                                userData->propertyInstances.push_back(propertyInstance);
+
                                 break;
                             }
                             case UserDataPrimitiveType::BOOL_DATA_TYPE:
                             {
-                                auto propInstance = AllocatedClass::New<UserDataClassInstance::BoolPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
-                                if (propInstance == nullptr)
+                                auto propertyInstance = AllocatedClass::New<UserDataClassInstance::BoolPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
+                                if (propertyInstance == nullptr)
                                 {
                                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate boolean property instance '%1%'.", prop->name));
                                     return;
                                 }
-                            
-                                userData->propertyInstances.push_back(propInstance);
-                            
+
+                                userData->propertyInstances.push_back(propertyInstance);
+
                                 break;
                             }
                             case UserDataPrimitiveType::RGB_DATA_TYPE:
                             {
-                                auto propInstance = AllocatedClass::New<UserDataClassInstance::RGBAPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
-                                if (propInstance == nullptr)
+                                auto propertyInstance = AllocatedClass::New<UserDataClassInstance::RGBAPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
+                                if (propertyInstance == nullptr)
                                 {
                                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate RGB property instance '%1%'.", prop->name));
                                     return;
                                 }
-                            
-                                userData->propertyInstances.push_back(propInstance);
-                            
+
+                                userData->propertyInstances.push_back(propertyInstance);
+
                                 break;
                             }
                             case UserDataPrimitiveType::RGBA_DATA_TYPE:
                             {
-                                auto propInstance = AllocatedClass::New<UserDataClassInstance::RGBAPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
-                                if (propInstance == nullptr)
+                                auto propertyInstance = AllocatedClass::New<UserDataClassInstance::RGBAPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, prop);
+                                if (propertyInstance == nullptr)
                                 {
                                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate RGBA property instance '%1%'.", prop->name));
                                     return;
                                 }
-                            
-                                userData->propertyInstances.push_back(propInstance);
-                            
+
+                                userData->propertyInstances.push_back(propertyInstance);
+
                                 break;
                             }
                         }
@@ -514,102 +539,102 @@ void AddUserDataMappings
             if (userData->userDataClass != nullptr)
             {
                 //It's a property instance to be updated
-                auto userDataPropInstanceIter = std::find_if(userData->propertyInstances.begin(), userData->propertyInstances.end(), [&propertyName](UserDataClassInstance::PropertyInstance* userDataPropInstance)
+                auto userDatapropertyInstanceIter = std::find_if(userData->propertyInstances.begin(), userData->propertyInstances.end(), [&propertyName](UserDataClassInstance::PropertyInstance* userDatapropertyInstance)
                 {
-                    return propertyName.id == userDataPropInstance->chunkPropertyNameID;
+                    return propertyName.id == userDatapropertyInstance->chunkPropertyNameID;
                 });
-                if (userDataPropInstanceIter != userData->propertyInstances.end())
+                if (userDatapropertyInstanceIter != userData->propertyInstances.end())
                 {
-                    auto userDataPropInstance = *userDataPropInstanceIter;
-                    switch (userDataPropInstance->userDataProperty->type.type)
+                    auto userDatapropertyInstance = *userDatapropertyInstanceIter;
+                    switch (userDatapropertyInstance->userDataProperty->type.type)
                     {
-                        case UserDataPrimitiveType::STRING_DATA_TYPE: 
+                        case UserDataPrimitiveType::STRING_DATA_TYPE:
                         {
-                            auto propInstance = static_cast<UserDataClassInstance::StringPropertyInstance*>(userDataPropInstance);
-                            
-                            auto isValueDone = ReadStringWithLengthHint(reader, dataHeader, state, propInstance->value, error);
+                            auto propertyInstance = static_cast<UserDataClassInstance::StringPropertyInstance*>(userDatapropertyInstance);
+
+                            auto isValueDone = ReadStringWithLengthHint(reader, dataHeader, state, propertyInstance->value, error);
                             if (error)
                             {
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read string property '%1%'.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read string property '%1%'.", userDatapropertyInstance->userDataProperty->name));
                                 return;
                             }
                             else if (isValueDone)
-                                PRINT_VALUE(state.GetDepth(), userDataPropInstance->userDataProperty->name, propInstance->value);
+                                PRINT_VALUE(state.GetDepth(), userDatapropertyInstance->userDataProperty->name, propertyInstance->value);
 
                             break;
                         }
                         case UserDataPrimitiveType::INT_DATA_TYPE:
                         {
-                            auto propInstance = static_cast<UserDataClassInstance::IntPropertyInstance*>(userDataPropInstance);
-                            reader.ReadInt32(dataHeader, propInstance->value, error);
+                            auto propertyInstance = static_cast<UserDataClassInstance::IntPropertyInstance*>(userDatapropertyInstance);
+                            reader.ReadInt32(dataHeader, propertyInstance->value, error);
                             if (error)
                             {
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read int32 property '%1%'.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read int32 property '%1%'.", userDatapropertyInstance->userDataProperty->name));
                                 return;
                             }
 
-                            PRINT_VALUE(state.GetDepth(), userDataPropInstance->userDataProperty->name, propInstance->value);
+                            PRINT_VALUE(state.GetDepth(), userDatapropertyInstance->userDataProperty->name, propertyInstance->value);
 
                             break;
                         }
                         case UserDataPrimitiveType::FLOAT_DATA_TYPE:
                         {
-                            auto propInstance = static_cast<UserDataClassInstance::FloatPropertyInstance*>(userDataPropInstance);
-                            reader.ReadFloat(dataHeader, propInstance->value, error);
+                            auto propertyInstance = static_cast<UserDataClassInstance::FloatPropertyInstance*>(userDatapropertyInstance);
+                            reader.ReadFloat(dataHeader, propertyInstance->value, error);
                             if (error)
                             {
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float property '%1%'.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float property '%1%'.", userDatapropertyInstance->userDataProperty->name));
                                 return;
                             }
-                                
-                            PRINT_VALUE(state.GetDepth(), userDataPropInstance->userDataProperty->name, propInstance->value);
-                                
+
+                            PRINT_VALUE(state.GetDepth(), userDatapropertyInstance->userDataProperty->name, propertyInstance->value);
+
                             break;
                         }
                         case UserDataPrimitiveType::BOOL_DATA_TYPE:
                         {
-                            auto propInstance = static_cast<UserDataClassInstance::BoolPropertyInstance*>(userDataPropInstance);
-                            reader.ReadBool(dataHeader, propInstance->value, error);
+                            auto propertyInstance = static_cast<UserDataClassInstance::BoolPropertyInstance*>(userDatapropertyInstance);
+                            reader.ReadBool(dataHeader, propertyInstance->value, error);
                             if (error)
                             {
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read bool property '%1%'.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read bool property '%1%'.", userDatapropertyInstance->userDataProperty->name));
                                 return;
                             }
 
-                            PRINT_VALUE(state.GetDepth(), userDataPropInstance->userDataProperty->name, (int)propInstance->value);
+                            PRINT_VALUE(state.GetDepth(), userDatapropertyInstance->userDataProperty->name, (int)propertyInstance->value);
 
                             break;
                         }
                         case UserDataPrimitiveType::RGB_DATA_TYPE:
                         {
-                            auto propInstance = static_cast<UserDataClassInstance::RGBAPropertyInstance*>(userDataPropInstance);
-                            auto isValueDone = reader.ReadFloats(dataHeader, propInstance->value.data(), 3, error) == 3;
+                            auto propertyInstance = static_cast<UserDataClassInstance::RGBAPropertyInstance*>(userDatapropertyInstance);
+                            auto isValueDone = reader.ReadFloats(dataHeader, propertyInstance->value.data(), 3, error) == 3;
                             if (error)
                             {
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read RGB property '%1%'.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read RGB property '%1%'.", userDatapropertyInstance->userDataProperty->name));
                                 return;
                             }
                             else if (!isValueDone)
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%' in a single read.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%' in a single read.", userDatapropertyInstance->userDataProperty->name));
 
-                            PRINT_VALUE3(state.GetDepth(), userDataPropInstance->userDataProperty->name, propInstance->value[0], propInstance->value[1], propInstance->value[2]);
-                                
+                            PRINT_VALUE3(state.GetDepth(), userDatapropertyInstance->userDataProperty->name, propertyInstance->value[0], propertyInstance->value[1], propertyInstance->value[2]);
+
                             break;
                         }
                         case UserDataPrimitiveType::RGBA_DATA_TYPE:
                         {
-                            auto propInstance = static_cast<UserDataClassInstance::RGBAPropertyInstance*>(userDataPropInstance);
-                            auto isValueDone = reader.ReadFloats(dataHeader, propInstance->value.data(), 4, error) == 4;
+                            auto propertyInstance = static_cast<UserDataClassInstance::RGBAPropertyInstance*>(userDatapropertyInstance);
+                            auto isValueDone = reader.ReadFloats(dataHeader, propertyInstance->value.data(), 4, error) == 4;
                             if (error)
                             {
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read RGBA property '%1%'.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read RGBA property '%1%'.", userDatapropertyInstance->userDataProperty->name));
                                 return;
                             }
                             else if (!isValueDone)
-                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%' in a single read.", userDataPropInstance->userDataProperty->name));
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%' in a single read.", userDatapropertyInstance->userDataProperty->name));
 
-                            PRINT_VALUE4(state.GetDepth(), userDataPropInstance->userDataProperty->name, propInstance->value[0], propInstance->value[1], propInstance->value[2], propInstance->value[3]);
-                                
+                            PRINT_VALUE4(state.GetDepth(), userDatapropertyInstance->userDataProperty->name, propertyInstance->value[0], propertyInstance->value[1], propertyInstance->value[2], propertyInstance->value[3]);
+
                             break;
                         }
                     }
@@ -618,27 +643,27 @@ void AddUserDataMappings
             else
             {
                 //It's a property instance to be updated or added
-            
+
                 //If there is an existing instance, it will be the last one in the collection
-                UserDataClassInstance::StringPropertyInstance* propInstance = nullptr;
+                UserDataClassInstance::StringPropertyInstance* propertyInstance = nullptr;
                 if (!userData->propertyInstances.empty() && userData->propertyInstances.back()->chunkPropertyNameID == propertyName.id)
                 {
                     //Existing instance found
-                    propInstance = static_cast<UserDataClassInstance::StringPropertyInstance*>(userData->propertyInstances.back());
+                    propertyInstance = static_cast<UserDataClassInstance::StringPropertyInstance*>(userData->propertyInstances.back());
                 }
                 else
                 {
                     //Existing instance not found. Create new one
-                    propInstance = AllocatedClass::New<UserDataClassInstance::StringPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, nullptr);
-                    if (propInstance == nullptr)
+                    propertyInstance = AllocatedClass::New<UserDataClassInstance::StringPropertyInstance>(state.allocator, FINJIN_CALLER_ARGUMENTS, nullptr);
+                    if (propertyInstance == nullptr)
                     {
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate string property instance '%1%'.", propertyName.ToString()));
                         return;
                     }
 
-                    propInstance->chunkPropertyNameID = propertyName.id;
+                    propertyInstance->chunkPropertyNameID = propertyName.id;
 
-                    if (userData->propertyInstances.push_back(propInstance).HasErrorOrValue(false))
+                    if (userData->propertyInstances.push_back(propertyInstance).HasErrorOrValue(false))
                     {
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add string property instance '%1%'.", propertyName.ToString()));
                         return;
@@ -646,14 +671,14 @@ void AddUserDataMappings
                 }
 
                 //Read/update the string value
-                auto isValueDone = ReadStringWithLengthHint(reader, dataHeader, state, propInstance->value, error);
+                auto isValueDone = ReadStringWithLengthHint(reader, dataHeader, state, propertyInstance->value, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read string property '%1%'.", propertyName.ToString()));
                     return;
                 }
                 else if (isValueDone)
-                    PRINT_VALUE(state.GetDepth(), Convert::ToString(propInstance->chunkPropertyNameID), propInstance->value);
+                    PRINT_VALUE(state.GetDepth(), Convert::ToString(propertyInstance->chunkPropertyNameID), propertyInstance->value);
             }
         }
     };
@@ -668,9 +693,9 @@ void AddUserDataMappings
 template <typename State, typename Callbacks, typename GetData, typename... BasePattern>
 void AddNoteTracksMappings
     (
-    Callbacks* callbacks, 
-    GetData getData, //std::function<void(AllocatedVector<FinjinSceneObjectBase::NoteTrack>*&, State&, Error& error)> getData,
-    Error& error, 
+    Callbacks* callbacks,
+    GetData getData, //std::function<void(DynamicVector<FinjinSceneObjectBase::NoteTrack>*&, State&, Error& error)> getData,
+    Error& error,
     const BasePattern&... basePattern
     )
 {
@@ -681,8 +706,8 @@ void AddNoteTracksMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::NOTE_TRACKS).HasErrorOrValue(false))
         {
@@ -699,14 +724,14 @@ void AddNoteTracksMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
+            DynamicVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
             getData(noteTracks, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get note tracks.");
                 return;
             }
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -735,8 +760,8 @@ void AddNoteTracksMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::NOTE_TRACKS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -751,7 +776,7 @@ void AddNoteTracksMappings
 
             if (isStart)
             {
-                AllocatedVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
+                DynamicVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
                 getData(noteTracks, state, error);
                 if (error)
                 {
@@ -765,7 +790,7 @@ void AddNoteTracksMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
+            DynamicVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
             getData(noteTracks, state, error);
             if (error)
             {
@@ -797,8 +822,8 @@ void AddNoteTracksMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::NOTE_TRACKS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS).HasErrorOrValue(false))
         {
@@ -815,14 +840,14 @@ void AddNoteTracksMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
+            DynamicVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
             getData(noteTracks, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get note tracks.");
                 return;
             }
-            
+
             CHECK_NOTE_TRACKS_NOT_EMPTY(noteTrack, *noteTracks)
 
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
@@ -853,8 +878,8 @@ void AddNoteTracksMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::NOTE_TRACKS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -869,7 +894,7 @@ void AddNoteTracksMappings
 
             if (isStart)
             {
-                AllocatedVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
+                DynamicVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
                 getData(noteTracks, state, error);
                 if (error)
                 {
@@ -885,7 +910,7 @@ void AddNoteTracksMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
+            DynamicVector<FinjinSceneObjectBase::NoteTrack>* noteTracks = nullptr;
             getData(noteTracks, state, error);
             if (error)
             {
@@ -924,12 +949,12 @@ void AddNoteTracksMappings
 
 template <typename State, typename Callbacks, typename GetData, typename... BasePattern>
 void AddFlagsMappings
-(
+    (
     Callbacks* callbacks,
-    GetData getData, //std::function<void(AllocatedVector<uint8_t>*&, State&, Error& error)> getData,
+    GetData getData, //std::function<void(DynamicVector<uint8_t>*&, State&, Error& error)> getData,
     Error& error,
     const BasePattern&... basePattern
-)
+    )
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -956,7 +981,7 @@ void AddFlagsMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<uint8_t>* flags = nullptr;
+            DynamicVector<uint8_t>* flags = nullptr;
             getData(flags, state, error);
             if (error)
             {
@@ -1059,7 +1084,7 @@ void AddNodeAnimationMappings
                     else
                     {
                         PRINT_VALUE(state.GetDepth(), "node animation ref", animationRef);
-                        
+
                         state.RecordAssetHandle(animationHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record node animation asset.");
@@ -1088,9 +1113,9 @@ void AddNodeAnimationMappings
                     else if (isValueDone)
                     {
                         PRINT_VALUE(state.GetDepth(), "animation name", animation->name);
-                        
+
                         animationHandle->assetRef.objectName = animation->name;
-                        
+
                         state.RecordAssetHandle(animationHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record node animation asset.");
@@ -1135,8 +1160,8 @@ void AddNodeAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::KEYS).HasErrorOrValue(false))
         {
@@ -1230,9 +1255,9 @@ void AddNodeAnimationMappings
 template <typename State, typename Callbacks, typename GetData, typename... BasePattern>
 void AddNodeAnimationsMappings
     (
-    Callbacks* callbacks, 
-    GetData getData, //std::function<void(AllocatedVector<AssetHandle<FinjinNodeAnimation> >*&, State&, Error& error)> getData,
-    Error& error, 
+    Callbacks* callbacks,
+    GetData getData, //std::function<void(DynamicVector<AssetHandle<FinjinNodeAnimation> >*&, State&, Error& error)> getData,
+    Error& error,
     const BasePattern&... basePattern
     )
 {
@@ -1243,8 +1268,8 @@ void AddNodeAnimationsMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::NODE_ANIMATIONS).HasErrorOrValue(false))
         {
@@ -1261,7 +1286,7 @@ void AddNodeAnimationsMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<AssetHandle<FinjinNodeAnimation> >* nodeAnimationHandles = nullptr;
+            DynamicVector<AssetHandle<FinjinNodeAnimation> >* nodeAnimationHandles = nullptr;
             getData(nodeAnimationHandles, state, error);
             if (error)
             {
@@ -1295,14 +1320,14 @@ void AddNodeAnimationsMappings
     //basePattern/[node-animations]/[node-animation-index]
     AddNodeAnimationMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (isStart)
             {
-                AllocatedVector<AssetHandle<FinjinNodeAnimation> >* nodeAnimationHandles = nullptr;
+                DynamicVector<AssetHandle<FinjinNodeAnimation> >* nodeAnimationHandles = nullptr;
                 getData(nodeAnimationHandles, state, error);
                 if (error)
                 {
@@ -1316,8 +1341,8 @@ void AddNodeAnimationsMappings
         [getData, callbacks](AssetHandle<FinjinNodeAnimation>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
-            AllocatedVector<AssetHandle<FinjinNodeAnimation> >* nodeAnimationHandles = nullptr;
+
+            DynamicVector<AssetHandle<FinjinNodeAnimation> >* nodeAnimationHandles = nullptr;
             getData(nodeAnimationHandles, state, error);
             if (error)
             {
@@ -1340,9 +1365,9 @@ void AddNodeAnimationsMappings
 template <typename State, typename Callbacks, typename GetData, typename... BasePattern>
 void AddSceneNodesMappings
     (
-    Callbacks* callbacks, 
-    GetData getData, //std::function<void(AllocatedVector<FinjinSceneNode*>*&, State&, Error& error)> getData,
-    Error& error, 
+    Callbacks* callbacks,
+    GetData getData, //std::function<void(DynamicVector<FinjinSceneNode*>*&, State&, Error& error)> getData,
+    Error& error,
     const BasePattern&... basePattern
     )
 {
@@ -1353,8 +1378,8 @@ void AddSceneNodesMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SCENE_NODES).HasErrorOrValue(false))
         {
@@ -1371,14 +1396,14 @@ void AddSceneNodesMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -1407,8 +1432,8 @@ void AddSceneNodesMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -1419,7 +1444,7 @@ void AddSceneNodesMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
@@ -1439,14 +1464,14 @@ void AddSceneNodesMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY(sceneNode, *sceneNodes)
 
             if (propertyName == StandardAssetDocumentPropertyNames::TYPE)
@@ -1527,9 +1552,9 @@ void AddSceneNodesMappings
                         if (error)
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse prefab reference '%1%'.", prefabRef));
                         else
-                        {  
+                        {
                             PRINT_VALUE(state.GetDepth(), "prefab ref", prefabRef);
-                            
+
                             state.RecordAssetHandle(&sceneNode->prefabHandle, error);
                             if (error)
                                 FINJIN_SET_ERROR(error, "Failed to prefab asset.");
@@ -1591,12 +1616,12 @@ void AddSceneNodesMappings
     //basePattern/[scene-nodes]/[scene-node-index]/[user-data]
     AddUserDataMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](UserDataClassInstance*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
@@ -1605,10 +1630,10 @@ void AddSceneNodesMappings
             }
 
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
-            
+
             result = &sceneNode->userData;
         },
-        error, 
+        error,
         basePattern..., StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1
         );
     if (error)
@@ -1620,12 +1645,12 @@ void AddSceneNodesMappings
     //basePattern/[scene-nodes]/[scene-node-index]/[note-tracks]
     AddNoteTracksMappings<State>
         (
-        callbacks, 
-        [getData](AllocatedVector<FinjinSceneObjectBase::NoteTrack>*& result, State& state, Error& error)
+        callbacks,
+        [getData](DynamicVector<FinjinSceneObjectBase::NoteTrack>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
@@ -1634,10 +1659,10 @@ void AddSceneNodesMappings
             }
 
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
-            
+
             result = &sceneNode->noteTracks;
         },
-        error, 
+        error,
         basePattern..., StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1
         );
     if (error)
@@ -1645,28 +1670,28 @@ void AddSceneNodesMappings
         FINJIN_SET_ERROR(error, "Failed to add mapping for scene node note tracks.");
         return;
     }
-    
+
     //basePattern/[scene-nodes]/[scene-node-index]/[node-animations]
     AddNodeAnimationsMappings<State>
         (
-        callbacks, 
-        [getData](AllocatedVector<AssetHandle<FinjinNodeAnimation> >*& result, State& state, Error& error)
+        callbacks,
+        [getData](DynamicVector<AssetHandle<FinjinNodeAnimation> >*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
-            
+
             result = &sceneNode->nodeAnimationHandles;
         },
-        error, 
+        error,
         basePattern..., StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1
         );
     if (error)
@@ -1680,8 +1705,8 @@ void AddSceneNodesMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::OBJECTS).HasErrorOrValue(false))
         {
@@ -1698,7 +1723,7 @@ void AddSceneNodesMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
@@ -1736,8 +1761,8 @@ void AddSceneNodesMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::OBJECTS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -1750,16 +1775,16 @@ void AddSceneNodesMappings
 
             PRINT_CHUNK(state.GetDepth(), "SCENE NODE OBJECT", isStart);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
-            
+
             if (isStart)
                 sceneNode->objects.push_back(nullptr);
             else
@@ -1772,17 +1797,17 @@ void AddSceneNodesMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
             CHECK_OBJECTS_NOT_EMPTY(obj, sceneNode->objects)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::TYPE)
             {
                 if (dataHeader.IsOnlyOrFirstOccurrence())
@@ -1802,12 +1827,12 @@ void AddSceneNodesMappings
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create object of type '%1%'.", typeName));
                         else
                         {
-                            if (obj->IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneMovableObject)))
+                            if (obj->IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneMovableObject)))
                             {
                                 auto movable = static_cast<FinjinSceneMovableObject*>(obj);
                                 movable->parentNodePointer = sceneNode;
                             }
-                            
+
                             PRINT_VALUE(state.GetDepth(), "type", typeName);
                         }
                     }
@@ -1844,7 +1869,7 @@ void AddSceneNodesMappings
                     propertyHandled = true;
                 }
 
-                if (!propertyHandled && obj->IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneMovableObject)))
+                if (!propertyHandled && obj->IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneMovableObject)))
                 {
                     auto movable = static_cast<FinjinSceneMovableObject*>(obj);
 
@@ -1862,7 +1887,7 @@ void AddSceneNodesMappings
                     }
                 }
 
-                if (!propertyHandled && obj->IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneRenderableMovableObject)))
+                if (!propertyHandled && obj->IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneRenderableMovableObject)))
                 {
                     auto renderableMovable = static_cast<FinjinSceneRenderableMovableObject*>(obj);
 
@@ -1888,7 +1913,7 @@ void AddSceneNodesMappings
                                 }
                             }
                             else
-                                PRINT_VALUE(state.GetDepth(), "render queue (string)", callbacks->tempString);                            
+                                PRINT_VALUE(state.GetDepth(), "render queue (string)", callbacks->tempString);
                         }
 
                         propertyHandled = true;
@@ -1935,7 +1960,7 @@ void AddSceneNodesMappings
                     }
                 }
 
-                if (!propertyHandled && obj->IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneObjectEntity)))
+                if (!propertyHandled && obj->IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneObjectEntity)))
                 {
                     auto entity = static_cast<FinjinSceneObjectEntity*>(obj);
 
@@ -1965,7 +1990,7 @@ void AddSceneNodesMappings
                     }
                 }
 
-                if (!propertyHandled && obj->IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneObjectCamera)))
+                if (!propertyHandled && obj->IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneObjectCamera)))
                 {
                     auto camera = static_cast<FinjinSceneObjectCamera*>(obj);
 
@@ -1978,7 +2003,7 @@ void AddSceneNodesMappings
                         else
                         {
                             PRINT_VALUE(state.GetDepth(), "fov", fov);
-                            
+
                             camera->fovY = Radians(fov);
                         }
 
@@ -1995,9 +2020,9 @@ void AddSceneNodesMappings
                         else if (isValueDone)
                         {
                             if (projectionType == StandardAssetDocumentPropertyValues::CameraProjection::ORTHOGRAPHIC)
-                                camera->projectionType = FinjinSceneObjectCamera::ProjectionType::ORTHOGRAPHIC;
+                                camera->projectionType = CameraProjectionType::ORTHOGRAPHIC;
                             else if (projectionType == StandardAssetDocumentPropertyValues::CameraProjection::PERSPECTIVE)
-                                camera->projectionType = FinjinSceneObjectCamera::ProjectionType::PERSPECTIVE;
+                                camera->projectionType = CameraProjectionType::PERSPECTIVE;
 
                             PRINT_VALUE(state.GetDepth(), "projection", projectionType);
                         }
@@ -2029,8 +2054,8 @@ void AddSceneNodesMappings
                         propertyHandled = true;
                     }
                 }
-                
-                if (!propertyHandled && obj->IsTypeOf(FINJIN_CLASS_DESCRIPTION(FinjinSceneObjectLight)))
+
+                if (!propertyHandled && obj->IsTypeOf(FINJIN_TYPE_DESCRIPTION(FinjinSceneObjectLight)))
                 {
                     auto light = static_cast<FinjinSceneObjectLight*>(obj);
 
@@ -2045,7 +2070,7 @@ void AddSceneNodesMappings
                         else if (isValueDone)
                         {
                             if (lightType == StandardAssetDocumentPropertyValues::LightType::DIRECTIONAL)
-                                light->lightType = LightType::DIRECTIONAL; 
+                                light->lightType = LightType::DIRECTIONAL;
                             else if (lightType == StandardAssetDocumentPropertyValues::LightType::POINT)
                                 light->lightType = LightType::POINT;
                             else if (lightType == StandardAssetDocumentPropertyValues::LightType::SPOT)
@@ -2097,9 +2122,9 @@ void AddSceneNodesMappings
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%' in a single read.", StandardAssetDocumentPropertyNames::RANGE.name));
                         else
                             PRINT_VALUE2(state.GetDepth(), "range", light->range[0], light->range[1]);
-                        
+
                         propertyHandled = true;
-                    }                    
+                    }
                     else if (propertyName == StandardAssetDocumentPropertyNames::CONE_RANGE)
                     {
                         float coneRange[2];
@@ -2112,7 +2137,7 @@ void AddSceneNodesMappings
                         {
                             light->coneRange[0] = Radians(coneRange[0]);
                             light->coneRange[1] = Radians(coneRange[1]);
-                            
+
                             PRINT_VALUE2(state.GetDepth(), "cone range", coneRange[0], coneRange[1]);
                         }
 
@@ -2132,25 +2157,25 @@ void AddSceneNodesMappings
     //basePattern/[scene-nodes]/[scene-node-index]/[objects]/[object-index]/[user-data]
     AddUserDataMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](UserDataClassInstance*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
             CHECK_OBJECTS_NOT_EMPTY(obj, sceneNode->objects)
-            
+
             result = &obj->userData;
         },
-        error, 
+        error,
         basePattern..., StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::OBJECTS, (ChunkName::Index)-1
         );
     if (error)
@@ -2162,25 +2187,25 @@ void AddSceneNodesMappings
     //basePattern/[scene-nodes]/[scene-node-index]/[objects]/[object-index]/[note-tracks]
     AddNoteTracksMappings<State>
         (
-        callbacks, 
-        [getData](AllocatedVector<FinjinSceneObjectBase::NoteTrack>*& result, State& state, Error& error)
+        callbacks,
+        [getData](DynamicVector<FinjinSceneObjectBase::NoteTrack>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
             CHECK_OBJECTS_NOT_EMPTY(obj, sceneNode->objects)
-            
+
             result = &obj->noteTracks;
         },
-        error, 
+        error,
         basePattern..., StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::OBJECTS, (ChunkName::Index)-1
         );
     if (error)
@@ -2192,25 +2217,25 @@ void AddSceneNodesMappings
     //basePattern/[scene-nodes]/[scene-node-index]/[objects]/[object-index]/[flags]
     AddFlagsMappings<State>
         (
-        callbacks, 
-        [getData](AllocatedVector<uint8_t>*& result, State& state, Error& error)
+        callbacks,
+        [getData](DynamicVector<uint8_t>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
             CHECK_OBJECTS_NOT_EMPTY(obj, sceneNode->objects)
-            
+
             result = &obj->flags;
         },
-        error, 
+        error,
         basePattern..., StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::OBJECTS, (ChunkName::Index)-1
         );
     if (error)
@@ -2224,8 +2249,8 @@ void AddSceneNodesMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::OBJECTS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBENTITIES).HasErrorOrValue(false))
         {
@@ -2242,18 +2267,18 @@ void AddSceneNodesMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
             CHECK_OBJECTS_NOT_EMPTY(obj, sceneNode->objects)
             CHECK_OBJECT_OF_TYPE(entity, obj, FinjinSceneObjectEntity)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -2282,8 +2307,8 @@ void AddSceneNodesMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SCENE_NODES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::OBJECTS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBENTITIES, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -2298,14 +2323,14 @@ void AddSceneNodesMappings
 
             if (isStart)
             {
-                AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+                DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
                 getData(sceneNodes, state, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                     return;
                 }
-                
+
                 CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
                 CHECK_OBJECTS_NOT_EMPTY(obj, sceneNode->objects)
                 CHECK_OBJECT_OF_TYPE(entity, obj, FinjinSceneObjectEntity)
@@ -2316,14 +2341,14 @@ void AddSceneNodesMappings
         {
             FINJIN_ERROR_METHOD_START(error);
 
-            AllocatedVector<FinjinSceneNode*>* sceneNodes = nullptr;
+            DynamicVector<FinjinSceneNode*>* sceneNodes = nullptr;
             getData(sceneNodes, state, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to get scene nodes.");
                 return;
             }
-            
+
             CHECK_SCENE_NODES_NOT_EMPTY_NOT_NULL(sceneNode, *sceneNodes)
             CHECK_OBJECTS_NOT_EMPTY(obj, sceneNode->objects)
             CHECK_OBJECT_OF_TYPE(entity, obj, FinjinSceneObjectEntity)
@@ -2345,7 +2370,7 @@ void AddSceneNodesMappings
                     else
                     {
                         PRINT_VALUE(state.GetDepth(), "material ref", materialRef);
-                        
+
                         state.RecordAssetHandle(&subentity.materialHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record material asset.");
@@ -2379,15 +2404,15 @@ void AddSkeletonAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         mapping.chunkCallback = [handleChunk](bool isStart, const ChunkName* chunkName, const ParsedChunkName& parsedChunkName, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
 
             PRINT_CHUNK(state.GetDepth(), "SKELETON BONE ANIMATION", isStart);
-            
+
             handleChunk(isStart, reader, state, error);
             if (error)
                 FINJIN_SET_ERROR(error, "Chunk handler failed.");
@@ -2422,7 +2447,7 @@ void AddSkeletonAnimationMappings
                     else
                     {
                         PRINT_VALUE(state.GetDepth(), "skeleton animation ref", animationRef);
-                        
+
                         state.RecordAssetHandle(animationHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record skeleton animation asset.");
@@ -2453,7 +2478,7 @@ void AddSkeletonAnimationMappings
                         PRINT_VALUE(state.GetDepth(), "animation name", animation->name);
 
                         animationHandle->assetRef.objectName = animation->name;
-                        
+
                         state.RecordAssetHandle(animationHandle, error);
                         if (error)
                         {
@@ -2485,8 +2510,8 @@ void AddSkeletonAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::BONES).HasErrorOrValue(false))
         {
@@ -2541,8 +2566,8 @@ void AddSkeletonAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::BONES, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -2593,8 +2618,8 @@ void AddSkeletonAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SKELETON, StandardAssetDocumentChunkNames::SKELETON_ANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::BONES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS).HasErrorOrValue(false))
         {
@@ -2698,14 +2723,14 @@ void AddIndexBufferMappings
     )
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //basePattern
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         mapping.chunkCallback = [handleChunk](bool isStart, const ChunkName* chunkName, const ParsedChunkName& parsedChunkName, DataChunkReader& reader, State& state, Error& error)
         {
@@ -2818,7 +2843,7 @@ void AddVertexBufferMappings
     )
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //basePattern
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
@@ -2832,7 +2857,7 @@ void AddVertexBufferMappings
             FINJIN_ERROR_METHOD_START(error);
 
             PRINT_CHUNK(state.GetDepth(), "VERTEX BUFFER", isStart);
-            
+
             handleChunk(isStart, reader, state, error);
             if (error)
                 FINJIN_SET_ERROR(error, "Chunk handler failed.");
@@ -2971,7 +2996,7 @@ void AddVertexBufferMappings
                 FINJIN_SET_ERROR(error, "Failed to get vertex buffer.");
                 return;
             }
-            
+
             CHECK_VERTEX_BUFFER_FORMAT_NOT_EMPTY(formatElement, vertexBuffer->formatElements)
 
             ReadFormatElement(formatElement, propertyName, reader, dataHeader, callbacks, state, error);
@@ -3091,7 +3116,7 @@ void AddVertexBufferMappings
                 FINJIN_SET_ERROR(error, "Failed to get vertex buffer.");
                 return;
             }
-            
+
             CHECK_VERTEX_BUFFER_CHANNELS_NOT_EMPTY(channel, vertexBuffer->channels)
 
             if (propertyName == StandardAssetDocumentPropertyNames::VALUES)
@@ -3130,15 +3155,15 @@ void AddSkeletonMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         mapping.chunkCallback = [handleChunk](bool isStart, const ChunkName* chunkName, const ParsedChunkName& parsedChunkName, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
 
             PRINT_CHUNK(state.GetDepth(), "SKELETON", isStart);
-            
+
             handleChunk(isStart, reader, state, error);
             if (error)
                 FINJIN_SET_ERROR(error, "Chunk handler failed.");
@@ -3173,7 +3198,7 @@ void AddSkeletonMappings
                     else
                     {
                         PRINT_VALUE(state.GetDepth(), "skeleton ref", skeletonRef);
-                        
+
                         state.RecordAssetHandle(skeletonHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record skeleton asset.");
@@ -3204,7 +3229,7 @@ void AddSkeletonMappings
                         PRINT_VALUE(state.GetDepth(), "name", skeleton->name);
 
                         skeletonHandle->assetRef.objectName = skeleton->name;
-                        
+
                         state.RecordAssetHandle(skeletonHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record skeleton asset.");
@@ -3225,8 +3250,8 @@ void AddSkeletonMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::BONES).HasErrorOrValue(false))
         {
@@ -3281,8 +3306,8 @@ void AddSkeletonMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::BONES, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -3294,7 +3319,7 @@ void AddSkeletonMappings
             FINJIN_ERROR_METHOD_START(error);
 
             PRINT_CHUNK(state.GetDepth(), "SKELETON BONE", isStart);
-            
+
             if (isStart)
             {
                 AssetHandle<FinjinMeshSkeleton>* skeletonHandle = nullptr;
@@ -3378,10 +3403,10 @@ void AddSkeletonMappings
     //basePattern/[animations]
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
-        if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false)) 
+        if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SKELETON_ANIMATIONS).HasErrorOrValue(false))
         {
@@ -3434,11 +3459,11 @@ void AddSkeletonMappings
     //basePattern/[animations]/[animation-index]
     AddSkeletonAnimationMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (isStart)
             {
                 AssetHandle<FinjinMeshSkeleton>* skeletonHandle = nullptr;
@@ -3457,7 +3482,7 @@ void AddSkeletonMappings
         [getData, callbacks](AssetHandle<FinjinMeshSkeleton::Animation>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMeshSkeleton>* skeletonHandle = nullptr;
             getData(skeletonHandle, state, error);
             if (error)
@@ -3570,7 +3595,7 @@ void AddMorphAnimationMappings
                         PRINT_VALUE(state.GetDepth(), "morph animation name", animation->name);
 
                         animationHandle->assetRef.objectName = animation->name;
-                        
+
                         state.RecordAssetHandle(animationHandle, error);
                         if (error)
                         {
@@ -3602,8 +3627,8 @@ void AddMorphAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS).HasErrorOrValue(false))
         {
@@ -3658,8 +3683,8 @@ void AddMorphAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -3702,7 +3727,7 @@ void AddMorphAnimationMappings
             auto& animation = animationHandle->asset;
 
             CHECK_MORPH_ANIMATION_SUBANIMATIONS_NOT_EMPTY(subanimation, animation->subanimations)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::SUBMESH)
             {
                 reader.ReadCount(dataHeader, subanimation.submeshIndex, error);
@@ -3719,14 +3744,14 @@ void AddMorphAnimationMappings
             return;
         }
     }
-    
+
     //basePattern/[subanimations]/[subanimation-index]/[format]
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::FORMAT).HasErrorOrValue(false))
         {
@@ -3754,7 +3779,7 @@ void AddMorphAnimationMappings
             auto& animation = animationHandle->asset;
 
             CHECK_MORPH_ANIMATION_SUBANIMATIONS_NOT_EMPTY(subanimation, animation->subanimations)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -3778,13 +3803,13 @@ void AddMorphAnimationMappings
         }
     }
 
-    //basePattern/[format]/[element-index]
+    //basePattern/[subanimations]/[subanimation-index]/[format]/[element-index]
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::FORMAT, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -3850,8 +3875,8 @@ void AddMorphAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS).HasErrorOrValue(false))
         {
@@ -3879,7 +3904,7 @@ void AddMorphAnimationMappings
             auto& animation = animationHandle->asset;
 
             CHECK_MORPH_ANIMATION_SUBANIMATIONS_NOT_EMPTY(subanimation, animation->subanimations)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -3908,8 +3933,8 @@ void AddMorphAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -3985,8 +4010,8 @@ void AddMorphAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::CHANNELS).HasErrorOrValue(false))
         {
@@ -4038,14 +4063,14 @@ void AddMorphAnimationMappings
             return;
         }
     }
-    
+
     //basePattern/[subanimations]/[subanimation-index]/[keys]/[key-index]/[channels]/[channel-index]
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::CHANNELS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -4072,7 +4097,7 @@ void AddMorphAnimationMappings
 
                 CHECK_MORPH_ANIMATION_SUBANIMATIONS_NOT_EMPTY(subanimation, animation->subanimations)
                 CHECK_MORPH_ANIMATION_SUBANIMATION_KEYS_NOT_EMPTY(key, subanimation.keys)
-            
+
                 PrepareToReadChannelValues(key.channels, key.vertexCount, subanimation.formatElements, callbacks->GetSettings(), state, error);
                 if (error)
                 {
@@ -4208,7 +4233,7 @@ void AddPoseAnimationMappings
                         PRINT_VALUE(state.GetDepth(), "animation name", animation->name);
 
                         animationHandle->assetRef.objectName = animation->name;
-                        
+
                         state.RecordAssetHandle(animationHandle, error);
                         if (error)
                         {
@@ -4240,8 +4265,8 @@ void AddPoseAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS).HasErrorOrValue(false))
         {
@@ -4296,8 +4321,8 @@ void AddPoseAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -4363,8 +4388,8 @@ void AddPoseAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS).HasErrorOrValue(false))
         {
@@ -4392,7 +4417,7 @@ void AddPoseAnimationMappings
             auto& animation = animationHandle->asset;
 
             CHECK_POSE_ANIMATION_SUBANIMATIONS_NOT_EMPTY(subanimation, animation->subanimations)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -4421,8 +4446,8 @@ void AddPoseAnimationMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBANIMATIONS, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::KEYS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -4467,7 +4492,7 @@ void AddPoseAnimationMappings
 
             CHECK_POSE_ANIMATION_SUBANIMATIONS_NOT_EMPTY(subanimation, animation->subanimations)
             CHECK_POSE_ANIMATION_SUBANIMATION_KEY_NOT_EMPTY(key, subanimation.keys)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::TIME)
             {
                 reader.ReadTimeDuration(dataHeader, key.time, error);
@@ -4524,7 +4549,7 @@ void AddMeshMappings
     Callbacks* callbacks,
     HandleChunk handleChunk, //std::function<void(bool, DataChunkReader&, State&, Error&)> handleChunk,
     GetData getData, //std::function<void(AssetHandle<FinjinMesh>*&, State&, Error& error)> getData,
-    Error& error, 
+    Error& error,
     const BasePattern&... basePattern
     )
 {
@@ -4535,8 +4560,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         mapping.chunkCallback = [handleChunk](bool isStart, const ChunkName* chunkName, const ParsedChunkName& parsedChunkName, DataChunkReader& reader, State& state, Error& error)
         {
@@ -4624,7 +4649,7 @@ void AddMeshMappings
                             PRINT_VALUE(state.GetDepth(), "name", mesh->name);
 
                             meshHandle->assetRef.objectName = mesh->name;
-                            
+
                             state.RecordAssetHandle(meshHandle, error);
                             if (error)
                                 FINJIN_SET_ERROR(error, "Failed to record mesh asset.");
@@ -4646,8 +4671,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::BOUNDING_VOLUME).HasErrorOrValue(false))
         {
@@ -4732,11 +4757,11 @@ void AddMeshMappings
     //basePattern/[index-buffer]
     AddIndexBufferMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -4748,7 +4773,7 @@ void AddMeshMappings
         [getData](FinjinMesh::IndexBuffer*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -4775,8 +4800,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::VERTEX_BUFFERS).HasErrorOrValue(false))
         {
@@ -4829,11 +4854,11 @@ void AddMeshMappings
     //basePattern/[vertex-buffers]/[vertex-buffer-index]
     AddVertexBufferMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (isStart)
             {
                 AssetHandle<FinjinMesh>* meshHandle = nullptr;
@@ -4852,7 +4877,7 @@ void AddMeshMappings
         [getData, callbacks](FinjinMesh::VertexBuffer*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -4879,8 +4904,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBMESHES).HasErrorOrValue(false))
         {
@@ -4935,8 +4960,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBMESHES, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -4979,7 +5004,7 @@ void AddMeshMappings
             auto& mesh = meshHandle->asset;
 
             CHECK_SUBMESHES_NOT_EMPTY(submesh, mesh->submeshes)
-                
+
             if (propertyName == StandardAssetDocumentPropertyNames::NAME)
             {
                 auto isValueDone = ReadStringWithLengthHint(reader, dataHeader, state, submesh.name, error);
@@ -5042,11 +5067,11 @@ void AddMeshMappings
     //basePattern/[submeshes]/[submesh-index]/[index-buffer]
     AddIndexBufferMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -5056,13 +5081,13 @@ void AddMeshMappings
             }
 
             auto& mesh = meshHandle->asset;
-            
+
             CHECK_SUBMESHES_NOT_EMPTY(submesh, mesh->submeshes)
         },
         [getData](FinjinMesh::IndexBuffer*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -5091,8 +5116,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBMESHES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::INDEX_BUFFER_RANGE).HasErrorOrValue(false))
         {
@@ -5157,11 +5182,11 @@ void AddMeshMappings
     //basePattern/[submeshes]/[submesh-index]/[vertex-buffer]
     AddVertexBufferMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -5171,13 +5196,13 @@ void AddMeshMappings
             }
 
             auto& mesh = meshHandle->asset;
-            
+
             CHECK_SUBMESHES_NOT_EMPTY(submesh, mesh->submeshes)
         },
         [getData](FinjinMesh::VertexBuffer*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -5200,14 +5225,14 @@ void AddMeshMappings
         FINJIN_SET_ERROR(error, "Failed to add mappings for submesh vertex buffer.");
         return;
     }
-    
+
     //basePattern/[submeshes]/[submesh-index]/[vertex-buffer-range]
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBMESHES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::VERTEX_BUFFER_RANGE).HasErrorOrValue(false))
         {
@@ -5274,8 +5299,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::SUBMESHES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::VERTEX_BONE_ASSIGNMENTS).HasErrorOrValue(false))
         {
@@ -5327,7 +5352,7 @@ void AddMeshMappings
                 if (error)
                     FINJIN_SET_ERROR(error, "Failed to read vertex bone assignment vertex uint32 values.");
                 else
-                {   
+                {
                     if (state.bufferValuesRead == submesh.vertexBoneAssignments.size())
                         PRINT_VALUES_ITEM(state.GetDepth(), "vertex bone assignment vertex values", submesh.vertexBoneAssignments, vertexIndex);
                 }
@@ -5372,11 +5397,11 @@ void AddMeshMappings
     //basePattern/[skeleton]
     AddSkeletonMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -5388,7 +5413,7 @@ void AddMeshMappings
         [getData](AssetHandle<FinjinMeshSkeleton>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -5415,8 +5440,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::MORPH_ANIMATIONS).HasErrorOrValue(false))
         {
@@ -5469,11 +5494,11 @@ void AddMeshMappings
     //basePattern/[morph-animations]/[animation-index]
     AddMorphAnimationMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (isStart)
             {
                 AssetHandle<FinjinMesh>* meshHandle = nullptr;
@@ -5492,7 +5517,7 @@ void AddMeshMappings
         [getData, callbacks](AssetHandle<FinjinMesh::MorphAnimation>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -5519,8 +5544,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES).HasErrorOrValue(false))
         {
@@ -5575,8 +5600,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -5600,7 +5625,7 @@ void AddMeshMappings
                 }
 
                 auto& mesh = meshHandle->asset;
-                
+
                 mesh->poses.push_back();
             }
         };
@@ -5631,8 +5656,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBPOSES).HasErrorOrValue(false))
         {
@@ -5689,8 +5714,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBPOSES, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -5758,8 +5783,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBPOSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::FORMAT).HasErrorOrValue(false))
         {
@@ -5817,8 +5842,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBPOSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::FORMAT, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -5886,8 +5911,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBPOSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::CHANNELS).HasErrorOrValue(false))
         {
@@ -5916,7 +5941,7 @@ void AddMeshMappings
 
             CHECK_POSES_NOT_EMPTY(pose, mesh->poses)
             CHECK_SUBPOSES_NOT_EMPTY(subpose, pose.subposes)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -5945,8 +5970,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::SUBPOSES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::CHANNELS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -5993,7 +6018,7 @@ void AddMeshMappings
             CHECK_POSES_NOT_EMPTY(pose, mesh->poses)
             CHECK_SUBPOSES_NOT_EMPTY(subpose, pose.subposes)
             CHECK_SUBPOSE_CHANNELS_NOT_EMPTY(channel, subpose.channels)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::VALUES)
             {
                 ReadChannelValues(channel, reader, dataHeader, state, callbacks->GetSettings(), error);
@@ -6017,8 +6042,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::POSE_ANIMATIONS).HasErrorOrValue(false))
         {
@@ -6071,11 +6096,11 @@ void AddMeshMappings
     //basePattern/[pose-animations]/[animation-index]
     AddPoseAnimationMappings<State>
         (
-        callbacks, 
+        callbacks,
         [getData](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (isStart)
             {
                 AssetHandle<FinjinMesh>* meshHandle = nullptr;
@@ -6094,7 +6119,7 @@ void AddMeshMappings
         [getData, callbacks](AssetHandle<FinjinMesh::PoseAnimation>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinMesh>* meshHandle = nullptr;
             getData(meshHandle, state, error);
             if (error)
@@ -6121,8 +6146,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::MANUAL_LODS).HasErrorOrValue(false))
         {
@@ -6177,8 +6202,8 @@ void AddMeshMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::MANUAL_LODS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -6268,7 +6293,7 @@ void AddMaterialMappings
     Callbacks* callbacks,
     HandleChunk handleChunk, //std::function<void(bool, DataChunkReader&, State&, Error&)> handleChunk,
     GetData getData, //std::function<void(AssetHandle<FinjinMaterial>*&, State&, Error& error)> getData,
-    Error& error, 
+    Error& error,
     const BasePattern&... basePattern
     )
 {
@@ -6279,8 +6304,8 @@ void AddMaterialMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         mapping.chunkCallback = [handleChunk](bool isStart, const ChunkName* chunkName, const ParsedChunkName& parsedChunkName, DataChunkReader& reader, State& state, Error& error)
         {
@@ -6303,7 +6328,7 @@ void AddMaterialMappings
                 FINJIN_SET_ERROR(error, "Failed to get material.");
                 return;
             }
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::MATERIAL_REF)
             {
                 if (dataHeader.IsOnlyOrFirstOccurrence())
@@ -6524,8 +6549,8 @@ void AddMaterialMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::MAPS).HasErrorOrValue(false))
         {
@@ -6580,8 +6605,8 @@ void AddMaterialMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         if (mapping.pattern.Add(StandardAssetDocumentChunkNames::MAPS, (ChunkName::Index)-1).HasErrorOrValue(false))
         {
@@ -6670,7 +6695,7 @@ void AddMaterialMappings
                     else
                     {
                         PRINT_VALUE(state.GetDepth(), "texture ref", textureRef);
-                        
+
                         state.RecordAssetHandle(&map.textureHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record texture asset.");
@@ -6734,7 +6759,7 @@ void AddMaterialMappings
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%' in a single read.", StandardAssetDocumentPropertyNames::TEXTURE_OFFSET.name));
                 else
                     PRINT_VALUE3(state.GetDepth(), "texture offset", map.textureOffset[0], map.textureOffset[1], map.textureOffset[2]);
-            }            
+            }
             else if (propertyName == StandardAssetDocumentPropertyNames::TEXTURE_ADDRESS_MODE)
             {
                 if (dataHeader.IsOnlyOrFirstOccurrence())
@@ -6787,8 +6812,8 @@ void AddPrefabMappings
         DataChunkReaderCallbacksChunkMapping<State> mapping;
         if (mapping.pattern.Add(basePattern...).HasErrorOrValue(false))
         {
-            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns."); 
-            return; 
+            FINJIN_SET_ERROR(error, "Failed to add base pattern to mapping patterns.");
+            return;
         }
         mapping.chunkCallback = [handleChunk](bool isStart, const ChunkName* chunkName, const ParsedChunkName& parsedChunkName, DataChunkReader& reader, State& state, Error& error)
         {
@@ -6830,7 +6855,7 @@ void AddPrefabMappings
                     else
                     {
                         PRINT_VALUE(state.GetDepth(), "prefab ref", prefabRef);
-                        
+
                         state.RecordAssetHandle(prefabHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record prefab asset.");
@@ -6880,11 +6905,11 @@ void AddPrefabMappings
     //basePattern/[scene-nodes]
     AddSceneNodesMappings<State>
         (
-        callbacks, 
-        [getData, callbacks](AllocatedVector<FinjinSceneNode*>*& result, State& state, Error& error)
+        callbacks,
+        [getData, callbacks](DynamicVector<FinjinSceneNode*>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             AssetHandle<FinjinPrefab>* prefabHandle = nullptr;
             getData(prefabHandle, state, error);
             if (error)
@@ -6897,7 +6922,7 @@ void AddPrefabMappings
 
             result = &prefab->sceneNodes;
         },
-        error, 
+        error,
         basePattern...
         );
     if (error)
@@ -6908,17 +6933,17 @@ void AddPrefabMappings
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //FinjinCommonDataChunkReaderCallbacksState
 FinjinCommonDataChunkReaderCallbacksState::FinjinCommonDataChunkReaderCallbacksState(FinjinCommonDataChunkReaderCallbacksState* parentState)
 {
     this->parentState = parentState;
 
-    this->allocator = nullptr;    
-    
+    this->allocator = nullptr;
+
     this->controller = nullptr;
-    
+
     this->createOptimizedLookups = true;
 }
 
@@ -6989,7 +7014,7 @@ void FinjinCommonDataChunkReaderCallbacksState::Destroy()
         this->assetBucketsByClass[i].assetHandlesByName.Destroy();
 
     this->encounteredFilePaths.Destroy();
-    
+
     this->filesToLoad.Destroy();
 
     for (size_t assetClass = 0; assetClass < this->assetBucketsByClass.size(); assetClass++)
@@ -7051,7 +7076,7 @@ void FinjinCommonDataChunkReaderCallbacksState::Destroy()
             }
 
             this->allocator->Deallocate(allocatedHandle);
-            
+
             allocatedHandle->allocatedNext = nullptr;
             allocatedHandle = next;
         }
@@ -7170,22 +7195,22 @@ void FinjinCommonDataChunkReaderCallbacksState::RecordAssetHandle(AssetHandle<vo
             {
                 switch (rootState->controller->ResolveAssetCollision(foundAssetHandle, assetClass, assetHandle))
                 {
-                    case AssetCollisionResolution::GENERATE_ERROR: 
+                    case AssetCollisionResolution::GENERATE_ERROR:
                     {
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Encountered a duplicate asset name '%1%' (%2%).", assetHandle->assetRef.objectName, AssetClassUtilities::ToString(assetClass)));
                         return;
                     }
-                    case AssetCollisionResolution::KEEP_EXISTING: 
+                    case AssetCollisionResolution::KEEP_EXISTING:
                     {
                         break;
                     }
-                    case AssetCollisionResolution::KEEP_NEW: 
+                    case AssetCollisionResolution::KEEP_NEW:
                     {
                         foundAssetHandle->asset = assetHandle->asset;
                         break;
                     }
                 }
-            }            
+            }
         }
         else if (assetHandle->isOwner)
         {
@@ -7266,7 +7291,7 @@ FinjinSceneReaderState::FinjinSceneReaderState(FinjinCommonDataChunkReaderCallba
     handwrittenUserDataTypesReaderState(this),
     handwrittenStringsReaderState(this),
     textureReaderState(this),
-    soundReaderState(this)    
+    soundReaderState(this)
 {
 }
 
@@ -7372,7 +7397,7 @@ void FinjinSceneReaderState::Destroy()
     this->morphAnimationCallbacksState.Destroy();
     this->poseAnimationCallbacksState.Destroy();
     this->textureReaderState.Destroy();
-    this->soundReaderState.Destroy();    
+    this->soundReaderState.Destroy();
 }
 
 //FinjinMeshDataChunkReaderCallbacks
@@ -7573,7 +7598,7 @@ void FinjinPrefabDataChunkReaderCallbacks::Create(const Settings& settings, Erro
         FINJIN_SET_ERROR_NO_MESSAGE(error);
         return;
     }
-    
+
     //[prefab]
     AddPrefabMappings<State>(this, prefabHandleChunk, prefabHandleProperty, error, StandardAssetDocumentChunkNames::PREFAB);
     if (error)
@@ -7583,16 +7608,16 @@ void FinjinPrefabDataChunkReaderCallbacks::Create(const Settings& settings, Erro
     }
 }
 
-FinjinPrefabDataChunkReaderCallbacks::Settings& FinjinPrefabDataChunkReaderCallbacks::GetSettings() 
-{ 
-    return this->settings; 
+FinjinPrefabDataChunkReaderCallbacks::Settings& FinjinPrefabDataChunkReaderCallbacks::GetSettings()
+{
+    return this->settings;
 }
 
 //FinjinSceneDataChunkReaderCallbacks
 void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error& error)
 {
     static NonEmbeddedAssetHandleChunk<FinjinScene, State> sceneHandleChunk;
-    
+
     FINJIN_ERROR_METHOD_START(error);
 
     this->settings = settings;
@@ -7603,7 +7628,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
         FINJIN_SET_ERROR_NO_MESSAGE(error);
         return;
     }
-    
+
     //[scene]
     {
         DataChunkReaderCallbacksChunkMapping<State> mapping;
@@ -7617,7 +7642,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
             FINJIN_ERROR_METHOD_START(error);
 
             PRINT_CHUNK(state.GetDepth(), "SCENE", isStart);
-            
+
             sceneHandleChunk(isStart, reader, state, error);
             if (error)
                 FINJIN_SET_ERROR_NO_MESSAGE(error);
@@ -7686,7 +7711,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
 
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -7717,22 +7742,22 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
         [](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
-            
+
             if (isStart)
                 scene->prefabHandles.push_back();
         },
         [](AssetHandle<FinjinPrefab>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
-            
+
             CHECK_PREFABS_NOT_EMPTY(prefab, scene->prefabHandles)
-            
+
             result = &prefab;
         },
         error,
@@ -7822,9 +7847,9 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
 
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
-            
+
             CHECK_SUBSCENES_NOT_EMPTY(subscene, scene->subscenes)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::ID)
             {
                 reader.ReadUuid(dataHeader, subscene.id, error);
@@ -7872,7 +7897,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
             auto& scene = sceneHandle->asset;
 
             CHECK_SUBSCENES_NOT_EMPTY(subscene, scene->subscenes)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::AMBIENT_COLOR)
             {
                 auto isValueDone = reader.ReadFloats(dataHeader, subscene.environment.ambientLight.color.data(), 4, error) == 4;
@@ -7934,7 +7959,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
             auto& scene = sceneHandle->asset;
 
             CHECK_SUBSCENES_NOT_EMPTY(subscene, scene->subscenes)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::MODE)
             {
                 auto isValueDone = ReadStringWithLengthHint(reader, dataHeader, state, subscene.environment.fog.mode, error);
@@ -8060,7 +8085,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
             auto& scene = sceneHandle->asset;
 
             CHECK_SUBSCENES_NOT_EMPTY(subscene, scene->subscenes)
-            
+
             if (propertyName == StandardAssetDocumentPropertyNames::COUNT)
             {
                 size_t value;
@@ -8166,7 +8191,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
                     else
                     {
                         PRINT_VALUE(state.GetDepth(), "mesh ref", meshRef);
-                        
+
                         state.RecordAssetHandle(&skyNode.meshHandle, error);
                         if (error)
                             FINJIN_SET_ERROR(error, "Failed to record mesh asset.");
@@ -8185,20 +8210,20 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
     //[scene]/[subscenes]/[subscene-index]/[environment]/[sky-nodes]/[sky-node-index]/[node-animations]
     AddNodeAnimationsMappings<State>
         (
-        this, 
-        [](AllocatedVector<AssetHandle<FinjinNodeAnimation> >*& result, State& state, Error& error)
+        this,
+        [](DynamicVector<AssetHandle<FinjinNodeAnimation> >*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
 
             CHECK_SUBSCENES_NOT_EMPTY(subscene, scene->subscenes)
             CHECK_SKY_NODES_NOT_EMPTY(skyNode, subscene.environment.skyNodes)
-            
+
             result = &skyNode.nodeAnimationHandles;
         },
-        error, 
+        error,
         StandardAssetDocumentChunkNames::SCENE, StandardAssetDocumentChunkNames::SUBSCENES, (ChunkName::Index)-1, StandardAssetDocumentChunkNames::ENVIRONMENT, StandardAssetDocumentChunkNames::SKY_NODES, (ChunkName::Index)-1
         );
     if (error)
@@ -8210,19 +8235,19 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
     //[scene]/[subscenes]/[subscene-index]/[scene-nodes]
     AddSceneNodesMappings<State>
         (
-        this, 
-        [](AllocatedVector<FinjinSceneNode*>*& result, State& state, Error& error)
+        this,
+        [](DynamicVector<FinjinSceneNode*>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
 
             CHECK_SUBSCENES_NOT_EMPTY(subscene, scene->subscenes)
-            
+
             result = &subscene.sceneNodes;
         },
-        error, 
+        error,
         StandardAssetDocumentChunkNames::SCENE, StandardAssetDocumentChunkNames::SUBSCENES, (ChunkName::Index)-1
         );
     if (error)
@@ -8282,7 +8307,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
         [](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
 
@@ -8292,12 +8317,12 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
         [](AssetHandle<FinjinMaterial>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
 
             CHECK_MATERIALS_NOT_EMPTY(material, scene->materialHandles)
-            
+
             result = &material;
         },
         error,
@@ -8428,7 +8453,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
                 }
             }
             else if (propertyName == StandardAssetDocumentPropertyNames::CONTENT)
-            {   
+            {
                 auto bytesRead = reader.ReadBlob(dataHeader, texture->fileBytes.data_left(), texture->fileBytes.size_left(), error);
                 if (error)
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read blob property '%1%'.", StandardAssetDocumentPropertyNames::CONTENT.name));
@@ -8495,7 +8520,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
         [](bool isStart, DataChunkReader& reader, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
 
@@ -8505,12 +8530,12 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
         [](AssetHandle<FinjinMesh>*& result, State& state, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& sceneHandle = state.assetHandle;
             auto& scene = sceneHandle->asset;
 
             CHECK_MESHES_NOT_EMPTY(mesh, scene->meshHandles)
-            
+
             result = &mesh;
         },
         error,
@@ -8524,8 +8549,8 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
 }
 
 FinjinSceneDataChunkReaderCallbacks::Settings& FinjinSceneDataChunkReaderCallbacks::GetSettings()
-{ 
-    return this->settings; 
+{
+    return this->settings;
 }
 
 
@@ -9492,13 +9517,13 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to allocate user data properties state.");
             return;
         }
         this->settings.userDataClassPropertiesLookup = &this->userDataClassPropertiesLookup;
     }
-    
+
     if (!this->createdCallbacks)
     {
         this->createdCallbacks = true;
@@ -9507,7 +9532,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create scene callbacks.");
             return;
         }
@@ -9517,7 +9542,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create mesh callbacks.");
             return;
         }
@@ -9527,7 +9552,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create skeleton callbacks.");
             return;
         }
@@ -9537,7 +9562,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create material callbacks.");
             return;
         }
@@ -9547,7 +9572,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create prefab callbacks.");
             return;
         }
@@ -9557,7 +9582,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create node animation callbacks.");
             return;
         }
@@ -9567,7 +9592,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create skeleton animation callbacks.");
             return;
         }
@@ -9577,7 +9602,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create morph animation callbacks.");
             return;
         }
@@ -9587,7 +9612,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
         if (error)
         {
             Destroy();
-            
+
             FINJIN_SET_ERROR(error, "Failed to create pose animation callbacks.");
             return;
         }
@@ -9597,7 +9622,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
     if (!this->tempSimpleUri.Create(this->settings.setupAllocator))
     {
         Destroy();
-        
+
         FINJIN_SET_ERROR(error, "Failed to create temporary simple URI.");
         return;
     }
@@ -9605,7 +9630,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
     if (!this->workingAssetRef.Create(this->settings.setupAllocator))
     {
         Destroy();
-        
+
         FINJIN_SET_ERROR(error, "Failed to create working asset reference.");
         return;
     }
@@ -9613,7 +9638,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
     if (!this->workingAssetRequest.Create(this->settings.setupAllocator))
     {
         Destroy();
-        
+
         FINJIN_SET_ERROR(error, "Failed to create working asset request.");
         return;
     }
@@ -9630,7 +9655,7 @@ void FinjinSceneReader::Create(const Settings& settings, Error& error)
     if (error)
     {
         Destroy();
-        
+
         FINJIN_SET_ERROR(error, "Failed to create handwritten user data types reader.");
         return;
     }
@@ -9681,7 +9706,7 @@ void FinjinSceneReader::Destroy()
     this->handwrittenStringsReader.Destroy();
     this->textureReader.Destroy();
     this->soundReader.Destroy();
-    
+
     this->settings = Settings();
 }
 
@@ -9704,7 +9729,7 @@ void FinjinSceneReader::SetState(State* state, Error& error)
         case SetStateResult::SUCCESS: break;
         case SetStateResult::READ_IN_PROGRESS: FINJIN_SET_ERROR(error, "Can't change state until all asset requests have completed."); break;
         case SetStateResult::STATE_STILL_ATTACHED_TO_CONTROLLER: FINJIN_SET_ERROR(error, "The specified state is still attached to a controller."); break;
-    }    
+    }
 }
 
 FinjinSceneReader::SetStateResult FinjinSceneReader::SetState(State* state)
@@ -9716,8 +9741,8 @@ FinjinSceneReader::SetStateResult FinjinSceneReader::SetState(State* state)
     }
 
     if (!IsResidentOnGpu())
-        return SetStateResult::READ_IN_PROGRESS;        
-    
+        return SetStateResult::READ_IN_PROGRESS;
+
     if (state == nullptr)
     {
         //Detaching
@@ -9769,7 +9794,7 @@ bool FinjinSceneReader::RequestRead(const AssetReference& assetRef, bool addToEn
         FINJIN_SET_ERROR(error, "Failed request a read. A destination state has not been set.");
         return false;
     }
-    
+
     if (this->assetReadHandleQueue.full())
     {
         FINJIN_SET_ERROR(error, "Maximum number of asset files have been queued.");
@@ -9802,7 +9827,7 @@ bool FinjinSceneReader::RequestRead(const AssetReference& assetRef, bool addToEn
     {
         CreateFullParseAssetRequest(assetRef, AssetClass::SOUND, this->soundReader, this->settings.state->soundReaderState);
     }
-    else 
+    else
     {
         if (assetClass == AssetClass::COUNT)
         {

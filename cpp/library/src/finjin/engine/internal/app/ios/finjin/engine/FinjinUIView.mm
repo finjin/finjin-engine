@@ -11,12 +11,13 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinUIView.h"
 #import <QuartzCore/CATransaction.h>
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 @interface FinjinUIView ()
 @end
 
@@ -32,7 +33,7 @@
     {
         [self _finishInit];
     }
-    
+
     return self;
 }
 
@@ -51,11 +52,11 @@
 {
     _metalLayer = [CAMetalLayer layer];
     _metalLayer.framebufferOnly = YES;
-    
+
     [self.layer addSublayer:_metalLayer];
-    
+
     self.userInteractionEnabled = YES;
-    
+
 #if !TARGET_OS_TV
     self.multipleTouchEnabled = YES;
 #endif

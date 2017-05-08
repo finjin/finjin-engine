@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/NumericStruct.hpp"
 #include "finjin/common/RequestedValue.hpp"
@@ -28,13 +28,13 @@
 #include <boost/thread/null_mutex.hpp>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class OSWindow;
-    
+
     struct GpuEvent
     {
         enum class Type
@@ -44,7 +44,7 @@ namespace Finjin { namespace Engine {
             CREATE_MESH_FINISHED,
             CREATE_TEXTURE_FINISHED,
             CREATE_MATERIAL_FINISHED,
-            
+
             SET_CLEAR_COLOR_FINISHED,
             SET_CAMERA_FINISHED,
 
@@ -76,10 +76,10 @@ namespace Finjin { namespace Engine {
         ContextEventInfo eventInfo;
     };
 
-    class GpuEvents : public AllocatedVector<GpuEvent>
+    class GpuEvents : public DynamicVector<GpuEvent>
     {
     public:
-        using Super = AllocatedVector<GpuEvent>;
+        using Super = DynamicVector<GpuEvent>;
     };
 
     struct GpuCommand
@@ -94,11 +94,11 @@ namespace Finjin { namespace Engine {
 
             START_RENDER_TARGET,
             FINISH_RENDER_TARGET,
-            
+
             CREATE_MESH,
             CREATE_TEXTURE,
             CREATE_MATERIAL,
-            
+
             SET_CLEAR_COLOR,
             SET_CAMERA,
 
@@ -122,7 +122,7 @@ namespace Finjin { namespace Engine {
         {
             this->type = Type::NOTIFY;
         }
-    }; 
+    };
 
     struct StartGraphicsCommandListGpuCommand : public GpuCommand
     {
@@ -182,7 +182,7 @@ namespace Finjin { namespace Engine {
     using CreateMeshGpuCommand = UploadAssetGpuCommand<FinjinMesh, GpuCommand::Type::CREATE_MESH>;
     using CreateTextureGpuCommand = UploadAssetGpuCommand<FinjinTexture, GpuCommand::Type::CREATE_TEXTURE>;
     using CreateMaterialGpuCommand = UploadAssetGpuCommand<FinjinMaterial, GpuCommand::Type::CREATE_MATERIAL>;
-    
+
     struct SetClearColorGpuCommand : public GpuCommand
     {
         SetClearColorGpuCommand()
@@ -243,7 +243,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = PerFrameObjectAllocator<GpuCommand, boost::null_mutex>;
-        
+
         using iterator = Super::iterator;
         using const_iterator = Super::const_iterator;
 
@@ -444,9 +444,21 @@ namespace Finjin { namespace Engine {
 
     enum class GpuIndexFormat
     {
-        SHORT_INDEX, //16-bit index
-        INT_INDEX //32-bit index
+        UINT16_INDEX, //16-bit index
+        UINT32_INDEX //32-bit index
     };
+
+    enum class GpuAssetTextureFormats
+    {
+        NONE = 0,
+
+        ASTC = 1 << 0,
+        ETC2 = 1 << 1,
+        BC = 1 << 2,
+
+        ALL = ASTC | ETC2 | BC
+    };
+    FINJIN_ENUM_BITWISE_OPERATIONS(GpuAssetTextureFormats)
 
     struct GpuContextCommonSettings
     {
@@ -459,18 +471,17 @@ namespace Finjin { namespace Engine {
 
         void HandleTopLevelSetting(const Utf8StringView& key, const Utf8StringView& value, Error& error);
 
-        //RequestedValue types will be set in GpuContext during initialization
-
         void* applicationHandle;
         OSWindow* osWindow;
         AssetFileReader* assetFileReader;
         AssetPathSelector initialAssetFileSelector;
         AssetReferences<EngineConstants::MAX_CONTEXT_SETTINGS_FILES> contextSettingsFileNames; //Usually "gpu-context.cfg"
         AssetReferences<EngineConstants::MAX_CONTEXT_SETTINGS_FILES> staticMeshRendererSettingsFileNames; //Usually "gpu-context-static-mesh-renderer.cfg"
+        GpuAssetTextureFormats availableAssetTextureFormats; //Application-provided formats, beyond PNG
 
         size_t tempReadBufferSize;
 
-        size_t maxCommandsPerUpdate; //Maximum number of high level commands 
+        size_t maxCommandsPerUpdate; //Maximum number of high level commands
         size_t maxMaterials;
         size_t max2DTextures;
         size_t maxCubeTextures;
@@ -479,9 +490,11 @@ namespace Finjin { namespace Engine {
         size_t maxMeshes;
         size_t maxLights;
 
+        //RequestedValue types will be set in GpuContext during initialization
+
         GpuID gpuID;
-        RequestedValue<size_t> frameCount;  //Number of frames, including the one displayed. 2 = double buffer, 3 = triple buffer, etc
-        size_t jobProcessingPipelineSize; //Will be set by the GpuContext during initialization based on requestedFrameCount. Will usually be actualFrameCount - 1
+        RequestedValue<size_t> frameBufferCount;  //Number of frames, including the one displayed. 2 = double buffer, 3 = triple buffer.
+        size_t jobProcessingPipelineSize; //Will be set by the GpuContext during initialization based on frameBufferCount. Will usually be frameBufferCount.actual - 1
         size_t presentSyncInterval; //Will be set by the GpuContext during initialization
         size_t maxGpuCommandListsPerStage; //Maximum number of D3D/Vulkan/Metal command lists. The default is sufficient
         float maxDepthValue; //The default is sufficient
@@ -503,5 +516,5 @@ namespace Finjin { namespace Engine {
         else
             return false;
     }
-    
+
 } }

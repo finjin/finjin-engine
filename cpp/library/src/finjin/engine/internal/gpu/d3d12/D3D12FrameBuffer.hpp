@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "D3D12Includes.hpp"
 #include "D3D12Utilities.hpp"
 #include "D3D12StaticMeshRendererFrameState.hpp"
 #include "D3D12RenderTarget.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -34,7 +34,7 @@ namespace Finjin { namespace Engine {
         void SetIndex(size_t index);
 
         ID3D12GraphicsCommandList* NewGraphicsCommandList();
-        ID3D12GraphicsCommandList* CurrentGraphicsCommandList();
+        ID3D12GraphicsCommandList* GetCurrentGraphicsCommandList();
         void ExecuteCommandLists(ID3D12CommandQueue* queue);
         void ResetCommandLists();
 
@@ -43,12 +43,12 @@ namespace Finjin { namespace Engine {
     public:
         size_t index;
         D3D12RenderTarget renderTarget;
-        
+
         uint64_t framePresentCompletedFenceValue;
-        
+
         Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
-        AllocatedVector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> > graphicsCommandLists;
-        AllocatedVector<ID3D12CommandList*> commandListsToExecute;
+        DynamicVector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> > graphicsCommandLists;
+        DynamicVector<ID3D12CommandList*> commandListsToExecute;
 
         D3D12StaticMeshRendererFrameState staticMeshRendererFrameState;
     };

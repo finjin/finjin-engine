@@ -14,17 +14,17 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "WindowsUWPInputSystem.hpp"
-#include "finjin/common/Vector.hpp"
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/StaticVector.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct WindowsUWPInputSystem::Impl : public AllocatedClass
 {
     Impl(Allocator* allocator) : AllocatedClass(allocator)
-    {           
+    {
     }
 
     WindowsUWPInputSystem::Settings settings;
@@ -33,7 +33,7 @@ struct WindowsUWPInputSystem::Impl : public AllocatedClass
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 const Utf8String& WindowsUWPInputSystem::GetSystemInternalName()
 {
     static const Utf8String value("uwpinput");
@@ -41,11 +41,11 @@ const Utf8String& WindowsUWPInputSystem::GetSystemInternalName()
 }
 
 WindowsUWPInputSystem::WindowsUWPInputSystem()
-{    
+{
 }
-    
-WindowsUWPInputSystem::~WindowsUWPInputSystem() 
-{     
+
+WindowsUWPInputSystem::~WindowsUWPInputSystem()
+{
 }
 
 void WindowsUWPInputSystem::Create(const Settings& settings, Error& error)
@@ -121,5 +121,5 @@ void WindowsUWPInputSystem::DestroyContext(WindowsUWPInputContext* context)
             impl->contexts.erase(it);
 
         context->Destroy();
-    }    
+    }
 }

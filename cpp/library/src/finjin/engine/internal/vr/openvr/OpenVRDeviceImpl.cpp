@@ -20,16 +20,15 @@
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/DebugLog.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static Utf8String GetStringTrackedDeviceProperty
     (
-    vr::IVRSystem* ivrSystem, 
-    vr::TrackedDeviceIndex_t deviceIndex, 
-    vr::TrackedDeviceProperty prop, 
+    vr::IVRSystem* ivrSystem,
+    vr::TrackedDeviceIndex_t deviceIndex,
+    vr::TrackedDeviceProperty prop,
     vr::TrackedPropertyError* vrError = nullptr
     )
 {
@@ -46,7 +45,7 @@ static Utf8String GetStringTrackedDeviceProperty
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 OpenVRDeviceImpl::OpenVRDeviceImpl()
 {
     this->deviceIndex = vr::k_unTrackedDeviceIndex_Hmd;
@@ -65,7 +64,7 @@ void OpenVRDeviceImpl::Reset(bool isConstructing)
 
     this->productDescriptor.clear();
     this->instanceDescriptor.clear();
-        
+
     this->trackingSystemName.clear();
     this->modelNumber.clear();
     this->serialNumber.clear();
@@ -87,7 +86,7 @@ void OpenVRDeviceImpl::Reset(bool isConstructing)
 
     FINJIN_ZERO_ITEM(this->controllerState);
     FINJIN_ZERO_ITEM(this->controllerPoseState);
-    this->gameControllerState.Reset(isConstructing);        
+    this->gameControllerState.Reset(isConstructing);
 }
 
 bool OpenVRDeviceImpl::GetInfo(vr::IVRSystem* ivrSystem)
@@ -169,7 +168,7 @@ bool OpenVRDeviceImpl::GetInfo(vr::IVRSystem* ivrSystem)
 
                 switch (this->axisTypes[i])
                 {
-                    case vr::k_eControllerAxis_None: 
+                    case vr::k_eControllerAxis_None:
                     {
                         axisName.clear();
                         break;
@@ -186,13 +185,13 @@ bool OpenVRDeviceImpl::GetInfo(vr::IVRSystem* ivrSystem)
                         hasJoystick = true;
                         break;
                     }
-                    case vr::k_eControllerAxis_Trigger: 
+                    case vr::k_eControllerAxis_Trigger:
                     {
                         axisName = "Trigger";
                         break;
                     }
                 }
-                
+
                 auto axisDisplayName = axisName;
                 axisDisplayName += " X";
                 xAxis.SetDisplayName(axisDisplayName);
@@ -270,7 +269,7 @@ bool OpenVRDeviceImpl::GetInfo(vr::IVRSystem* ivrSystem)
     this->instanceDescriptor = this->productDescriptor;
     this->instanceDescriptor += "-";
     this->instanceDescriptor += Convert::ToString(deviceIndex + 1);
-        
+
     return true;
 }
 

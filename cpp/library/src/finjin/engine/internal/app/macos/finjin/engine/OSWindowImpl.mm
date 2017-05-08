@@ -23,7 +23,7 @@
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static bool operator == (const CGPoint a, const CGPoint b)
 {
     return a.x == b.x && a.y == b.y;
@@ -40,11 +40,11 @@ static bool operator == (const NSRect a, const NSRect b)
 }
 
 
-//Local classes----------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 OSWindowImpl::OSWindowImpl(Allocator* allocator, void* clientData) : AllocatedClass(allocator)
 {
     Clear();
-    
+
     this->clientData = clientData;
 }
 
@@ -64,14 +64,15 @@ CAMetalLayer* OSWindowImpl::GetMetalLayer() const
 
 bool OSWindowImpl::IsMaximized() const
 {
-    //There's no such thing as a maximized window in OSX. isZoomed is the closest approximation, but that also returns true:
-    //-In full screen mode.
-    //-For windows with NSBorderlessWindowMask style.
+    //There's no such thing as a maximized window in macOS.
+    //isZoomed is the closest approximation, but that also returns true:
+    //  -In full screen mode.
+    //  -For windows with NSBorderlessWindowMask style.
     if ((this->windowController.window.styleMask & NSTitledWindowMask) == NSTitledWindowMask)
     {
         return
-        this->windowController.window.isZoomed ||
-        this->windowController.window.frame == this->windowController.window.screen.visibleFrame;
+            this->windowController.window.isZoomed ||
+            this->windowController.window.frame == this->windowController.window.screen.visibleFrame;
     }
     else
         return false;

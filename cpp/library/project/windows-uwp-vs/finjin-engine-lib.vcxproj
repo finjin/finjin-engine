@@ -47,14 +47,17 @@
     <ClInclude Include="..\..\src\finjin\engine\AssetReference.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\AssetReadHandle.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\AssetReadQueue.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ASTCReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\Camera.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\CameraState.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ContextEventInfo.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\DDSReader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\DXGIIncludes.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FinjinSceneAssets.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FinjinSceneReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FinjinSceneTypeNames.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\GenericGpuNumericStructs.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\gl_format.h" />
     <ClInclude Include="..\..\src\finjin\engine\GpuSystemCommonSettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputSystemCommonSettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\app\uwp\finjin\engine\ApplicationGlobals.hpp" />
@@ -76,7 +79,6 @@
     <ClInclude Include="..\..\src\finjin\engine\FinjinEngineLibrary.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FlyingCameraInputBindings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonSettings.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\GpuSerializers.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputBindings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputBindingsSerializer.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputComponents.hpp" />
@@ -109,6 +111,7 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12Resources.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12RootSignature.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12Shader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12ShaderType.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12StaticMeshRenderer.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12StaticMeshRendererFrameState.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12System.hpp" />
@@ -137,6 +140,7 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\sound\xaudio2\XAudio2SoundSourceVoice.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\sound\xaudio2\XAudio2System.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\JobPipelineStage.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\KTXReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\LightState.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\MemorySettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\OSWindowDefs.hpp" />
@@ -144,6 +148,7 @@
     <ClInclude Include="..\..\src\finjin\engine\PerFrameObjectAllocator.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\PlatformCapabilities.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\PointerType.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\PVRReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ResourcePoolDescription.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ShaderFeatureFlag.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ShaderFeatures.hpp" />
@@ -158,6 +163,7 @@
     <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\StringTable.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\TextureDimension.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\UserDataTypes.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\WindowBounds.hpp" />
@@ -180,8 +186,11 @@
     <ClCompile Include="..\..\src\finjin\engine\AssetReference.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetReadHandle.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetReadQueue.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ASTCReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\Camera.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\CameraState.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\DDSReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\DXGIIncludes.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\FinjinSceneAssets.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\FinjinSceneReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\GenericGpuNumericStructs.cpp" />
@@ -253,8 +262,11 @@
     <ClCompile Include="..\..\src\finjin\engine\internal\sound\xaudio2\XAudio2SoundSource.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\sound\xaudio2\XAudio2System.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\JobPipelineStage.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\KTXReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\LightState.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\MemorySettings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\PlatformCapabilities_General.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\PVRReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\ShaderFeatureFlag.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\ShaderFeatures.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\SoundContextCommonSettings.cpp" />
@@ -264,6 +276,7 @@
     <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\StringTable.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\TextureDimension.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\UserDataTypes.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\WindowBounds.cpp" />

@@ -17,13 +17,12 @@
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/Convert.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 InputContextCommonSettings::InputContextCommonSettings(Allocator* allocator) : initialAssetFileSelector(allocator), settingsFileNames(allocator)
-{    
+{
     this->applicationHandle = nullptr;
     this->osWindow = nullptr;
     this->assetFileReader = nullptr;

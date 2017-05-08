@@ -14,17 +14,17 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
     #include "finjin/engine/internal/gpu/d3d12/D3D12GpuContext.hpp"
     namespace Finjin { namespace Engine {
         using GpuContext = D3D12GpuContext;
-        using GpuContextSettings = D3D12GpuContext::Settings;        
+        using GpuContextSettings = D3D12GpuContext::Settings;
     } }
 #elif FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_VULKAN
     #include "finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp"
     namespace Finjin { namespace Engine {
         using GpuContext = VulkanGpuContext;
-        using GpuContextSettings = VulkanGpuContext::Settings;        
+        using GpuContextSettings = VulkanGpuContext::Settings;
     } }
 #endif

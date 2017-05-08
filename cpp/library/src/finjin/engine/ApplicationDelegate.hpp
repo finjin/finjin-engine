@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/CommandLineArgsProcessor.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
@@ -27,14 +27,14 @@
 #include "finjin/engine/ApplicationSettings.hpp"
 #include "finjin/engine/ApplicationViewportDescription.hpp"
 #include "finjin/engine/DisplayInfo.hpp"
-#include "finjin/engine/MemorySettings.hpp"
 #include "finjin/engine/GpuDescription.hpp"
 #include "finjin/engine/GpuSystem.hpp"
+#include "finjin/engine/MemorySettings.hpp"
 #include "finjin/engine/SoundAdapterDescription.hpp"
 #include "finjin/engine/SoundSourceCommon.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class ApplicationViewport;
@@ -43,7 +43,7 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    /** 
+    /**
      * General call flow from application:
      * During initialization:
      *  1)ReadCommandLineSettings() - Reads/parses the specified command line arguments.
@@ -52,12 +52,12 @@ namespace Finjin { namespace Engine {
      *  3)ReadBootFileItem() - Reads/parses one item that was in the boot file.
      *  4)OnGpusEnumerated()
      *  5)GetApplicationViewportDescriptionCount()
-     *    5a)GetApplicationViewportDescription() - Called GetApplicationViewportDescriptionCount() times     
+     *    5a)GetApplicationViewportDescription() - Called GetApplicationViewportDescriptionCount() times
      *    5b)CreateApplicationViewport() - Called GetApplicationViewportDescriptionCount() times
      *  6)OnInitializedApplicationViewportsController()
      *
      * During runtime:
-     *  -OnTickWindow() - Called GetApplicationViewportDescriptionCount() times. 
+     *  -OnTickWindow() - Called GetApplicationViewportDescriptionCount() times.
      */
     class ApplicationDelegate : public AllocatedClass
     {
@@ -66,10 +66,11 @@ namespace Finjin { namespace Engine {
         ~ApplicationDelegate();
 
         virtual size_t GetMaxFileSystemEntries(ApplicationFileSystem fileSystem) const;
-        
+
         virtual const Utf8String& GetName(ApplicationNameFormat format) const = 0;
-                
-        virtual void ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
+
+        virtual ReadCommandLineResult ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
+        virtual void GetCommandLineUsage(Utf8String& usage);
 
         virtual size_t GetBootFileNameCount() const;
         virtual const Path& GetBootFileName(size_t index, bool& required) const;
@@ -81,9 +82,9 @@ namespace Finjin { namespace Engine {
         virtual size_t GetSettingsFileNameCount() const;
         virtual const AssetReference& GetSettingsFileName(size_t index, bool& required) const;
         virtual void ReadSettings(size_t index, const ByteBuffer& settingsBuffer, Error& error);
-        
+
         virtual void OnSoundDevicesEnumerated(const SoundAdapterDescriptions& devices);
-        
+
         virtual void OnGpusEnumerated(const HardwareGpuDescriptions& hardwareGpus, const SoftwareGpuDescriptions& softwareGpus);
 
         virtual const ApplicationSettings& GetApplicationSettings() const = 0;

@@ -14,11 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "D3D12Includes.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class D3D12RefreshRate
@@ -27,7 +27,7 @@ namespace Finjin { namespace Engine {
         D3D12RefreshRate();
         D3D12RefreshRate(int n, int d);
         D3D12RefreshRate(DXGI_RATIONAL dxgiRefresh);
-    
+
         bool IsEquivalent(const D3D12RefreshRate& other) const;
 
         double ToDouble() const;

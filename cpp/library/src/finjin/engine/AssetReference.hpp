@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Path.hpp"
 #include "finjin/common/StaticVector.hpp"
@@ -22,7 +22,7 @@
 #include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -30,8 +30,8 @@ namespace Finjin { namespace Engine {
     class AssetReference
     {
     public:
-        static const AssetReference EMPTY;
-        
+        static const AssetReference& Empty();
+
         AssetReference(Allocator* allocator = nullptr);
 
         bool Create(Allocator* allocator);
@@ -118,7 +118,7 @@ namespace Finjin { namespace Engine {
         ValueOrError<void> ForObjectInLocalFile(const T& filePath, const Utf8String& objectName)
         {
             Clear();
-            
+
             if (this->filePath.assign(filePath).HasError())
                 return ValueOrError<void>::CreateError();
             if (this->objectName.assign(objectName).HasError())

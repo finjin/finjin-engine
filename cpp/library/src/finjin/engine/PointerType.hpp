@@ -14,10 +14,10 @@
 #pragma once
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    enum class PointerType 
+    enum class PointerType
     {
         NONE,
         SIMULATED,

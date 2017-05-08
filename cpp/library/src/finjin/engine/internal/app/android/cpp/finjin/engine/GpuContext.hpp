@@ -14,8 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using GpuContext = VulkanGpuContext;
     using GpuContextSettings = VulkanGpuContext::Settings;

@@ -17,21 +17,23 @@
 #if FINJIN_TARGET_VR_SYSTEM == FINJIN_TARGET_VR_SYSTEM_OPENVR
 
 #include "OpenVRContext.hpp"
-#include "OpenVRSystem.hpp"
-#include "OpenVRDeviceImpl.hpp"
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/DebugLog.hpp"
-#include "finjin/common/Vector.hpp"
-#include "finjin/engine/InputComponents.hpp"
+#include "finjin/common/DynamicVector.hpp"
+#include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/GeometryGenerator.hpp"
+#include "finjin/engine/InputComponents.hpp"
+#include "OpenVRDeviceImpl.hpp"
+#include "OpenVRSystem.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
+
+//Macros------------------------------------------------------------------------
 #define HAPTIC_PULSE_LENGTH_MICROSECONDS 3000
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct OpenVRContext::Impl : public AllocatedClass
 {
     using Vector2 = GeometryGenerator::Vector2;
@@ -46,17 +48,17 @@ struct OpenVRContext::Impl : public AllocatedClass
 
     struct DistortionMesh
     {
-        AllocatedVector<DistortionVertex> verts;
-        AllocatedVector<uint16_t> indices;
+        DynamicVector<DistortionVertex> verts;
+        DynamicVector<uint16_t> indices;
     };
-        
+
     Impl(Allocator* allocator, OpenVRContext* context) : AllocatedClass(allocator), settings(allocator)
     {
         this->context = context;
 
         this->hasRuntime = false;
 
-        this->ivrSystem = nullptr;        
+        this->ivrSystem = nullptr;
     }
 
     bool HasFocus()
@@ -110,7 +112,7 @@ struct OpenVRContext::Impl : public AllocatedClass
 
         return nullptr;
     }
-    
+
     void StartLoadingRenderModel(const Utf8String& modelName)
     {
         if (this->loadingRenderModels.size() + this->loadedRenderModels.size() < this->loadedRenderModels.max_size())
@@ -251,7 +253,7 @@ struct OpenVRContext::Impl : public AllocatedClass
 
                 //Update devices that need the model that is now finished (due to the texture being finished)
                 UpdateDeviceRenderModelsForTexture(loadingRenderModelTexture.textureID, loadingRenderModelTexture.texture);
-                
+
                 //Remove from "loading" vector
                 this->loadingRenderModelTextures.erase(this->loadingRenderModelTextures.begin() + i);
             }
@@ -309,7 +311,7 @@ struct OpenVRContext::Impl : public AllocatedClass
 
         auto& verts = this->distortionMesh.verts;
         verts.Create(lensGridSegmentCountVert * lensGridSegmentCountHorz * 2, GetAllocator());
-        
+
         DistortionVertex vert;
 
         //Left eye distortion vertices
@@ -318,9 +320,9 @@ struct OpenVRContext::Impl : public AllocatedClass
         {
             for (int x = 0; x < lensGridSegmentCountHorz; x++)
             {
-                u = x * w; 
+                u = x * w;
                 v = 1 - y * h;
-                
+
                 vert.position = Vector2(xOffset + u, -1 + 2 * y*h);
 
                 vr::DistortionCoordinates_t dc0 = this->ivrSystem->ComputeDistortion(vr::Eye_Left, u, v);
@@ -339,7 +341,7 @@ struct OpenVRContext::Impl : public AllocatedClass
         {
             for (int x = 0; x < lensGridSegmentCountHorz; x++)
             {
-                u = x * w; 
+                u = x * w;
                 v = 1 - y * h;
 
                 vert.position = Vector2(xOffset + u, -1 + 2 * y*h);
@@ -368,7 +370,7 @@ struct OpenVRContext::Impl : public AllocatedClass
                 b = lensGridSegmentCountHorz * y + x + 1 + offset;
                 c = (y + 1) * lensGridSegmentCountHorz + x + 1 + offset;
                 d = (y + 1) * lensGridSegmentCountHorz + x + offset;
-                
+
                 indices.push_back(a);
                 indices.push_back(b);
                 indices.push_back(c);
@@ -388,7 +390,7 @@ struct OpenVRContext::Impl : public AllocatedClass
                 b = lensGridSegmentCountHorz * y + x + 1 + offset;
                 c = (y + 1) * lensGridSegmentCountHorz + x + 1 + offset;
                 d = (y + 1) * lensGridSegmentCountHorz + x + offset;
-                
+
                 indices.push_back(a);
                 indices.push_back(b);
                 indices.push_back(c);
@@ -406,16 +408,15 @@ struct OpenVRContext::Impl : public AllocatedClass
 
     OpenVRContextSettings settings;
 
-    OperationStatus initializationStatus;
     bool hasRuntime;
-    
+
     vr::IVRSystem* ivrSystem;
-    
+
     vr::Texture_t vrLeftEyeTexture; //{ (void*)leftEyeDesc.m_nResolveTextureId, vr::API_DirectX, vr::ColorSpace_Gamma };
     vr::Texture_t vrRightEyeTexture; //{ (void*)rightEyeDesc.m_nResolveTextureId, vr::API_DirectX, vr::ColorSpace_Gamma };
 
     std::array<OpenVRDevice, vr::k_unMaxTrackedDeviceCount> devices;
-    std::array<vr::TrackedDevicePose_t, vr::k_unMaxTrackedDeviceCount> deviceRenderPoseStates; //One for each device. Check bPoseIsValid before using 
+    std::array<vr::TrackedDevicePose_t, vr::k_unMaxTrackedDeviceCount> deviceRenderPoseStates; //One for each device. Check bPoseIsValid before using
 
     DistortionMesh distortionMesh;
 
@@ -460,16 +461,16 @@ struct OpenVRContext::Impl : public AllocatedClass
 };
 
 
-//Implementation---------------------------------------------------------------
-OpenVRContext::OpenVRContext(Allocator* allocator, OpenVRSystem* vrSystem) : 
-    AllocatedClass(allocator), 
+//Implementation----------------------------------------------------------------
+OpenVRContext::OpenVRContext(Allocator* allocator, OpenVRSystem* vrSystem) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<Impl>(allocator, FINJIN_CALLER_ARGUMENTS, this))
-{    
+{
     impl->vrSystem = vrSystem;
 }
 
 OpenVRContext::~OpenVRContext()
-{    
+{
 }
 
 void OpenVRContext::Create(const Settings& settings, Error& error)
@@ -483,23 +484,17 @@ void OpenVRContext::Create(const Settings& settings, Error& error)
     //Copy settings
     impl->settings = settings;
 
-    impl->initializationStatus.SetStatus(OperationStatus::STARTED);
-
     //Detect runtime
     impl->hasRuntime = vr::VR_IsRuntimeInstalled();
     if (!impl->hasRuntime)
     {
         //No runtime drivers installed. This isn't an error condition
-        impl->initializationStatus.SetStatus(OperationStatus::SUCCESS);
-
         return;
     }
 
     if (!vr::VR_IsHmdPresent())
     {
         //No headset. This isn't an error condition.
-        impl->initializationStatus.SetStatus(OperationStatus::SUCCESS);
-
         return;
     }
 
@@ -508,8 +503,6 @@ void OpenVRContext::Create(const Settings& settings, Error& error)
     impl->ivrSystem = vr::VR_Init(&vrError, vr::VRApplication_Scene);
     if (vrError != vr::VRInitError_None)
     {
-        impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-        
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize VR runtime: '%1%'", vr::VR_GetVRInitErrorAsEnglishDescription(vrError)));
         return;
     }
@@ -533,13 +526,10 @@ void OpenVRContext::Create(const Settings& settings, Error& error)
                 impl->settings.addDeviceHandler(this, deviceIndex);
         }
     }
-
-    //Done
-    impl->initializationStatus.SetStatus(OperationStatus::SUCCESS);
 }
 
 void OpenVRContext::Destroy()
-{    
+{
     for (vr::TrackedDeviceIndex_t deviceIndex = 0; deviceIndex < vr::k_unMaxTrackedDeviceCount; deviceIndex++)
     {
         auto& device = impl->devices[deviceIndex];
@@ -549,11 +539,6 @@ void OpenVRContext::Destroy()
     }
 
     vr::VR_Shutdown();
-}
-
-const OperationStatus& OpenVRContext::GetInitializationStatus() const
-{
-    return impl->initializationStatus;
 }
 
 void OpenVRContext::GetSelectorComponents(AssetPathSelector& result)
@@ -577,7 +562,7 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
     }
     if (impl->ivrSystem == nullptr)
         return;
-    
+
     //Clear previously changed state
     for (vr::TrackedDeviceIndex_t deviceIndex = 0; deviceIndex < vr::k_unMaxTrackedDeviceCount; deviceIndex++)
     {
@@ -585,7 +570,7 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
         auto deviceImpl = device.GetImpl();
 
         deviceImpl->isNewConnection = false;
-        
+
         deviceImpl->gameControllerState.ClearChanged();
     }
 
@@ -594,17 +579,17 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
     while (impl->ivrSystem->PollNextEvent(&event, sizeof(event)))
     {
         switch (event.eventType)
-	    {
-	        case vr::VREvent_TrackedDeviceActivated:
+        {
+            case vr::VREvent_TrackedDeviceActivated:
             {
                 auto& device = impl->devices[event.trackedDeviceIndex];
                 auto deviceImpl = device.GetImpl();
 
-                //The connection is only considered new if the deviceClass has not yet been set 
+                //The connection is only considered new if the deviceClass has not yet been set
                 deviceImpl->isNewConnection = deviceImpl->vrDeviceClass == vr::TrackedDeviceClass_Invalid;
-                
+
                 impl->GetDeviceInfo(device);
-                
+
                 deviceImpl->gameControllerState.connectionChanged = true;
 
                 break;
@@ -613,11 +598,11 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
             {
                 auto& device = impl->devices[event.trackedDeviceIndex];
                 auto deviceImpl = device.GetImpl();
-                
+
                 FINJIN_ZERO_ITEM(deviceImpl->controllerState);
                 FINJIN_ZERO_ITEM(deviceImpl->controllerPoseState);
                 deviceImpl->gameControllerState.Reset();
-                                
+
                 deviceImpl->gameControllerState.connectionChanged = true;
 
                 break;
@@ -672,7 +657,7 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
                 //FINJIN_DEBUG_LOG_INFO("VR Event: %1%", event.eventType);
                 break;
             }
-		}
+        }
     }
 
     //Poll devices
@@ -720,7 +705,7 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
                     MathVector3 velocity(deviceImpl->controllerPoseState.vVelocity.v[0], deviceImpl->controllerPoseState.vVelocity.v[1], deviceImpl->controllerPoseState.vVelocity.v[2]);
                     locator.velocity.SetMeters(velocity);
                 }
-                
+
                 if (deviceImpl->forceFeedback.IsActive())
                 {
                     impl->SetForces(deviceImpl);

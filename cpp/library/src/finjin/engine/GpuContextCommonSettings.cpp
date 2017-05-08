@@ -17,16 +17,16 @@
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/Convert.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 GpuContextCommonSettings::GpuContextCommonSettings(Allocator* allocator) : initialAssetFileSelector(allocator), contextSettingsFileNames(allocator), staticMeshRendererSettingsFileNames(allocator)
 {
     this->applicationHandle = nullptr;
     this->osWindow = nullptr;
     this->assetFileReader = nullptr;
+    this->availableAssetTextureFormats = GpuAssetTextureFormats::NONE;
 
     this->tempReadBufferSize = EngineConstants::DEFAULT_GPU_CONTEXT_READ_BUFFER_SIZE;
 
@@ -38,12 +38,12 @@ GpuContextCommonSettings::GpuContextCommonSettings(Allocator* allocator) : initi
     this->maxShaders = 100;
     this->maxMeshes = 100;
     this->maxLights = 100;
-    
-    this->frameCount.requested = 2;
-    this->frameCount.actual = 0;
+
+    this->frameBufferCount.requested = 2;
+    this->frameBufferCount.actual = 0;
     this->jobProcessingPipelineSize = 0;
-    this->presentSyncInterval = 1;    
-    this->maxGpuCommandListsPerStage = 3; 
+    this->presentSyncInterval = 1;
+    this->maxGpuCommandListsPerStage = 3;
     this->maxDepthValue = 1.0f;
     this->renderingScale = 1;
     this->presentMode = GpuSwapChainPresentMode::ADAPTIVE_VSYNC;
@@ -92,13 +92,13 @@ void GpuContextCommonSettings::ParseSettings(const ByteBufferReader& configFileB
         {
             switch (line->GetType())
             {
-                case ConfigDocumentLine::Type::SECTION: 
+                case ConfigDocumentLine::Type::SECTION:
                 {
                     line->GetSectionName(section);
 
                     break;
                 }
-                case ConfigDocumentLine::Type::KEY_AND_VALUE: 
+                case ConfigDocumentLine::Type::KEY_AND_VALUE:
                 {
                     line->GetKeyAndValue(key, value);
 
@@ -121,6 +121,19 @@ void GpuContextCommonSettings::HandleTopLevelSetting(const Utf8StringView& key, 
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    if (key == "texture-asset-formats")
+    {
+        Split(value, ' ', [this](Utf8StringView& value)
+        {
+            if (value == "astc")
+                this->availableAssetTextureFormats |= GpuAssetTextureFormats::ASTC;
+            else if (value == "etc2")
+                this->availableAssetTextureFormats |= GpuAssetTextureFormats::ETC2;
+            else if (value == "bc")
+                this->availableAssetTextureFormats |= GpuAssetTextureFormats::BC;
+            return ValueOrError<bool>(true);
+        });
+    }
     if (key == "temp-read-buffer-size")
         this->tempReadBufferSize = Convert::ToInteger(value.ToString(), this->tempReadBufferSize);
     else if (key == "max-commands-per-update")

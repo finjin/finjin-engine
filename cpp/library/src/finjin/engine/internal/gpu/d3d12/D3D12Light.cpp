@@ -21,7 +21,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //D3D12Light
 D3D12Light::D3D12Light(Allocator* allocator)

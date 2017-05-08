@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "D3D12RenderTarget.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -29,7 +29,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         D3D12FrameStage();
-                
+
     public:
         size_t index;
         size_t frameBufferIndex;
@@ -38,7 +38,7 @@ namespace Finjin { namespace Engine {
 
         SimpleTimeDelta elapsedTime;
         SimpleTimeCounter totalElapsedTime;
-                
+
         D3D12RenderTarget* renderTarget;
         StaticVector<D3D12RenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES> dependentRenderTargets;
     };

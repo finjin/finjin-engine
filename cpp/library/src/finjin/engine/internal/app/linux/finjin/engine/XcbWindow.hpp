@@ -14,23 +14,23 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include <xcb/xcb.h>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     class XcbWindow
     {
-    public: 
+    public:
         XcbWindow();
         virtual ~XcbWindow();
-        
+
         virtual bool HandleEvent(const xcb_generic_event_t* ev) = 0;
     };
-    
+
 } }

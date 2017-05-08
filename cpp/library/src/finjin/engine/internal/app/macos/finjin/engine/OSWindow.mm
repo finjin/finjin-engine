@@ -14,21 +14,23 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "OSWindow.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "OSWindowImpl.hpp"
 #import "FinjinNSWindowController.h"
 #import "FinjinNSViewController.h"
 #import <Foundation/NSString.h>
 #import <AppKit/NSScreen.h>
 #import <CoreGraphics/CoreGraphics.h>
-#include <vector>
-
-#define BORDER_STYLE (NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask)
-#define BORDERLESS_STYLE NSBorderlessWindowMask
 
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Macros------------------------------------------------------------------------
+#define BORDER_STYLE (NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask)
+#define BORDERLESS_STYLE NSBorderlessWindowMask
+
+
+//Local functions---------------------------------------------------------------
 /*static bool operator == (const CGPoint a, const CGPoint b)
 {
     return a.x == b.x && a.y == b.y;
@@ -55,11 +57,11 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
 }
 
 
-//OSWindowNSWindowDelegate-----------------
-@interface OSWindowViewerNSViewDelegate : NSObject<FinjinNSViewDelegate, NSWindowDelegate>
+//OSWindowNSViewDelegate-----------------
+@interface OSWindowNSViewDelegate : NSObject<FinjinNSViewDelegate, NSWindowDelegate>
 @end
 
-@implementation OSWindowViewerNSViewDelegate
+@implementation OSWindowNSViewDelegate
 {
 @public
     OSWindow* osWindow;
@@ -72,7 +74,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate x(theEvent.locationInWindow.x, InputCoordinate::Type::DIPS, density);
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
-    
+
     for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
         osWindow->GetWindowEventListener(i)->WindowOnPointerDown(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
@@ -83,7 +85,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate x(theEvent.locationInWindow.x, InputCoordinate::Type::DIPS, density);
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
-    
+
     for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
         osWindow->GetWindowEventListener(i)->WindowOnPointerMove(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
@@ -94,7 +96,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate x(theEvent.locationInWindow.x, InputCoordinate::Type::DIPS, density);
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
-    
+
     for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
         osWindow->GetWindowEventListener(i)->WindowOnPointerUp(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
@@ -135,7 +137,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate x(theEvent.locationInWindow.x, InputCoordinate::Type::DIPS, density);
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
-    
+
     for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
         osWindow->GetWindowEventListener(i)->WindowOnPointerMove(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
@@ -147,7 +149,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
     auto wheelDelta = theEvent.scrollingDeltaY;
-    
+
     for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
         osWindow->GetWindowEventListener(i)->WindowOnMouseWheel(osWindow, PointerType::MOUSE, 0, x, y, buttons, wheelDelta);
 }
@@ -166,16 +168,18 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
 {
     if (osWindow->GetWindowEventListenerCount() > 0)
     {
-        std::vector<Path> fileNames;
-        fileNames.resize(files.count);
-        for (NSUInteger i = 0; i < files.count; i++)
+        DynamicVector<Path> fileNames;
+        if (fileNames.Create(files.count, FINJIN_ALLOCATOR_NULL, FINJIN_ALLOCATOR_NULL))
         {
-            auto* s = (NSString*)files[i];
-            fileNames[i] = s.UTF8String;
+            for (NSUInteger i = 0; i < files.count; i++)
+            {
+                auto* s = (NSString*)files[i];
+                fileNames[i] = s.UTF8String;
+            }
+
+            for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
+                osWindow->GetWindowEventListener(i)->WindowOnDropFiles(osWindow, fileNames.data(), fileNames.size());
         }
-        
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowOnDropFiles(osWindow, &fileNames[0], fileNames.size());
     }
 }
 
@@ -187,7 +191,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     auto controlDown = (theEvent.modifierFlags & NSControlKeyMask) != 0;
     auto shiftDown = (theEvent.modifierFlags & NSShiftKeyMask) != 0;
     auto altDown = (theEvent.modifierFlags & NSAlternateKeyMask) != 0;
-    
+
     for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
     {
         if (pressed)
@@ -203,7 +207,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     if (osWindow != nullptr)
     {
         osWindow->GetWindowSize().WindowResized(osWindow->GetImpl()->IsMaximized());
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowResized(osWindow);
     }
@@ -214,7 +218,7 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     if (osWindow != nullptr)
     {
         osWindow->GetWindowSize().WindowMoved(osWindow->GetImpl()->IsMaximized());
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowMoved(osWindow);
     }
@@ -247,9 +251,9 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
 @end
 
 
-//Implementation---------------------------------------------------------------
-OSWindow::OSWindow(Allocator* allocator, void* clientData) : 
-    AllocatedClass(allocator), 
+//Implementation----------------------------------------------------------------
+OSWindow::OSWindow(Allocator* allocator, void* clientData) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<OSWindowImpl>(allocator, FINJIN_CALLER_ARGUMENTS, clientData))
 {
 }
@@ -262,23 +266,23 @@ OSWindow::~OSWindow()
 void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrSubtitle, const Utf8String& displayName, OSWindowRect windowRect, const WindowSize& windowSize, Error& error)
 {
     //Note: There is a ViewerWindow.xib file in this project but it isn't used
-    
+
     FINJIN_ERROR_METHOD_START(error);
 
     //Make copy of settings
     impl->title = [[NSString alloc] initWithUTF8String:titleOrSubtitle.c_str()];
     impl->internalName = internalName;
-    
+
     impl->windowSize = windowSize;
     impl->windowSize.SetWindow(this);
-    
+
     impl->windowController = [FinjinNSWindowController createFromWindowFrame:OSRectToNSRect(windowRect) withTitle:impl->title withWindowStyle:BORDER_STYLE withScreen:[NSScreen mainScreen]];
-    
-    auto viewDelegate = [[OSWindowViewerNSViewDelegate alloc] init];
+
+    auto viewDelegate = [[OSWindowNSViewDelegate alloc] init];
     viewDelegate->osWindow = this;
     impl->windowController.window.delegate = viewDelegate;
     impl->windowController.view.delegate = viewDelegate;
-    
+
     impl->windowSize.SetApplyingToWindow(true);
     Raise();
     impl->windowSize.SetApplyingToWindow(false);
@@ -289,7 +293,7 @@ void OSWindow::Destroy()
     if (!impl->destroyed)
     {
         impl->destroyed = true;
-        
+
         [impl->windowController close];
     }
 }
@@ -303,7 +307,7 @@ void OSWindow::ShowMessage(const Utf8String& message, const Utf8String& title)
 {
     NSString* nsMessage = [[NSString alloc] initWithUTF8String:message.c_str()];
     NSString* nsTitle = [[NSString alloc] initWithUTF8String:title.c_str()];
-    
+
     NSAlert* alert = [[NSAlert alloc] init];
     [alert setMessageText:nsTitle];
     [alert setInformativeText:nsMessage];
@@ -318,7 +322,7 @@ void OSWindow::ShowErrorMessage(const Utf8String& message, const Utf8String& tit
     errorMessage += message;
     NSString* nsMessage = [[NSString alloc] initWithUTF8String:errorMessage.c_str()];
     NSString* nsTitle = [[NSString alloc] initWithUTF8String:title.c_str()];
-    
+
     NSAlert* alert = [[NSAlert alloc] init];
     [alert setMessageText:nsTitle];
     [alert setInformativeText:nsMessage];
@@ -329,43 +333,43 @@ void OSWindow::ShowErrorMessage(const Utf8String& message, const Utf8String& tit
 void OSWindow::ApplyWindowSize()
 {
     impl->windowSize.SetApplyingToWindow(true);
-    
+
     auto bounds = impl->windowSize.GetCurrentBounds();
-    
+
     if (bounds.HasBorder())
         SetBorderedStyle();
     else
         SetBorderlessStyle();
-    
+
     [NSMenu setMenuBarVisible:!impl->windowSize.IsFullScreenExclusive()];
-    
+
     LimitBounds(bounds);
-    
+
     switch (impl->windowSize.GetState())
     {
-        case WindowSize::State::WINDOWED_NORMAL:
+        case WindowSizeState::WINDOWED_NORMAL:
         {
             Move(bounds.x, bounds.y, bounds.GetClientWidth(), bounds.GetClientHeight(), true);
             break;
         }
-        case WindowSize::State::WINDOWED_MAXIMIZED:
+        case WindowSizeState::WINDOWED_MAXIMIZED:
         {
             Maximize();
             break;
         }
-        case WindowSize::State::BORDERLESS_FULLSCREEN:
+        case WindowSizeState::BORDERLESS_FULLSCREEN:
         {
             Move(bounds.x, bounds.y, bounds.GetClientWidth(), bounds.GetClientHeight(), true);
             break;
         }
-        case WindowSize::State::EXCLUSIVE_FULLSCREEN:
+        case WindowSizeState::EXCLUSIVE_FULLSCREEN:
         {
             Move(bounds.x, bounds.y, bounds.GetClientWidth(), bounds.GetClientHeight(), true);
             break;
         }
         default: break;
     }
-    
+
     impl->windowSize.SetApplyingToWindow(false);
 }
 
@@ -403,11 +407,11 @@ void OSWindow::Center()
 void OSWindow::Maximize()
 {
     auto theFrame = impl->windowController.window.screen.visibleFrame;
-    
+
     //This is kind of a hack to prevent IsMaximized() from returning true. This should be addressed at some point
     theFrame.origin.y += 1;
     theFrame.size.height -= 1;
-    
+
     [impl->windowController.window setFrame:theFrame display:YES animate:YES];
 }
 
@@ -449,7 +453,7 @@ bool OSWindow::HasFocus() const
 
 void OSWindow::Raise()
 {
-    [impl->windowController.window makeKeyAndOrderFront:nil];
+    [impl->windowController.window makeKeyAndOrderFront:nullptr];
     [impl->windowController.window makeFirstResponder:impl->windowController.view];
 }
 
@@ -457,10 +461,10 @@ void OSWindow::SetBorderedStyle()
 {
     [impl->windowController.window setStyleMask:BORDER_STYLE];
     impl->windowController.window.title = impl->title; //Re-set the title since it is lost when toggling to borderless
-    
+
     //Re-disable the zoom button
     [impl->windowController disableZoom];
-    
+
     //Restore first responder
     [impl->windowController.window makeFirstResponder:impl->windowController.view];
 }
@@ -471,7 +475,7 @@ void OSWindow::SetBorderlessStyle()
 
     //Re-disable the zoom button
     [impl->windowController disableZoom];
-    
+
     //Restore first responder
     [impl->windowController.window makeFirstResponder:impl->windowController.view];
 }
@@ -528,7 +532,7 @@ bool OSWindow::Move(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimensio
     windowFrame.origin.y = y;
     windowFrame.size.width += (clientWidth - currentContentSize.size.width);
     windowFrame.size.height += (clientHeight - currentContentSize.size.height);
-    
+
     [impl->windowController.window setFrame:windowFrame display:YES animate:(animate ? YES : NO)];
 
     return true;
@@ -587,12 +591,12 @@ bool OSWindow::CenterCursor()
 {
     auto displayID = GetDisplayID();
     auto screenFrame = CGDisplayBounds(displayID);
-    
+
     auto windowFrame = impl->windowController.window.frame;
-    
+
     auto center = CGPointMake(windowFrame.origin.x + windowFrame.size.width/2, windowFrame.origin.y + windowFrame.size.height/2);
     center.y = screenFrame.size.height - center.y + screenFrame.origin.y; //Convert from lower left screen origin to upper left global origin
-    
+
     CGWarpMouseCursorPosition(center);
 
     return true;
@@ -602,14 +606,14 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
 {
     auto screen = impl->windowController.window.screen;
     auto frame = impl->windowSize.IsFullScreenExclusive() ? screen.frame : screen.visibleFrame;
-    if (impl->windowSize.IsFullScreen())
+    if (impl->windowSize.IsFullScreen() || (bounds.width == 0 && bounds.height == 0))
     {
         bounds.x = frame.origin.x;
         bounds.y = frame.origin.y;
         bounds.width = bounds.clientWidth = frame.size.width;
         bounds.height = bounds.clientHeight = frame.size.height;
     }
-    
+
     auto constrained = [impl->windowController.window constrainFrameRect:CGRectMake(bounds.x, bounds.y, bounds.width, bounds.height) toScreen:screen];
     bounds.x = constrained.origin.x;
     bounds.y = constrained.origin.y;

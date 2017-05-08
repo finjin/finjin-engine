@@ -14,7 +14,7 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "Win32InputContext.hpp"
-#include "finjin/common/Vector.hpp"
+#include "finjin/common/StaticVector.hpp"
 #include "finjin/common/WindowsUtilities.hpp"
 #include "finjin/engine/InputDeviceSerializer.hpp"
 #include "finjin/engine/OSWindow.hpp"
@@ -25,15 +25,17 @@
 
 using namespace Finjin::Engine;
 
+
+//Macros------------------------------------------------------------------------
 #define MAX_DINPUT_GAME_CONTROLLER_COUNT 8 //DirectInput has no inherent limit but we impose one
 #define MAX_EXTERNAL_GAME_CONTROLLER_COUNT (GameControllerConstants::MAX_GAME_CONTROLLERS - XUSER_MAX_COUNT - MAX_DINPUT_GAME_CONTROLLER_COUNT)
 
 
-//Locals-----------------------------------------------------------------------
+//Locals------------------------------------------------------------------------
 static const Utf8String DINPUT_SYSTEM_INTERNAL_NAME("dinput");
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct Win32InputContext::Impl : public AllocatedClass
 {
     Impl(Allocator* allocator, Win32InputSystem* inputSystem) : AllocatedClass(allocator), settings(allocator)
@@ -51,10 +53,8 @@ struct Win32InputContext::Impl : public AllocatedClass
 
     Win32InputSystem* inputSystem;
 
-    OperationStatus initializationStatus;
-
     Win32InputContext::Settings settings;
-    
+
     AssetClassFileReader xinputDevicesAssetReader;
     AssetClassFileReader dinputDevicesAssetReader;
     AssetClassFileReader inputBindingsAssetReader;
@@ -83,7 +83,7 @@ struct Win32InputContext::Impl : public AllocatedClass
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static BOOL CALLBACK EnumGameControllersCallback(const DIDEVICEINSTANCE* ddi, void* data)
 {
     //Only handle non-XInput devices
@@ -114,11 +114,11 @@ static BOOL CALLBACK EnumMiceCallback(const DIDEVICEINSTANCE* ddi, void* data)
 template <typename Configs, typename StaticDevices>
 void CheckForNewDevices
     (
-    Configs& configs, 
+    Configs& configs,
     StaticDevices& devices,
     size_t previousDeviceCount,
     size_t newDeviceCount,
-    Win32InputContext* context, 
+    Win32InputContext* context,
     AssetClassFileReader& assetReader,
     ByteBuffer& configFileBuffer
     )
@@ -126,7 +126,7 @@ void CheckForNewDevices
     for (size_t i = previousDeviceCount; i < newDeviceCount; i++)
     {
         auto& config = configs[i];
-    
+
         //Handle new controller
         //std::cout << "Found a new device: " << config.GetDebugName() << std::endl;
 
@@ -150,9 +150,9 @@ void CheckForNewDevices
 template <typename Configs, typename DynamicDevices>
 void CheckForNewDevices
     (
-    Configs& configs, 
+    Configs& configs,
     DynamicDevices& devices,
-    Win32InputContext* context, 
+    Win32InputContext* context,
     AssetClassFileReader& assetReader,
     ByteBuffer& configFileBuffer
     )
@@ -189,11 +189,11 @@ void CheckForNewDevices
 }
 
 
-//Implementation---------------------------------------------------------------
-Win32InputContext::Win32InputContext(Allocator* allocator, Win32InputSystem* inputSystem) : 
-    AllocatedClass(allocator), 
+//Implementation----------------------------------------------------------------
+Win32InputContext::Win32InputContext(Allocator* allocator, Win32InputSystem* inputSystem) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<Impl>(allocator, FINJIN_CALLER_ARGUMENTS, inputSystem))
-{    
+{
 }
 
 Win32InputContext::~Win32InputContext()
@@ -209,8 +209,6 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
     assert(settings.assetFileReader != nullptr);
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
-
-    impl->initializationStatus.SetStatus(OperationStatus::STARTED);
 
     //Copy settings---------------------------------------------
     impl->settings = settings;
@@ -242,16 +240,14 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
     //XInput game controllers-----------------------
     for (size_t i = 0; i < impl->xinputGameControllers.size(); i++)
     {
-        impl->xinputGameControllers[i].Create(i);        
+        impl->xinputGameControllers[i].Create(i);
         ConfigureInputDevice(impl->xinputGameControllers[i], impl->xinputGameControllers[i].GetProductDescriptor(), impl->xinputDevicesAssetReader, impl->configFileBuffer);
     }
 
     //DirectInput----------------------------------------
-    //Create the main DirectInput object    
+    //Create the main DirectInput object
     if (FAILED(DirectInput8Create(static_cast<HINSTANCE>(impl->settings.applicationHandle), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&impl->dinput, 0)))
     {
-        impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-        
         FINJIN_SET_ERROR(error, "Failed to initialize DirectInput.");
         return;
     }
@@ -263,8 +259,6 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
         impl->dinputGameControllers[i].Create(this, impl->dinputGameControllerConfigs[i], error);
         if (error)
         {
-            impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-            
             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize game controller '%1%'.", impl->dinputGameControllerConfigs[i].GetDebugName()));
             return;
         }
@@ -279,8 +273,6 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
         impl->mice[i].Create(this, impl->mouseFoundConfigs[i], error);
         if (error)
         {
-            impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-            
             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize mouse '%1%'.", impl->mouseFoundConfigs[i].GetDebugName()));
             return;
         }
@@ -295,19 +287,15 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
         impl->keyboards[i].Create(this, impl->keyboardFoundConfigs[i], error);
         if (error)
         {
-            impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-            
             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize keyboard '%1%'.", impl->keyboardFoundConfigs[i].GetDebugName()));
             return;
         }
 
         ConfigureInputDevice(impl->keyboards[i], impl->keyboardFoundConfigs[i].GetProductDescriptor(), impl->dinputDevicesAssetReader, impl->configFileBuffer);
     }
-        
+
     impl->updateCount = 0;
     Update(0);
-
-    impl->initializationStatus.SetStatus(OperationStatus::SUCCESS);
 }
 
 void Win32InputContext::Destroy()
@@ -329,11 +317,6 @@ void Win32InputContext::Destroy()
     impl->keyboards.clear();
 
     FINJIN_SAFE_RELEASE(impl->dinput);
-}
-
-const OperationStatus& Win32InputContext::GetInitializationStatus() const
-{
-    return impl->initializationStatus;
 }
 
 void Win32InputContext::GetSelectorComponents(AssetPathSelector& result)
@@ -377,20 +360,20 @@ void Win32InputContext::Update(SimpleTimeDelta elapsedTime, InputDevicePollFlag 
             impl->dinput->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumGameControllersCallback, this, DIEDFL_ATTACHEDONLY);
             CheckForNewDevices(impl->dinputGameControllerConfigs, impl->dinputGameControllers, countBefore, impl->dinputGameControllerCount, this, impl->dinputDevicesAssetReader, impl->configFileBuffer);
         }
-        
+
         if (!impl->mice.full())
         {
             impl->mouseFoundConfigs.clear();
             impl->dinput->EnumDevices(DI8DEVCLASS_POINTER, EnumMiceCallback, this, DIEDFL_ATTACHEDONLY);
             CheckForNewDevices(impl->mouseFoundConfigs, impl->mice, this, impl->dinputDevicesAssetReader, impl->configFileBuffer);
         }
-        
+
         if (!impl->keyboards.full())
         {
             impl->keyboardFoundConfigs.clear();
             impl->dinput->EnumDevices(DI8DEVCLASS_KEYBOARD, EnumKeyboardsCallback, this, DIEDFL_ATTACHEDONLY);
             CheckForNewDevices(impl->keyboardFoundConfigs, impl->keyboards, this, impl->dinputDevicesAssetReader, impl->configFileBuffer);
-        }        
+        }
     }
 }
 
@@ -480,7 +463,7 @@ void Win32InputContext::HandleDeviceChanges()
 }
 
 void Win32InputContext::HandleApplicationViewportLostFocus()
-{    
+{
     for (auto& device : impl->xinputGameControllers)
         device.StopHapticFeedback();
 
@@ -495,7 +478,7 @@ void Win32InputContext::HandleApplicationViewportLostFocus()
 }
 
 void Win32InputContext::HandleApplicationViewportGainedFocus()
-{    
+{
 }
 
 size_t Win32InputContext::GetDeviceCount(InputDeviceClass deviceClass) const
@@ -646,7 +629,7 @@ size_t Win32InputContext::GetDInputGameControllerCount() const
 
 DInputGameController* Win32InputContext::GetDInputGameController(size_t index)
 {
-    return &impl->dinputGameControllers[index];        
+    return &impl->dinputGameControllers[index];
 }
 
 void Win32InputContext::AddExternalGameController(InputGenericGameController* gameController, bool configure, Error& error)
@@ -700,7 +683,7 @@ size_t Win32InputContext::GetMouseCount() const
 
 DInputMouse* Win32InputContext::GetMouse(size_t index)
 {
-    return &impl->mice[index];            
+    return &impl->mice[index];
 }
 
 bool Win32InputContext::IsMouseConnected(size_t index) const

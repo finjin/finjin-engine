@@ -11,10 +11,11 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #import <Foundation/Foundation.h>
 
 
-//Classes-------------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 
 //A delegate that can be used to receive touch events sent to the FinjinUIView
 @protocol FinjinUIViewDelegate<NSObject>

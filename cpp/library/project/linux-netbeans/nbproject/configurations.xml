@@ -33,11 +33,13 @@
         <logicalFolder name="f9" displayName="assets" projectFiles="true">
           <itemPath>../../src/finjin/engine/Asset.cpp</itemPath>
           <itemPath>../../src/finjin/engine/Asset.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetClass.cpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetClass.hpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetClassFileReader.cpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetClassFileReader.hpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetCountsSettings.cpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetCountsSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/AssetCreationCapability.hpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetFileReader.cpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetFileReader.hpp</itemPath>
           <itemPath>../../src/finjin/engine/AssetHandle.hpp</itemPath>
@@ -67,19 +69,35 @@
           <itemPath>../../src/finjin/engine/UserDataTypes.cpp</itemPath>
           <itemPath>../../src/finjin/engine/UserDataTypes.hpp</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="external-file-formats" projectFiles="true">
+        <logicalFolder name="f2"
+                       displayName="external-file-formats"
+                       projectFiles="true">
+          <itemPath>../../src/finjin/engine/ASTCReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ASTCReader.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/DDSReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/DDSReader.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/DXGIIncludes.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/DXGIIncludes.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/KTXReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/KTXReader.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/PVRReader.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/PVRReader.hpp</itemPath>
           <itemPath>../../src/finjin/engine/WAVReader.cpp</itemPath>
           <itemPath>../../src/finjin/engine/WAVReader.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/gl_format.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f3" displayName="gpu" projectFiles="true">
           <itemPath>../../src/finjin/engine/GenericGpuNumericStructs.cpp</itemPath>
           <itemPath>../../src/finjin/engine/GenericGpuNumericStructs.hpp</itemPath>
           <itemPath>../../src/finjin/engine/GpuContextCommonSettings.cpp</itemPath>
           <itemPath>../../src/finjin/engine/GpuContextCommonSettings.hpp</itemPath>
-          <itemPath>../../src/finjin/engine/GpuSerializers.hpp</itemPath>
           <itemPath>../../src/finjin/engine/GpuSystemCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ShaderFeatureFlag.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ShaderFeatureFlag.hpp</itemPath>
           <itemPath>../../src/finjin/engine/ShaderFeatures.cpp</itemPath>
           <itemPath>../../src/finjin/engine/ShaderFeatures.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/TextureDimension.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/TextureDimension.hpp</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="input" projectFiles="true">
           <itemPath>../../src/finjin/engine/FlyingCameraInputBindings.cpp</itemPath>
@@ -119,12 +137,18 @@
         <logicalFolder name="f7" displayName="utilities" projectFiles="true">
           <itemPath>../../src/finjin/engine/Camera.cpp</itemPath>
           <itemPath>../../src/finjin/engine/Camera.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/CameraState.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/CameraState.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ContextEventInfo.hpp</itemPath>
           <itemPath>../../src/finjin/engine/EventCollection.hpp</itemPath>
           <itemPath>../../src/finjin/engine/JobPipelineStage.cpp</itemPath>
           <itemPath>../../src/finjin/engine/JobPipelineStage.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/LightState.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/LightState.hpp</itemPath>
           <itemPath>../../src/finjin/engine/OSWindowDefs.hpp</itemPath>
           <itemPath>../../src/finjin/engine/OSWindowEventListener.hpp</itemPath>
           <itemPath>../../src/finjin/engine/PerFrameObjectAllocator.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ResourcePoolDescription.hpp</itemPath>
           <itemPath>../../src/finjin/engine/WindowBounds.cpp</itemPath>
           <itemPath>../../src/finjin/engine/WindowBounds.hpp</itemPath>
           <itemPath>../../src/finjin/engine/WindowSize.cpp</itemPath>
@@ -167,27 +191,83 @@
         </logicalFolder>
         <logicalFolder name="f1" displayName="gpu" projectFiles="true">
           <logicalFolder name="f1" displayName="vulkan" projectFiles="true">
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanDepthBuffer.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.cpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.hpp</itemPath>
+            <logicalFolder name="f1" displayName="renderers" projectFiles="true">
+              <logicalFolder name="f1" displayName="static-mesh" projectFiles="true">
+                <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRenderer.cpp</itemPath>
+                <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRenderer.hpp</itemPath>
+                <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRendererFrameState.hpp</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="resources" projectFiles="true">
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanBufferView.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuBuffer.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuBuffer.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanInputFormat.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanInputFormat.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLight.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLight.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanMaterial.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanMaterial.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanMemoryResource.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanMemoryResource.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanMesh.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanMesh.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderableEntity.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanResources.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanResources.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanShaderType.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanTexture.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanTexture.hpp</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="utilities" projectFiles="true">
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorPool.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorSetLayout.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorSetLayout.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanIncludes.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanIncludes.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanNamePointers.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPipeline.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPipeline.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPipelineLayout.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPipelineLayout.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPresentModes.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPresentModes.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPushConstant.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.cpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.hpp</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/vk_platform.h</itemPath>
+              <itemPath>../../src/finjin/engine/internal/gpu/vulkan/vulkan.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameStage.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameStage.hpp</itemPath>
             <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.cpp</itemPath>
             <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextSettings.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextSettings.hpp</itemPath>
             <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.cpp</itemPath>
             <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.cpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.cpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanLayerProperties.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanNamePointers.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderTarget.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderTarget.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanShader.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanShader.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.cpp</itemPath>
             <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.hpp</itemPath>
             <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.cpp</itemPath>
             <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystem.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.cpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.hpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.cpp</itemPath>
-            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.hpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemSettings.cpp</itemPath>
+            <itemPath>../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemSettings.hpp</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="f2" displayName="input" projectFiles="true">
@@ -264,7 +344,6 @@
           <architecture>2</architecture>
           <standard>11</standard>
           <incDir>
-            <pElem>/home/derek/Downloads/VulkanSDK/1.0.13.0/x86_64/include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/boost</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/eigen</pElem>
             <pElem>../../../../../finjin-common/cpp/library/include</pElem>
@@ -283,6 +362,16 @@
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libfinjin-engine.a</output>
         </archiverTool>
       </compileType>
+      <item path="../../src/finjin/engine/ASTCReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ASTCReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/Application.hpp"
             ex="false"
             tool="3"
@@ -372,6 +461,11 @@
       </item>
       <item path="../../src/finjin/engine/Asset.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/AssetClass.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/AssetClass.hpp"
             ex="false"
             tool="3"
@@ -393,6 +487,11 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/AssetCountsSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetCreationCapability.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -455,6 +554,41 @@
       <item path="../../src/finjin/engine/Camera.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/finjin/engine/Camera.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/CameraState.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/CameraState.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ContextEventInfo.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DDSReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DDSReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DXGIIncludes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DXGIIncludes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/finjin/engine/EventCollection.hpp"
             ex="false"
@@ -527,11 +661,6 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/GpuContextCommonSettings.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/finjin/engine/GpuSerializers.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -616,6 +745,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/KTXReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/KTXReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/LightState.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/LightState.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/MemorySettings.cpp"
             ex="false"
             tool="1"
@@ -636,6 +785,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/PVRReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PVRReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/PerFrameObjectAllocator.hpp"
             ex="false"
             tool="3"
@@ -652,6 +811,21 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/PointerType.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ResourcePoolDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatureFlag.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatureFlag.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -751,6 +925,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/TextureDimension.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/TextureDimension.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/UserDataTypes.cpp"
             ex="false"
             tool="1"
@@ -812,6 +996,11 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/WindowSize.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/gl_format.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -936,17 +1125,52 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDepthBuffer.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanBufferView.hpp"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.cpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorPool.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorSetLayout.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorSetLayout.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameStage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameStage.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuBuffer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuBuffer.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -961,6 +1185,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.cpp"
             ex="false"
             tool="1"
@@ -971,12 +1215,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.cpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanIncludes.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanIncludes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputFormat.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputFormat.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -991,9 +1245,84 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLight.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLight.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMaterial.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMaterial.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMemoryResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMemoryResource.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMesh.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanNamePointers.hpp"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipeline.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipeline.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipelineLayout.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipelineLayout.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPresentModes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPresentModes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.cpp"
+            ex="false"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.hpp"
@@ -1001,9 +1330,79 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPushConstant.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.hpp"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderTarget.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderTarget.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderableEntity.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanResources.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanResources.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanShader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanShader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanShaderType.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRenderer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRenderer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRendererFrameState.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.cpp"
+            ex="false"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.hpp"
@@ -1021,12 +1420,32 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.cpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTexture.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTexture.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1037,6 +1456,16 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/vk_platform.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/vulkan.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1237,7 +1666,6 @@
           <architecture>2</architecture>
           <standard>11</standard>
           <incDir>
-            <pElem>/home/derek/Downloads/VulkanSDK/1.0.13.0/x86_64/include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/boost</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/eigen</pElem>
             <pElem>../../../../../finjin-common/cpp/library/include</pElem>
@@ -1261,6 +1689,16 @@
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libfinjin-engine.a</output>
         </archiverTool>
       </compileType>
+      <item path="../../src/finjin/engine/ASTCReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ASTCReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/Application.hpp"
             ex="false"
             tool="3"
@@ -1350,6 +1788,11 @@
       </item>
       <item path="../../src/finjin/engine/Asset.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/AssetClass.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/AssetClass.hpp"
             ex="false"
             tool="3"
@@ -1371,6 +1814,11 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/AssetCountsSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/AssetCreationCapability.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1433,6 +1881,41 @@
       <item path="../../src/finjin/engine/Camera.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../src/finjin/engine/Camera.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/CameraState.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/CameraState.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ContextEventInfo.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DDSReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DDSReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DXGIIncludes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/DXGIIncludes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../src/finjin/engine/EventCollection.hpp"
             ex="false"
@@ -1505,11 +1988,6 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/GpuContextCommonSettings.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../src/finjin/engine/GpuSerializers.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1594,6 +2072,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/KTXReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/KTXReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/LightState.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/LightState.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/MemorySettings.cpp"
             ex="false"
             tool="1"
@@ -1614,6 +2112,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/PVRReader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/PVRReader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/PerFrameObjectAllocator.hpp"
             ex="false"
             tool="3"
@@ -1630,6 +2138,21 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/PointerType.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ResourcePoolDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatureFlag.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ShaderFeatureFlag.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1729,6 +2252,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/TextureDimension.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/TextureDimension.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/UserDataTypes.cpp"
             ex="false"
             tool="1"
@@ -1790,6 +2323,11 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/WindowSize.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/gl_format.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1914,17 +2452,52 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDepthBuffer.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanBufferView.hpp"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.cpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorPool.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorSetLayout.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFunctions.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanDescriptorSetLayout.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameStage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanFrameStage.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuBuffer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuBuffer.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1939,6 +2512,26 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuContextSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.cpp"
             ex="false"
             tool="1"
@@ -1949,12 +2542,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.cpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanIncludes.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputElementDescriptions.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanIncludes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputFormat.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanInputFormat.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1969,9 +2572,84 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLight.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanLight.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMaterial.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMaterial.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMemoryResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMemoryResource.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanMesh.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanNamePointers.hpp"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipeline.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipeline.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipelineLayout.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPipelineLayout.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPresentModes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPresentModes.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.cpp"
+            ex="false"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPrimaryQueues.hpp"
@@ -1979,9 +2657,79 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanPushConstant.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanQueueFamilyIndexes.hpp"
             ex="false"
             tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderTarget.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderTarget.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanRenderableEntity.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanResources.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanResources.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanShader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanShader.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanShaderType.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRenderer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRenderer.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanStaticMeshRendererFrameState.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.cpp"
+            ex="false"
+            tool="1"
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSurfaceFormats.hpp"
@@ -1999,12 +2747,32 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.cpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTextureLoader.hpp"
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanSystemSettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTexture.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanTexture.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2015,6 +2783,16 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/internal/gpu/vulkan/VulkanUtilities.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/vk_platform.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/internal/gpu/vulkan/vulkan.h"
             ex="false"
             tool="3"
             flavor2="0">

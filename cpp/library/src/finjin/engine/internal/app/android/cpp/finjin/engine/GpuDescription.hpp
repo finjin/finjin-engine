@@ -14,8 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/gpu/vulkan/VulkanGpuDescription.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using HardwareGpuDescriptions = VulkanHardwareGpuDescriptions;
     using SoftwareGpuDescriptions = VulkanSoftwareGpuDescriptions;

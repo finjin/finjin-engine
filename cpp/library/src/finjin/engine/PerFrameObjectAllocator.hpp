@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ForwardAllocator.hpp"
 #include "finjin/common/IntrusiveList.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -29,7 +29,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = ForwardAllocator<MutexType>;
-        
+
         using ListType = IntrusiveSingleList<ObjectType, NextAccessor<ObjectType> >;
         using iterator = typename ListType::iterator;
         using const_iterator = typename ListType::const_iterator;
@@ -57,7 +57,7 @@ namespace Finjin { namespace Engine {
         {
             return byteCount / GetObjectSize<T>();
         }
-        
+
         template <typename T>
         T* NewObject(FINJIN_CALLER_PARAMETERS_DECLARATION)
         {

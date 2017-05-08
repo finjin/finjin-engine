@@ -18,9 +18,9 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
-ApplicationViewportDescription::ApplicationViewportDescription() : windowFrame(OSWindowRect(0, 0, 1280, 720))
+//Implementation----------------------------------------------------------------
+ApplicationViewportDescription::ApplicationViewportDescription() : windowFrame(OSWindowRect(0, 0, 1024, 600))
 {
-    this->requestedFrameCount = 3;
+    this->requestedFrameBufferCount = 3;
     this->jobProcessingPipelineSize = 2;
 }

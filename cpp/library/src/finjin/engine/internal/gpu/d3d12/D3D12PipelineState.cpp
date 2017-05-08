@@ -22,7 +22,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12PipelineStateDescriptor::D3D12PipelineStateDescriptor(Allocator* allocator) :
     typeName(allocator),
     rootSignatureType(allocator),
@@ -35,7 +35,7 @@ D3D12PipelineStateDescriptor::D3D12PipelineStateDescriptor(Allocator* allocator)
 void D3D12PipelineStateDescriptor::Create
     (
     AssetReference& shaderFileRef,
-    AllocatedVector<D3D12PipelineStateDescriptor>& pipelineStates,
+    DynamicVector<D3D12PipelineStateDescriptor>& pipelineStates,
     Allocator* allocator,
     const ByteBuffer& readBuffer,
     SimpleUri& tempUri,
@@ -43,10 +43,10 @@ void D3D12PipelineStateDescriptor::Create
     )
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     ConfigDocumentReader reader;
     reader.Start(readBuffer);
-    
+
     Create(shaderFileRef, pipelineStates, allocator, reader, tempUri, error);
     if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
@@ -55,7 +55,7 @@ void D3D12PipelineStateDescriptor::Create
 void D3D12PipelineStateDescriptor::Create
     (
     AssetReference& shaderFileRef,
-    AllocatedVector<D3D12PipelineStateDescriptor>& pipelineStates,
+    DynamicVector<D3D12PipelineStateDescriptor>& pipelineStates,
     Allocator* allocator,
     ConfigDocumentReader& reader,
     SimpleUri& tempUri,
@@ -63,18 +63,18 @@ void D3D12PipelineStateDescriptor::Create
     )
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     static Utf8String configSectionName("pipeline-states");
-    
+
     if (reader.Current() == nullptr)
     {
         FINJIN_SET_ERROR(error, "The specified reader ended unexpectedly.");
         return;
     }
-    
+
     auto startLine = *reader.Current();
-    
-    auto searchDone = false;    
+
+    auto searchDone = false;
     Utf8StringView sectionName;
     for (auto line = reader.Current(); line != nullptr && !searchDone; line = reader.Next())
     {
@@ -91,7 +91,7 @@ void D3D12PipelineStateDescriptor::Create
             }
             case ConfigDocumentLine::Type::SCOPE_START:
             {
-                searchDone = true;                
+                searchDone = true;
                 break;
             }
             default: break;
@@ -101,7 +101,7 @@ void D3D12PipelineStateDescriptor::Create
     if (sectionName == configSectionName)
     {
         sectionName.clear();
-        
+
         size_t pipelineStateCount = 0;
 
         for (auto line = reader.Current(); line != nullptr; line = reader.Next())
@@ -136,7 +136,7 @@ void D3D12PipelineStateDescriptor::Create
                             pipelineStateCount = 0;
                         }
                     }
-                    
+
                     break;
                 }
                 case ConfigDocumentLine::Type::SECTION:
@@ -156,6 +156,8 @@ void D3D12PipelineStateDescriptor::Create
             }
         }
     }
+
+    reader.Restart(startLine);
 }
 
 void D3D12PipelineStateDescriptor::CreateFromScope
@@ -170,10 +172,10 @@ void D3D12PipelineStateDescriptor::CreateFromScope
     )
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     int depth = 0;
     auto descriptionDone = false;
-    
+
     for (auto line = reader.Next(); line != nullptr && !descriptionDone; )
     {
         switch (line->GetType())
@@ -182,7 +184,7 @@ void D3D12PipelineStateDescriptor::CreateFromScope
             {
                 Utf8StringView key, value;
                 line->GetKeyAndValue(key, value);
-                
+
                 if (key == "type")
                 {
                     if (pipelineState.typeName.assign(value.begin(), value.size()).HasError())
@@ -212,7 +214,7 @@ void D3D12PipelineStateDescriptor::CreateFromScope
                     auto component = key.substr(14);
                     if (component == "offset")
                     {
-                        auto splitResult = pipelineState.shaderOffsets[D3D12ShaderType::VERTEX_SHADER].Parse(value);
+                        auto splitResult = pipelineState.shaderOffsets[D3D12ShaderType::VERTEX].Parse(value);
                         if (splitResult.HasError())
                         {
                             FINJIN_SET_ERROR(error, "Failed to split 'vertex-shader-offset' values.");
@@ -221,7 +223,7 @@ void D3D12PipelineStateDescriptor::CreateFromScope
                     }
                     else if (component == "ref")
                     {
-                        pipelineState.shaderRefs[D3D12ShaderType::VERTEX_SHADER].ForUriString(value, tempUri, error);
+                        pipelineState.shaderRefs[D3D12ShaderType::VERTEX].ForUriString(value, tempUri, error);
                         if (error)
                         {
                             FINJIN_SET_ERROR(error, "Failed to assign vertex shader reference.");
@@ -234,16 +236,16 @@ void D3D12PipelineStateDescriptor::CreateFromScope
                     auto component = key.substr(13);
                     if (component == "offset")
                     {
-                        auto splitResult = pipelineState.shaderOffsets[D3D12ShaderType::PIXEL_SHADER].Parse(value);
+                        auto splitResult = pipelineState.shaderOffsets[D3D12ShaderType::PIXEL].Parse(value);
                         if (splitResult.HasError())
                         {
                             FINJIN_SET_ERROR(error, "Failed to split 'pixel-shader-offset' values.");
                             return;
                         }
                     }
-                    else if (key == "ref")
+                    else if (component == "ref")
                     {
-                        pipelineState.shaderRefs[D3D12ShaderType::PIXEL_SHADER].ForUriString(value, tempUri, error);
+                        pipelineState.shaderRefs[D3D12ShaderType::PIXEL].ForUriString(value, tempUri, error);
                         if (error)
                         {
                             FINJIN_SET_ERROR(error, "Failed to assign pixel shader reference.");
@@ -254,7 +256,7 @@ void D3D12PipelineStateDescriptor::CreateFromScope
                 else if (key == "primitive-topology")
                 {
                     if (value == "tr" || value == "triangle")
-                        pipelineState.graphicsState.primitiveTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE; 
+                        pipelineState.graphicsState.primitiveTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
                     else if (value == "li" || value == "line")
                         pipelineState.graphicsState.primitiveTopology = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
                     else if (value == "po" || value == "point")
@@ -269,47 +271,23 @@ void D3D12PipelineStateDescriptor::CreateFromScope
                 }
                 else if (key == "feature-flags")
                 {
-                    auto splitResult = Split(value, ' ', [&pipelineState](Utf8StringView& feature)
-                    {
-                        if (!pipelineState.graphicsState.shaderFeatures.ParseAndAddFlag(feature))
-                            return ValueOrError<bool>::CreateError();
-
-                        return ValueOrError<bool>(true);
-                    });
-                    if (splitResult.HasError())
+                    pipelineState.graphicsState.shaderFeatures.ParseAndAddFlags(value, error);
+                    if (error)
                     {
                         FINJIN_SET_ERROR(error, "Failed to parse feature flags.");
-                        return;
-                    }
-                    else if (!splitResult.value)
-                    {
-                        FINJIN_SET_ERROR(error, "Failed to parse and add all feature flags.");
                         return;
                     }
                 }
                 else if (key == "lights")
                 {
-                    auto splitResult = Split(value, ' ', [&pipelineState](Utf8StringView& lightType)
-                    {
-                        if (pipelineState.graphicsState.shaderFeatures.lights.full())
-                            return ValueOrError<bool>(false);
-
-                        pipelineState.graphicsState.shaderFeatures.ParseAndAddLightType(lightType);
-
-                        return ValueOrError<bool>(true);
-                    });
-                    if (splitResult.HasError())
+                    pipelineState.graphicsState.shaderFeatures.ParseAndAddLightTypes(value, error);
+                    if (error)
                     {
                         FINJIN_SET_ERROR(error, "Failed to parse light types.");
                         return;
                     }
-                    else if (!splitResult.value)
-                    {
-                        FINJIN_SET_ERROR(error, "Failed to parse and add all light types.");
-                        return;
-                    }
                 }
-                
+
                 break;
             }
             case ConfigDocumentLine::Type::SCOPE_START:
@@ -326,7 +304,7 @@ void D3D12PipelineStateDescriptor::CreateFromScope
             }
             default: break;
         }
-        
+
         if (!descriptionDone)
             line = reader.Next();
     }

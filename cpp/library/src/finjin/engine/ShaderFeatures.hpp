@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
 #include "finjin/engine/ShaderFeatureFlag.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -29,7 +29,10 @@ namespace Finjin { namespace Engine {
     {
         ShaderFeatures();
 
+        void ParseAndAddFlags(const Utf8StringView& features, Error& error);
         bool ParseAndAddFlag(const Utf8StringView& feature);
+
+        void ParseAndAddLightTypes(const Utf8StringView& features, Error& error);
         bool ParseAndAddLightType(const Utf8StringView& feature);
 
         size_t GetHash() const;

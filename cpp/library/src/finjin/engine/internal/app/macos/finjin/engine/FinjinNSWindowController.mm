@@ -11,15 +11,16 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinNSWindowController.h"
 #import "FinjinNSViewController.h"
 
+
+//Implementation----------------------------------------------------------------
 @class FinjinNSViewController;
 @class FinjinNSView;
 
-
-//Implementation---------------------------------------------------------------
 @interface FinjinNSWindowController ()
 @end
 
@@ -49,20 +50,20 @@
     auto contentRect = [NSWindow contentRectForFrameRect:frameRect styleMask:windowStyle];
     contentRect.origin.x = 0;
     contentRect.origin.y = 0;
-    
+
     auto windowController = [[FinjinNSWindowController alloc] init];
     windowController.window = [[NSWindow alloc] initWithContentRect:contentRect styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES screen:screen];
     windowController.window.title = title;
     windowController.window.acceptsMouseMovedEvents = YES;
     [windowController.window setFrame:frameRect display:NO];
-    
+
     auto viewController = [[FinjinNSViewController alloc] init];
     viewController.preferredContentSize = contentRect.size;
-    
+
     [windowController.window setContentViewController:viewController];
-    
+
     [windowController disableZoom];
-    
+
     return windowController;
 }
 

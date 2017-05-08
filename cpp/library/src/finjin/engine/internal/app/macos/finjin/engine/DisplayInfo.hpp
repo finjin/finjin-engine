@@ -14,20 +14,20 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class DisplayInfo
     {
-    public:    
+    public:
         DisplayInfo();
 
     public:
@@ -45,6 +45,6 @@ namespace Finjin { namespace Engine {
         void Enumerate();
 
         void SortLeftToRight();
-    };    
+    };
 
 } }

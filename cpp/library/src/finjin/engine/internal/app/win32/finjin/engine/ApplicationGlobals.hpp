@@ -14,22 +14,22 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class ApplicationGlobals
     {
-    public:    
+    public:
         ApplicationGlobals();
 
-    public:        
+    public:
         bool hasConsole;
-    };    
+    };
 
 } }

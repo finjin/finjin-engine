@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/AllocatedQueue.hpp"
 #include "finjin/common/BinaryDataChunkReader.hpp"
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/ConfigDataChunkReader.hpp"
-#include "finjin/common/EnumValues.hpp"
+#include "finjin/common/DynamicQueue.hpp"
+#include "finjin/common/EnumArray.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/JsonDataChunkReader.hpp"
 #include "finjin/common/Path.hpp"
@@ -34,7 +34,7 @@
 #include "finjin/engine/AssetReference.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class AssetReadRequest
@@ -99,7 +99,7 @@ namespace Finjin { namespace Engine {
     public:
         AssetReference assetRef;
         AssetClassFileReader* assetClassFileReader;
-        
+
         FullPostReadCallback fullPostReadCallback;
         StreamingReadCallback streamingReadCallback;
         StreamingFileFormat streamingFileFormat;
@@ -134,12 +134,12 @@ namespace Finjin { namespace Engine {
 
         bool CanAddRequest() const;
         void AddRequest(AssetReadHandle& assetReadHandle, const AssetReadRequest& assetReadRequest, Error& error);
-        
+
         float GetProgress(const AssetReadHandle& assetReadHandle) const;
         bool IsQueuedAndFinished(const AssetReadHandle& assetReadHandle) const;
 
         bool ClearAsset(const AssetReadHandle& assetReadHandle);
-        
+
         void Cancel(const AssetReadHandle& assetReadHandle);
 
         bool HasPendingOperations() const;
@@ -163,7 +163,7 @@ namespace Finjin { namespace Engine {
             bool isFinished;
             bool cancel;
             VirtualFileOperationHandle fileOperationHandle;
-            AssetReadHandle assetReadHandle;            
+            AssetReadHandle assetReadHandle;
         };
 
         void ContinueStreaming(InternalAssetReadRequest& request, size_t maxReadByteCountHint, Error& error);
@@ -172,14 +172,14 @@ namespace Finjin { namespace Engine {
         Settings settings;
 
         VirtualFileOperationRequest workingFileOperationRequest;
-        AllocatedQueue<InternalAssetReadRequest> internalAssetReadRequestQueue;
-        
+        DynamicQueue<InternalAssetReadRequest> internalAssetReadRequestQueue;
+
         size_t sequenceID;
 
         ByteBuffer assetBuffer;
 
         VirtualFileHandleDataChunkReaderInput dataChunkReaderFileInput;
-        EnumValues<StreamingFileFormat, StreamingFileFormat::COUNT, DataChunkReader*> dataChunkReaders;
+        EnumArray<StreamingFileFormat, StreamingFileFormat::COUNT, DataChunkReader*> dataChunkReaders;
         BinaryDataChunkReader fsbdBinaryDataChunkReader;
         TextDataChunkReader fstdTextDataChunkReader;
         ConfigDataChunkReader configDataChunkReader;

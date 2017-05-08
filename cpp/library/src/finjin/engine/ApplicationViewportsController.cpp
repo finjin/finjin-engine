@@ -14,16 +14,16 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "ApplicationViewportsController.hpp"
-#include "finjin/engine/OSWindow.hpp"
 #include "finjin/engine/DisplayInfo.hpp"
+#include "finjin/engine/OSWindow.hpp"
 #include "PlatformCapabilities.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 ApplicationViewportsController::ApplicationViewportsController()
-{    
+{
 }
 
 bool ApplicationViewportsController::IsOnOwnDisplay(ApplicationViewport* testAppWindow) const
@@ -45,8 +45,8 @@ bool ApplicationViewportsController::MoveNonFullscreenViewportsToOwnDisplay() co
     DisplayInfos displays;
     PlatformCapabilities::GetInstance().GetDisplays(displays);
     if (this->appViewports.size() > displays.size())
-        return false;    
-    
+        return false;
+
     //Put the windows onto each display left to right
     displays.SortLeftToRight();
     size_t windowIndex = 0;
@@ -66,7 +66,7 @@ bool ApplicationViewportsController::MoveNonFullscreenViewportsToOwnDisplay() co
 
             appViewport->GetOSWindow()->Raise();
         }
-    }    
+    }
 
     return true;
 }
@@ -115,7 +115,7 @@ bool ApplicationViewportsController::RequestFullScreenToggle()
     {
         for (auto& appViewport : this->appViewports)
             appViewport->RequestFullScreenToggle();
-    
+
         return true;
     }
     else
@@ -123,7 +123,7 @@ bool ApplicationViewportsController::RequestFullScreenToggle()
 }
 
 ApplicationViewportsClosing ApplicationViewportsController::GetAllViewports()
-{    
+{
     ApplicationViewportsClosing all;
 
     for (size_t i = 0; i < this->appViewports.size(); i++)
@@ -183,16 +183,16 @@ bool ApplicationViewportsController::FindAndDeleteAndRemove(ApplicationViewport*
 ApplicationViewportsFocusState ApplicationViewportsController::StartFocusUpdate()
 {
     ApplicationViewportsFocusState state;
-    
+
     for (auto& appViewport : *this)
     {
         bool hadFocus = appViewport->GetOSWindow()->HasFocus();
-        
+
         state.hadFocus.push_back(hadFocus);
-        
+
         state.anyHadFocus |= hadFocus;
     }
-    
+
     return state;
 }
 
@@ -203,7 +203,7 @@ void ApplicationViewportsController::FinishFocusUpdate(ApplicationViewportsFocus
     {
         auto hasFocus = appViewport->GetOSWindow()->HasFocus();
         state.anyHasFocus |= hasFocus;
-        
+
         auto lostFocus = state.hadFocus[appWindowIndex] && !hasFocus;
         state.anyLostFocus |= lostFocus;
 

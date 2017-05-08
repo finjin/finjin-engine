@@ -18,13 +18,12 @@
 
 #include "OpenVRContextSettings.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------
+//Implementation----------------------------------------------------------------
 OpenVRContextSettings::OpenVRContextSettings(Allocator* allocator) : VRContextCommonSettings(allocator)
-{    
+{
 }
 
 #endif

@@ -14,13 +14,14 @@
 #pragma once
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     enum class ApplicationNameFormat
     {
         DISPLAY, //Example: "My Application"
-        CAMEL_CASE, //Example: "MyApplication"
+        UPPER_CAMEL_CASE, //Example: "MyApplication"
+        LOWER_CASE, //Example: 'my-application'
         DOTTED_WITH_ORGANIZATION_PREFIX, //Example: "org.myorganization.myapplication"
 
         COUNT

@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include <wtypes.h>
 #include <wrl.h>
 #include <dxgi1_4.h>
@@ -22,18 +22,7 @@
 #include "d3dx12.h"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-
-    enum class D3D12ShaderType
-    {
-        VERTEX_SHADER,
-        PIXEL_SHADER,
-        DOMAIN_SHADER,
-        GEOMETRY_SHADER,
-        HULL_SHADER,
-
-        COUNT
-    };
 
 } }

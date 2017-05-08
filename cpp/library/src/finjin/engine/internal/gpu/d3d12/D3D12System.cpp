@@ -23,7 +23,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 const Utf8String& D3D12System::GetSystemInternalName()
 {
     static const Utf8String value("d3d12");
@@ -31,11 +31,11 @@ const Utf8String& D3D12System::GetSystemInternalName()
 }
 
 D3D12System::D3D12System()
-{    
+{
 }
 
 D3D12System::~D3D12System()
-{    
+{
 }
 
 void D3D12System::Create(const Settings& settings, Error& error)
@@ -74,7 +74,7 @@ void D3D12System::Create(const Settings& settings, Error& error)
     impl->EnumerateHardwareGpus();
     auto disallowSoftwareGpu = impl->settings.softwareGpuRequirement == D3D12SystemSettings::SoftwareGpuRequirement::DISALLOW;
     if (disallowSoftwareGpu && impl->hardwareGpuDescriptions.empty())
-    {        
+    {
         FINJIN_SET_ERROR(error, "Failed to enumerate hardware adapters.");
         return;
     }
@@ -125,9 +125,9 @@ const D3D12SoftwareGpuDescriptions& D3D12System::GetSoftwareGpuDescriptions() co
 D3D12GpuContext* D3D12System::CreateContext(const D3D12GpuContext::Settings& settings, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL_RETURN(impl, error, nullptr);
-    
+
     if (impl->contexts.full())
     {
         FINJIN_SET_ERROR(error, "The maximum number of GPU device contexts have already been created.");
@@ -162,7 +162,7 @@ void D3D12System::DestroyContext(D3D12GpuContext* context)
             impl->contexts.erase(it);
 
         context->Destroy();
-    }    
+    }
 }
 
 D3D12SystemImpl* D3D12System::GetImpl()

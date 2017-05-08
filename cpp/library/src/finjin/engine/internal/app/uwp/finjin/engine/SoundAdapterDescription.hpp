@@ -14,10 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "SoundAdapterID.hpp"
-
 #include "finjin/engine/internal/sound/xaudio2/XAudio2AdapterDescription.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using SoundAdapterDescriptions = XAudio2AdapterDescriptions;
 } }

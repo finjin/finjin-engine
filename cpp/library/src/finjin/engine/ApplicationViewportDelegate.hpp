@@ -14,9 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Chrono.hpp"
+#include "finjin/engine/AssetClass.hpp"
+#include "finjin/engine/AssetReadQueue.hpp"
+#include "finjin/engine/FinjinSceneReader.hpp"
 #include "finjin/engine/GpuContext.hpp"
 #include "finjin/engine/InputContext.hpp"
 #include "finjin/engine/JobPipelineStage.hpp"
@@ -24,18 +27,15 @@
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     #include "finjin/engine/VRContext.hpp"
 #endif
-#include "finjin/engine/AssetClass.hpp"
-#include "finjin/engine/AssetReadQueue.hpp"
-#include "finjin/engine/FinjinSceneReader.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class ApplicationViewport;
-    
+
     class ApplicationViewportUpdateContext : public AllocatedClass
     {
     public:
@@ -52,11 +52,12 @@ namespace Finjin { namespace Engine {
         void ClearCommands();
 
         void ClearEvents();
-        
-        void Poll();
-        
+
+        void StartPoll();
+        void FinishPoll();
+
         void Execute(GpuContext::JobPipelineStage& frameStage, Error& error);
-        
+
     public:
     #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
         VRContext* vrContext;
@@ -64,14 +65,14 @@ namespace Finjin { namespace Engine {
         InputContext* inputContext;
         SoundContext* soundContext;
         GpuContext* gpuContext;
-    
-        SimpleTimeDelta elapsedTime;        
+
+        SimpleTimeDelta elapsedTime;
         int fixedSteps;
         SimpleTimeDelta fixedStepTime;
         JobPipelineStage* jobPipelineStage;
         JobSystem* jobSystem;
         AssetReadQueue* assetReadQueue;
-        EnumValues<AssetClass, AssetClass::COUNT, AssetClassFileReader>* assetClassFileReaders;
+        EnumArray<AssetClass, AssetClass::COUNT, AssetClassFileReader>* assetClassFileReaders;
         StandardPaths* standardPaths;
         UserInformation* userInfo;
         DomainInformation* domainInfo;
@@ -81,18 +82,18 @@ namespace Finjin { namespace Engine {
         NewAssetsResult<FinjinMesh> newMeshes;
         NewAssetsResult<FinjinTexture> newTextures;
         NewAssetsResult<FinjinMaterial> newMaterials;
-        
+
     #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
         VREvents vrEvents;
         VRCommands vrCommands;
     #endif
-        
+
         InputEvents inputEvents;
         InputCommands inputCommands;
-        
+
         SoundEvents soundEvents;
         SoundCommands soundCommands;
-        
+
         GpuEvents gpuEvents;
         GpuCommands gpuCommands;
     };
@@ -113,9 +114,10 @@ namespace Finjin { namespace Engine {
         InputContext* inputContext;
         SoundContext* soundContext;
         GpuContext* gpuContext;
-        
+
         JobPipelineStage* jobPipelineStage;
         bool continueRendering;
+        bool modifyingRenderTarget;
         size_t presentSyncIntervalOverride;
     };
 

@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/Distance.hpp"
 #include "finjin/engine/AssetClassFileReader.hpp"
@@ -25,9 +25,9 @@
 #include <boost/thread/null_mutex.hpp>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     class OSWindow;
 
     using namespace Finjin::Common;
@@ -39,18 +39,18 @@ namespace Finjin { namespace Engine {
             NOTIFY,
 
             CREATED_STATIC_BUFFER,
-            
+
             CREATED_SOURCE
         };
-        
+
         SoundEvent()
         {
             this->type = Type::NOTIFY;
             this->count = 0;
         }
-        
+
         Type type;
-        
+
         union
         {
             size_t count;
@@ -60,11 +60,11 @@ namespace Finjin { namespace Engine {
 
         ContextEventInfo eventInfo;
     };
-    
-    class SoundEvents : public AllocatedVector<SoundEvent>
+
+    class SoundEvents : public DynamicVector<SoundEvent>
     {
     public:
-        using Super = AllocatedVector<SoundEvent>;
+        using Super = DynamicVector<SoundEvent>;
 
         using iterator = Super::iterator;
         using const_iterator = Super::const_iterator;
@@ -81,13 +81,13 @@ namespace Finjin { namespace Engine {
         enum class Type
         {
             NOTIFY,
-            
+
             CREATE_STATIC_BUFFER,
             DESTROY_STATIC_BUFFER,
-            
+
             CREATE_SOURCE,
             DESTROY_SOURCE,
-            
+
             PLAY_SOURCE,
             PAUSE_SOURCE,
             STOP_SOURCE
@@ -119,7 +119,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = PerFrameObjectAllocator<SoundCommand, boost::null_mutex>;
-        
+
         using iterator = Super::iterator;
         using const_iterator = Super::const_iterator;
 
@@ -140,7 +140,7 @@ namespace Finjin { namespace Engine {
             command->staticSound = staticSound;
 
             this->commands.push_back(command);
-            
+
             return true;
         }
 
@@ -155,7 +155,7 @@ namespace Finjin { namespace Engine {
             command->soundBuffer = soundBuffer;
 
             this->commands.push_back(command);
-            
+
             return true;
         }
 
@@ -170,7 +170,7 @@ namespace Finjin { namespace Engine {
             command->soundSource = soundSource;
 
             this->commands.push_back(command);
-            
+
             return true;
         }
 
@@ -185,7 +185,7 @@ namespace Finjin { namespace Engine {
             command->soundSource = soundSource;
 
             this->commands.push_back(command);
-            
+
             return true;
         }
 
@@ -200,7 +200,7 @@ namespace Finjin { namespace Engine {
             command->soundSource = soundSource;
 
             this->commands.push_back(command);
-            
+
             return true;
         }
     };
@@ -211,7 +211,7 @@ namespace Finjin { namespace Engine {
         LINEAR_DISTANCE_CLAMPED,
         EXPONENT_DISTANCE_CLAMPED
     };
-    
+
     enum class SoundSpeakerSetup
     {
         DEFAULT,
@@ -223,24 +223,9 @@ namespace Finjin { namespace Engine {
         SURROUND_5_1,
         SURROUND_7_1
     };
-    
-    inline int GetSoundSpeakerSetupChannelCount(SoundSpeakerSetup s)
-    {
-        switch (s)
-        {
-            case SoundSpeakerSetup::MONO: return 1;
-            case SoundSpeakerSetup::STEREO: return 2;
-            case SoundSpeakerSetup::STEREO_PLUS: return 3;
-            case SoundSpeakerSetup::SURROUND_4: return 4;
-            case SoundSpeakerSetup::SURROUND_4_1: return 5;
-            case SoundSpeakerSetup::SURROUND_5_1: return 6;
-            case SoundSpeakerSetup::SURROUND_7_1: return 8;
-            default: return 0;
-        }
-    }
-    
+
     struct SoundContextCommonSettings
-    {    
+    {
         SoundContextCommonSettings(Allocator* allocator);
 
         void SetDefaultSoundSourcePools();
@@ -265,7 +250,7 @@ namespace Finjin { namespace Engine {
         size_t maxCommandsPerUpdate; //Maximum number of high level commands
 
         Utf8String deviceID;
-        
+
         int playbackSampleRate;
         SoundSpeakerSetup speakerSetup;
         Sound3DQuality sound3DQuality;
@@ -273,8 +258,29 @@ namespace Finjin { namespace Engine {
 
         StaticVector<SoundFormat, 16> soundFormats;
         StaticVector<ResourcePoolDescription, 16> soundSourcePools;
-                
+
         size_t maxSoundBufferCount;
     };
+
+} }
+
+
+//Functions---------------------------------------------------------------------
+namespace Finjin { namespace Engine {
+
+    inline int GetSoundSpeakerSetupChannelCount(SoundSpeakerSetup s)
+    {
+        switch (s)
+        {
+            case SoundSpeakerSetup::MONO: return 1;
+            case SoundSpeakerSetup::STEREO: return 2;
+            case SoundSpeakerSetup::STEREO_PLUS: return 3;
+            case SoundSpeakerSetup::SURROUND_4: return 4;
+            case SoundSpeakerSetup::SURROUND_4_1: return 5;
+            case SoundSpeakerSetup::SURROUND_5_1: return 6;
+            case SoundSpeakerSetup::SURROUND_7_1: return 8;
+            default: return 0;
+        }
+    }
 
 } }

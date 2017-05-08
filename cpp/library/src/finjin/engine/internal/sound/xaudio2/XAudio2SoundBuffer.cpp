@@ -14,15 +14,15 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "XAudio2SoundBuffer.hpp"
-#include "XAudio2SoundSource.hpp"
+#include "finjin/common/IntrusiveList.hpp"
 #include "XAudio2Context.hpp"
 #include "XAudio2ContextImpl.hpp"
-#include "finjin/common/IntrusiveList.hpp"
+#include "XAudio2SoundSource.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 XAudio2SoundBuffer::XAudio2SoundBuffer()
 {
     this->context = nullptr;

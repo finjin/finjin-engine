@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Settings.hpp"
@@ -25,23 +25,23 @@
 #include "finjin/engine/XcbConnection.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class OSWindow : public AllocatedClass, public XcbWindow
     {
-    public: 
+    public:
         OSWindow(Allocator* allocator, void* clientData = nullptr);
         ~OSWindow();
-        
+
         void Create
             (
-            const Utf8String& internalName, 
+            const Utf8String& internalName,
             const Utf8String& titleOrSubtitle,
             const Utf8String& displayName,
-            OSWindowRect rect,            
+            OSWindowRect rect,
             const WindowSize& windowSize,
             Error& error
             );
@@ -72,13 +72,13 @@ namespace Finjin { namespace Engine {
         OSWindowRect GetDisplayVisibleRect() const;
 
         OSWindowRect GetRect() const;
-        
+
         OSWindowSize GetClientSize() const;
         void SetClientSize(OSWindowDimension width, OSWindowDimension height);
-        
+
         bool Move(OSWindowCoordinate x, OSWindowCoordinate y);
         bool Move(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension clientWidth, OSWindowDimension clientHeight);
-        
+
         bool HasWindowHandle() const;
         void ClearSystemWindowHandle();
 
@@ -96,42 +96,42 @@ namespace Finjin { namespace Engine {
         void LimitBounds(WindowBounds& bounds) const;
 
         void Tick() {}
-        
+
         //Linux-specific methods------------------------------
         xcb_window_t GetWindowHandle() const;
         xcb_connection_t* GetConnection();
-        
+
         void Maximize(bool maximize = true);
-        
+
         void ShowTheCursor();
         void HideTheCursor();
 
         bool HandleEvent(const xcb_generic_event_t* ev) override;
-        
+
     private:
         bool IsMaximized() const;
 
         void LockSize(OSWindowSize size);
         void UnlockSize(OSWindowSize minSize = OSWindowSize(800, 600));
-        
+
         void SetBorderedStyle();
-        
+
         void SetBorderlessStyle();
         void SetFullScreenBorderlessStyle();
-        
+
         void GetDisplayInfo(DisplayInfo& displayInfo) const;
-        
+
         bool HasWmProperties(const xcb_atom_t* searchProperties, size_t searchPropertyCount) const;
         void ChangeNetWmState(bool set, xcb_atom_t one, xcb_atom_t two = 0);
-        
-        bool GetExtents();        
+
+        bool GetExtents();
         void CreateBlankCursor(Error& error);
-        
+
         void HandleGrab();
         void HandleUngrab();
-        
+
         bool IsAcceptedDndFormat() const;
-        
+
         std::shared_ptr<XcbConnection> connection;
         xcb_screen_t* screen;
         xcb_window_t window;
@@ -152,11 +152,11 @@ namespace Finjin { namespace Engine {
         void* clientData;
         Utf8String internalName;
         WindowSize windowSize;
-        
+
         OSWindowRect lastWindowRect;
         OSWindowRect liveResizeGrabRect;
         bool isLiveResize;
-        
+
         struct DndData
         {
             DndData()
@@ -165,7 +165,7 @@ namespace Finjin { namespace Engine {
                 this->targetTime = XCB_CURRENT_TIME;
                 this->expecting = false;
             }
-            
+
             xcb_window_t dragSource;
             uint32_t targetTime;
             bool expecting;
@@ -173,5 +173,5 @@ namespace Finjin { namespace Engine {
         };
         DndData dndData;
     };
-    
+
 } }

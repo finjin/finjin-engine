@@ -14,18 +14,18 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
-#include "finjin/common/Error.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Error.hpp"
 #include "finjin/engine/InputComponents.hpp"
 #include <openvr.h>
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     struct OpenVRDeviceImpl
     {
         OpenVRDeviceImpl();
@@ -46,7 +46,7 @@ namespace Finjin { namespace Engine {
         InputDeviceSemantic semantic;
 
         Utf8String displayName;
-                
+
         Utf8String productDescriptor;
         Utf8String instanceDescriptor;
 
@@ -80,5 +80,5 @@ namespace Finjin { namespace Engine {
         //vr::k_unControllerStateAxisCount * 2 axes (each VR axis has 2 components)
         InputDeviceState<InputButton, InputAxis, InputPov, vr::k_EButton_Max, vr::k_unControllerStateAxisCount * 2> gameControllerState; //The 'isConnected' and 'connectionChanged' members are used for all devices, not just controllers
     };
-    
+
 } }

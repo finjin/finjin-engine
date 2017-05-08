@@ -21,17 +21,18 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //D3D12Mesh::Submesh
 D3D12Mesh::Submesh::Submesh(D3D12Mesh* owner)
 {
     this->mesh = owner;
     this->vertexBufferIndex = 0;
-    this->indexCount = 0;
     this->startIndexLocation = 0;
+    this->indexCount = 0;
     this->baseVertexLocation = 0;
-    this->primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;    
+    this->vertexCount = 0;
+    this->primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 }
 
 D3D12_VERTEX_BUFFER_VIEW D3D12Mesh::Submesh::GetVertexBufferView() const
@@ -40,8 +41,8 @@ D3D12_VERTEX_BUFFER_VIEW D3D12Mesh::Submesh::GetVertexBufferView() const
     {
         D3D12_VERTEX_BUFFER_VIEW vbv;
         vbv.BufferLocation = this->vertexBuffer.gpu->GetGPUVirtualAddress();
-        vbv.StrideInBytes = this->vertexBuffer.elementStride;
-        vbv.SizeInBytes = this->vertexBuffer.byteSize;
+        vbv.StrideInBytes = static_cast<UINT>(this->vertexBuffer.elementStride);
+        vbv.SizeInBytes = static_cast<UINT>(this->vertexBuffer.byteSize);
         return vbv;
     }
     else
@@ -55,7 +56,7 @@ D3D12_INDEX_BUFFER_VIEW D3D12Mesh::Submesh::GetIndexBufferView() const
         D3D12_INDEX_BUFFER_VIEW ibv;
         ibv.BufferLocation = this->indexBuffer.gpu->GetGPUVirtualAddress();
         ibv.Format = this->indexBuffer.elementStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-        ibv.SizeInBytes = this->indexBuffer.byteSize;
+        ibv.SizeInBytes = static_cast<UINT>(this->indexBuffer.byteSize);
         return ibv;
     }
     else
@@ -81,6 +82,22 @@ D3D12Mesh::D3D12Mesh(Allocator* allocator)
     this->waitingToBeResidentNext = nullptr;
 }
 
+void D3D12Mesh::Destroy()
+{
+    for (auto& vb : this->sharedVertexBuffers)
+        vb.Destroy();
+    this->sharedVertexBuffers.Destroy();
+
+    this->sharedIndexBuffer.Destroy();
+
+    for (auto& submesh : this->submeshes)
+    {
+        submesh.vertexBuffer.Destroy();
+        submesh.indexBuffer.Destroy();
+    }
+    this->submeshes.Destroy();
+}
+
 void D3D12Mesh::HandleCreationFailure()
 {
     for (auto& vb : this->sharedVertexBuffers)
@@ -97,7 +114,7 @@ void D3D12Mesh::HandleCreationFailure()
     this->submeshes.Destroy();
 }
 
-void D3D12Mesh::DisposeUploaders()
+void D3D12Mesh::ReleaseUploaders()
 {
     for (auto& vb : this->sharedVertexBuffers)
         vb.uploader = nullptr;
@@ -115,8 +132,8 @@ D3D12_VERTEX_BUFFER_VIEW D3D12Mesh::GetSharedVertexBufferView(UINT vertexBufferI
 {
     D3D12_VERTEX_BUFFER_VIEW vbv;
     vbv.BufferLocation = this->sharedVertexBuffers[vertexBufferIndex].gpu->GetGPUVirtualAddress();
-    vbv.StrideInBytes = this->sharedVertexBuffers[vertexBufferIndex].elementStride;
-    vbv.SizeInBytes = this->sharedVertexBuffers[vertexBufferIndex].byteSize;
+    vbv.StrideInBytes = static_cast<UINT>(this->sharedVertexBuffers[vertexBufferIndex].elementStride);
+    vbv.SizeInBytes = static_cast<UINT>(this->sharedVertexBuffers[vertexBufferIndex].byteSize);
     return vbv;
 }
 
@@ -125,22 +142,24 @@ D3D12_INDEX_BUFFER_VIEW D3D12Mesh::GetSharedIndexBufferView() const
     D3D12_INDEX_BUFFER_VIEW ibv;
     ibv.BufferLocation = this->sharedIndexBuffer.gpu->GetGPUVirtualAddress();
     ibv.Format = this->sharedIndexBuffer.elementStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-    ibv.SizeInBytes = this->sharedIndexBuffer.byteSize;
+    ibv.SizeInBytes = static_cast<UINT>(this->sharedIndexBuffer.byteSize);
     return ibv;
 }
 
-bool D3D12Mesh::IsResidentOnGpu() const 
-{ 
-    return this->isResidentCountdown == 0; 
+bool D3D12Mesh::IsResidentOnGpu() const
+{
+    return this->isResidentCountdown == 0;
 }
 
 void D3D12Mesh::UpdateResidentOnGpuStatus()
-{ 
-    if (this->isResidentCountdown > 0) 
-        this->isResidentCountdown--; 
+{
+    if (this->isResidentCountdown > 0)
+    {
+        this->isResidentCountdown--;
 
-    if (IsResidentOnGpu())
-        DisposeUploaders();
+        if (IsResidentOnGpu())
+            ReleaseUploaders();
+    }
 }
 
 #endif

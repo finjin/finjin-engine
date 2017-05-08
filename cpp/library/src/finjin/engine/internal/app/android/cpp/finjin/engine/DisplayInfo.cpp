@@ -20,11 +20,11 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 //DisplayInfo
 DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0), clientFrame(0, 0, 0, 0)
 {
-    this->index = 0;    
+    this->index = 0;
     this->isPrimary = false;
     this->density = 1;
     this->hasSmallScreen = false;

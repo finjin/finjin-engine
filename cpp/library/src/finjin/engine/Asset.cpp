@@ -15,8 +15,7 @@
 #include "FinjinPrecompiled.hpp"
 #include "Asset.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------

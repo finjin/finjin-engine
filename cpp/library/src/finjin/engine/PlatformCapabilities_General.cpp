@@ -18,11 +18,11 @@
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
+//Static initialization---------------------------------------------------------
 PlatformCapabilities* PlatformCapabilities::instance;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 PlatformCapabilities::PlatformCapabilities()
 {
     if (instance == nullptr)
@@ -30,7 +30,7 @@ PlatformCapabilities::PlatformCapabilities()
 
     this->maxWindows = std::numeric_limits<size_t>::max();
 
-    this->directoryApplicationNameFormat = ApplicationNameFormat::CAMEL_CASE;
+    this->directoryApplicationNameFormat = ApplicationNameFormat::UPPER_CAMEL_CASE;
 
     this->hasDelayedWindowSizeChangeNotification = false;
     this->canCloseWindowsInternally = true;
@@ -69,7 +69,7 @@ void PlatformCapabilities::SetLanguageAndCountry(const char* lang, const char* c
 {
     this->lang = lang;
     this->lang.ToLowerAscii();
-    
+
     this->country = country;
     this->country.ToLowerAscii();
 }
@@ -89,10 +89,10 @@ void PlatformCapabilities::SetLanguageAndCountry(const char* culture)
         size_t cultureLength = strlen(culture);
         if (cultureLength > 2 && (culture[2] == '-' || culture[2] == '_'))
         {
-            this->lang.assign(culture, 2);            
-            
+            this->lang.assign(culture, 2);
+
             //Figure out country
-            //Shorten the country a little if there is a '.' (usually indicating some type of character encoding)            
+            //Shorten the country a little if there is a '.' (usually indicating some type of character encoding)
             Utf8String country = &culture[3];
             auto dotIndex = country.find('.');
             if (dotIndex != Utf8String::npos)
@@ -107,7 +107,7 @@ void PlatformCapabilities::SetLanguageAndCountry(const char* culture)
 
 PlatformCapabilities::ClipboardName PlatformCapabilities::GetClipboardName()
 {
-#if FINJIN_TARGET_OS_IS_APPLE
+#if FINJIN_TARGET_PLATFORM_IS_APPLE
     return ClipboardName::PASTEBOARD;
 #else
     return ClipboardName::CLIPBOARD;

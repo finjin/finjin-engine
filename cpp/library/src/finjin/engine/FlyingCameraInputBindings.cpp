@@ -19,13 +19,15 @@
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
-const Utf8String FlyingCameraInputBindings::DEFAULT_BINDINGS_FILE_NAME = "flying-camera.cfg";
-
-
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 FlyingCameraInputBindings::FlyingCameraInputBindings()
-{   
+{
+}
+
+const Utf8String& FlyingCameraInputBindings::GetDefaultBindingsFileName()
+{
+    static const Utf8String name("flying-camera.cfg");
+    return name;
 }
 
 void FlyingCameraInputBindings::ProcessInputAction
@@ -39,7 +41,7 @@ void FlyingCameraInputBindings::ProcessInputAction
     )
 {
     //std::cout << Utf8StringFormatter::Format("Action id: %1%, amount %2%", inputActionID, amount.scalar) << std::endl;
-    
+
     outputEvents.usedKeyboard |= InputDeviceComponentUtilities::IsKeyboard(deviceComponent);
     outputEvents.usedMouse |= InputDeviceComponentUtilities::IsMouse(deviceComponent);
     outputEvents.usedGameController |= InputDeviceComponentUtilities::IsGameController(deviceComponent);
@@ -119,7 +121,7 @@ void FlyingCameraInputBindings::ProcessInputAction
                 outputEvents.Add(FlyingCameraEvents::MOUSE_RIGHT_BUTTON_UP);
             break;
         }
-        
+
         case MOVE_FORWARD:
         {
             outputEvents.Add(FlyingCameraEvents::MOVE);
@@ -148,7 +150,7 @@ void FlyingCameraInputBindings::ProcessInputAction
                 outputEvents.move[0] += amount.scalar;
             break;
         }
-        
+
         case PAN_ORBIT_UP:
         {
             outputEvents.Add(FlyingCameraEvents::PAN_ORBIT);
@@ -177,7 +179,7 @@ void FlyingCameraInputBindings::ProcessInputAction
                 outputEvents.panOrbit[0] += amount.scalar;
             break;
         }
-        
+
         case LOOK_UP:
         {
             outputEvents.Add(FlyingCameraEvents::LOOK);
@@ -206,7 +208,7 @@ void FlyingCameraInputBindings::ProcessInputAction
                 outputEvents.look[0] += amount.scalar;
             break;
         }
-        
+
         case SELECT_OBJECT:
         {
             outputEvents.Add(FlyingCameraEvents::SELECT_OBJECT);
@@ -217,45 +219,45 @@ void FlyingCameraInputBindings::ProcessInputAction
             outputEvents.Add(FlyingCameraEvents::DESELECT_OBJECT);
             break;
         }
-        
+
         case SET_DOLLY_MODE:
         {
-            outputEvents.Add(FlyingCameraEvents::SET_DOLLY_MODE); 
+            outputEvents.Add(FlyingCameraEvents::SET_DOLLY_MODE);
             break;
         }
-        
+
         case SET_PAN_OR_ORBIT_MODE:
         {
-            outputEvents.Add(FlyingCameraEvents::SET_PAN_OR_ORBIT_MODE); 
+            outputEvents.Add(FlyingCameraEvents::SET_PAN_OR_ORBIT_MODE);
             break;
         }
-        
+
         case SET_FREE_LOOK_MODE:
         {
-            outputEvents.Add(FlyingCameraEvents::SET_FREE_LOOK_MODE); 
+            outputEvents.Add(FlyingCameraEvents::SET_FREE_LOOK_MODE);
             break;
         }
-        
+
         case ZOOM_TO_FIT:
         {
-            outputEvents.Add(FlyingCameraEvents::ZOOM_TO_FIT); 
+            outputEvents.Add(FlyingCameraEvents::ZOOM_TO_FIT);
             break;
         }
 
-        case SCREENSHOT: 
+        case SCREENSHOT:
         {
-            outputEvents.Add(FlyingCameraEvents::SCREENSHOT); 
+            outputEvents.Add(FlyingCameraEvents::SCREENSHOT);
             break;
         }
 
-        case ESCAPE: 
+        case ESCAPE:
         {
-            outputEvents.Add(FlyingCameraEvents::ESCAPE); 
+            outputEvents.Add(FlyingCameraEvents::ESCAPE);
             break;
         }
-        case MENU: 
+        case MENU:
         {
-            outputEvents.Add(FlyingCameraEvents::MENU); 
+            outputEvents.Add(FlyingCameraEvents::MENU);
             break;
         }
     }
@@ -277,22 +279,22 @@ const FlyingCameraInputBindings::InputActionInfo* FlyingCameraInputBindings::Get
         InputActionInfo("mouse-y", MOUSE_Y, InputActionInfoFlag::PRIVATE),
         InputActionInfo("mouse-left-button", MOUSE_LEFT_BUTTON, InputActionInfoFlag::PRIVATE),
         InputActionInfo("mouse-right-button", MOUSE_RIGHT_BUTTON, InputActionInfoFlag::PRIVATE),
-        
+
         InputActionInfo("move-forward", MOVE_FORWARD),
         InputActionInfo("move-backward", MOVE_BACKWARD),
         InputActionInfo("move-left", MOVE_LEFT),
         InputActionInfo("move-right", MOVE_RIGHT),
-        
+
         InputActionInfo("pan-orbit-up", PAN_ORBIT_UP),
         InputActionInfo("pan-orbit-down", PAN_ORBIT_DOWN),
         InputActionInfo("pan-orbit-left", PAN_ORBIT_LEFT),
         InputActionInfo("pan-orbit-right", PAN_ORBIT_RIGHT),
-        
+
         InputActionInfo("look-up", LOOK_UP),
         InputActionInfo("look-down", LOOK_DOWN),
         InputActionInfo("look-left", LOOK_LEFT),
         InputActionInfo("look-right", LOOK_RIGHT),
-        
+
         InputActionInfo("set-dolly-mode", SET_DOLLY_MODE),
         InputActionInfo("set-pan-or-orbit-mode", SET_PAN_OR_ORBIT_MODE),
         InputActionInfo("set-free-look-mode", SET_FREE_LOOK_MODE),
@@ -303,7 +305,7 @@ const FlyingCameraInputBindings::InputActionInfo* FlyingCameraInputBindings::Get
         InputActionInfo("deselect-object", DESELECT_OBJECT),
 
         InputActionInfo("screenshot", SCREENSHOT),
-        
+
         InputActionInfo("escape", ESCAPE),
         InputActionInfo("menu", MENU),
 

@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/BitArray.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/VirtualFileSystemOperationQueue.hpp"
@@ -22,11 +22,11 @@
 #include "finjin/engine/AssetReference.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     /**
      * Collects root directory names and file systems, providing the mechanism for loading asset files.
      * This class will often be used indirectly by way of AssetClassFileReader, which encapsulates asset-specific
@@ -38,7 +38,7 @@ namespace Finjin { namespace Engine {
 
     public:
         AssetFileReader();
-        
+
         bool Create(Allocator* allocator);
 
         VirtualFileSystemOperationQueue* GetFileSystemOperationQueue();
@@ -61,14 +61,14 @@ namespace Finjin { namespace Engine {
                     if (rootName.ToString(this->fileSystemRootDirectoryNames.back()).HasError())
                     {
                         this->fileSystemRootDirectoryNames.pop_back();
-                        
+
                         FINJIN_SET_ERROR(error, "Failed to assign root name to string.");
                         return false;
                     }
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -150,7 +150,7 @@ namespace Finjin { namespace Engine {
                 }
 
                 //Mark the current best as invalid so it won't be considered in the next iteration, forcing the next best directory to be selected
-                auto invalidIndex = bestDirectory - directories.data(); 
+                auto invalidIndex = bestDirectory - directories.data();
                 invalidDirectories.SetBit(invalidIndex);
                 invalidDirectoryCount++;
             }
@@ -215,7 +215,7 @@ namespace Finjin { namespace Engine {
 
             return false;
         }
-        
+
         //Finds the directories with names matching the specified selector
         template <size_t resultSize, typename RelativePath>
         void GetDirectories
@@ -223,7 +223,7 @@ namespace Finjin { namespace Engine {
             StaticVector<AssetPath, resultSize>& directories,
             const AssetPathSelector& assetPathSelector,
             const RelativePath& rootPath, //Will be something like "app" or "engine"
-            AssetClass assetClass, 
+            AssetClass assetClass,
             Error& error
             )
         {
@@ -296,7 +296,7 @@ namespace Finjin { namespace Engine {
                 }
             }
         }
-        
+
     private:
         VirtualFileSystemOperationQueue* fileSystemOperationQueue;
         StaticVector<VirtualFileSystem*, EngineConstants::MAX_FILE_SYSTEMS> fileSystems;
@@ -305,5 +305,5 @@ namespace Finjin { namespace Engine {
         Path workingSearchPath;
         AssetPath workingAssetPath;
     };
-    
+
 } }

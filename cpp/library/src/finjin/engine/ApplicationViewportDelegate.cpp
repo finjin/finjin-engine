@@ -16,11 +16,10 @@
 #include "ApplicationViewportDelegate.hpp"
 #include "ApplicationViewport.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //ApplicationViewportUpdateContext
 ApplicationViewportUpdateContext::ApplicationViewportUpdateContext(Allocator* allocator) : AllocatedClass(allocator)
@@ -32,7 +31,7 @@ ApplicationViewportUpdateContext::ApplicationViewportUpdateContext(Allocator* al
     this->soundContext = nullptr;
     this->gpuContext = nullptr;
 
-    this->elapsedTime = 0;    
+    this->elapsedTime = 0;
     this->fixedSteps = 0;
     this->fixedStepTime = 0;
     this->jobPipelineStage = nullptr;
@@ -55,7 +54,7 @@ void ApplicationViewportUpdateContext::ClearCommands()
     this->newMeshes.clear();
     this->newTextures.clear();
     this->newMaterials.clear();
-    
+
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     this->vrCommands.clear();
 #endif
@@ -74,20 +73,26 @@ void ApplicationViewportUpdateContext::ClearEvents()
     this->gpuEvents.clear();
 }
 
-void ApplicationViewportUpdateContext::Poll()
+void ApplicationViewportUpdateContext::StartPoll()
 {
+    ClearEvents();
+
     if (HasFocus())
     {
     #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
         if (this->vrContext != nullptr)
             this->vrContext->UpdateInputDevices(this->elapsedTime);
     #endif
-        
-        this->inputContext->HandleDeviceChanges();
+
         this->inputContext->Update(this->elapsedTime);
     }
-    
+
     this->soundContext->Update(this->elapsedTime);
+}
+
+void ApplicationViewportUpdateContext::FinishPoll()
+{
+    this->inputContext->HandleDeviceChanges();
 }
 
 void ApplicationViewportUpdateContext::Execute(GpuContext::JobPipelineStage& frameStage, Error& error)
@@ -102,21 +107,21 @@ void ApplicationViewportUpdateContext::Execute(GpuContext::JobPipelineStage& fra
         return;
     }
 #endif
-    
+
     this->inputContext->Execute(this->inputEvents, this->inputCommands, error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to execute input commands.");
         return;
     }
-    
+
     this->soundContext->Execute(this->soundEvents, this->soundCommands, error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to execute sound commands.");
         return;
     }
-    
+
     this->gpuContext->Execute(frameStage, this->gpuEvents, this->gpuCommands, error);
     if (error)
     {
@@ -137,6 +142,7 @@ ApplicationViewportRenderContext::ApplicationViewportRenderContext(Allocator* al
 
     this->jobPipelineStage = nullptr;
     this->continueRendering = true;
+    this->modifyingRenderTarget = false;
     this->presentSyncIntervalOverride = 0;
 }
 

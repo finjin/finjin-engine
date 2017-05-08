@@ -17,11 +17,10 @@
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/Convert.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 SoundContextCommonSettings::SoundContextCommonSettings(Allocator* allocator) : initialAssetFileSelector(allocator), settingsFileNames(allocator)
 {
     this->applicationHandle = nullptr;
@@ -38,7 +37,7 @@ SoundContextCommonSettings::SoundContextCommonSettings(Allocator* allocator) : i
     this->sound3DQuality = Sound3DQuality::MEDIUM;
     this->speedOfSound.SetMeters(340); //340 meters/second
 
-    this->maxSoundBufferCount = 100;    
+    this->maxSoundBufferCount = 100;
 }
 
 void SoundContextCommonSettings::SetDefaultSoundSourcePools()
@@ -80,7 +79,7 @@ size_t SoundContextCommonSettings::GetTotalSoundSourceCount() const
 
     for (size_t i = 0; i < this->soundSourcePools.size(); i++)
         total += this->soundSourcePools[i].count;
-            
+
     return total;
 }
 
@@ -133,10 +132,10 @@ void SoundContextCommonSettings::ParseSettings(const ByteBufferReader& configFil
 
     auto soundFormatCount = reader.GetSectionCount("sound-format");
     auto soundPoolCount = reader.GetSectionCount("sound-pool");
-    
+
     this->soundFormats.resize(soundFormatCount + soundPoolCount); //Add soundPoolCount since the sound pool defintions can contain a format
     this->soundSourcePools.resize(soundPoolCount);
-    
+
     soundFormatCount = 0;
     soundPoolCount = 0;
 
@@ -162,14 +161,14 @@ void SoundContextCommonSettings::ParseSettings(const ByteBufferReader& configFil
             {
                 line->GetKeyAndValue(key, value);
 
-                if (section.empty())                    
+                if (section.empty())
                 {
                     HandleTopLevelSetting(key, value, error);
                     if (error)
                     {
                         FINJIN_SET_ERROR_NO_MESSAGE(error);
                         return;
-                    }                    
+                    }
                 }
                 else if (section == "sound-format")
                 {
@@ -234,7 +233,7 @@ void SoundContextCommonSettings::ParseSettings(const ByteBufferReader& configFil
                     }
 
                     auto& pool = this->soundSourcePools[soundPoolCount];
-                    
+
                     if (key == "type")
                     {
                         auto foundFormat = SoundFormat::FindByTypeName(this->soundFormats, value.ToString());

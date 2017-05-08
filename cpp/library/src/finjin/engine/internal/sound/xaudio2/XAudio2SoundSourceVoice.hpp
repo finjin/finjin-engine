@@ -14,15 +14,15 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "XAudio2Includes.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class XAudio2SoundSourceVoice
-    {     
+    {
     public:
         IXAudio2SourceVoice* xaudioSourceVoice;
 

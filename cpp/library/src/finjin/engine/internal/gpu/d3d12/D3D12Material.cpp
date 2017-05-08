@@ -21,7 +21,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //D3D12Material
 D3D12Material::D3D12Material(Allocator* allocator)

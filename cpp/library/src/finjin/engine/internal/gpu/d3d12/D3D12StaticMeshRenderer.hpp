@@ -14,28 +14,28 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
-#include "finjin/common/AllocatedUnorderedMap.hpp"
-#include "finjin/common/AllocatedUnorderedSet.hpp"
+//Includes----------------------------------------------------------------------
+#include "finjin/common/DynamicUnorderedMap.hpp"
+#include "finjin/common/DynamicUnorderedSet.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Math.hpp"
-#include "finjin/engine/GpuContextCommonSettings.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
+#include "finjin/engine/GpuContextCommonSettings.hpp"
 #include "D3D12Includes.hpp"
 #include "D3D12DescriptorHeap.hpp"
+#include "D3D12PipelineState.hpp"
 #include "D3D12Resources.hpp"
 #include "D3D12RootSignature.hpp"
-#include "D3D12PipelineState.hpp"
 #include "D3D12StaticMeshRendererFrameState.hpp"
 #include "D3D12Utilities.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class D3D12GpuContextImpl;
 
     class D3D12StaticMeshRenderer
@@ -44,21 +44,20 @@ namespace Finjin { namespace Engine {
         struct Settings
         {
             Settings();
-            
+
             Settings& operator = (Settings&& other);
 
             void ParseSettings(const ByteBufferReader& configFileBuffer, const Path& assetFilePath, Error& error);
 
             D3D12GpuContextImpl* contextImpl;
-            
-            size_t maxRenderables;
-            
-            AssetReference pipelineStatesShaderFileReference;
 
-            AllocatedVector<GpuRenderingConstantBufferStruct> constantBufferFormats;
-            AllocatedVector<GpuRenderingStructuredBufferStruct> structuredBufferFormats;
-            AllocatedVector<D3D12RootSignatureDescriptor> rootSignatures;
-            AllocatedVector<D3D12PipelineStateDescriptor> pipelineStates;
+            size_t maxRenderables;
+
+            AssetReference pipelineShaderFileReference;
+
+            DynamicVector<GpuRenderingConstantBufferStruct> constantBufferFormats;
+            DynamicVector<D3D12RootSignatureDescriptor> rootSignatures;
+            DynamicVector<D3D12PipelineStateDescriptor> graphicsPipelineStates;
         };
 
         D3D12StaticMeshRenderer();
@@ -70,33 +69,25 @@ namespace Finjin { namespace Engine {
 
         void RenderEntity(D3D12StaticMeshRendererFrameState& frameState, SceneNodeState& sceneNodeState, FinjinSceneObjectEntity* entity, const RenderShaderFeatureFlags& entityShaderFeatureFlags, const GpuCommandLights& sortedLights, const MathVector4& ambientLight);
         void RenderQueued(D3D12StaticMeshRendererFrameState& frameState, ID3D12GraphicsCommandList* commandList);
-        
+
     public:
         Settings settings;
 
-        AllocatedVector<Microsoft::WRL::ComPtr<ID3D12RootSignature> > rootSignatures;
+        DynamicVector<Microsoft::WRL::ComPtr<ID3D12RootSignature> > rootSignatures;
 
-        D3D12_GRAPHICS_PIPELINE_STATE_DESC basePipelineStateDesc;
-        AllocatedVector<Microsoft::WRL::ComPtr<ID3D12PipelineState> > pipelineStates;
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC baseGraphicsPipelineStateDesc;
+        DynamicVector<Microsoft::WRL::ComPtr<ID3D12PipelineState> > graphicsPipelineStates;
 
-        ByteBuffer pipelineStatesShaderFileBytes;
+        ByteBuffer shaderFileBytes;
 
         struct RootSignatureAndPipelineState
         {
             ID3D12RootSignature* rootSignature;
             ID3D12PipelineState* pipelineState;
-
-            D3D12StaticMeshRendererRootSignatureIndexes rootSignatureIndexes;
         };
-        AllocatedUnorderedMap<size_t, RootSignatureAndPipelineState, MapPairConstructNone<size_t, RootSignatureAndPipelineState>, PassthroughHash> graphicsRootSignatureAndPipelineStates;
+        DynamicUnorderedMap<size_t, RootSignatureAndPipelineState, MapPairConstructNone<size_t, RootSignatureAndPipelineState>, PassthroughHash> graphicsRootSignatureAndPipelineStates;
 
-        const GpuRenderingConstantBufferStruct* passConstantsDescription;
-        const GpuRenderingConstantBufferStruct* objectConstantBufferDescription;
-        const GpuRenderingStructuredBufferStruct* objectStructuredBufferDescription;
-        const GpuRenderingConstantBufferStruct* materialConstantBufferDescription;
-        const GpuRenderingStructuredBufferStruct* materialStructuredBufferDescription;
-        const GpuRenderingConstantBufferStruct* lightConstantBufferDescription;        
-        const GpuRenderingStructuredBufferStruct* lightStructuredBufferDescription;
+        EnumArray<D3D12StaticMeshRendererKnownConstantBuffer, D3D12StaticMeshRendererKnownConstantBuffer::COUNT, const GpuRenderingConstantBufferStruct*> knownConstantBufferDescriptions;
     };
-    
+
 } }

@@ -14,21 +14,21 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/AssetFileReader.hpp"
 #include "finjin/engine/ContextEventInfo.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
 #include <boost/thread/null_mutex.hpp>
 
 
-//Macros-----------------------------------------------------------------------
+//Macros------------------------------------------------------------------------
 #define FINJIN_VR_CONTEXT_DEVICE_CALLBACKS(CONTEXT_TYPE) \
     std::function<void(CONTEXT_TYPE* vrContext, size_t vrDeviceIndex)> addDeviceHandler;\
     std::function<void(CONTEXT_TYPE* vrContext, size_t vrDeviceIndex)> removeDeviceHandler;\
     std::function<void(CONTEXT_TYPE* vrContext, size_t vrDeviceIndex)> deviceRenderModelLoadedHandler;
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -58,10 +58,10 @@ namespace Finjin { namespace Engine {
         ContextEventInfo eventInfo;
     };
 
-    class VREvents : public AllocatedVector<VREvent>
+    class VREvents : public DynamicVector<VREvent>
     {
     public:
-        using Super = AllocatedVector<VREvent>;
+        using Super = DynamicVector<VREvent>;
     };
 
     struct VRCommand
@@ -95,7 +95,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = PerFrameObjectAllocator<VRCommand, boost::null_mutex>;
-        
+
         using iterator = Super::iterator;
         using const_iterator = Super::const_iterator;
 
@@ -140,7 +140,7 @@ namespace Finjin { namespace Engine {
         AssetPathSelector initialAssetSelector;
         AssetReferences<EngineConstants::MAX_CONTEXT_SETTINGS_FILES> settingsFileNames; //Usually "vr-context.cfg"
 
-        bool loadStandardRenderModels; //Indicates whether the standard 3D models should be loaded (if such a thing is supported)        
+        bool loadStandardRenderModels; //Indicates whether the standard 3D models should be loaded (if such a thing is supported)
 
         size_t maxCommandsPerUpdate;
     };

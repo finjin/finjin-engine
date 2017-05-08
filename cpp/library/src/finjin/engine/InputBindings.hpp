@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/BitArray.hpp"
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/Chrono.hpp"
@@ -30,7 +30,7 @@
 #include "finjin/engine/InputSource.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -74,7 +74,7 @@ namespace Finjin { namespace Engine {
             this->deviceClass = deviceClass;
             this->deviceSemantic = semantic;
             this->deviceIndex = index;
-            this->flags = flags;            
+            this->flags = flags;
         }
 
         InputBindingsConfigurationSearchCriteria(InputDeviceClass deviceClass, const Utf8String& productDescriptor, size_t index = (size_t)-1, InputBindingsConfigurationFlag flags = InputBindingsConfigurationFlag::NONE, InputDeviceSemantic semantic = InputDeviceSemantic::NONE)
@@ -94,21 +94,6 @@ namespace Finjin { namespace Engine {
             this->instanceDescriptor = instanceDescriptor;
             this->deviceIndex = (size_t)-1;
             this->flags = flags;
-        }
-
-        bool SearchingByIndex() const
-        {
-            return this->deviceClass != InputDeviceClass::NONE && this->deviceIndex != (size_t)-1;
-        }
-
-        bool SearchingByProductDescriptor() const
-        {
-            return !this->productDescriptor.empty() && (this->deviceIndex != (size_t)-1 || this->deviceSemantic != InputDeviceSemantic::NONE);
-        }
-
-        bool SearchingByInstanceDescriptor() const
-        {
-            return !this->instanceDescriptor.empty() && (this->deviceIndex != (size_t)-1 || this->deviceSemantic != InputDeviceSemantic::NONE);
         }
 
         bool IsMatchingDeviceIndex(size_t index) const
@@ -181,11 +166,11 @@ namespace Finjin { namespace Engine {
         enum class Type
         {
             SCALAR, //This is used for nearly everything
-            VECTOR_3, 
-            MATRIX_33, 
+            VECTOR_3,
+            MATRIX_33,
             LOCATOR //Used by inputs that generate a locator, like a VR headset or a VR motion controller
         };
-        
+
         InputBindingValue()
         {
             this->scalar = 0;
@@ -209,7 +194,7 @@ namespace Finjin { namespace Engine {
                 case Type::MATRIX_33: FINJIN_COPY_MEMORY(this->matrix33, value, sizeof(float) * 3 * 3); break;
                 default: break;
             }
-            
+
             this->type = type;
         }
 
@@ -244,8 +229,8 @@ namespace Finjin { namespace Engine {
      *  2)In the second stage, the InputActionID is then turned into an EventID, which is added to a collection of Actions.
      *
      * For example:
-     *  -Some InputActionID values might be: MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT. 
-     *  -Those might be translated to a single MOVE EventID, which may also have additional data for tracking the direction of the move. 
+     *  -Some InputActionID values might be: MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT.
+     *  -Those might be translated to a single MOVE EventID, which may also have additional data for tracking the direction of the move.
      *  -In the process of performing the translation, depending on the input source type, values may also be generated as well. This is the case for mouse and game controller inputs
      *
      * This class has one virtual method that must be overridden in a derived class:
@@ -256,7 +241,7 @@ namespace Finjin { namespace Engine {
      * that is passed to AddAction().
      */
     template <typename Actions, size_t maxBindings = 100>
-    class FINJIN_ASSET_CLASS(InputBindings)
+    FINJIN_ASSET_CLASS class InputBindings
     {
     public:
         using InputActionID = int;
@@ -353,7 +338,7 @@ namespace Finjin { namespace Engine {
             for (size_t i = 0; i < this->defaultGameControllerAxisDeadZone.size(); i++)
             {
                 this->defaultGameControllerAxisDeadZone[i] = defaults.gameControllerAxisDeadZone;
-                
+
                 this->defaultGameControllerAxisSensitivity[i] = defaults.gameControllerAxisSensitivity;
             }
 
@@ -374,7 +359,7 @@ namespace Finjin { namespace Engine {
             for (size_t i = 0; i < this->gameControllerAxisSensitivity.size(); i++)
             {
                 this->gameControllerAxisDeadZone[i] = this->defaultGameControllerAxisDeadZone[i];
-                
+
                 this->gameControllerAxisSensitivity[i] = this->defaultGameControllerAxisSensitivity[i];
             }
         }
@@ -422,7 +407,7 @@ namespace Finjin { namespace Engine {
         void StopHapticFeedback(InputCommands& inputCommands, InputDeviceClass deviceClass, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
         {
             std::array<BitArray<InputDeviceConstants::MAX_DEVICES>, InputDeviceClassUtilities::COUNT> triggeredDevices;
-            
+
             auto bindingCount = GetBindingCount();
             for (size_t index = 0; index < bindingCount; index++)
             {
@@ -574,16 +559,16 @@ namespace Finjin { namespace Engine {
             InputToAction binding;
 
             binding.inputSource = inputSource;
-            
+
             binding.action = action;
-            
+
             binding.triggerCriteria = triggerCriteria;
-            
+
             binding.FinishInitialization();
 
             return this->bindings.push_back(binding);
         }
-        
+
         /**
          * Assigns the bindings of the specified class to a different device.
          */
@@ -636,7 +621,7 @@ namespace Finjin { namespace Engine {
             //Return null InputActionInfo
             return actionInfo[index];
         }
-        
+
         enum class GetActionBindingsResult
         {
             SUCCESS,
@@ -647,10 +632,10 @@ namespace Finjin { namespace Engine {
         template <typename InputContext>
         GetActionBindingsResult GetActionBindingsFromConfiguration
             (
-            InputContext* inputContext, 
+            InputContext* inputContext,
             InputDeviceClass deviceClass,
             size_t deviceIndex,
-            const AssetReference& configFileName, 
+            const AssetReference& configFileName,
             ByteBuffer& fileBuffer
             )
         {
@@ -661,7 +646,7 @@ namespace Finjin { namespace Engine {
             InputBindingsSerializer<InputBindings<Actions, maxBindings>, InputContext> serializer(*this);
 
             FINJIN_DECLARE_ERROR(error);
-            serializer.Read(fileBuffer, error);                
+            serializer.Read(fileBuffer, error);
             if (error)
                 return GetActionBindingsResult::CONFIG_FILE_PARSE_FAILED;
 
@@ -671,8 +656,8 @@ namespace Finjin { namespace Engine {
         template <typename InputContext>
         InputBindingsConfigurationResult GetFromConfiguration
             (
-            InputContext* inputContext, 
-            const InputBindingsConfigurationSearchCriteria& criteria, 
+            InputContext* inputContext,
+            const InputBindingsConfigurationSearchCriteria& criteria,
             const AssetReference& configFileName,
             ByteBuffer& configFileBuffer
             )
@@ -681,9 +666,10 @@ namespace Finjin { namespace Engine {
             if (deviceCount == 0)
                 return InputBindingsConfigurationResult::Type::NO_DEVICES;
 
-            if (criteria.SearchingByInstanceDescriptor())
+            if (!criteria.instanceDescriptor.empty())
             {
-                //An instance descriptor was specified, so find the matching device
+                //Using an instance descriptor is the most direct search since it's device and instance-specific
+
                 for (size_t i = 0; i < deviceCount; i++)
                 {
                     if (inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, i) == criteria.instanceDescriptor)
@@ -715,13 +701,14 @@ namespace Finjin { namespace Engine {
                 //At this point no match was found
 
                 //The search is done if the caller doesn't also want to search by product descriptor
-                if (!criteria.SearchingByProductDescriptor())
+                if (!criteria.productDescriptor.empty())
                     return InputBindingsConfigurationResult::Type::NOT_FOUND;
             }
-            
-            if (criteria.SearchingByProductDescriptor())
+
+            if (!criteria.productDescriptor.empty())
             {
                 //A product descriptor was specified, so find the matching device and initialize
+
                 size_t validDeviceIndex = 0;
                 for (size_t i = 0; i < deviceCount; i++)
                 {
@@ -734,7 +721,7 @@ namespace Finjin { namespace Engine {
                             continue;
                         }
 
-                        if (criteria.IsMatchingDeviceIndex(validDeviceIndex) && 
+                        if (criteria.IsMatchingDeviceIndex(validDeviceIndex) &&
                             criteria.IsMatchingDeviceSemantic(inputContext->GetDeviceSemantic(criteria.deviceClass, i)))
                         {
                             if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, i, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
@@ -759,26 +746,35 @@ namespace Finjin { namespace Engine {
                 }
 
                 return InputBindingsConfigurationResult::Type::NOT_FOUND;
-            }            
-            else if (criteria.SearchingByIndex())
+            }
+            else
             {
-                if (criteria.deviceIndex >= deviceCount)
+                //Searching by index. Index might be in [0, deviceCount) or a wildcard (-1)
+
+                if (criteria.deviceIndex != (size_t)-1 && criteria.deviceIndex >= deviceCount)
                     return InputBindingsConfigurationResult::Type::BAD_SEARCH_CRITERIA;
 
-                //Take the first device that is supported
+                if (criteria.deviceIndex != (size_t)-1 &&
+                    AnySet(criteria.flags & InputBindingsConfigurationFlag::CONNECTED_ONLY) &&
+                    !inputContext->IsDeviceConnected(criteria.deviceClass, criteria.deviceIndex))
+                {
+                    //Device is disconnected. Skip
+                    return InputBindingsConfigurationResult::Type::NOT_FOUND;
+                }
+
                 size_t validDeviceIndex = 0;
                 for (size_t i = 0; i < deviceCount; i++)
                 {
-                    if (AnySet(criteria.flags & InputBindingsConfigurationFlag::CONNECTED_ONLY) &&
-                        !inputContext->IsDeviceConnected(criteria.deviceClass, i))
-                    {
-                        //Device is disconnected. Skip
-                        continue;
-                    }
-
-                    if (criteria.IsMatchingDeviceIndex(validDeviceIndex) && 
+                    if (criteria.IsMatchingDeviceIndex(validDeviceIndex) &&
                         criteria.IsMatchingDeviceSemantic(inputContext->GetDeviceSemantic(criteria.deviceClass, i)))
                     {
+                        if (AnySet(criteria.flags & InputBindingsConfigurationFlag::CONNECTED_ONLY) &&
+                            !inputContext->IsDeviceConnected(criteria.deviceClass, i))
+                        {
+                            //Device is disconnected. Skip
+                            continue;
+                        }
+
                         if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, i, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
                         {
                             inputContext->TranslateInputBindingsSemantics(*this, criteria.deviceClass, i);
@@ -787,7 +783,7 @@ namespace Finjin { namespace Engine {
                             return InputBindingsConfigurationResult
                                 (
                                 InputBindingsConfigurationResult::Type::SUCCESS,
-                                inputContext->GetDeviceProductDescriptor(criteria.deviceClass, i),
+                                criteria.productDescriptor,
                                 inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, i),
                                 i
                                 );
@@ -795,15 +791,12 @@ namespace Finjin { namespace Engine {
                         else
                             return InputBindingsConfigurationResult::Type::NO_CONFIGURATION;
 
+                        validDeviceIndex++;
                     }
-
-                    validDeviceIndex++;
                 }
 
                 return InputBindingsConfigurationResult::Type::NOT_FOUND;
             }
-            else
-                return InputBindingsConfigurationResult::Type::BAD_SEARCH_CRITERIA;
         }
 
         template <typename Device>
@@ -912,7 +905,7 @@ namespace Finjin { namespace Engine {
                                 return true;
                             }
                         }
-                    
+
                         break;
                     }
                     case InputDeviceComponent::GAME_CONTROLLER_POV:
@@ -1001,7 +994,7 @@ namespace Finjin { namespace Engine {
                     default: break;
                 }
             }
-            
+
             return false;
         }
 
@@ -1190,7 +1183,7 @@ namespace Finjin { namespace Engine {
             auto key = keyboard.GetButton(binding.inputSource.keyIndex);
             if (!key->IsEnabled())
                 return;
-            
+
             InputBindingValue amount(1.0f);
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && key->IsFirstDown())
@@ -1210,7 +1203,7 @@ namespace Finjin { namespace Engine {
             auto button = mouse.GetButton(binding.inputSource.buttonIndex);
             if (!button->IsEnabled())
                 return;
-            
+
             InputBindingValue amount(1.0f);
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && button->IsFirstDown())
@@ -1235,9 +1228,9 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(axisRelativeValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount = 
+            InputBindingValue amount =
                 axisRelativeValue *
-                BestDirection(binding.inputSource.directionFloat) * 
+                BestDirection(binding.inputSource.directionFloat) *
                 this->mouseAxisSensitivity[binding.inputSource.axisIndex];
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
@@ -1262,9 +1255,9 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(absoluteValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount = 
+            InputBindingValue amount =
                 absoluteValue *
-                BestDirection(binding.inputSource.directionFloat) * 
+                BestDirection(binding.inputSource.directionFloat) *
                 this->mouseAxisSensitivity[binding.inputSource.axisIndex];
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
@@ -1306,14 +1299,14 @@ namespace Finjin { namespace Engine {
                 return;
 
             auto absoluteValue = axis->GetAbsoluteValue() * axis->GetDirection();
-            
+
             auto deadZone = this->gameControllerAxisDeadZone[binding.inputSource.axisIndex];
             if (std::abs(absoluteValue) <= deadZone)
                 absoluteValue = 0;
-            
+
             if (!TestValueAgainstDirection(absoluteValue, binding.inputSource.directionFloat))
                 return;
-            
+
             InputBindingValue amount =
                 absoluteValue *
                 BestDirection(binding.inputSource.directionFloat) *
@@ -1336,9 +1329,9 @@ namespace Finjin { namespace Engine {
             auto pov = gameController.GetPov(binding.inputSource.povIndex);
             if (!pov->IsEnabled())
                 return;
-            
+
             InputBindingValue amount(1.0f);
-            
+
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && pov->IsFirstDown(binding.inputSource.povDirection, AnySet(binding.triggerCriteria.flags & InputTriggerFlag::POV_STRONG)))
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::GAME_CONTROLLER_POV, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
             else if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::HOLDING) && pov->IsHoldingDown(binding.inputSource.povDirection, AnySet(binding.triggerCriteria.flags & InputTriggerFlag::POV_STRONG)))
@@ -1354,7 +1347,7 @@ namespace Finjin { namespace Engine {
                 return;
 
             auto locator = device.GetLocator(binding.inputSource.locatorIndex);
-            
+
             InputBindingValue amount;
             amount.type = InputBindingValue::Type::LOCATOR;
             locator->GetOrientationMatrix33(amount.locator.orientation);
@@ -1388,7 +1381,7 @@ namespace Finjin { namespace Engine {
             auto previousTouchCount = touchScreen.GetPreviousTouchCount();
 
             InputBindingValue amount = RoundToFloat(touchCount);
-            
+
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && (touchCount > previousTouchCount) && IsInRange(binding.inputSource.touchCount, previousTouchCount, touchCount))
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::TOUCH_COUNT, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
             else if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::HOLDING) && (touchCount == previousTouchCount) && (touchCount == binding.inputSource.touchCount))
@@ -1407,9 +1400,9 @@ namespace Finjin { namespace Engine {
             auto relativeValue = axis->GetRelativeValue() * axis->GetDirection();
             if (!TestValueAgainstDirection(relativeValue, binding.inputSource.directionFloat))
                 return;
-            
+
             InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * relativeValue;
-            
+
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::TOUCH_RELATIVE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
             else if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::HOLDING) && axis->IsHoldingDown())
@@ -1430,7 +1423,7 @@ namespace Finjin { namespace Engine {
                 return;
 
             InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * absoluteValue;
-            
+
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::TOUCH_RELATIVE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
             else if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::HOLDING) && axis->IsHoldingDown())
@@ -1438,7 +1431,7 @@ namespace Finjin { namespace Engine {
             else if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::RELEASED) && axis->IsFirstUp())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::TOUCH_RELATIVE_AXIS, InputTriggerFlag::RELEASED, amount, elapsedTimeSeconds);
         }
-        
+
         template <typename TouchScreen>
         void ProcessMultitouchRelativeRadiusBinding(const InputToAction& binding, TouchScreen& touchScreen, Actions& actions, SimpleTimeDelta elapsedTimeSeconds)
         {
@@ -1449,7 +1442,7 @@ namespace Finjin { namespace Engine {
             auto relativeValue = radius.GetRelativeValue();
             if (!TestValueAgainstDirection(relativeValue, binding.inputSource.directionFloat))
                 return;
-            
+
             InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * relativeValue;
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && radius.IsFirstDown())
@@ -1472,7 +1465,7 @@ namespace Finjin { namespace Engine {
                 return;
 
             InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * relativeValue;
-            
+
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
             else if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::HOLDING) && axis->IsHoldingDown())
@@ -1513,7 +1506,7 @@ namespace Finjin { namespace Engine {
         {
             return direction != 0.0f ? direction : 1.0f;
         }
-                
+
     public:
         /** All the input bindings. */
         StaticVector<InputToAction, maxBindings> bindings;
@@ -1521,16 +1514,16 @@ namespace Finjin { namespace Engine {
         //Mouse axis sensitivity
         std::array<float, MouseConstants::MAX_AXIS_COUNT> defaultMouseAxisSensitivity;
         std::array<float, MouseConstants::MAX_AXIS_COUNT> mouseAxisSensitivity;
-        
+
         //Game controller axis dead zone
         std::array<float, GameControllerConstants::MAX_AXIS_COUNT> defaultGameControllerAxisDeadZone;
         std::array<float, GameControllerConstants::MAX_AXIS_COUNT> gameControllerAxisDeadZone;
-        
+
         //Game controller axis sensitivity
         std::array<float, GameControllerConstants::MAX_AXIS_COUNT> defaultGameControllerAxisSensitivity;
         std::array<float, GameControllerConstants::MAX_AXIS_COUNT> gameControllerAxisSensitivity;
 
-        InputBindingsUnitConverter unitConverter; //This survives a Reset() 
+        InputBindingsUnitConverter unitConverter; //This survives a Reset()
     };
 
 } }

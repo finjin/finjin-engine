@@ -15,15 +15,14 @@
 #include "FinjinPrecompiled.hpp"
 #include "XcbWindow.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 XcbWindow::XcbWindow()
-{       
+{
 }
 
 XcbWindow::~XcbWindow()
-{    
+{
 }

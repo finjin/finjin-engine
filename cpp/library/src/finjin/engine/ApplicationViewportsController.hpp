@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/engine/ApplicationViewport.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/StaticVector.hpp"
+#include "finjin/engine/ApplicationViewport.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     struct ApplicationViewportsClosing : public StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_WINDOWS>
@@ -37,16 +37,16 @@ namespace Finjin { namespace Engine {
 
             other.count = 0;
         }
-        
+
         ApplicationViewportsClosing& operator = (ApplicationViewportsClosing&& other)
         {
             resize(other.size());
-            
+
             for (size_t i = 0; i < this->count; i++)
                 this->items[i] = std::move(other[i]);
-            
+
             other.count = 0;
-            
+
             return *this;
         }
     };
@@ -57,7 +57,7 @@ namespace Finjin { namespace Engine {
         {
             this->anyHadFocus = this->anyHasFocus = this->anyLostFocus = false;
         }
-        
+
         bool anyHadFocus;
         bool anyHasFocus;
         bool anyLostFocus;
@@ -69,7 +69,7 @@ namespace Finjin { namespace Engine {
     };
 
     class ApplicationViewportsController
-    {        
+    {
     public:
         ApplicationViewportsController();
         virtual ~ApplicationViewportsController() {}
@@ -87,10 +87,10 @@ namespace Finjin { namespace Engine {
         ApplicationViewportsClosing GetViewportsClosing();
 
         bool FindAndDeleteAndRemove(ApplicationViewport* appViewport);
-        
+
         ApplicationViewportsFocusState StartFocusUpdate();
         void FinishFocusUpdate(ApplicationViewportsFocusState& state);
-        
+
         bool empty() const { return this->appViewports.empty(); }
 
         size_t size() const { return this->appViewports.size(); }
@@ -101,14 +101,14 @@ namespace Finjin { namespace Engine {
 
         const std::unique_ptr<ApplicationViewport>& back() const { return this->appViewports.back(); }
         std::unique_ptr<ApplicationViewport>& back() { return this->appViewports.back(); }
-        
+
         const std::unique_ptr<ApplicationViewport>* begin() const { return this->appViewports.begin(); }
         std::unique_ptr<ApplicationViewport>* begin() { return this->appViewports.begin(); }
 
         const std::unique_ptr<ApplicationViewport>* end() const { return this->appViewports.end(); }
         std::unique_ptr<ApplicationViewport>* end() { return this->appViewports.end(); }
 
-    private:   
+    private:
         using ApplicationViewports = StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_WINDOWS>;
         ApplicationViewports appViewports;
     };

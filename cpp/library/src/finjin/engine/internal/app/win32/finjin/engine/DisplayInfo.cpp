@@ -19,13 +19,13 @@
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct EnumHelper
 {
     EnumHelper(DisplayInfos* displaysBeingEnumerated) : displays(displaysBeingEnumerated)
     {
         //Enumerates all the display names for subsequent monitor enumeration
-        
+
         this->outputNameToMonitorName.resize(EngineConstants::MAX_DISPLAYS);
         DISPLAY_DEVICEW displayDevice;
 
@@ -46,9 +46,9 @@ struct EnumHelper
                 //Second call gets monitor name
                 if (!EnumDisplayDevicesW(graphicsCardNameW.c_str(), i, &displayDevice, 0))
                     break;
-            
+
                 this->outputNameToMonitorName[okCount].second = displayDevice.DeviceString; //monitor/device name (such as "Dell Ultrasharp")
-                
+
                 okCount++;
             }
         }
@@ -74,7 +74,7 @@ struct EnumHelper
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hDC, LPRECT rect, LPARAM param)
 {
     auto helper = reinterpret_cast<EnumHelper*>(param);
@@ -89,7 +89,7 @@ static BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hDC, LPRECT rect, LP
     display.name = monitorInfo.szDevice; //output name (such as "\\\\.\\DISPLAY1")
 
     auto continueEnumeration = TRUE;
-    
+
     //If the monitor's name can be found in the helper, then the monitor is connected and its info should be stored
     auto monitorName = helper->FindMonitorName(display.name);
     if (monitorName != nullptr)
@@ -115,16 +115,16 @@ static BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hDC, LPRECT rect, LP
         if (helper->displays->push_back(display).HasErrorOrValue(false))
             continueEnumeration = FALSE;
     }
-    
+
     return continueEnumeration;
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 //DisplayInfo
 DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0), clientFrame(0, 0, 0, 0)
 {
-    this->index = 0;    
+    this->index = 0;
     this->isPrimary = false;
     this->monitorHandle = nullptr;
 }
@@ -133,9 +133,9 @@ DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0), clientFrame(0, 0, 0, 0)
 void DisplayInfos::Enumerate()
 {
     clear();
-    
+
     EnumHelper helper(this);
-    EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, reinterpret_cast<LPARAM>(&helper));    
+    EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, reinterpret_cast<LPARAM>(&helper));
 }
 
 void DisplayInfos::SortLeftToRight()

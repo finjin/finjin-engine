@@ -14,11 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/sound/opensles/OpenSLESContext.hpp"
 #include "finjin/engine/internal/sound/opensles/OpenSLESSoundSource.hpp"
 #include "finjin/engine/internal/sound/opensles/OpenSLESSoundBuffer.hpp"
 #include "finjin/engine/internal/sound/opensles/OpenSLESSoundGroup.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using SoundContext = OpenSLESContext;
     using SoundContextSettings = OpenSLESContext::Settings;

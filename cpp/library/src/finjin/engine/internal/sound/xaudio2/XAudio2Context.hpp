@@ -14,20 +14,20 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/engine/SoundContextCommonSettings.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/OperationStatus.hpp"
 #include "finjin/common/Path.hpp"
-#include "finjin/engine/SoundFormat.hpp"
-#include "finjin/engine/SoundSorter.hpp"
 #include "finjin/engine/AssetClass.hpp"
 #include "finjin/engine/AssetCreationCapability.hpp"
+#include "finjin/engine/SoundContextCommonSettings.hpp"
+#include "finjin/engine/SoundFormat.hpp"
+#include "finjin/engine/SoundSorter.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class XAudio2System;
@@ -36,7 +36,7 @@ namespace Finjin { namespace Engine {
     class XAudio2SoundBuffer;
     class XAudio2Listener;
     class XAudio2ContextImpl;
-        
+
     using namespace Finjin::Common;
 
     class XAudio2Context : public AllocatedClass
@@ -55,32 +55,11 @@ namespace Finjin { namespace Engine {
         void Create(const Settings& settings, Error& error);
         void Destroy();
 
-        const OperationStatus& GetInitializationStatus() const;
-
         void GetSelectorComponents(AssetPathSelector& result);
 
         const Settings& GetSettings() const;
 
-        template <typename T>
-        size_t GetExternalAssetFileExtensions(T& extensions, AssetClass assetClass, Error& error)
-        {
-            FINJIN_ERROR_METHOD_START(error);
-
-            switch (assetClass)
-            {
-                case AssetClass::SOUND:
-                {
-                    if (extensions.push_back("wav").HasErrorOrValue(false))
-                    {
-                        FINJIN_SET_ERROR(error, "Failed to add 'wav' extension.");
-                        return 0;
-                    }
-                    return 1;
-                }
-            }
-
-            return 0;
-        }
+        size_t GetExternalAssetFileExtensions(StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS>& extensions, AssetClass assetClass, Error& error);
 
         AssetCreationCapability GetAssetCreationCapabilities(AssetClass assetClass) const;
 
@@ -130,8 +109,8 @@ namespace Finjin { namespace Engine {
         void SetDistanceModel(SoundDistanceModel model);
 
         //XAudio-specific methods---------------
-        XAudio2ContextImpl* GetImpl();        
-        
+        XAudio2ContextImpl* GetImpl();
+
     private:
         std::unique_ptr<XAudio2ContextImpl> impl;
     };

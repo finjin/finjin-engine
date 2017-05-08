@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/DefaultAllocator.hpp"
 #include "finjin/common/PassthroughSystemAllocator.hpp"
 
 
-//Macros-----------------------------------------------------------------------
-#define FINJIN_ENGINE_IMPLEMENT_MAIN(AppDelegate)\
+//Macros------------------------------------------------------------------------
+#define FINJIN_ENGINE_MAIN(AppDelegate)\
     int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)\
     {\
         int FinjinMain(ApplicationDelegate* del, HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow);\

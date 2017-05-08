@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/JobFuture.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     class JobPipelineStage
@@ -30,8 +30,6 @@ namespace Finjin { namespace Engine {
         ~JobPipelineStage();
 
         size_t index;
-
-        size_t frameSequenceIndex;
 
         future<void> simulateAndRenderFuture;
     };

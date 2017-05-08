@@ -19,14 +19,13 @@
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/JobSystem.hpp"
-#include "finjin/common/OperationStatus.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/OSWindow.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct ApplicationViewport::Impl : public AllocatedClass
 {
     Impl(Allocator* allocator) : AllocatedClass(allocator)
@@ -34,13 +33,12 @@ struct ApplicationViewport::Impl : public AllocatedClass
     }
 
     std::unique_ptr<ApplicationViewportDelegate> windowDelegate;
-    
+
     std::unique_ptr<OSWindow> osWindow;
 
     AssetPathSelector applicationAssetFileSelectorWithSubsystems;
-    EnumValues<AssetClass, AssetClass::COUNT, AssetClassFileReader> assetClassFileReaders;
+    EnumArray<AssetClass, AssetClass::COUNT, AssetClassFileReader> assetClassFileReaders;
 
-    OperationStatuses<4> contextInitializationStatus; //One for each context
     InputContext* inputContext;
     SoundContext* soundContext;
     GpuContext* gpuContext;
@@ -84,9 +82,9 @@ struct ApplicationViewport::Impl : public AllocatedClass
 };
 
 
-//Implementation---------------------------------------------------------------
-ApplicationViewport::ApplicationViewport(Allocator* allocator) : 
-    AllocatedClass(allocator), 
+//Implementation----------------------------------------------------------------
+ApplicationViewport::ApplicationViewport(Allocator* allocator) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<Impl>(allocator, FINJIN_CALLER_ARGUMENTS))
 {
     Init();
@@ -100,16 +98,16 @@ void ApplicationViewport::Init()
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     impl->vrContext = nullptr;
 #endif
-    
+
     impl->isMain = false;
     impl->windowResized = false;
     impl->toggleFullScreenRequested = false;
     impl->closeRequested = false;
-    impl->exitApplicationRequested = false;    
+    impl->exitApplicationRequested = false;
     impl->finishResizeTargetsRequested = false;
-    
+
     impl->targetFramesPerSecond = 1000;
-    
+
     impl->jobProcessingPipelineSize = 1;
     ResetUpdateAndRenderingCounters();
 }
@@ -117,7 +115,7 @@ void ApplicationViewport::Init()
 void ApplicationViewport::ConfigureJobPipeline(size_t renderBuffering, size_t pipelineSize)
 {
     impl->jobProcessingPipelineSize = renderBuffering;
-    
+
     impl->stages.resize(pipelineSize);
     for (size_t i = 0; i < impl->stages.size(); i++)
         impl->stages[i].jobPipelineStage.index = i;
@@ -130,8 +128,8 @@ size_t ApplicationViewport::GetJobPipelineSize() const
 
 void ApplicationViewport::SetJobPipelineStageData
     (
-    size_t index, 
-    std::unique_ptr<ApplicationViewportUpdateContext>&& updateContext, 
+    size_t index,
+    std::unique_ptr<ApplicationViewportUpdateContext>&& updateContext,
     std::unique_ptr<ApplicationViewportRenderContext>&& renderContext
     )
 {
@@ -148,13 +146,13 @@ void ApplicationViewport::ResetUpdateAndRenderingCounters()
 {
     impl->frameTimeStamp = impl->frameTimeClock.Now();
     impl->leftoverFrameTimeNanoseconds = 0;
-    
+
     impl->renderTickCount = 0;
     impl->jobPipelineStageUpdateIndex = 0;
     impl->jobPipelineStageRenderIndex = 0;
 }
 
-ApplicationViewport::~ApplicationViewport() 
+ApplicationViewport::~ApplicationViewport()
 {
     if (impl->osWindow != nullptr)
         impl->osWindow->Destroy();
@@ -210,13 +208,7 @@ VRContext* ApplicationViewport::GetVRContext()
 
 void ApplicationViewport::SetVRContext(std::unique_ptr<VRContext>&& context)
 {
-    //if (impl->vrContext != nullptr)
-    //    impl->contextInitializationStatus.Remove(&impl->vrContext->GetInitializationStatus());
-
     impl->vrContext = context.release();
-    
-    if (impl->vrContext != nullptr)
-        impl->contextInitializationStatus.push_back(&impl->vrContext->GetInitializationStatus());
 }
 
 #endif
@@ -235,13 +227,7 @@ InputContext* ApplicationViewport::GetInputContext()
 
 void ApplicationViewport::SetInputContext(std::unique_ptr<InputContext>&& context)
 {
-    //if (impl->inputContext != nullptr)
-      //  impl->contextInitializationStatus.Remove(&impl->inputContext->GetInitializationStatus());
-    
     impl->inputContext = context.release();
-
-    if (impl->inputContext != nullptr)
-        impl->contextInitializationStatus.push_back(&impl->inputContext->GetInitializationStatus());
 }
 
 SoundContext* ApplicationViewport::DetachSoundContext()
@@ -258,13 +244,7 @@ SoundContext* ApplicationViewport::GetSoundContext()
 
 void ApplicationViewport::SetSoundContext(std::unique_ptr<SoundContext>&& context)
 {
-    //if (impl->soundContext != nullptr)
-      //  impl->contextInitializationStatus.Remove(&impl->soundContext->GetInitializationStatus());
-    
     impl->soundContext = context.release();
-    
-    if (impl->soundContext != nullptr)
-        impl->contextInitializationStatus.push_back(&impl->soundContext->GetInitializationStatus());
 }
 
 GpuContext* ApplicationViewport::DetachGpuContext()
@@ -281,13 +261,7 @@ GpuContext* ApplicationViewport::GetGpuContext()
 
 void ApplicationViewport::SetGpuContext(std::unique_ptr<GpuContext>&& context)
 {
-    //if (impl->gpuContext != nullptr)
-      //  impl->contextInitializationStatus.Remove(&impl->gpuContext->GetInitializationStatus());
-    
     impl->gpuContext = context.release();
-
-    if (impl->gpuContext != nullptr)
-        impl->contextInitializationStatus.push_back(&impl->gpuContext->GetInitializationStatus());
 }
 
 void ApplicationViewport::CreateAssetClassFileReaders(AssetFileReader& assetFileReader, const AssetPathSelector& applicationAssetFileSelector, Error& error)
@@ -326,7 +300,7 @@ void ApplicationViewport::CreateAssetClassFileReaders(AssetFileReader& assetFile
     }
 }
 
-EnumValues<AssetClass, AssetClass::COUNT, AssetClassFileReader>& ApplicationViewport::GetAssetClassFileReaders()
+EnumArray<AssetClass, AssetClass::COUNT, AssetClassFileReader>& ApplicationViewport::GetAssetClassFileReaders()
 {
     return impl->assetClassFileReaders;
 }
@@ -340,7 +314,7 @@ bool ApplicationViewport::NotifyWindowResized()
         FINJIN_DEBUG_LOG_INFO("  Resize accepted");
 
         impl->windowResized = true;
-        
+
         return true;
     }
     else
@@ -436,7 +410,7 @@ void ApplicationViewport::ApplyFullScreenToggle(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto nextStateRequiresFullScreenExclusiveToggle = GetOSWindow()->GetWindowSize().GetFullScreenState() == WindowSize::EXCLUSIVE_FULLSCREEN;
+    auto nextStateRequiresFullScreenExclusiveToggle = GetOSWindow()->GetWindowSize().GetFullScreenState() == WindowSizeState::EXCLUSIVE_FULLSCREEN;
     ApplyFullScreenToggle(nextStateRequiresFullScreenExclusiveToggle, error);
     if (error)
     {
@@ -478,7 +452,7 @@ void ApplicationViewport::ApplyFullScreenToggle(bool needsExclusiveToggle, Error
             FINJIN_SET_ERROR(error, "Failed to start resize swap chain render targets.");
             return;
         }
-    }   
+    }
     else
     {
         //A window size change will come in later and trigger a resize
@@ -492,8 +466,8 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
 
     if (NeedsToModifyRenderTarget())
     {
-        FinishWork(true);
-        
+        FinishWork(true, true);
+
         ApplyModifyRenderTarget(error);
         if (error)
         {
@@ -507,21 +481,21 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
         auto stepCount = Update(jobSystem, error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, "Error during call to Update.");
+            FINJIN_SET_ERROR(error, "Error while updating frame.");
             return;
         }
 
         if (stepCount > 0)
         {
             //A frame was updated
-                
+
             //Render previous frame if buffering requirement has been met
             if (++impl->renderTickCount >= impl->jobProcessingPipelineSize)
             {
-                FinishFrame(true, -1, error);
+                FinishFrame(true, false, -1, error);
                 if (error)
                 {
-                    FINJIN_SET_ERROR(error, "Error during call to FinishFrame.");
+                    FINJIN_SET_ERROR(error, "Error while finishing frame.");
                     return;
                 }
             }
@@ -529,17 +503,20 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
     }
 }
 
-void ApplicationViewport::FinishWork(bool continueRendering)
+void ApplicationViewport::FinishWork(bool continueRendering, bool modifyingRenderTarget)
 {
     if (!impl->stages.empty())
     {
         while ((impl->jobPipelineStageRenderIndex % impl->stages.size()) != (impl->jobPipelineStageUpdateIndex % impl->stages.size()))
         {
             FINJIN_DECLARE_ERROR(error);
-            FinishFrame(continueRendering, 0, error);
+            FinishFrame(continueRendering, modifyingRenderTarget, 0, error);
         }
     }
-    
+
+    if (impl->gpuContext != nullptr)
+        impl->gpuContext->FlushGpu();
+
     ResetUpdateAndRenderingCounters();
 }
 
@@ -550,16 +527,16 @@ int ApplicationViewport::Update(JobSystem& jobSystem, Error& error)
     auto now = impl->frameTimeClock.Now();
     auto elapsedTimeDuration = now - impl->frameTimeStamp;
     impl->frameTimeStamp = now;
-    
+
     int stepCount = 0;
-    
+
     impl->leftoverFrameTimeNanoseconds += elapsedTimeDuration.ToNanoseconds();
     int64_t targetNanosecondsPerFrame = 1000000000ll / static_cast<int64_t>(impl->targetFramesPerSecond);
     if (impl->leftoverFrameTimeNanoseconds >= targetNanosecondsPerFrame)
     {
         stepCount = static_cast<int>(impl->leftoverFrameTimeNanoseconds / targetNanosecondsPerFrame);
         impl->leftoverFrameTimeNanoseconds = impl->leftoverFrameTimeNanoseconds % targetNanosecondsPerFrame;
-        
+
         auto stageIndex = impl->jobPipelineStageUpdateIndex++ % impl->stages.size();
         auto& stage = impl->stages[stageIndex];
         //auto& jobPipelineStage = stage.jobPipelineStage;
@@ -573,7 +550,7 @@ int ApplicationViewport::Update(JobSystem& jobSystem, Error& error)
         auto updateResult = impl->windowDelegate->Update(updateContext, error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, "Window delegate failed.");
+            FINJIN_SET_ERROR(error, "Application viewport delegate failed.");
         }
 
         stage.hasFrame = updateResult == ApplicationViewportDelegate::UpdateResult::STARTED_FRAME;
@@ -582,7 +559,7 @@ int ApplicationViewport::Update(JobSystem& jobSystem, Error& error)
     return stepCount;
 }
 
-void ApplicationViewport::FinishFrame(bool continueRendering, size_t presentSyncIntervalOverride, Error& error)
+void ApplicationViewport::FinishFrame(bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -592,16 +569,17 @@ void ApplicationViewport::FinishFrame(bool continueRendering, size_t presentSync
     auto& renderContext = *stage.renderContext.get();
 
     renderContext.continueRendering = continueRendering;
+    renderContext.modifyingRenderTarget = modifyingRenderTarget;
     renderContext.presentSyncIntervalOverride = presentSyncIntervalOverride;
 
     if (stage.hasFrame)
-    {   
+    {
         impl->windowDelegate->FinishFrame(renderContext, error);
         if (error)
-            FINJIN_SET_ERROR(error, "Failed to FinishFrame.");
+            FINJIN_SET_ERROR(error, "Failed to finish frame.");
 
         stage.hasFrame = false;
-    }    
+    }
 }
 
 bool ApplicationViewport::StartResizeTargets(Error& error)

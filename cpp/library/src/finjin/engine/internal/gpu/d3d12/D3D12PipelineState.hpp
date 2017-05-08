@@ -14,22 +14,23 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
-#include "finjin/common/EnumValues.hpp"
+#include "finjin/common/DynamicVector.hpp"
+#include "finjin/common/EnumArray.hpp"
 #include "finjin/common/Setting.hpp"
 #include "finjin/engine/AssetReference.hpp"
 #include "finjin/engine/ShaderFeatures.hpp"
 #include "D3D12Includes.hpp"
+#include "D3D12ShaderType.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class D3D12PipelineStateDescriptor
     {
     public:
@@ -49,17 +50,17 @@ namespace Finjin { namespace Engine {
         static void Create
             (
             AssetReference& shaderFileRef,
-            AllocatedVector<D3D12PipelineStateDescriptor>& pipelineStates,
+            DynamicVector<D3D12PipelineStateDescriptor>& pipelineStates,
             Allocator* allocator,
             const ByteBuffer& readBuffer,
             SimpleUri& tempUri,
             Error& error
             );
-        
+
         static void Create
             (
             AssetReference& shaderFileRef,
-            AllocatedVector<D3D12PipelineStateDescriptor>& pipelineStates,
+            DynamicVector<D3D12PipelineStateDescriptor>& pipelineStates,
             Allocator* allocator,
             ConfigDocumentReader& reader,
             SimpleUri& tempUri,
@@ -79,7 +80,7 @@ namespace Finjin { namespace Engine {
 
     public:
         Utf8String typeName;
-        
+
         struct GraphicsState
         {
             GraphicsState() : primitiveTopology(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE)
@@ -128,8 +129,8 @@ namespace Finjin { namespace Engine {
             size_t offset;
             size_t size;
         };
-        EnumValues<D3D12ShaderType, D3D12ShaderType::COUNT, ShaderOffset> shaderOffsets;
-        EnumValues<D3D12ShaderType, D3D12ShaderType::COUNT, AssetReference> shaderRefs;
+        EnumArray<D3D12ShaderType, D3D12ShaderType::COUNT, ShaderOffset> shaderOffsets;
+        EnumArray<D3D12ShaderType, D3D12ShaderType::COUNT, AssetReference> shaderRefs;
         GraphicsState graphicsState;
     };
 

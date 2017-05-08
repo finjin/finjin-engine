@@ -24,7 +24,7 @@
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct D3D12DescriptorRange : public D3D12_DESCRIPTOR_RANGE
 {
     D3D12DescriptorRange() { FINJIN_ZERO_ITEM(*this); }
@@ -38,36 +38,11 @@ struct D3D12DescriptorRange : public D3D12_DESCRIPTOR_RANGE
         UINT offsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND
         )
     {
-        Init(rangeType, numDescriptors, baseShaderRegister, registerSpace, offsetInDescriptorsFromTableStart);
-    }
-
-    inline void Init
-        (
-        D3D12_DESCRIPTOR_RANGE_TYPE rangeType,
-        UINT numDescriptors,
-        UINT baseShaderRegister,
-        UINT registerSpace,
-        UINT offsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND
-        )
-    {
-        Init(*this, rangeType, numDescriptors, baseShaderRegister, registerSpace, offsetInDescriptorsFromTableStart);
-    }
-
-    static inline void Init
-        (
-        D3D12_DESCRIPTOR_RANGE& range,
-        D3D12_DESCRIPTOR_RANGE_TYPE rangeType,
-        UINT numDescriptors,
-        UINT baseShaderRegister,
-        UINT registerSpace,
-        UINT offsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND
-        )
-    {
-        range.RangeType = rangeType;
-        range.NumDescriptors = numDescriptors;
-        range.BaseShaderRegister = baseShaderRegister;
-        range.RegisterSpace = registerSpace;
-        range.OffsetInDescriptorsFromTableStart = offsetInDescriptorsFromTableStart;
+        this->RangeType = rangeType;
+        this->NumDescriptors = numDescriptors;
+        this->BaseShaderRegister = baseShaderRegister;
+        this->RegisterSpace = registerSpace;
+        this->OffsetInDescriptorsFromTableStart = offsetInDescriptorsFromTableStart;
     }
 };
 
@@ -91,18 +66,6 @@ struct D3D12ShaderRootParameter
         this->visibility = visibility;
     }
 
-    D3D12ShaderRootParameter(std::initializer_list<D3D12DescriptorRange> descriptorTable)
-    {
-        this->parameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-        this->shaderRegister = 0;
-        this->registerSpace = 0;
-        this->num32BitValues = 0;
-        this->visibility = D3D12_SHADER_VISIBILITY_ALL;
-
-        assert(descriptorTable.size() <= this->descriptorTable.max_size());
-        this->descriptorTable.assign(descriptorTable.begin(), descriptorTable.size());
-    }
-
     D3D12ShaderRootParameter(UINT shaderRegister, UINT registerSpace, UINT num32BitValues, D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
     {
         this->parameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
@@ -112,20 +75,19 @@ struct D3D12ShaderRootParameter
         this->visibility = visibility;
     }
 
-
     D3D12_ROOT_PARAMETER_TYPE parameterType;
     UINT shaderRegister;
     UINT registerSpace;
     UINT num32BitValues;
     D3D12_SHADER_VISIBILITY visibility;
 
-    StaticVector<D3D12DescriptorRange, EngineConstants::MAX_DESCRIPTOR_TABLE_ELEMENTS> descriptorTable;
+    StaticVector<D3D12DescriptorRange, 8> descriptorTable;
 };
 
 class D3D12RootParametersBuilder
 {
 public:
-    D3D12RootParametersBuilder() { } 
+    D3D12RootParametersBuilder() { }
 
     void Reset() { this->params.clear(); }
 
@@ -207,7 +169,7 @@ private:
 class D3D12StaticSamplersBuilder
 {
 public:
-    D3D12StaticSamplersBuilder() { } 
+    D3D12StaticSamplersBuilder() { }
 
     void Reset() { return this->samplers.clear(); }
 
@@ -353,7 +315,7 @@ private:
 };
 
 
-//Implementation---------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //D3D12RootSignatureDescriptor
 D3D12RootSignatureDescriptor::D3D12RootSignatureDescriptor(Allocator* allocator) : typeName(allocator)
@@ -373,12 +335,12 @@ void D3D12RootSignatureDescriptor::CreateRootSignature(Microsoft::WRL::ComPtr<ID
             D3D12ShaderRootParameter table;
             table.parameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
             table.visibility = rootSignatureElement.visibility;
-            
+
             for (size_t descriptorTableElementIndex = 0; descriptorTableElementIndex < rootSignatureElement.descriptorTable.size(); descriptorTableElementIndex++)
             {
                 auto& descriptorTableElement = rootSignatureElement.descriptorTable[descriptorTableElementIndex];
 
-                D3D12DescriptorRange range(descriptorTableElement.type, descriptorTableElement.descriptorCount, descriptorTableElement.shaderRegister, descriptorTableElement.registerSpace);
+                D3D12DescriptorRange range(descriptorTableElement.type, static_cast<UINT>(descriptorTableElement.descriptorCount), static_cast<UINT>(descriptorTableElement.shaderRegister), static_cast<UINT>(descriptorTableElement.registerSpace));
                 if (table.descriptorTable.push_back(range).HasErrorOrValue(false))
                 {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add descriptor range for element '%1%'. Too many entries.", rootSignatureElement.id));
@@ -395,7 +357,7 @@ void D3D12RootSignatureDescriptor::CreateRootSignature(Microsoft::WRL::ComPtr<ID
         }
         else
         {
-            D3D12ShaderRootParameter parameter(rootSignatureElement.type, rootSignatureElement.shaderRegister, rootSignatureElement.registerSpace, rootSignatureElement.visibility);
+            D3D12ShaderRootParameter parameter(rootSignatureElement.type, static_cast<UINT>(rootSignatureElement.shaderRegister), static_cast<UINT>(rootSignatureElement.registerSpace), rootSignatureElement.visibility);
             rootSignatureBuilder.GetRootParameters().Add(parameter, error);
             if (error)
             {
@@ -417,7 +379,7 @@ void D3D12RootSignatureDescriptor::CreateRootSignature(Microsoft::WRL::ComPtr<ID
 
 void D3D12RootSignatureDescriptor::Create
     (
-    AllocatedVector<D3D12RootSignatureDescriptor>& rootSignatures,
+    DynamicVector<D3D12RootSignatureDescriptor>& rootSignatures,
     Allocator* allocator,
     const ByteBuffer& readBuffer,
     Error& error
@@ -432,10 +394,10 @@ void D3D12RootSignatureDescriptor::Create
     if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
 }
-        
+
 void D3D12RootSignatureDescriptor::Create
     (
-    AllocatedVector<D3D12RootSignatureDescriptor>& rootSignatures,
+    DynamicVector<D3D12RootSignatureDescriptor>& rootSignatures,
     Allocator* allocator,
     ConfigDocumentReader& reader,
     Error& error
@@ -491,6 +453,8 @@ void D3D12RootSignatureDescriptor::Create
             }
         }
     }
+
+    reader.Restart(startLine);
 }
 
 void D3D12RootSignatureDescriptor::CreateFromScope
@@ -585,7 +549,7 @@ void D3D12RootSignatureDescriptor::CreateFromScope
 
                         descriptorTableElementCount++;
                         auto& descriptorTableElement = element.descriptorTable[descriptorTableElementCount - 1];
-                                
+
                         descriptorTableElement.type = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
                     }
                     else if (sectionName == "unordered-access-view-range")
@@ -615,7 +579,7 @@ void D3D12RootSignatureDescriptor::CreateFromScope
                         {
                             if (rootSignature.typeName.assign(value.begin(), value.size()).HasError())
                             {
-                                FINJIN_SET_ERROR(error, "Failed to assign root signature element type.");
+                                FINJIN_SET_ERROR(error, "Failed to assign root signature type.");
                                 return;
                             }
                         }
@@ -662,7 +626,7 @@ void D3D12RootSignatureDescriptor::CreateFromScope
                                 descriptorTableElement.descriptorCount = Convert::ToInteger(value.ToString(), descriptorTableElement.descriptorCount);
                         }
                     }
-                            
+
                     break;
                 }
                 case ConfigDocumentLine::Type::SCOPE_START:

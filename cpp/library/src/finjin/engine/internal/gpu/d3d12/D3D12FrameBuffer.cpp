@@ -21,7 +21,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12FrameBuffer::D3D12FrameBuffer()
 {
     this->index = 0;
@@ -32,7 +32,7 @@ D3D12FrameBuffer::D3D12FrameBuffer()
 void D3D12FrameBuffer::SetIndex(size_t index)
 {
     this->index = index;
-    
+
     this->staticMeshRendererFrameState.index = index;
 }
 
@@ -46,7 +46,7 @@ ID3D12GraphicsCommandList* D3D12FrameBuffer::NewGraphicsCommandList()
     return result;
 }
 
-ID3D12GraphicsCommandList* D3D12FrameBuffer::CurrentGraphicsCommandList()
+ID3D12GraphicsCommandList* D3D12FrameBuffer::GetCurrentGraphicsCommandList()
 {
     return !this->graphicsCommandLists.empty() ? this->graphicsCommandLists.back().Get() : nullptr;
 }

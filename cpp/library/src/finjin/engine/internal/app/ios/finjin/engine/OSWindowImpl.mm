@@ -21,18 +21,20 @@
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
 
-#define TouchToPointerID(touch) static_cast<int>(reinterpret_cast<intptr_t>(touch))
-
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Macros------------------------------------------------------------------------
+#define TouchToPointerID(touch) static_cast<int>(reinterpret_cast<intptr_t>(touch))
 
-//OSWindowNSWindowDelegate-----------------
-@interface OSWindowViewerUIViewDelegate : NSObject<FinjinUIViewDelegate>
+
+//Local types-------------------------------------------------------------------
+
+//OSWindowUIViewDelegate-----------------
+@interface OSWindowUIViewDelegate : NSObject<FinjinUIViewDelegate>
 @end
 
-@implementation OSWindowViewerUIViewDelegate
+@implementation OSWindowUIViewDelegate
 {
 @public
     OSWindow* osWindow;
@@ -42,15 +44,15 @@ using namespace Finjin::Engine;
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)theEvent
 {
     auto density = osWindow->GetDisplayDensity();
-    
+
     for (UITouch* touch in touches)
     {
         auto pointerID = TouchToPointerID(touch);
-        
+
         auto locationInView = [touch locationInView:osWindow->GetImpl()->GetWindowHandle().subviews.lastObject];
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowOnPointerDown(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
@@ -64,15 +66,15 @@ using namespace Finjin::Engine;
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)theEvent
 {
     auto density = osWindow->GetDisplayDensity();
-    
+
     for (UITouch* touch in touches)
     {
         auto pointerID = TouchToPointerID(touch);
-        
+
         auto locationInView = [touch locationInView:osWindow->GetImpl()->GetWindowHandle().subviews.lastObject];
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowOnPointerUp(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
@@ -81,15 +83,15 @@ using namespace Finjin::Engine;
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)theEvent
 {
     auto density = osWindow->GetDisplayDensity();
-    
+
     for (UITouch* touch in touches)
     {
         auto pointerID = TouchToPointerID(touch);
-        
+
         auto locationInView = [touch locationInView:osWindow->GetImpl()->GetWindowHandle().subviews.lastObject];
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowOnPointerMove(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
@@ -98,11 +100,11 @@ using namespace Finjin::Engine;
 @end
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 OSWindowImpl::OSWindowImpl(Allocator* allocator, void* clientData) : AllocatedClass(allocator)
 {
     Clear();
-    
+
     this->clientData = clientData;
 }
 

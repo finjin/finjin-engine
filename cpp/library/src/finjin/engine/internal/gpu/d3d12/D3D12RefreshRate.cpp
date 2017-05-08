@@ -21,10 +21,10 @@
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static D3D12RefreshRate NormalizeRatio(D3D12RefreshRate refresh)
 {
-    while (refresh.numerator > 0 && refresh.numerator % 10 == 0 && 
+    while (refresh.numerator > 0 && refresh.numerator % 10 == 0 &&
         refresh.denominator > 0 && refresh.denominator % 10 == 0)
     {
         refresh.numerator /= 10;
@@ -34,7 +34,7 @@ static D3D12RefreshRate NormalizeRatio(D3D12RefreshRate refresh)
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12RefreshRate::D3D12RefreshRate()
 {
     this->numerator = this->denominator = 1;

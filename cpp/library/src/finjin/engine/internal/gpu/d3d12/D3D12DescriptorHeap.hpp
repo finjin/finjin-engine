@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "D3D12Includes.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     class D3D12DescriptorHeap
@@ -30,7 +30,7 @@ namespace Finjin { namespace Engine {
         D3D12DescriptorHeap();
 
         void Create(ID3D12Device* device, const D3D12_DESCRIPTOR_HEAP_DESC& desc, Error& error);
-        
+
         D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHeapStart();
         D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHeapStart();
 

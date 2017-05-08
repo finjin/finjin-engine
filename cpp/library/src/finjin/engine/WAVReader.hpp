@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/SoundFormat.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -45,14 +45,14 @@ namespace Finjin { namespace Engine {
     public:
         WAVReader();
 
-        /** 
-         * Decompresses a file from memory 
+        /**
+         * Decompresses a file from memory
          * @param fileImage [in] - The file image
-         * @param decompressedBuffer [in] - A modifiable buffer that can be used during the decode process.
+         * @param soundOutputBuffer [in] - A modifiable buffer that can be used during the decode process.
          * @param error [out] - Error object.
          * @return The read audio bytes. The returned data pointer will point to decompressedBuffer.
          */
-        WAVSoundData DecompressFileImage(ByteBufferReader& reader, ByteBuffer& decompressedBuffer, Error& error);
+        WAVSoundData Read(ByteBufferReader& reader, ByteBuffer& soundOutputBuffer, Error& error);
     };
 
 } }

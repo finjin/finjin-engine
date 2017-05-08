@@ -11,12 +11,13 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinNSViewController.h"
 #import "FinjinNSView.h"
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 @interface FinjinNSViewController ()
 @end
 
@@ -27,10 +28,10 @@
 - (void)loadView
 {
     auto view = [[FinjinNSView alloc] initWithFrame:CGRectMake(0, 0, self.preferredContentSize.width, self.preferredContentSize.height)];
-    view.dropTypes = [NSArray arrayWithObjects:NSFilenamesPboardType, nil];
-    view.supportedFileExtensions = [NSArray arrayWithObjects:@"fstd-scene", @"fsbd-scene", @"cfg-scene", @"json-scene", nil];
+    view.dropTypes = [NSArray arrayWithObjects:NSFilenamesPboardType, nullptr];
+    view.supportedFileExtensions = [NSArray arrayWithObjects:@"fstd-scene", @"fsbd-scene", @"cfg-scene", @"json-scene", nullptr];
     [view registerForDraggedTypes:view.dropTypes];
-    
+
     [self setView:view];
 }
 

@@ -14,15 +14,15 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
-#include "finjin/common/EnumValues.hpp"
+#include "finjin/common/EnumArray.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/AssetClass.hpp"
 #include "finjin/engine/AssetReference.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -35,7 +35,7 @@ namespace Finjin { namespace Engine {
         void ParseSettings(const ByteBufferReader& configFileBuffer, const Path& assetFilePath, Error& error);
 
     public:
-        EnumValues<AssetClass, AssetClass::COUNT, size_t> assetCounts;
+        EnumArray<AssetClass, AssetClass::COUNT, size_t> assetCounts;
     };
 
 } }

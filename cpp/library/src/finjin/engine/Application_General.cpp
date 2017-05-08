@@ -24,17 +24,20 @@
 #include "finjin/engine/OSWindow.hpp"
 #include "ApplicationDelegate.hpp"
 
-#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12 && !FINJIN_TARGET_OS_IS_WINDOWS_UWP
+using namespace Finjin::Engine;
+
+
+//Macros------------------------------------------------------------------------
+#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12 && !FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
     #define TOGGLE_FULLSCREEN_ON_LOST_FOCUS 1 //Sometimes helpful to set this to 0 during multi-screen development on Windows
 #else
     #define TOGGLE_FULLSCREEN_ON_LOST_FOCUS 0
 #endif
 
-using namespace Finjin::Common;
-using namespace Finjin::Engine;
+#define ALLOW_USER_HOME_DIRECTORY_EXPANSION 1
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 class WindowedViewportUpdateContext : public ApplicationViewportUpdateContext
 {
 public:
@@ -64,10 +67,10 @@ private:
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //Memory allocators
-#if FINJIN_TARGET_OS_IS_WINDOWS
+#if FINJIN_TARGET_PLATFORM_IS_WINDOWS
     #define NEW_THROW throw()
 #else
     #define NEW_THROW throw(std::bad_alloc)
@@ -97,7 +100,7 @@ void operator delete[](void* p) noexcept
 WindowedViewportUpdateContext::WindowedViewportUpdateContext(Allocator* allocator, ApplicationViewport* appViewport) : ApplicationViewportUpdateContext(allocator)
 {
     this->appViewport = appViewport;
-    
+
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     this->vrContext = appViewport->GetVRContext();
 #endif
@@ -162,11 +165,12 @@ bool WindowedViewportRenderContext::HasFocus() const
 }
 
 //Application
-Application::Application(Allocator* allocator, ApplicationDelegate* applicationDelegate, void* applicationHandle) : 
+Application::Application(Allocator* allocator, ApplicationDelegate* applicationDelegate, void* applicationHandle) :
     AllocatedClass(allocator),
     memorySettings(allocator),
     standardPaths(allocator),
     workingPath(allocator),
+    workingPath2(allocator),
     workingAssetRef(allocator),
     defaultStringsAssetFileNames(allocator),
     inputContextSettings(allocator),
@@ -176,11 +180,11 @@ Application::Application(Allocator* allocator, ApplicationDelegate* applicationD
     ,
     vrContextSettings(allocator)
 #endif
-{    
+{
     assert(applicationDelegate != nullptr);
 
     this->applicationHandle = applicationHandle;
-    
+
     this->estimatedBytesFreeAtInitialization = 0;
 
     this->applicationDelegate.reset(applicationDelegate);
@@ -254,14 +258,22 @@ bool Application::Run(CommandLineArgsProcessor& argsProcessor, Error& error)
     FINJIN_ERROR_METHOD_START(error);
 
     //Command line settings----------------------------------------------------
-    ReadCommandLineSettings(argsProcessor, error);
+    auto commandLineResult = ReadCommandLineSettings(argsProcessor, error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to initialize application.");
         return false;
     }
+    if (commandLineResult == ReadCommandLineResult::SHOW_USAGE)
+    {
+        Utf8String usage;
+        this->applicationDelegate->GetCommandLineUsage(usage);
+        if (!usage.empty())
+            std::cout << usage << std::endl;
+        return true;
+    }
 
-    //Initialize--------------------------------------------------    
+    //Initialize--------------------------------------------------
     Initialize(error);
     if (error)
     {
@@ -269,27 +281,26 @@ bool Application::Run(CommandLineArgsProcessor& argsProcessor, Error& error)
         return false;
     }
 
-    //Main loop--------------------------------------------------    
+    //Main loop--------------------------------------------------
     MainLoop(error);
     if (error)
     {
-        FINJIN_SET_ERROR(error, "An error occurred while running the application.");        
+        FINJIN_SET_ERROR(error, "An error occurred while running the application.");
         return false;
     }
 
     return true;
 }
 
-void Application::ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error)
+ReadCommandLineResult Application::ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    this->applicationDelegate->ReadCommandLineSettings(argsProcessor, error);
+    auto result = this->applicationDelegate->ReadCommandLineSettings(argsProcessor, error);
     if (error)
-    {
         FINJIN_SET_ERROR(error, "Failed to read command line settings");
-        return;
-    }
+
+    return result;
 }
 
 void Application::OnSystemMessage(const ApplicationSystemMessage& message, Error& error)
@@ -305,7 +316,7 @@ void Application::OnSystemMessage(const ApplicationSystemMessage& message, Error
         case ApplicationSystemMessage::PAUSE:
         {
             for (auto& appViewport : this->appViewportsController)
-                appViewport->FinishWork(true);
+                appViewport->FinishWork(true, false);
             this->jobSystem.Stop();
             break;
         }
@@ -324,9 +335,9 @@ void Application::OnSystemMessage(const ApplicationSystemMessage& message, Error
 }
 
 void Application::Tick(Error& error)
-{    
+{
     FINJIN_ERROR_METHOD_START(error);
-    
+
     if (!this->appViewportsController.empty())
     {
         //Update file operation queue
@@ -363,7 +374,7 @@ void Application::Tick(Error& error)
             if (appViewport->GetOSWindow()->HasWindowHandle())
             {
                 appViewport->GetOSWindow()->Tick();
-                
+
                 appViewport->OnTick(jobSystem, error);
                 if (error)
                 {
@@ -379,7 +390,7 @@ void Application::Tick(Error& error)
         {
             HandleApplicationViewportEndOfLife(appViewport.get(), true);
             appViewport.reset();
-        }        
+        }
     }
 }
 
@@ -394,12 +405,12 @@ void Application::Initialize(Error& error)
     //auto bytesUsed = MemorySize::Format(GetAllocator()->GetBytesUsed());
 
     this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator());
-    
+
     for (size_t applicationFileSystemIndex = 0; applicationFileSystemIndex < (size_t)ApplicationFileSystem::COUNT; applicationFileSystemIndex++)
     {
         auto& fileSystem = this->fileSystems[applicationFileSystemIndex];
         auto applicationFileSystem = static_cast<ApplicationFileSystem>(applicationFileSystemIndex);
-        
+
         VirtualFileSystem::Settings fileSystemSettings;
         fileSystemSettings.maxEntries = this->applicationDelegate->GetMaxFileSystemEntries(applicationFileSystem);
         if (fileSystemSettings.maxEntries > 0)
@@ -425,7 +436,7 @@ void Application::Initialize(Error& error)
             return;
         }
     }
-    
+
     //Platform-specific globals, including asset file system
     InitializeGlobals(error);
     if (error)
@@ -481,8 +492,9 @@ void Application::Initialize(Error& error)
     //Set up file systems----------------------------------------------------------------------------
 
     //Set up user data file system
-    this->standardPaths.ForEachUserPath([&](const StandardPath& standardPath)
+    this->standardPaths.ForEachUserPath([&](const StandardPath& standardPath, Error& error)
     {
+        FINJIN_ERROR_METHOD_START(error);
         if (!standardPath.isSystemCreated)
             standardPath.path.CreateDirectories();
 
@@ -494,14 +506,20 @@ void Application::Initialize(Error& error)
         }
 
         return true;
-    });
-    
+    }, error);
+    if (error)
+    {
+        //The error was set while adding user paths
+        FINJIN_SET_ERROR(error, "Failed to add all standard user paths to virtual file system.");
+        return;
+    }
+
     if (!this->standardPaths.userApplicationSettingsDirectory.path.empty())
     {
         auto& standardPath = this->standardPaths.userApplicationSettingsDirectory;
         if (!standardPath.isSystemCreated)
             standardPath.path.CreateDirectories();
-        
+
         this->fileSystems[ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA].AddDirectory(standardPath.path, error);
         if (error)
         {
@@ -509,7 +527,7 @@ void Application::Initialize(Error& error)
             return;
         }
     }
-    
+
     //Handle temp directory
     if (!this->standardPaths.userApplicationTemporaryDirectory.path.empty())
     {
@@ -584,7 +602,7 @@ void Application::Initialize(Error& error)
         FINJIN_SET_ERROR(error, "Failed to add 'read application assets' file system to asset file reader.");
         return;
     }
-    
+
     //Finish initializing asset reader
     if (this->assetFileReader.GetRootDirectoryNameCount() == 0)
     {
@@ -632,9 +650,9 @@ void Application::Initialize(Error& error)
     }
 
     FINJIN_DEBUG_LOG_INFO("Memory usage after asset class file readers: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
-    
+
     //Memory settings/allocator--------------------------------------------
-    
+
     //Read settings
     this->workingAssetRef.ForLocalFile("memory.cfg");
     this->assetClassFileReaders[AssetClass::SETTINGS].ReadAndParseSettingsFile(this->memorySettings, this->configFileBuffer, this->workingAssetRef, error);
@@ -672,7 +690,7 @@ void Application::Initialize(Error& error)
     FINJIN_DEBUG_LOG_INFO("Memory usage after initializing application allocator: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Read various settings-------------------------------------------------------------------------
-    
+
     //Read default strings asset
     if (this->defaultStringsAssetFileNames.empty())
     {
@@ -710,7 +728,7 @@ void Application::Initialize(Error& error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
         return;
     }
-    
+
     //Job system settings
     this->workingAssetRef.ForLocalFile("job-system.cfg");
     this->jobSystemSettings.allocator = &this->applicationAllocator;
@@ -805,7 +823,7 @@ void Application::Initialize(Error& error)
         }
         if (this->gpuContextSettings.staticMeshRendererSettingsFileNames.empty())
         {
-            for (auto fileName : { "gpu-context-static-mesh-renderer-buffer-formats.cfg", "gpu-context-static-mesh-renderer-root-signatures.cfg", "gpu-context-static-mesh-renderer-render-states.cfg" })
+            for (auto fileName : { "gpu-context-static-mesh-renderer-buffer-formats.cfg" })
             {
                 this->gpuContextSettings.staticMeshRendererSettingsFileNames.AddLocalFile(fileName, error);
                 if (error)
@@ -841,7 +859,7 @@ void Application::Initialize(Error& error)
     FINJIN_DEBUG_LOG_INFO("Memory usage after reading settings: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Initialize various systems------------------------------------------------------------
-    
+
     this->fileSystemOperationQueueSettings.allocator = &this->applicationAllocator;
     this->fileSystemOperationQueue.Create(this->fileSystemOperationQueueSettings, error);
     if (error)
@@ -849,7 +867,7 @@ void Application::Initialize(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize file system operation queue.");
         return;
     }
-    
+
     this->assetReadQueueSettings.allocator = &this->applicationAllocator;
     this->assetReadQueue.Create(assetReadQueueSettings, error);
     if (error)
@@ -857,12 +875,12 @@ void Application::Initialize(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize asset operation queue.");
         return;
     }
-    
+
     //Threading
     {
         //Set main (this) thread name
         this->mainThreadName.Create(&this->applicationAllocator);
-        if (this->mainThreadName.assign(this->applicationDelegate->GetName(ApplicationNameFormat::CAMEL_CASE)).HasError())
+        if (this->mainThreadName.assign(this->applicationDelegate->GetName(ApplicationNameFormat::LOWER_CASE)).HasError())
         {
             FINJIN_SET_ERROR(error, "Failed to assign camel case name to working main thread name.");
             return;
@@ -882,7 +900,7 @@ void Application::Initialize(Error& error)
             return;
         }
         this->logicalCpus.AssociateCurrentThreadAndRemove(&this->mainThreadLogicalCpu);
-        
+        //this->logicalCpus.Truncate(1); //For testing
         //this->logicalCpus.Output(std::cout); //For testing
     }
 
@@ -904,7 +922,7 @@ void Application::Initialize(Error& error)
     //Input, sound, GPU, VR
     this->inputSystemSettings.allocator = &this->applicationAllocator;
     this->soundSystemSettings.allocator = &this->applicationAllocator;
-    this->gpuSystemSettings.applicationName = this->applicationDelegate->GetName(ApplicationNameFormat::CAMEL_CASE);
+    this->gpuSystemSettings.applicationName = this->applicationDelegate->GetName(ApplicationNameFormat::LOWER_CASE);
     this->gpuSystemSettings.allocator = &this->applicationAllocator;
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     this->vrSystemSettings.allocator = &this->applicationAllocator;
@@ -920,14 +938,14 @@ void Application::Initialize(Error& error)
 
     //Initialize windows------------------------------------------------------------------------
     Setting<size_t> mainApplicationViewportIndex(0);
-    
+
     auto viewportDescriptionCount = this->applicationDelegate->GetApplicationViewportDescriptionCount();
     this->applicationDelegate->SetActualApplicationViewportDescriptionCount(viewportDescriptionCount);
     this->workingWindowInternalName.Create(&this->applicationAllocator);
     for (size_t windowIndex = 0; windowIndex < viewportDescriptionCount; windowIndex++)
     {
         const auto& windowDescription = this->applicationDelegate->GetApplicationViewportDescription(windowIndex);
-        
+
         //Create ApplicationViewport----------------------------
         std::unique_ptr<ApplicationViewport> appViewport(this->applicationDelegate->CreateApplicationViewport(&this->applicationAllocator, windowIndex));
         if (appViewport == nullptr)
@@ -937,7 +955,7 @@ void Application::Initialize(Error& error)
         }
         if (appViewport->IsMain() && !mainApplicationViewportIndex.IsSet())
             mainApplicationViewportIndex = windowIndex;
-        
+
         std::unique_ptr<ApplicationViewportDelegate> appWindowDelegate(this->applicationDelegate->CreateApplicationViewportDelegate(&this->applicationAllocator, windowIndex));
         if (appWindowDelegate == nullptr)
         {
@@ -958,9 +976,14 @@ void Application::Initialize(Error& error)
         }
         else
         {
-            if (this->workingWindowInternalName.assign(this->applicationDelegate->GetName(ApplicationNameFormat::CAMEL_CASE)).HasError())
+            if (this->workingWindowInternalName.assign(this->applicationDelegate->GetName(ApplicationNameFormat::LOWER_CASE)).HasError())
             {
-                FINJIN_SET_ERROR(error, "Failed to assign application delegates's camel case name to working window internal name.");
+                FINJIN_SET_ERROR(error, "Failed to assign application delegates's camel lower name to working window internal name.");
+                return;
+            }
+            if (this->workingWindowInternalName.append("-").HasError())
+            {
+                FINJIN_SET_ERROR(error, "Failed to append dash to working window internal name.");
                 return;
             }
             if (this->workingWindowInternalName.append(Convert::ToString(windowIndex)).HasError())
@@ -980,7 +1003,7 @@ void Application::Initialize(Error& error)
         //Size
         WindowSize windowSize;
         GetConfiguredApplicationViewportSize(windowSize, windowDescription.windowFrame);
-                
+
         //Create
         auto osWindow = AllocatedClass::NewUnique<OSWindow>(&this->applicationAllocator, FINJIN_CALLER_ARGUMENTS, appViewport.get()); //Pass appViewport as 'client data' for faster lookup in OSWindowToApplicationViewport()
         if (osWindow == nullptr)
@@ -998,7 +1021,7 @@ void Application::Initialize(Error& error)
         }
         appViewport->SetOSWindow(std::move(osWindow));
         appViewport->SetDelegate(std::move(appWindowDelegate));
-        
+
         //Add to collection-----------------------------------------
         this->appViewportsController.push_back(std::move(appViewport));
     }
@@ -1029,7 +1052,7 @@ void Application::Initialize(Error& error)
             return;
         }
     }
-    
+
     FINJIN_DEBUG_LOG_INFO("Memory usage after creation: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     this->applicationDelegate->OnStart();
@@ -1039,21 +1062,21 @@ void Application::Destroy()
 {
     this->assetReadQueue.Destroy();
     this->fileSystemOperationQueue.Destroy();
-    
+
     auto closingWindows = this->appViewportsController.GetAllViewports();
     for (auto& appViewport : closingWindows)
     {
         HandleApplicationViewportEndOfLife(appViewport.get(), true);
         appViewport.reset();
-    }        
-    
+    }
+
     if (this->applicationDelegate != nullptr)
         this->applicationDelegate->OnStop();
 
-#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE        
+#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     this->vrSystem.Destroy();
 #endif
-    
+
     this->gpuSystem.Destroy();
 
     this->soundSystem.Destroy();
@@ -1070,7 +1093,7 @@ void Application::WindowMoved(OSWindow* osWindow)
 void Application::WindowResized(OSWindow* osWindow)
 {
     auto appViewport = OSWindowToApplicationViewport(osWindow);
-    
+
     if (appViewport->NotifyWindowResized())
         appViewport->GetDelegate()->OnApplicationViewportResized(appViewport);
 }
@@ -1088,10 +1111,10 @@ void Application::WindowLostFocus(OSWindow* osWindow)
 }
 
 void Application::WindowClosing(OSWindow* osWindow)
-{   
+{
     auto appViewport = OSWindowToApplicationViewport(osWindow);
     HandleApplicationViewportEndOfLife(appViewport, true);
-    
+
     //One window closing indicates all windows should close and that the application should exit
     for (auto& appViewport : this->appViewportsController)
         appViewport->RequestApplicationExit();
@@ -1101,7 +1124,7 @@ bool Application::WindowOnDropFiles(OSWindow* osWindow, const Path* fileNames, s
 {
     for (size_t droppedFileIndex = 0; droppedFileIndex < count; droppedFileIndex++)
         FINJIN_DEBUG_LOG_INFO("Dropped: %1%", fileNames[droppedFileIndex]);
-    
+
     osWindow->Raise();
 
     return false;
@@ -1114,35 +1137,35 @@ void Application::GetConfiguredApplicationViewportSize(WindowSize& windowSize, c
     const auto& appSettings = this->applicationDelegate->GetApplicationSettings();
 
     if (appSettings.isFullScreen && appSettings.isFullScreenExclusive)
-        windowSize.SetFullScreenState(WindowSize::EXCLUSIVE_FULLSCREEN);
-    
+        windowSize.SetFullScreenState(WindowSizeState::EXCLUSIVE_FULLSCREEN);
+
     if (appSettings.windowWidth.IsSet() || appSettings.windowHeight.IsSet())
     {
-        auto bounds = windowSize.GetBounds(WindowSize::WINDOWED_NORMAL);
+        auto bounds = windowSize.GetBounds(WindowSizeState::WINDOWED_NORMAL);
         if (appSettings.windowWidth.IsSet())
             bounds.width = appSettings.windowWidth;
         if (appSettings.windowHeight.IsSet())
             bounds.height = appSettings.windowHeight;
-        windowSize.SetBounds(WindowSize::WINDOWED_NORMAL, bounds);
+        windowSize.SetBounds(WindowSizeState::WINDOWED_NORMAL, bounds);
     }
     else
     {
-        auto bounds = windowSize.GetBounds(WindowSize::WINDOWED_NORMAL);
+        auto bounds = windowSize.GetBounds(WindowSizeState::WINDOWED_NORMAL);
         bounds.x = windowFrame.value.GetX();
         bounds.y = windowFrame.value.GetY();
         bounds.width = windowFrame.value.GetWidth();
         bounds.height = windowFrame.value.GetHeight();
-        windowSize.SetBounds(WindowSize::WINDOWED_NORMAL, bounds);
+        windowSize.SetBounds(WindowSizeState::WINDOWED_NORMAL, bounds);
     }
-    
+
     if (appSettings.fullScreenWidth.IsSet() || appSettings.fullScreenHeight.IsSet())
     {
-        auto bounds = windowSize.GetBounds(WindowSize::EXCLUSIVE_FULLSCREEN);
+        auto bounds = windowSize.GetBounds(WindowSizeState::EXCLUSIVE_FULLSCREEN);
         if (appSettings.fullScreenWidth.IsSet())
             bounds.width = appSettings.fullScreenWidth;
         if (appSettings.fullScreenHeight.IsSet())
             bounds.height = appSettings.fullScreenHeight;
-        windowSize.SetBounds(WindowSize::EXCLUSIVE_FULLSCREEN, bounds);
+        windowSize.SetBounds(WindowSizeState::EXCLUSIVE_FULLSCREEN, bounds);
     }
 }
 
@@ -1162,8 +1185,8 @@ void Application::HandleApplicationViewportLostFocus(ApplicationViewport* appVie
         //So to be safe, let all windows finish their scheduled work and then toggle out of full screen exclusive
 
         for (auto& otherAppViewport : this->appViewportsController)
-            otherAppViewport->FinishWork(false);
-        
+            otherAppViewport->FinishWork(false, false);
+
         this->appViewportsController.RequestFullScreenToggle();
     }
 #endif
@@ -1172,7 +1195,7 @@ void Application::HandleApplicationViewportLostFocus(ApplicationViewport* appVie
 }
 
 void Application::HandleApplicationViewportGainedFocus(ApplicationViewport* appViewport)
-{    
+{
     if (appViewport->GetInputContext() != nullptr)
         appViewport->GetInputContext()->HandleApplicationViewportGainedFocus();
 
@@ -1211,7 +1234,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    //Input    
+    //Input
     {
         this->inputContextSettings.osWindow = appViewport->GetOSWindow();
         std::unique_ptr<InputContext> inputContext(this->inputSystem.CreateContext(this->inputContextSettings, error));
@@ -1223,10 +1246,10 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         }
         appViewport->SetInputContext(std::move(inputContext));
     }
-    
+
     //Sound
     if (appViewport->IsMain())
-    {        
+    {
         this->soundContextSettings.osWindow = appViewport->GetOSWindow();
         std::unique_ptr<SoundContext> soundContext(this->soundSystem.CreateContext(this->soundContextSettings, error));
         this->soundContextSettings.osWindow = nullptr;
@@ -1242,7 +1265,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
     {
         this->gpuContextSettings.osWindow = appViewport->GetOSWindow();
         this->gpuContextSettings.gpuID = windowDescription.gpuID;
-        this->gpuContextSettings.frameCount.requested = Limited(windowDescription.requestedFrameCount, (size_t)EngineConstants::MIN_FRAME_BUFFERS, (size_t)EngineConstants::MAX_FRAME_BUFFERS);
+        this->gpuContextSettings.frameBufferCount.requested = Limited(windowDescription.requestedFrameBufferCount, (size_t)EngineConstants::MIN_FRAME_BUFFERS, (size_t)EngineConstants::MAX_FRAME_BUFFERS);
         std::unique_ptr<GpuContext> gpuContext(this->gpuSystem.CreateContext(this->gpuContextSettings, error));
         this->gpuContextSettings.osWindow = nullptr;
         if (error)
@@ -1254,9 +1277,9 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
     }
 
     //VR
-#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE        
+#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     if (appViewport->IsMain())
-    {            
+    {
         this->vrContextSettings.addDeviceHandler = [this, appViewport](VRContext* vrContext, size_t vrDeviceIndex)
         {
             auto deviceClass = vrContext->GetDeviceClass(vrDeviceIndex);
@@ -1282,7 +1305,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
                     foundUnused->vrContext = vrContext;
                     foundUnused->vrDeviceIndex = vrDeviceIndex;
                     this->vrHeadsetsForInputSystem.Use(foundUnused);
-                    
+
                     FINJIN_DECLARE_ERROR(error);
                     appViewport->GetInputContext()->AddExternalHeadset(foundUnused, true, error);
                     FINJIN_DEBUG_LOG_ERROR("Failed to add external VR headset: %1%", error.GetLastNonEmptyErrorMessage());
@@ -1300,7 +1323,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
                     this->vrGameControllersForInputSystem.Unuse(foundUsed);
                     appViewport->GetInputContext()->RemoveExternalGameController(foundUsed);
                 }
-            }            
+            }
             else if (deviceClass == InputDeviceClass::HEADSET)
             {
                 auto foundUsed = this->vrHeadsetsForInputSystem.FindUsed(VRHeadsetForInputSystem(vrContext, vrDeviceIndex));
@@ -1348,7 +1371,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         auto jobProcessingPipelineSize = appViewport->GetGpuContext()->GetSettings().jobProcessingPipelineSize;
         appViewport->ConfigureJobPipeline
             (
-            Limited(windowDescription.jobProcessingPipelineSize, 1, jobProcessingPipelineSize), 
+            Limited(windowDescription.jobProcessingPipelineSize, 1, jobProcessingPipelineSize),
             jobProcessingPipelineSize
             );
         for (size_t stageIndex = 0; stageIndex < appViewport->GetJobPipelineSize(); stageIndex++)
@@ -1361,7 +1384,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
             updateContext->standardPaths = &this->standardPaths;
             updateContext->userInfo = &this->userInfo;
             updateContext->domainInfo = &this->domainInfo;
-        
+
         #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
             if (!updateContext->vrEvents.CreateEmpty(this->vrContextSettings.maxCommandsPerUpdate, &this->applicationAllocator))
             {
@@ -1407,7 +1430,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
                     return;
                 }
             }
-            
+
             if (!updateContext->soundEvents.CreateEmpty(this->soundContextSettings.maxCommandsPerUpdate, &this->applicationAllocator))
             {
                 FINJIN_SET_ERROR(error, "Failed to allocate sound events collection.");
@@ -1429,7 +1452,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
                     return;
                 }
             }
-            
+
             if (!updateContext->gpuEvents.CreateEmpty(this->gpuContextSettings.maxCommandsPerUpdate, &this->applicationAllocator))
             {
                 FINJIN_SET_ERROR(error, "Failed to allocate GPU events collection.");
@@ -1455,15 +1478,15 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
 
             //Create render context
             auto renderContext = AllocatedClass::NewUnique<WindowedViewportRenderContext>(&this->applicationAllocator, FINJIN_CALLER_ARGUMENTS, appViewport);
-            
+
             //Set update and render contexts into the stage
             appViewport->SetJobPipelineStageData(stageIndex, std::move(updateContext), std::move(renderContext));
         }
     }
-        
+
     //At this point the appViewport is successfully set up so add a listener
     appViewport->GetOSWindow()->AddWindowEventListener(this);
-            
+
     //Apply window size if it isn't full screen
     if (!this->applicationDelegate->GetApplicationSettings().isFullScreen)
         appViewport->GetOSWindow()->ApplyWindowSize();
@@ -1473,16 +1496,16 @@ void Application::HandleApplicationViewportEndOfLife(ApplicationViewport* appVie
 {
     //Let the application delegate perform application specific logic on the window
     //At a minimum it should let any async work finish
-    appViewport->FinishWork(false);
+    appViewport->FinishWork(false, false);
     appViewport->GetDelegate()->OnApplicationViewportClosing(appViewport);
-    
+
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     this->vrSystem.DestroyContext(appViewport->DetachVRContext());
 #endif
     this->gpuSystem.DestroyContext(appViewport->DetachGpuContext());
-    this->soundSystem.DestroyContext(appViewport->DetachSoundContext()); 
-    this->inputSystem.DestroyContext(appViewport->DetachInputContext()); 
-    
+    this->soundSystem.DestroyContext(appViewport->DetachSoundContext());
+    this->inputSystem.DestroyContext(appViewport->DetachInputContext());
+
     //Remove event listener to prevent triggering any more events
     if (appViewport->GetOSWindow() != nullptr)
         appViewport->GetOSWindow()->RemoveWindowEventListener(this);
@@ -1517,12 +1540,13 @@ void Application::ReadBootFile(Error& error)
     {
         switch (line->GetType())
         {
-            case ConfigDocumentLine::Type::SECTION: 
+            case ConfigDocumentLine::Type::SECTION:
             {
                 line->GetSectionName(section);
 
                 if (section == "asset-reader" || section == "asset-file-system" || section == "settings-files" || section == "strings-files")
-                {   
+                {
+                    //Do nothing
                 }
                 else if (this->applicationDelegate->ReadBootFileSection(reader, section, error))
                 {
@@ -1537,7 +1561,7 @@ void Application::ReadBootFile(Error& error)
 
                 break;
             }
-            case ConfigDocumentLine::Type::KEY_AND_VALUE: 
+            case ConfigDocumentLine::Type::KEY_AND_VALUE:
             {
                 line->GetKeyAndValue(key, value);
 
@@ -1583,14 +1607,27 @@ void Application::ReadBootFile(Error& error)
                 {
                     if (key == "zip")
                     {
+                        if (this->workingPath2.assign(value).HasError())
+                        {
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign zip path '%1%' to working path.", value));
+                            return;
+                        }
+                    #if ALLOW_USER_HOME_DIRECTORY_EXPANSION
+                        if (this->workingPath2.ExpandUserHomeDirectory().HasError())
+                        {
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to expand zip path '%1%' user home directory component.", value));
+                            return;
+                        }
+                    #endif
+
                         if (this->workingPath.assign(this->standardPaths.applicationBundleDirectory.path).HasError())
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign application bundle directory '%1%' to working path.", this->standardPaths.applicationBundleDirectory.path));
                             return;
                         }
-                        if ((this->workingPath /= value).HasError())
+                        if ((this->workingPath /= this->workingPath2).HasError())
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to append zip file '%1%' to working path.", value));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to append zip file '%1%' to working path.", this->workingPath2));
                             return;
                         }
 
@@ -1603,14 +1640,27 @@ void Application::ReadBootFile(Error& error)
                     }
                     else if (key == "directory")
                     {
+                        if (this->workingPath2.assign(value).HasError())
+                        {
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign directory path '%1%' to working path.", value));
+                            return;
+                        }
+                    #if ALLOW_USER_HOME_DIRECTORY_EXPANSION
+                        if (this->workingPath2.ExpandUserHomeDirectory().HasError())
+                        {
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to expand directory path '%1%' user home directory component.", value));
+                            return;
+                        }
+                    #endif
+
                         if (this->workingPath.assign(this->standardPaths.applicationBundleDirectory.path).HasError())
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign application bundle directory '%1%' to working path.", this->standardPaths.applicationBundleDirectory.path));
                             return;
                         }
-                        if ((this->workingPath /= value).HasError())
+                        if ((this->workingPath /= this->workingPath2).HasError())
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to append directory '%1%' to working path.", value));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to append directory '%1%' to working path.", this->workingPath2));
                             return;
                         }
 
@@ -1723,7 +1773,7 @@ void Application::ReadBootFile(Error& error)
                             FINJIN_SET_ERROR(error, "Failed to parse 'vr' section setting.");
                             return;
                         }
-                    }                    
+                    }
                 }
                 #endif
                 else if (section == "string-table-files")

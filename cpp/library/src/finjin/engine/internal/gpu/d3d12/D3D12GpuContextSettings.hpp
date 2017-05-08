@@ -14,25 +14,28 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
+#include "finjin/common/RequestedValue.hpp"
 #include "finjin/engine/GpuContextCommonSettings.hpp"
-#include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include <dxgi1_4.h>
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     struct D3D12GpuContextSettings : GpuContextCommonSettings
     {
         D3D12GpuContextSettings(Allocator* allocator);
 
         bool useSoftwareGpu;
-        DXGI_FORMAT colorFormat;
-        DXGI_FORMAT depthStencilFormat;
+
+        RequestedValue<DXGI_FORMAT> colorFormat;
+        RequestedValue<DXGI_FORMAT> depthStencilFormat;
+
+        bool stencilRequired;
     };
-    
+
 } }

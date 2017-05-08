@@ -17,17 +17,20 @@
 #include "finjin/engine/PlatformCapabilities.hpp"
 #include <Windows.h>
 
-//Sizes from https://msdn.microsoft.com/en-us/windows/uwp/layout/screen-sizes-and-breakpoints-for-responsive-design
-#define DISPLAY_SMALL_DIMENSION 320
-#define DISPLAY_MEDIUM_DIMENSION 720
-#define DISPLAY_LARGE_DIMENSION 1024
-
 using namespace Finjin::Engine;
 using namespace Windows::Graphics::Display;
 using namespace Windows::Devices::Input;
 
 
-//Implementation---------------------------------------------------------------
+//Macros------------------------------------------------------------------------
+//Sizes from https://msdn.microsoft.com/en-us/windows/uwp/layout/screen-sizes-and-breakpoints-for-responsive-design
+#define DISPLAY_SMALL_DIMENSION 320
+#define DISPLAY_MEDIUM_DIMENSION 720
+#define DISPLAY_LARGE_DIMENSION 1024
+
+
+//Implementation----------------------------------------------------------------
+
 //DisplayInfo
 DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0), clientFrame(0, 0, 0, 0)
 {
@@ -43,7 +46,7 @@ DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0), clientFrame(0, 0, 0, 0)
 
 //DisplayInfos
 void DisplayInfos::Enumerate(const HardwareGpuDescriptions& hardwareGpus)
-{    
+{
     clear();
 
     auto touchCaps = ref new TouchCapabilities();
@@ -67,7 +70,7 @@ void DisplayInfos::Enumerate(const HardwareGpuDescriptions& hardwareGpus)
                 auto top = platformCaps.PixelsToDips(output.desc.DesktopCoordinates.top, currentDisplayInformation->LogicalDpi);
                 auto width = platformCaps.PixelsToDips(output.desc.DesktopCoordinates.right - output.desc.DesktopCoordinates.left, currentDisplayInformation->LogicalDpi);
                 auto height = platformCaps.PixelsToDips(output.desc.DesktopCoordinates.bottom - output.desc.DesktopCoordinates.top, currentDisplayInformation->LogicalDpi);
-                
+
                 DisplayInfo display;
                 display.index = displayIndex++;
                 display.isPrimary = output.desc.DesktopCoordinates.left == 0 && output.desc.DesktopCoordinates.top == 0;

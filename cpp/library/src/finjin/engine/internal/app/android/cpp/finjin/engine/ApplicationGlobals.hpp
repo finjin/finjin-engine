@@ -14,25 +14,24 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/Utf8String.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class ApplicationGlobals
     {
-    public:    
+    public:
         ApplicationGlobals();
 
         int NewLooperID();
 
     private:
         int alooperIdentifierGenerator;
-    };    
+    };
 
 } }

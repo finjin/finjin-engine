@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/Vector.hpp"
+//Includes----------------------------------------------------------------------
+#include "finjin/common/StaticVector.hpp"
 #include "D3D12DisplayMode.hpp"
 #include "D3D12RefreshRate.hpp"
 #include <dxgi1_4.h>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;

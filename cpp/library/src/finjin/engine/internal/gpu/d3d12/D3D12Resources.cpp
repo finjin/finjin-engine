@@ -21,14 +21,38 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
-D3D12Resources::D3D12Resources()
+//Implementation----------------------------------------------------------------
+D3D12AssetResources::D3D12AssetResources()
 {
     this->waitingToBeResidentTexturesHead = nullptr;
-    this->waitingToBeResidentMeshesHead = nullptr;    
+    this->waitingToBeResidentMeshesHead = nullptr;
 }
 
-void D3D12Resources::ValidateTextureForCreation(const Utf8String& name, Error& error)
+void D3D12AssetResources::Destroy()
+{
+    this->inputFormatsByNameHash.Destroy();
+
+    for (auto& texture : this->texturesByNameHash)
+        texture.second.Destroy();
+    this->texturesByNameHash.Destroy();
+
+    for (auto& count : this->textureOffsetsByDimension)
+        count.Reset();
+
+    for (auto& shaders : this->shadersByShaderTypeAndNameHash)
+        shaders.Destroy();
+
+    this->materialsByNameHash.Destroy();
+
+    for (auto& mesh : this->meshesByNameHash)
+        mesh.second.Destroy();
+    this->meshesByNameHash.Destroy();
+
+    this->waitingToBeResidentTexturesHead = nullptr;
+    this->waitingToBeResidentMeshesHead = nullptr;
+}
+
+void D3D12AssetResources::ValidateTextureForCreation(const Utf8String& name, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -44,7 +68,7 @@ void D3D12Resources::ValidateTextureForCreation(const Utf8String& name, Error& e
     }
 }
 
-D3D12Texture* D3D12Resources::GetTextureByName(const Utf8String& name)
+D3D12Texture* D3D12AssetResources::GetTextureByName(const Utf8String& name)
 {
     auto foundAt = this->texturesByNameHash.find(name.GetHash());
     if (foundAt != this->texturesByNameHash.end())
@@ -52,7 +76,7 @@ D3D12Texture* D3D12Resources::GetTextureByName(const Utf8String& name)
     return nullptr;
 }
 
-void D3D12Resources::ValidateMeshForCreation(const Utf8String& name, Error& error)
+void D3D12AssetResources::ValidateMeshForCreation(const Utf8String& name, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -68,7 +92,7 @@ void D3D12Resources::ValidateMeshForCreation(const Utf8String& name, Error& erro
     }
 }
 
-D3D12Mesh* D3D12Resources::GetMeshByName(const Utf8String& name)
+D3D12Mesh* D3D12AssetResources::GetMeshByName(const Utf8String& name)
 {
     auto foundAt = this->meshesByNameHash.find(name.GetHash());
     if (foundAt != this->meshesByNameHash.end())
@@ -76,7 +100,7 @@ D3D12Mesh* D3D12Resources::GetMeshByName(const Utf8String& name)
     return nullptr;
 }
 
-void D3D12Resources::ValidateMaterialForCreation(const Utf8String& name, Error& error)
+void D3D12AssetResources::ValidateMaterialForCreation(const Utf8String& name, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -92,7 +116,7 @@ void D3D12Resources::ValidateMaterialForCreation(const Utf8String& name, Error& 
     }
 }
 
-D3D12Material* D3D12Resources::GetMaterialByName(const Utf8String& name)
+D3D12Material* D3D12AssetResources::GetMaterialByName(const Utf8String& name)
 {
     auto foundAt = this->materialsByNameHash.find(name.GetHash());
     if (foundAt != this->materialsByNameHash.end())
@@ -100,7 +124,7 @@ D3D12Material* D3D12Resources::GetMaterialByName(const Utf8String& name)
     return nullptr;
 }
 
-bool D3D12Resources::ValidateShaderForCreation(D3D12ShaderType shaderType, const Utf8String& name, Error& error)
+bool D3D12AssetResources::ValidateShaderForCreation(D3D12ShaderType shaderType, const Utf8String& name, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -115,11 +139,11 @@ bool D3D12Resources::ValidateShaderForCreation(D3D12ShaderType shaderType, const
     //Encountering a duplicate shader isn't an error condition
     if (shadersByNameHash.contains(name.GetHash()))
         return false;
-    
+
     return true;
 }
 
-D3D12Shader* D3D12Resources::GetShaderByName(D3D12ShaderType shaderType, const Utf8String& name)
+D3D12Shader* D3D12AssetResources::GetShaderByName(D3D12ShaderType shaderType, const Utf8String& name)
 {
     auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
 
@@ -129,11 +153,11 @@ D3D12Shader* D3D12Resources::GetShaderByName(D3D12ShaderType shaderType, const U
     return nullptr;
 }
 
-D3D12InputFormat* D3D12Resources::GetInputFormatByTypeName(const Utf8String& name)
+D3D12InputFormat* D3D12AssetResources::GetInputFormatByTypeName(const Utf8String& name)
 {
     auto foundAt = this->inputFormatsByNameHash.find(name.GetHash());
     if (foundAt != this->inputFormatsByNameHash.end())
-        return &foundAt->second;    
+        return &foundAt->second;
     return nullptr;
 }
 

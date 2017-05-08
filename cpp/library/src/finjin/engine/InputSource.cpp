@@ -18,12 +18,14 @@
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/Math.hpp"
 
-#define DEFAULT_DEVICE_INDEX 0
-
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Macros------------------------------------------------------------------------
+#define DEFAULT_DEVICE_INDEX 0
+
+
+//Implementation----------------------------------------------------------------
 
 //InputSource
 InputSource::InputSource()
@@ -127,7 +129,7 @@ InputSource InputSource::FromTouchCount(size_t touchCount)
 {
     InputSource source;
     source.deviceComponent = InputDeviceComponent::TOUCH_COUNT;
-    source.touchCount = touchCount;    
+    source.touchCount = touchCount;
     source.deviceIndex = DEFAULT_DEVICE_INDEX;
     return source;
 }
@@ -160,7 +162,7 @@ InputSource InputSource::FromMultitouchRelativeRadius(size_t touchCount, int dir
     source.deviceComponent = InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS;
     source.direction = direction;
     source.directionFloat = (float)direction;
-    source.touchCount = touchCount;    
+    source.touchCount = touchCount;
     source.deviceIndex = DEFAULT_DEVICE_INDEX;
     return source;
 }
@@ -172,7 +174,7 @@ InputSource InputSource::FromMultitouchRelativeAxis(size_t touchCount, size_t ax
     source.axisIndex = axisIndex;
     source.direction = direction;
     source.directionFloat = (float)direction;
-    source.touchCount = touchCount;    
+    source.touchCount = touchCount;
     source.deviceIndex = DEFAULT_DEVICE_INDEX;
     return source;
 }
@@ -249,28 +251,28 @@ Utf8String InputSource::ToString() const
     switch (this->deviceComponent)
     {
         case InputDeviceComponent::KEYBOARD_KEY: return Utf8StringFormatter::Format("Device: Keyboard %1%, Key code: %2%, Key index: %3%", this->deviceIndex, this->keyCode, this->keyIndex);
-        
+
         case InputDeviceComponent::MOUSE_BUTTON: return Utf8StringFormatter::Format("Device: Mouse %1%, Button code: %2%, Button index: %3%", this->deviceIndex, this->buttonCode, this->buttonIndex);
         case InputDeviceComponent::MOUSE_RELATIVE_AXIS: return Utf8StringFormatter::Format("Device: Mouse (relative) %1%, Axis code: %2%, Axis index: %3%, Direction: %4%", this->deviceIndex, this->axisCode, this->axisIndex, this->direction);
         case InputDeviceComponent::MOUSE_ABSOLUTE_AXIS: return Utf8StringFormatter::Format("Device: Mouse (absolute) %1%, Axis code: %2%, Axis index: %3%, Direction: %4%", this->deviceIndex, this->axisCode, this->axisIndex, this->direction);
-        
+
         case InputDeviceComponent::GAME_CONTROLLER_BUTTON: return Utf8StringFormatter::Format("Device: Game controller %1%, Button code: %2%, Button index: %3%", this->deviceIndex, this->buttonCode, this->buttonIndex);
         case InputDeviceComponent::GAME_CONTROLLER_AXIS: return Utf8StringFormatter::Format("Device: Game controller %1%, Axis code: %2%, Axis index: %3%, Direction: %4%", this->deviceIndex, this->axisCode, this->axisIndex, this->direction);
         case InputDeviceComponent::GAME_CONTROLLER_POV: return Utf8StringFormatter::Format("Device: Game controller %1%, POV code: %2%, POV index: %3%, Direction: %4%", this->deviceIndex, this->povCode, this->povIndex, this->direction);
         case InputDeviceComponent::GAME_CONTROLLER_LOCATOR: return Utf8StringFormatter::Format("Device: Game controller %1%: Locator", this->deviceIndex);
-        
+
         case InputDeviceComponent::TOUCH_COUNT: return Utf8StringFormatter::Format("Device: Touch count. Count: %1%", this->touchCount);
         case InputDeviceComponent::TOUCH_RELATIVE_AXIS: return Utf8StringFormatter::Format("Device: Touch (relative), Axis index: %1%, Direction: %2%", this->axisIndex, this->direction);
         case InputDeviceComponent::TOUCH_ABSOLUTE_AXIS: return Utf8StringFormatter::Format("Device: Touch (absolute), Axis index: %1%, Direction: %2%", this->axisIndex, this->direction);
-        
+
         case InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS: return Utf8StringFormatter::Format("Device: Radius (relative), Count: %1%, Direction: %2%", this->touchCount, this->direction);
         case InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS: return Utf8StringFormatter::Format("Device: Multitouch (relative), Axis index: %1%, Direction: %2%", this->axisIndex, this->direction);
-        
+
         case InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS: return Utf8StringFormatter::Format("Device: Accelerometer (relative), Axis index: %1%, Direction: %2%", this->axisIndex, this->direction);
         case InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS: return Utf8StringFormatter::Format("Device: Accelerometer (absolute), Axis index: %1%, Direction: %2%", this->axisIndex, this->direction);
-        
+
         case InputDeviceComponent::HEADSET_LOCATOR: return Utf8StringFormatter::Format("Device: Headset %1%: Locator", this->deviceIndex);
-        
+
         default: return "Device: None"; break;
     }
 }

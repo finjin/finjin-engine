@@ -14,26 +14,17 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
+//Includes----------------------------------------------------------------------
+#include "finjin/common/ByteBuffer.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
-#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
-    #include "finjin/common/ByteBuffer.hpp"
-    #include <wtypes.h>
-    #include <wrl.h>
-    #include <dxgi1_4.h>
-    #include <d3d12.h>
-#endif
+#include "finjin/engine/DXGIIncludes.hpp"
+#include "finjin/engine/TextureDimension.hpp"
 
 
-//Macros-----------------------------------------------------------------------
-#define FINJIN_DDS_MAGIC FINJIN_FOURCC('D', 'D', 'S', ' ') //0x20534444 
-#define FINJIN_DDS_FOURCC 0x00000004
-
-
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     class DDSReader
@@ -60,9 +51,7 @@ namespace Finjin { namespace Engine {
             uint32_t BBitMask;
             uint32_t ABitMask;
 
-        #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
             DXGI_FORMAT GetDXGIFormat() const;
-        #endif
         };
 
         struct Header
@@ -92,13 +81,9 @@ namespace Finjin { namespace Engine {
 
         struct DX10HeaderExtension
         {
-        #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
-            DXGI_FORMAT dxgiFormat;
-        #else
             uint32_t dxgiFormat;
-        #endif
             uint32_t resourceDimension;
-            uint32_t miscFlag; // see D3D11_RESOURCE_MISC_FLAG
+            uint32_t miscFlag; //See D3D11_RESOURCE_MISC_FLAG
             uint32_t arraySize;
             uint32_t miscFlags2;
 
@@ -111,24 +96,36 @@ namespace Finjin { namespace Engine {
         enum class ReadHeaderResult
         {
             SUCCESS,
-            FAILED_TO_READ_MAGIC_VALUE,
-            INVALID_MAGIC_VALUE,
+            FAILED_TO_READ_SIGNATURE,
+            INVALID_SIGNATURE,
+            FAILED_TO_READ_HEADER,
+            IMAGE_BYTE_SWAPPING_REQUIRED,
             INVALID_HEADER_SIZE,
             INVALID_PIXEL_FORMAT_SIZE,
-            NO_DXT10_HEADER
+            FAILED_TO_READ_DXT10_HEADER
         };
-        ReadHeaderResult ReadHeader(const void* bytes, size_t byteCount);
+        ReadHeaderResult ReadHeader(ByteBufferReader& reader);
         Utf8String GetReadHeaderResultString(ReadHeaderResult result) const;
-        
-        void ReadHeader(const void* bytes, size_t byteCount, Error& error);
-        
+
+        void ReadHeader(ByteBufferReader& reader, Error& error);
+
         const Header& GetHeader() const;
         const DX10HeaderExtension* GetHeaderDX10Extension() const;
 
-    private:        
+        DXGI_FORMAT GetDXGIFormat() const;
+
+        bool IsCube() const;
+        bool IsArray() const;
+
+        TextureDimension GetDimension() const;
+
+        bool IsImageByteSwapped() const;
+
+    private:
         Header header;
         DX10HeaderExtension headerDX10;
         bool isHeaderDX10;
+        bool swapBytes;
     };
 
 } }

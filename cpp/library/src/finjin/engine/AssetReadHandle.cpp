@@ -16,11 +16,10 @@
 #include "AssetReadHandle.hpp"
 #include "AssetReadQueue.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 AssetReadHandle::AssetReadHandle(Allocator* allocator) : assetRef(allocator)
 {
     Clear();

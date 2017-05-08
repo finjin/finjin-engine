@@ -14,25 +14,25 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/ScreenOrientation.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
-#include "finjin/common/ScreenOrientation.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class DisplayInfo
     {
-    public:    
-        DisplayInfo();
-        
     public:
-        size_t index;        
+        DisplayInfo();
+
+    public:
+        size_t index;
         bool isPrimary;
         float density;
         bool hasSmallScreen; //Indicates a small screen device, like a phone
@@ -52,6 +52,6 @@ namespace Finjin { namespace Engine {
         void Enumerate(void* androidApp);
 
         const DisplayInfo* GetByName(const Utf8String& name) const;
-    };    
+    };
 
 } }

@@ -14,62 +14,79 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
+#include "finjin/common/StaticUnorderedMap.hpp"
 #include "XcbWindow.hpp"
-#include <unordered_map>
 #include <xcb/xcb.h>
 #include <xcb/xcb_ewmh.h>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     class XcbConnection
     {
-    public: 
+    public:
         XcbConnection();
         ~XcbConnection();
-        
+
+        enum class CreateResult
+        {
+            SUCCESS,
+            FAILED_TO_CONNECT_TO_DISPLAY_SERVER,
+            FAILED_TO_INITIALIZE_XCB_DATA
+        };
+        CreateResult Create(const Utf8String& displayName);
         void Create(const Utf8String& displayName, Error& error);
+
         void Destroy();
-        
-        void AddWindow(xcb_window_t window, XcbWindow* windowPtr);
+
+        void AddWindow(xcb_window_t window, XcbWindow* windowPointer, Error& error);
         void RemoveWindow(xcb_window_t window);
-        
-        static void GetDefaultDisplayName(Utf8String& result, Error& error);
-        
+
         xcb_screen_t* GetDefaultScreen();
-        
+
         void GetAtomName(Utf8String& result, xcb_atom_t atom, Error& error) const;
-        
+
         uint32_t GenerateID();
-        
+
         void Flush();
-        
+
         bool IsStringType(xcb_atom_t type) const;
-        
-        static void HandleEvents(bool queuedOnly = true);        
+
+        static void HandleEvents(bool queuedOnly = true);
+
+        static bool GetDefaultDisplayName(Utf8String& result);
+        static void GetDefaultDisplayName(Utf8String& result, Error& error);
+
+        enum class GetOrCreateResult
+        {
+            SUCCESS,
+            FAILED_TO_GET_DEFAULT_DISPLAY_NAME,
+            FAILED_TO_CREATE_CONNECTION
+        };
+        static GetOrCreateResult GetOrCreate(std::shared_ptr<XcbConnection>& connection, const Utf8String& displayName);
         static std::shared_ptr<XcbConnection> GetOrCreate(const Utf8String& displayName, Error& error);
-        
+
     private:
         xcb_intern_atom_cookie_t InternAtom(const Utf8String& s);
         xcb_atom_t InternAtomReply(xcb_intern_atom_cookie_t cookie);
-        
+
         void HandleEvent(const xcb_generic_event_t* ev, xcb_window_t window);
-        void HandleEvent(const xcb_generic_event_t* ev);        
-        
-    public:        
+        void HandleEvent(const xcb_generic_event_t* ev);
+
+    public:
         xcb_connection_t* c;
         mutable xcb_ewmh_connection_t ewmh;
         bool hasRandrExtension;
         uint8_t randrFirstEvent;
         int defaultScreenNumber;
-        
+
         Utf8String displayName; //Xorg display name
-        
+
         xcb_atom_t _NET_WM_STATE_FOCUSED;
         xcb_atom_t WM_DELETE_WINDOW;
         xcb_atom_t XdndAware;
@@ -94,11 +111,11 @@ namespace Finjin { namespace Engine {
         xcb_atom_t TEXT_PLAIN_UTF8;
         xcb_atom_t TEXT_PLAIN;
         xcb_atom_t TEXT_URI_LIST;
-        
-        using WindowLookup = std::unordered_map<xcb_window_t, XcbWindow*>;
-        WindowLookup windowLookup;
+
+        using WindowPointerLookup = StaticUnorderedMap<xcb_window_t, XcbWindow*, EngineConstants::MAX_WINDOWS, EngineConstants::MAX_WINDOWS * 2 + 1>;
+        WindowPointerLookup windowLookup; //Pointers to created windows
     };
-    
-    using XcbConnectionLookup = std::unordered_map<Utf8String, std::weak_ptr<XcbConnection> >;
-    
+
+    using XcbConnectionLookup = StaticUnorderedMap<Utf8String, std::weak_ptr<XcbConnection>, 8, 13>;
+
 } }

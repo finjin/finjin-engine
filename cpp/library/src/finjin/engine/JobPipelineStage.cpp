@@ -18,12 +18,10 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 JobPipelineStage::JobPipelineStage()
 {
     this->index = 0;
-    
-    this->frameSequenceIndex = 0;
 }
 
 JobPipelineStage::~JobPipelineStage()

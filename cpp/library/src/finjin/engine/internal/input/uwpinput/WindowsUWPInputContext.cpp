@@ -14,19 +14,19 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "WindowsUWPInputContext.hpp"
-#include "WindowsUWPInputSystem.hpp"
+#include "finjin/common/DebugLog.hpp"
 #include "finjin/engine/InputCoordinate.hpp"
+#include "finjin/engine/InputDeviceSerializer.hpp"
 #include "finjin/engine/OSWindow.hpp"
 #include "finjin/engine/OSWindowEventListener.hpp"
-#include "finjin/engine/InputDeviceSerializer.hpp"
+#include "WindowsUWPInputSystem.hpp"
 #include "../xinput/XInputSystem.hpp"
-#include "finjin/common/DebugLog.hpp"
 #include <Xinput.h>
 
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct WindowsUWPInputContext::Impl : public AllocatedClass, public OSWindowEventListener
 {
     Impl(Allocator* allocator, WindowsUWPInputSystem* inputSystem);
@@ -38,17 +38,15 @@ struct WindowsUWPInputContext::Impl : public AllocatedClass, public OSWindowEven
     void WindowOnPointerMove(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons) override;
     void WindowOnPointerDown(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons) override;
     void WindowOnPointerUp(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons) override;
-    
-    WindowsUWPInputSystem* inputSystem;
 
-    OperationStatus initializationStatus;
+    WindowsUWPInputSystem* inputSystem;
 
     WindowsUWPInputContext::Settings settings;
 
     AssetClassFileReader inputDevicesAssetReader;
     AssetClassFileReader xinputDevicesAssetReader;
     AssetClassFileReader inputBindingsAssetReader;
-    
+
     int gameControllerID;
 
     int updateCount;
@@ -67,7 +65,7 @@ struct WindowsUWPInputContext::Impl : public AllocatedClass, public OSWindowEven
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //WindowsUWPInputContext::Impl
 WindowsUWPInputContext::Impl::Impl(Allocator* allocator, WindowsUWPInputSystem* inputSystem) : AllocatedClass(allocator), settings(allocator)
@@ -82,7 +80,7 @@ WindowsUWPInputContext::Impl::Impl(Allocator* allocator, WindowsUWPInputSystem* 
 }
 
 void WindowsUWPInputContext::Impl::WindowOnKeyDown(OSWindow* osWindow, int softwareKey, int hardwareCode, bool controlDown, bool shiftDown, bool altDown)
-{    
+{
     auto componentIndex = static_cast<size_t>(softwareKey);
     if (componentIndex < this->keyboard.GetButtonCount())
     {
@@ -92,7 +90,7 @@ void WindowsUWPInputContext::Impl::WindowOnKeyDown(OSWindow* osWindow, int softw
 }
 
 void WindowsUWPInputContext::Impl::WindowOnKeyUp(OSWindow* osWindow, int softwareKey, int hardwareCode, bool controlDown, bool shiftDown, bool altDown)
-{    
+{
     auto componentIndex = static_cast<size_t>(softwareKey);
     if (componentIndex < this->keyboard.GetButtonCount())
     {
@@ -134,7 +132,7 @@ void WindowsUWPInputContext::Impl::WindowOnPointerMove(OSWindow* osWindow, Point
 }
 
 void WindowsUWPInputContext::Impl::WindowOnPointerDown(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons)
-{    
+{
     if (pointerType == PointerType::MOUSE)
     {
         for (size_t componentIndex = 0; componentIndex < this->mouse.GetButtonCount(); componentIndex++)
@@ -157,7 +155,7 @@ void WindowsUWPInputContext::Impl::WindowOnPointerDown(OSWindow* osWindow, Point
 }
 
 void WindowsUWPInputContext::Impl::WindowOnPointerUp(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons)
-{    
+{
     if (pointerType == PointerType::MOUSE)
     {
         for (size_t componentIndex = 0; componentIndex < this->mouse.GetButtonCount(); componentIndex++)
@@ -180,10 +178,10 @@ void WindowsUWPInputContext::Impl::WindowOnPointerUp(OSWindow* osWindow, Pointer
 }
 
 //WindowsUWPInputContext
-WindowsUWPInputContext::WindowsUWPInputContext(Allocator* allocator, WindowsUWPInputSystem* inputSystem) : 
-    AllocatedClass(allocator), 
+WindowsUWPInputContext::WindowsUWPInputContext(Allocator* allocator, WindowsUWPInputSystem* inputSystem) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<Impl>(allocator, FINJIN_CALLER_ARGUMENTS, inputSystem))
-{    
+{
 }
 
 WindowsUWPInputContext::~WindowsUWPInputContext()
@@ -199,11 +197,9 @@ void WindowsUWPInputContext::Create(const Settings& settings, Error& error)
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
-    impl->initializationStatus.SetStatus(OperationStatus::STARTED);
-
     //Copy settings---------------------------------------------
     impl->settings = settings;
-    
+
     impl->inputDevicesAssetReader.Create(*impl->settings.assetFileReader, impl->settings.initialAssetFileSelector, AssetClass::INPUT_DEVICE, GetAllocator(), error);
     if (error)
     {
@@ -233,19 +229,19 @@ void WindowsUWPInputContext::Create(const Settings& settings, Error& error)
     for (size_t i = 0; i < impl->gameControllers.size(); i++)
     {
         auto& gameController = impl->gameControllers[i];
-        
+
         gameController.Create(i);
         ConfigureInputDevice(gameController, gameController.GetProductDescriptor(), impl->xinputDevicesAssetReader, impl->configFileBuffer);
     }
-    
+
     //Mice
     impl->mouse.Create(0);
     ConfigureInputDevice(impl->mouse, impl->mouse.GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
-    
+
     //Keyboard
     impl->keyboard.Create(0);
     ConfigureInputDevice(impl->keyboard, impl->keyboard.GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
-    
+
     impl->touchScreen.SetDisplayName("Touch screen");
     impl->touchScreen.Connect(true);
 
@@ -254,8 +250,6 @@ void WindowsUWPInputContext::Create(const Settings& settings, Error& error)
 
     //Set up window event listener
     impl->settings.osWindow->AddWindowEventListener(impl.get());
-
-    impl->initializationStatus.SetStatus(OperationStatus::SUCCESS);
 }
 
 void WindowsUWPInputContext::Destroy()
@@ -267,17 +261,12 @@ void WindowsUWPInputContext::Destroy()
     //Destroy devices
     for (auto& device : impl->gameControllers)
         device.Destroy();
-    
+
     impl->mouse.Destroy();
 
     impl->keyboard.Destroy();
 
     impl->touchScreen.Reset();
-}
-
-const OperationStatus& WindowsUWPInputContext::GetInitializationStatus() const
-{
-    return impl->initializationStatus;
 }
 
 void WindowsUWPInputContext::GetSelectorComponents(AssetPathSelector& result)
@@ -370,20 +359,20 @@ void WindowsUWPInputContext::HandleDeviceChanges()
         device.ClearChanged();
 
     impl->keyboard.ClearChanged();
-    
+
     impl->mouse.ClearChanged();
 
     impl->touchScreen.ClearChanged();
 }
 
 void WindowsUWPInputContext::HandleApplicationViewportLostFocus()
-{    
+{
     for (auto& device : impl->gameControllers)
         device.StopHapticFeedback();
 }
 
 void WindowsUWPInputContext::HandleApplicationViewportGainedFocus()
-{    
+{
 }
 
 size_t WindowsUWPInputContext::GetDeviceCount(InputDeviceClass deviceClass) const

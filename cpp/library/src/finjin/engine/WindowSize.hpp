@@ -14,68 +14,62 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/EnumArray.hpp"
 #include "finjin/engine/WindowBounds.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
+    using namespace Finjin::Common;
+
     class OSWindow;
-    
+
+    enum class WindowSizeState
+    {
+        WINDOWED_NORMAL,
+        WINDOWED_MAXIMIZED,
+        BORDERLESS_FULLSCREEN,
+        EXCLUSIVE_FULLSCREEN,
+
+        COUNT
+    };
+
     /**
-     * Default state: WINDOWED_NORMAL
-     * Default full screen state: BORDERLESS_FULLSCREEN
-     * Default non full screen state: WINDOWED_NORMAL
+     * Default state: WindowSizeState::WINDOWED_NORMAL
+     * Default full screen state: WindowSizeState::BORDERLESS_FULLSCREEN
+     * Default non full screen state: WindowSizeState::WINDOWED_NORMAL
      */
     class WindowSize
     {
     public:
-        enum State
-        {
-            //Not full screen--------------------------------------------------
-            /** Windowed, not full screen. */
-            WINDOWED_NORMAL,
-
-            /** Maximized window, and takes up the full screen but not in the conventional sense since the window chrome still exists. */
-            WINDOWED_MAXIMIZED,
-
-            //Full screen-------------------------------------------------------
-            /* Full screen, not exclusive. */
-            BORDERLESS_FULLSCREEN,
-
-            /** Full screen, exclusive access. */
-            EXCLUSIVE_FULLSCREEN,
-
-            STATE_COUNT
-        };
-        
         WindowSize();
 
         bool IsFullScreen() const;
         bool IsFullScreenExclusive() const;
         bool IsFullScreenBorderless() const;
-        
+
         bool IsWindowed() const;
         bool IsWindowedNormal() const;
         bool IsWindowedMaximized() const;
 
-        State GetState() const;
-        void SetState(WindowSize::State state);
+        WindowSizeState GetState() const;
+        void SetState(WindowSizeState state);
 
-        State GetFullScreenState() const;
-        bool SetFullScreenState(State value); //Valid: BORDERLESS_FULLSCREEN, EXCLUSIVE_FULLSCREEN
+        WindowSizeState GetFullScreenState() const;
+        bool SetFullScreenState(WindowSizeState value); //Valid: WindowSizeState::BORDERLESS_FULLSCREEN, WindowSizeState::EXCLUSIVE_FULLSCREEN
 
-        State GetWindowedState() const;
-        bool SetWindowedState(State value); //Valid: WINDOWED_NORMAL, WINDOWED_MAXIMIZED
+        WindowSizeState GetWindowedState() const;
+        bool SetWindowedState(WindowSizeState value); //Valid: WindowSizeState::WINDOWED_NORMAL, WindowSizeState::WINDOWED_MAXIMIZED
 
         bool IsInFullScreenState() const;
         bool IsInWindowedState() const;
 
         void SetFullScreen(bool value);
-        
+
         void Next(bool applyToWindow = true);
-        
+
         OSWindowDimension GetCurrentWidth() const;
         OSWindowDimension GetCurrentHeight() const;
         OSWindowDimension GetCurrentClientWidth() const;
@@ -85,29 +79,29 @@ namespace Finjin { namespace Engine {
         const WindowBounds& GetCurrentBounds() const;
         void SetCurrentBounds(const WindowBounds& value);
 
-        const WindowBounds& GetBounds(State state) const;
-        void SetBounds(State state, const WindowBounds& value);
-        
+        const WindowBounds& GetBounds(WindowSizeState state) const;
+        void SetBounds(WindowSizeState state, const WindowBounds& value);
+
         const WindowBounds& GetFullScreenBounds() const;
-        
+
         const WindowBounds& GetWindowedBounds() const;
 
         //-------------------------------------
         void SetWindow(OSWindow* window);
-        
+
         void WindowMoved(bool isWindowMaximized);
         void WindowResized(bool isWindowMaximized);
-        
+
         void SetApplyingToWindow(bool value);
         bool IsApplyingToWindow() const;
-        
+
         WindowBounds GetSafeCurrentBounds() const;
-        
+
     private:
-        State state;
-        State fullScreenState;
-        State windowedState;        
-        WindowBounds bounds[STATE_COUNT];
+        WindowSizeState state;
+        WindowSizeState fullScreenState;
+        WindowSizeState windowedState;
+        EnumArray<WindowSizeState, WindowSizeState::COUNT, WindowBounds> bounds;
 
         //---------------
         OSWindow* window;

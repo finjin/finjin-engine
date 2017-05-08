@@ -14,55 +14,55 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Math.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/InputComponents.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     /**
      * A single component of an input device, such as a keyboard key or joystick button.
-     * You should not attempt to construct an instance of this class manually. 
+     * You should not attempt to construct an instance of this class manually.
      * Instead, always use the "From" functions
      */
     class InputSource
     {
     public:
         enum { NO_COMPONENT_CODE = std::numeric_limits<int>::lowest() };
-        
+
         InputSource();
 
         void Reset();
 
         static InputSource FromKeyboardKey(size_t keyIndex);
-        
+
         static InputSource FromMouseButton(size_t buttonIndex);
         static InputSource FromMouseRelativeAxis(size_t axisIndex, int direction);
         static InputSource FromMouseAbsoluteAxis(size_t axisIndex, int direction);
-        
+
         static InputSource FromGameControllerButton(size_t buttonIndex);
         static InputSource FromGameControllerAxis(size_t axisIndex, int direction);
         static InputSource FromGameControllerPov(size_t povIndex, PovDirection direction);
         static InputSource FromGameControllerLocator(size_t locatorIndex = 0);
-        
+
         static InputSource FromTouchCount(size_t touchCount);
         static InputSource FromTouchRelativeAxis(size_t axisIndex, int direction);
         static InputSource FromTouchAbsoluteAxis(size_t axisIndex, int direction);
-        
+
         static InputSource FromMultitouchRelativeRadius(size_t touchCount, int direction);
         static InputSource FromMultitouchRelativeAxis(size_t touchCount, size_t axis, int direction);
-        
+
         static InputSource FromAccelerometerRelativeAxis(size_t axisIndex, int direction);
         static InputSource FromAccelerometerAbsoluteAxis(size_t axisIndex, int direction);
-        
+
         static InputSource FromHeadsetLocator(size_t locatorIndex = 0);
-        
+
         InputSource WithDeviceIndex(size_t index) const;
         InputSource WithCode(int code) const;
         InputSource WithSemantic(InputComponentSemantic semantic) const;
@@ -120,7 +120,7 @@ namespace Finjin { namespace Engine {
             /** Game controller or headset locator index */
             size_t locatorIndex;
         };
-        
+
         /** Mouse axis direction, game controller axis direction, or game controller pov direction */
         union
         {
@@ -145,7 +145,7 @@ namespace Finjin { namespace Engine {
             this->componentClasses = InputDeviceComponentClass::ALL;
             this->unifyRelativeAxisDirections = true;
         }
-        
+
         void SetDefaultDeadZones()
         {
             this->mouseMoveAxisDeadZone = 10;
@@ -154,7 +154,7 @@ namespace Finjin { namespace Engine {
             this->touchScreenMultitouchRadiusDeadZone = 3;
             this->accelerometerDeadZone = 1.25f;
         }
-        
+
         void SetMinimalDeadZones()
         {
             this->mouseMoveAxisDeadZone = 1;
@@ -187,7 +187,7 @@ namespace Finjin { namespace Engine {
         ChangedInputSource();
         ChangedInputSource(InputSource inputSource, Utf8String name);
         ChangedInputSource(InputSource inputSource, Utf8String name, bool value);
-        ChangedInputSource(InputSource inputSource, Utf8String name, float value);        
+        ChangedInputSource(InputSource inputSource, Utf8String name, float value);
         ChangedInputSource(InputSource inputSource, Utf8String name, PovDirection value);
 
         operator bool() const;
@@ -350,8 +350,8 @@ namespace Finjin { namespace Engine {
                         Super::push_back(ChangedInputSource(InputSource::FromAccelerometerAbsoluteAxis(axisIndex, value < 0 ? -1 : 1).WithDeviceIndex(deviceIndex), accelerometer->GetDisplayName(), value));
                     }
                 }
-            }            
+            }
         }
     };
-    
+
 } }

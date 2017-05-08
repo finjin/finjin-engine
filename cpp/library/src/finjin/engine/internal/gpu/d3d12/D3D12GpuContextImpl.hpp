@@ -14,37 +14,39 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/ByteBuffer.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/FiberSpinLock.hpp"
 #include "finjin/common/OperationStatus.hpp"
 #include "finjin/common/SimpleSpinLockMutex.hpp"
 #include "finjin/common/StaticUnorderedMap.hpp"
-#include "finjin/common/Vector.hpp"
+#include "finjin/common/StaticVector.hpp"
+#include "finjin/common/UsableDynamicVector.hpp"
 #include "finjin/common/WindowsUtilities.hpp"
 #include "finjin/engine/Camera.hpp"
 #include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include "finjin/engine/OSWindowEventListener.hpp"
 #include "finjin/engine/WindowSize.hpp"
-#include "D3D12GpuContextSettings.hpp"
 #include "D3D12DescriptorHeap.hpp"
 #include "D3D12DisplayMode.hpp"
 #include "D3D12FrameBuffer.hpp"
-#include "D3D12GpuDescription.hpp"
 #include "D3D12FrameStage.hpp"
+#include "D3D12GpuContextSettings.hpp"
+#include "D3D12GpuDescription.hpp"
 #include "D3D12Resources.hpp"
+#include "D3D12ShaderType.hpp"
 #include "D3D12StaticMeshRenderer.hpp"
 #include "D3D12Texture.hpp"
-#include "D3D12Utilities.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class D3D12System;
 
     class D3D12GpuContextImpl : public AllocatedClass, public OSWindowEventListener
@@ -65,14 +67,11 @@ namespace Finjin { namespace Engine {
         bool StartResizeTargets(bool minimized, Error& error);
         void FinishResizeTargets(Error& error);
 
-        uint64_t FlushGpu(Error& error);
-        uint64_t FlushGpu(); //SETS_ERROR_STATE
+        uint64_t FlushGpu();
 
-        uint64_t EmitFenceValue(Error& error);
-        uint64_t EmitFenceValue(); //SETS_ERROR_STATE
+        uint64_t EmitFenceValue();
 
-        void WaitForFenceValue(uint64_t v, Error& error);
-        void WaitForFenceValue(uint64_t v); //SETS_ERROR_STATE
+        void WaitForFenceValue(uint64_t v);
         size_t BusyWaitForFenceValue(uint64_t v);
 
         WindowBounds GetRenderingPixelBounds();
@@ -85,18 +84,16 @@ namespace Finjin { namespace Engine {
 
         D3D12Texture* CreateTextureFromMainThread(FinjinTexture* texture, Error& error);
         void UploadTexture(ID3D12GraphicsCommandList* commandList, FinjinTexture* texture);
-        
+
         void* CreateLightFromMainThread(FinjinSceneObjectLight* light, Error& error);
-        
+
         void* CreateMaterial(ID3D12GraphicsCommandList* commandList, FinjinMaterial* material, Error& error);
-        
+
         void* CreateMeshFromMainThread(FinjinMesh* mesh, Error& error);
         void UploadMesh(ID3D12GraphicsCommandList* commandList, FinjinMesh* mesh, Error& error);
-                
+
         void CreateShader(D3D12ShaderType shaderType, const Utf8String& name, const uint8_t* bytes, size_t byteCount, bool makeLocalCopy, Error& error);
         void CreateShader(D3D12ShaderType shaderType, const AssetReference& assetRef, Error& error);
-
-        void CreateCoreAssets(Error& error);
 
         D3D12RenderTarget* GetRenderTarget(D3D12FrameStage& frameStage, const Utf8String& name);
 
@@ -105,21 +102,25 @@ namespace Finjin { namespace Engine {
         void FinishRenderTarget(D3D12FrameStage& frameStage, Error& error);
         void FinishGraphicsCommandList(D3D12FrameStage& frameStage, Error& error);
 
+        D3D12FrameStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
+        void FinishBackFrameBufferRender(D3D12FrameStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error);
+
         void Execute(D3D12FrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
 
         void UpdateResourceGpuResidencyStatus();
 
         void CreateScreenSizeDependentResources(Error& error);
-        void DestroyScreenSizeDependentResources();
+        void DestroyScreenSizeDependentResources(bool resizing);
 
     private:
         void CreateGraphicsCommandQueue(Error& error);
         void CreateSwapChain(Error& error);
 
-    public:
-        OperationStatus initializationStatus;
+        void UpdateCachedFrameBufferSize();
 
+    public:
         D3D12GpuContextSettings settings;
+
         AssetClassFileReader settingsAssetClassFileReader;
         AssetClassFileReader shaderAssetClassFileReader;
 
@@ -131,19 +132,19 @@ namespace Finjin { namespace Engine {
 
             void Validate(Error& error);
 
-            GpuInputFormatStruct* GetInputFormat(const Utf8String& typeName, const AllocatedVector<FinjinVertexElementFormat>& elements);
+            GpuInputFormatStruct* GetInputFormat(const Utf8String& typeName, const DynamicVector<FinjinVertexElementFormat>& elements);
 
             D3D12GpuContextImpl* contextImpl;
 
-            AllocatedVector<GpuInputFormatStruct> inputFormats;
+            DynamicVector<GpuInputFormatStruct> inputFormats;
         };
         InternalSettings internalSettings;
-        
+
         D3D12System* d3dSystem;
 
         D3D12GpuDescription desc;
         WindowBounds renderingPixelBounds;
-        
+
         ByteBuffer readBuffer;
 
         struct MaterialMapTypeToGpuElements
@@ -171,14 +172,14 @@ namespace Finjin { namespace Engine {
         };
 
         StaticUnorderedMap<Utf8String, MaterialMapTypeToGpuElements, (size_t)D3D12Material::MapIndex::COUNT, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT(D3D12Material::MapIndex::COUNT)> materialMapTypeToGpuElements;
-        
-        AllocatedVector<D3D12_SUBRESOURCE_DATA> preallocatedSubresourceData;
+
+        DynamicVector<D3D12_SUBRESOURCE_DATA> preallocatedSubresourceData;
         ByteBuffer preallocatedFootprintSubresourceData;
 
         Microsoft::WRL::ComPtr<ID3D12Device> device;
         Microsoft::WRL::ComPtr<ID3D12CommandQueue> graphicsCommandQueue;
         Microsoft::WRL::ComPtr<IDXGISwapChain3> swapChain;
-        D3D12DescriptorHeap swapChainRtvDescHeap;        
+        D3D12DescriptorHeap swapChainRtvDescHeap;
         D3D12DescriptorHeap swapChainDsvDescHeap;
 
         size_t sequenceIndex;
@@ -187,25 +188,25 @@ namespace Finjin { namespace Engine {
         StaticVector<D3D12FrameBuffer, EngineConstants::MAX_FRAME_BUFFERS> frameBuffers;
         StaticVector<D3D12FrameStage, EngineConstants::MAX_FRAME_STAGES> frameStages;
 
-        D3D12DescriptorHeap srvTextureDescHeap;
+        D3D12TextureResources textureResources;
 
         HANDLE fenceEventHandle;
         Microsoft::WRL::ComPtr<ID3D12Fence> fence;
         std::atomic<uint64_t> fenceValue;
-        
+
         D3D12_VIEWPORT viewport;
         D3D12_RECT scissorRect;
 
         Camera camera;
         MathVector4 clearColor;
-        
-        D3D12Resources resources;
 
-        UsableAllocatedVector<D3D12Light> lights;
+        D3D12AssetResources assetResources;
+
+        UsableDynamicVector<D3D12Light> lights;
 
         D3D12StaticMeshRenderer staticMeshRenderer;
 
         FiberSpinLock createLock;
     };
-    
+
 } }

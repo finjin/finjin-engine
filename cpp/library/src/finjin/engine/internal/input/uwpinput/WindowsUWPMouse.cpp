@@ -17,12 +17,11 @@
 #include "finjin/common/Convert.hpp"
 
 using namespace Finjin::Engine;
-using namespace Finjin::Common;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 WindowsUWPMouse::WindowsUWPMouse()
-{   
+{
 }
 
 void WindowsUWPMouse::Reset()
@@ -51,22 +50,22 @@ bool WindowsUWPMouse::Create(size_t index)
     for (size_t i = 0; i < this->state.buttons.size(); i++)
     {
         auto inputSemantic = InputComponentSemantic::NONE;
-        
+
         switch (i)
         {
-            case 0: 
+            case 0:
             {
                 inputSemantic = InputComponentSemantic::ACCEPT;
                 componentName = "Left mouse button";
                 break;
             }
-            case 1: 
+            case 1:
             {
                 inputSemantic = InputComponentSemantic::CANCEL;
                 componentName = "Right mouse button";
                 break;
             }
-            case 2: 
+            case 2:
             {
                 inputSemantic = InputComponentSemantic::SETTINGS;
                 componentName = "Middle mouse button";
@@ -86,10 +85,10 @@ bool WindowsUWPMouse::Create(size_t index)
                 componentName += Convert::ToString(i + 1);
                 break;
             }
-            default: 
+            default:
             {
-                componentName = "Button "; 
-                componentName += Convert::ToString(i + 1); 
+                componentName = "Button ";
+                componentName += Convert::ToString(i + 1);
                 break;
             }
         }
@@ -97,6 +96,7 @@ bool WindowsUWPMouse::Create(size_t index)
         this->state.buttons[i]
             .SetIndex(i)
             .SetSemantic(inputSemantic)
+            .SetProcessing(InputButtonProcessing::EVENT_DRIVEN)
             .SetDisplayName(componentName);
     }
 
@@ -108,7 +108,7 @@ bool WindowsUWPMouse::Create(size_t index)
 
         switch (i)
         {
-            case 0: 
+            case 0:
             {
                 inputSemantic = InputComponentSemantic::MOVE_LEFT_RIGHT;
                 inputProcessing = InputAxisProcessing::IS_ABSOLUTE;
@@ -122,14 +122,14 @@ bool WindowsUWPMouse::Create(size_t index)
                 componentName = "Y";
                 break;
             }
-            case 2: 
+            case 2:
             {
                 inputSemantic = InputComponentSemantic::TOGGLE_UP_DOWN;
                 inputProcessing = InputAxisProcessing::REST_ON_CLEAR_CHANGES | InputAxisProcessing::ACCUMULATE_MULTIPLE_CHANGES;
                 componentName = "Wheel";
                 break;
             }
-            default: 
+            default:
             {
                 componentName = "Axis ";
                 componentName += Convert::ToString(i + 1);

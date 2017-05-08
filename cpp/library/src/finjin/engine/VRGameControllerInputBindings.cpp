@@ -19,13 +19,15 @@
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
-const Utf8String VRGameControllerInputBindings::DEFAULT_BINDINGS_FILE_NAME = "vr-game-controller.cfg";
+//Implementation----------------------------------------------------------------
+const Utf8String& VRGameControllerInputBindings::GetDefaultBindingsFileName()
+{
+    static const Utf8String value("vr-game-controller.cfg");
+    return value;
+}
 
-
-//Implementation---------------------------------------------------------------
 VRGameControllerInputBindings::VRGameControllerInputBindings()
-{   
+{
 }
 
 void VRGameControllerInputBindings::ProcessInputAction
@@ -39,7 +41,7 @@ void VRGameControllerInputBindings::ProcessInputAction
     )
 {
     //FINJIN_DEBUG_LOG_INFO("VR Game Controller: Action ID: %1%, amount %2%", inputActionID, amount);
-    
+
     switch (inputActionID)
     {
         case ACCEPT:
@@ -177,7 +179,7 @@ const VRGameControllerInputBindings::InputActionInfo* VRGameControllerInputBindi
     {
         InputActionInfo("accept", ACCEPT),
         InputActionInfo("cancel", CANCEL),
-        
+
         InputActionInfo("settings", SETTINGS),
 
         InputActionInfo("system-home", SYSTEM_HOME),
@@ -202,7 +204,7 @@ const VRGameControllerInputBindings::InputActionInfo* VRGameControllerInputBindi
         InputActionInfo("look-toggle", LOOK_TOGGLE),
 
         InputActionInfo("locator", LOCATOR),
-        
+
         InputActionInfo() //Null info
     };
     return actionInfo;

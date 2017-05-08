@@ -14,45 +14,23 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
-#include "finjin/common/AllocatedUnorderedMap.hpp"
+//Includes----------------------------------------------------------------------
+#include "finjin/common/DynamicUnorderedMap.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include "D3D12Includes.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class D3D12InputFormat
-    {    
+    {
     public:
         D3D12InputFormat();
 
         void Create(const GpuInputFormatStruct& inputFormat, Allocator* allocator, Error& error);
-
-        template <typename Dest, typename Source>
-        static void CreateVector(Dest& dest, Allocator* allocator, Source& src, Error& error)
-        {
-            FINJIN_ERROR_METHOD_START(error);
-
-            if (!dest.Create(src.size(), allocator))
-            {
-                FINJIN_SET_ERROR(error, "Failed to allocate outer D3D input format collection.");
-                return;
-            }
-
-            for (size_t i = 0; i < src.size(); i++)
-            {
-                dest[i].Create(src[i], allocator, error);
-                if (error)
-                {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create the '%1%' input format'.", src[i].GetTypeName()));
-                    return;
-                }
-            }
-        }
 
         template <typename Dest, typename Source>
         static void CreateUnorderedMap(Dest& dest, Allocator* allocator, Source& src, Error& error)
@@ -84,7 +62,7 @@ namespace Finjin { namespace Engine {
 
     public:
         size_t inputFormatHash;
-        AllocatedVector<D3D12_INPUT_ELEMENT_DESC> elements;
+        DynamicVector<D3D12_INPUT_ELEMENT_DESC> elements;
     };
 
 } }

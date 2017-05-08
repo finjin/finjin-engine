@@ -18,7 +18,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 Camera::Camera()
 {
     this->position = MathVector3(0.0f, 0.0f, 0.0f);
@@ -55,7 +55,7 @@ const MathVector3& Camera::GetPosition() const
 void Camera::SetPosition(float x, float y, float z)
 {
     this->position = MathVector3(x, y, z);
-    
+
     this->isViewDirty = true;
 }
 
@@ -66,7 +66,7 @@ void Camera::Set(const CameraState& cameraState)
     MathVector4 up = cameraState.worldMatrix * MathVector4(0, 0, 1, 0);
     MathVector4 forward = cameraState.worldMatrix * MathVector4(0, 1, 0, 0);
 
-    this->position = MathVector3(position.x(), position.y(), position.z());
+    this->position = MathVector3(position(0), position(1), position(2));
 
     SetBases(right.data(), up.data(), forward.data());
 
@@ -78,7 +78,7 @@ void Camera::SetBases(const float* right, const float* up, const float* forward)
     this->right = MathVector3(right[0], right[1], right[2]);
     this->up = MathVector3(up[0], up[1], up[2]);
     this->look = MathVector3(forward[0], forward[1], forward[2]);
-    
+
     this->isViewDirty = true;
 }
 
@@ -170,7 +170,7 @@ void Camera::SetLens(Angle fovY, float aspect, float zn, float zf)
     this->farZ = zf;
 
     auto halfFovY = this->fovY / 2.0f;
-    
+
     this->nearWindowHeight = 2.0f * this->nearZ * tanf(halfFovY);
     this->farWindowHeight = 2.0f * this->farZ * tanf(halfFovY);
 
@@ -207,7 +207,7 @@ void Camera::LookAt(const MathVector3& pos, const MathVector3& target, const Mat
     auto L = target - pos;
     auto R = worldUp - L;
     auto U = L.cross(R);
-    
+
     this->position = pos;
     this->look = L;
     this->right = R;
@@ -216,12 +216,12 @@ void Camera::LookAt(const MathVector3& pos, const MathVector3& target, const Mat
     this->isViewDirty = true;
 }
 
-const MathMatrix44& Camera::GetViewMatrix() const
+const MathMatrix4& Camera::GetViewMatrix() const
 {
     return this->viewMatrix;
 }
 
-const MathMatrix44& Camera::GetProjectionMatrix() const
+const MathMatrix4& Camera::GetProjectionMatrix() const
 {
     return this->projectionMatrix;
 }
@@ -244,7 +244,7 @@ void Camera::Pan(float dx, float dy)
 void Camera::Walk(float d)
 {
     this->position += -d * this->look;
-    
+
     this->isViewDirty = true;
 }
 
@@ -253,7 +253,7 @@ void Camera::Pitch(Angle angle)
     //Rotate up and look vector about the right vector
     MathAngleAxis R(angle.ToRadiansValue(), this->right);
     auto m = R.toRotationMatrix();
-    
+
     this->up = m * this->up;
     this->look = m * this->look;
 

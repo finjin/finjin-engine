@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/EventCollection.hpp"
 #include "finjin/engine/InputBindings.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class StandardGameControllerEvents : public EventCollectionFlags<>
@@ -33,7 +33,7 @@ namespace Finjin { namespace Engine {
             CHANGE,
 
             SETTINGS,
-            
+
             SYSTEM_SETTINGS,
 
             SYSTEM_HOME,
@@ -52,7 +52,7 @@ namespace Finjin { namespace Engine {
             LOOK,
             LOOK_TOGGLE
         };
-        
+
         StandardGameControllerEvents()
         {
             Reset();
@@ -68,11 +68,11 @@ namespace Finjin { namespace Engine {
             this->move[0] = this->move[1] = 0;
             this->look[0] = this->look[1] = 0;
         }
-        
+
     public:
         float brake; //Left trigger, if there is one
         float gas; //Right trigger, if there is one
-        float toggle[2]; //D-pad x/y, if there's a d-pad and an analog stick
+        float toggle[2]; //D-pad x/y, if there's a d-pad AND an analog stick
         float move[2]; //Left analog stick x/y, if there's a d-pad and a left analog stick. Otherwise, it's the d-pad
         float look[2]; //Right analog stick x/y, if there is one
     };
@@ -80,8 +80,6 @@ namespace Finjin { namespace Engine {
     class StandardGameControllerInputBindings : public InputBindings<StandardGameControllerEvents>
     {
     public:
-        static const Utf8String DEFAULT_BINDINGS_FILE_NAME;
-        
         enum //InputActionID
         {
             ACCEPT,
@@ -90,7 +88,7 @@ namespace Finjin { namespace Engine {
             CHANGE,
 
             SETTINGS,
-            
+
             SYSTEM_SETTINGS,
 
             SYSTEM_HOME,
@@ -118,9 +116,11 @@ namespace Finjin { namespace Engine {
             LOOK_RIGHT,
             LOOK_TOGGLE
         };
-        
+
     public:
         StandardGameControllerInputBindings();
+
+        static const Utf8String& GetDefaultBindingsFileName();
 
     protected:
         void ProcessInputAction

@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/CommandLineArgsProcessor.hpp"
 #include "finjin/common/DomainInformation.hpp"
-#include "finjin/common/EnumValues.hpp"
+#include "finjin/common/EnumArray.hpp"
 #include "finjin/common/GeneralAllocator.hpp"
 #include "finjin/common/JobSystem.hpp"
 #include "finjin/common/StandardPaths.hpp"
@@ -28,10 +28,10 @@
 #include "finjin/common/UserInformation.hpp"
 #include "finjin/common/VirtualFileSystemOperationQueue.hpp"
 #include "finjin/engine/Application.hpp"
+#include "finjin/engine/ApplicationFileSystem.hpp"
 #include "finjin/engine/ApplicationGlobals.hpp"
 #include "finjin/engine/ApplicationViewportsController.hpp"
 #include "finjin/engine/AssetClass.hpp"
-#include "finjin/engine/ApplicationFileSystem.hpp"
 #include "finjin/engine/AssetFileReader.hpp"
 #include "finjin/engine/AssetReadQueue.hpp"
 #include "finjin/engine/GpuSystem.hpp"
@@ -47,14 +47,14 @@
 #endif
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class ApplicationDelegate;        
+    class ApplicationDelegate;
     class ApplicationViewportDescription;
-	
+
     class ApplicationSystemMessage
     {
     public:
@@ -79,7 +79,7 @@ namespace Finjin { namespace Engine {
     private:
         MessageType messageType;
     };
-    
+
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     class VRGameControllerForInputSystem : public InputGenericGameController
     {
@@ -156,9 +156,9 @@ namespace Finjin { namespace Engine {
     };
 #endif
 
-    class Application : 
+    class Application :
         public AllocatedClass,
-        public OSWindowEventListener, 
+        public OSWindowEventListener,
         public PlatformCapabilities
     {
     public:
@@ -175,11 +175,11 @@ namespace Finjin { namespace Engine {
         JobSystem& GetJobSystem();
         InputSystem& GetInputSystem();
         ApplicationViewportsController& GetViewportsController();
-        
+
         bool Run(Error& error);
         bool Run(CommandLineArgsProcessor& argsProcessor, Error& error);
 
-        void ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
+        ReadCommandLineResult ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
 
         void OnSystemMessage(const ApplicationSystemMessage& message, Error& error);
         void Tick(Error& error);
@@ -201,7 +201,7 @@ namespace Finjin { namespace Engine {
         bool WindowOnDropFiles(OSWindow* osWindow, const Path* fileNames, size_t count) override;
 
         void InitializeGlobals(Error& error); //Platform-specific
-        void CreateSystems(Error& error); //Platform-specific        
+        void CreateSystems(Error& error); //Platform-specific
         void ShowTheCursor(); //Platform-specific
         void HideTheCursor(); //Platform-specific
 
@@ -210,27 +210,27 @@ namespace Finjin { namespace Engine {
 
         void HandleApplicationViewportLostFocus(ApplicationViewport* appViewport);
         void HandleApplicationViewportGainedFocus(ApplicationViewport* appViewport);
-        
+
         void HandleApplicationViewportsCreated(Error& error);
         void HandleApplicationViewportCreated(ApplicationViewport* appViewport, const ApplicationViewportDescription& windowDescription, Error& error);
-        
+
         void HandleApplicationViewportEndOfLife(ApplicationViewport* appViewport, bool isPermanent);
 
         ApplicationViewport* OSWindowToApplicationViewport(OSWindow* osWindow);
 
     private:
         void ReadBootFile(Error& error);
-        
+
     private:
         void* applicationHandle; //Platform-specific pointer to the application
 
         size_t estimatedBytesFreeAtInitialization; //Might be MemorySize::UNKNOWN_SIZE
-        
+
         MemorySettings memorySettings;
         GeneralAllocator applicationAllocator; //Top level application memory
-        
+
         //Logger logger
-    
+
         std::unique_ptr<ApplicationDelegate> applicationDelegate;
 
         ByteBuffer configFileBuffer;
@@ -240,7 +240,8 @@ namespace Finjin { namespace Engine {
 
         StandardPaths standardPaths;
         Path workingPath;
-        EnumValues<ApplicationFileSystem, ApplicationFileSystem::COUNT, VirtualFileSystem> fileSystems;
+        Path workingPath2;
+        EnumArray<ApplicationFileSystem, ApplicationFileSystem::COUNT, VirtualFileSystem> fileSystems;
         VirtualFileSystemOperationQueue::Settings fileSystemOperationQueueSettings;
         VirtualFileSystemOperationQueue fileSystemOperationQueue;
         HighResolutionClock fileSystemOperationQueueUpdateClock;
@@ -252,25 +253,25 @@ namespace Finjin { namespace Engine {
 
         AssetFileReader assetFileReader;
         AssetPathSelector assetFileSelector;
-        EnumValues<AssetClass, AssetClass::COUNT, AssetClassFileReader> assetClassFileReaders;
-        
+        EnumArray<AssetClass, AssetClass::COUNT, AssetClassFileReader> assetClassFileReaders;
+
         AssetReferences<StringTable::MAX_INSTANCES> defaultStringsAssetFileNames;
         StringTable defaultStrings;
 
         ApplicationGlobals applicationGlobals;
-        
+
         InputContext::Settings inputContextSettings;
         InputSystem::Settings inputSystemSettings;
         InputSystem inputSystem;
-        
+
         GpuContext::Settings gpuContextSettings;
         GpuSystem::Settings gpuSystemSettings;
         GpuSystem gpuSystem;
-        
+
         SoundContext::Settings soundContextSettings;
         SoundSystem::Settings soundSystemSettings;
         SoundSystem soundSystem;
-        
+
         //PhysicsContext::Settings physicsContextSettings;
         //PhysicsSystem::Settings physicsSystemSettings;
         //PhysicsSystem physicsSystem;
@@ -279,17 +280,17 @@ namespace Finjin { namespace Engine {
         VRContext::Settings vrContextSettings;
         VRSystem::Settings vrSystemSettings;
         VRSystem vrSystem;
-        UsableStaticVector<VRGameControllerForInputSystem, GameControllerConstants::MAX_GAME_CONTROLLERS> vrGameControllersForInputSystem;                
+        UsableStaticVector<VRGameControllerForInputSystem, GameControllerConstants::MAX_GAME_CONTROLLERS> vrGameControllersForInputSystem;
         UsableStaticVector<VRHeadsetForInputSystem, HeadsetConstants::MAX_HEADSETS> vrHeadsetsForInputSystem;
     #endif
 
         ApplicationViewportsController appViewportsController;
         Utf8String workingWindowInternalName;
-        
+
         Utf8String mainThreadName;
         LogicalCpus logicalCpus;
         LogicalCpu mainThreadLogicalCpu;
-        
+
         JobSystem::Settings jobSystemSettings;
         JobSystem jobSystem;
     };

@@ -14,11 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundContext.hpp"
 #include "finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSource.hpp"
 #include "finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBuffer.hpp"
 #include "finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundGroup.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using SoundContext = AVAudioEngineSoundContext;
     using SoundContextSettings = AVAudioEngineSoundContext::Settings;

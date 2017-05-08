@@ -20,25 +20,25 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 int FinjinMain(ApplicationDelegate* del, int argc, char* argv[])
 {
     auto app = AllocatedClass::NewUnique<Application>(del->GetAllocator(), FINJIN_CALLER_ARGUMENTS, del);
-    
+
     CommandLineArgsProcessor argsProcessor(del->GetAllocator());
     argsProcessor.Create(argc - 1);
     for (int i = 1; i < argc; i++)
         argsProcessor[i - 1] = argv[i];
-    
+
     int result = 0;
     FINJIN_DECLARE_ERROR(error);
     app->Run(argsProcessor, error);
     if (error)
     {
-        app->ReportError(error);        
+        app->ReportError(error);
         result = 1;
     }
-    
+
     app->Destroy();
     app.reset();
 

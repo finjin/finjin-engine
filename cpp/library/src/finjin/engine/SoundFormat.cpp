@@ -14,15 +14,14 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "SoundFormat.hpp"
+#include "finjin/common/Convert.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/common/Utf8StringFormatter.hpp"
-#include "finjin/common/Convert.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //SoundFormat
 SoundFormat::SoundFormat()
@@ -132,7 +131,7 @@ int64_t SoundFormat::GetSampleFrameOffset(SimpleTimeCounter timeOffset) const
 Utf8String SoundFormat::ToTypeName() const
 {
     Utf8String name;
-    
+
     switch (this->samplesPerSecond)
     {
         case 11025: name += "low-"; break;
@@ -140,7 +139,7 @@ Utf8String SoundFormat::ToTypeName() const
         case 44100: name += "high-"; break;
         default: name += Convert::ToString(this->samplesPerSecond); name += "-"; break;
     }
-    
+
     switch (this->channelCount)
     {
         case 1: name += "mono-"; break;
@@ -151,7 +150,7 @@ Utf8String SoundFormat::ToTypeName() const
         case 6: name += "51-"; break;
         case 8: name += "71-"; break;
     }
-    
+
     switch (this->bytesPerChannel)
     {
         case 1: name += "-8"; break;
@@ -165,10 +164,10 @@ Utf8String SoundFormat::ToTypeName() const
             break;
         }
     }
-    
+
     if (name.EndsWith("-"))
         name.pop_back();
-    
+
     return name;
 }
 

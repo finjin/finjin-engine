@@ -14,11 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/EnumBitwise.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     enum class AssetCreationCapability
@@ -27,9 +27,9 @@ namespace Finjin { namespace Engine {
 
         MAIN_THREAD = 1 << 0, //Some or all of the asset creation is done on the main thread
         FRAME_THREAD = 1 << 1, //Some or all of the asset creation is done on the frame thread
-        
+
         TWO_STEP = MAIN_THREAD | FRAME_THREAD //Some asset creation is done on main thread, some on frame thread
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(AssetCreationCapability)
-    
+
 } }

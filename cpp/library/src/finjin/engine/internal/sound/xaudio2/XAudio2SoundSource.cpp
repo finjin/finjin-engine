@@ -14,22 +14,21 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "XAudio2SoundSource.hpp"
+#include "finjin/common/Math.hpp"
+#include "finjin/common/StaticVector.hpp"
+#include "XAudio2Context.hpp"
+#include "XAudio2ContextImpl.hpp"
+#include "XAudio2Includes.hpp"
+#include "XAudio2Listener.hpp"
+#include "XAudio2ListenerImpl.hpp"
 #include "XAudio2SoundBuffer.hpp"
 #include "XAudio2SoundGroup.hpp"
 #include "XAudio2SoundSourceVoice.hpp"
-#include "XAudio2Listener.hpp"
-#include "XAudio2ListenerImpl.hpp"
-#include "XAudio2Context.hpp"
-#include "XAudio2ContextImpl.hpp"
-#include "finjin/common/Math.hpp"
-#include "finjin/common/Vector.hpp"
-#include "XAudio2Includes.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 enum class SoundSourceChange
 {
     NONE = 0,
@@ -83,12 +82,12 @@ struct XAudio2SoundSource::Impl
     SimpleTimeCounter timeOffset;
     float playbackRate;
     float volume;
-    
+
     Utf8String debugName;
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //XAudio2SoundSource::Impl
 XAudio2SoundSource::Impl::Impl()
@@ -127,7 +126,7 @@ void XAudio2SoundSource::Impl::SetDefaults()
 
 //XAudio2SoundSource
 XAudio2SoundSource::XAudio2SoundSource() : impl(new Impl)
-{    
+{
     this->soundBufferNext = nullptr;
     this->soundGroupNext = nullptr;
 }
@@ -201,7 +200,7 @@ void XAudio2SoundSource::Commit(bool force)
             //Recalculate 3D
             impl->x3dEmitter.CurveDistanceScaler = contextImpl->referenceDistance;
             impl->x3dEmitter.DopplerScaler = contextImpl->dopplerFactor;
-                                    
+
             X3DAudioCalculate
             (
                 static_cast<BYTE*>(contextImpl->x3dAudioInterface),
@@ -294,10 +293,10 @@ bool XAudio2SoundSource::SetBuffer(XAudio2SoundBuffer* soundBuffer)
         }
 
         impl->invalidated |= SoundSourceChange::BUFFER;
-        
+
         return true;
     }
-    
+
     return false;
 }
 
@@ -337,7 +336,7 @@ SoundSourceState XAudio2SoundSource::GetState() const
             //No sound sources, it's virtualized
             state |= SoundSourceState::VIRTUALIZED;
         }
-        
+
         if (impl->requestedState == SoundSourceState::PLAYING || impl->requestedState == SoundSourceState::PAUSED)
         {
             //Sound is in a non-stopped state
@@ -368,7 +367,7 @@ void XAudio2SoundSource::Play()
         impl->requestedState = SoundSourceState::PLAYING;
     }
 }
-        
+
 void XAudio2SoundSource::Pause()
 {
     if (impl->requestedState == SoundSourceState::PLAYING)
@@ -376,7 +375,7 @@ void XAudio2SoundSource::Pause()
         impl->requestedState = SoundSourceState::PAUSED;
 
         if (impl->sourceVoice != nullptr)
-            impl->sourceVoice->Stop();        
+            impl->sourceVoice->Stop();
     }
 }
 
@@ -386,7 +385,7 @@ void XAudio2SoundSource::Stop()
     {
         if (impl->sourceVoice != nullptr)
             impl->sourceVoice->Stop();
-        
+
         impl->requestedState = SoundSourceState::STOPPED;
 
         impl->timeOffset = 0;
@@ -400,8 +399,8 @@ void XAudio2SoundSource::Rewind()
     {
         if (impl->sourceVoice != nullptr)
             impl->sourceVoice->Stop();
-        
-        impl->timeOffset = 0;    
+
+        impl->timeOffset = 0;
         impl->firstUpdate = true;
     }
 }
@@ -465,12 +464,12 @@ SimpleTimeCounter XAudio2SoundSource::GetTimeLength() const
     return timeLength;
 }
 
-bool XAudio2SoundSource::IsLooping() const 
+bool XAudio2SoundSource::IsLooping() const
 {
     return impl->isLooping;
 }
 
-void XAudio2SoundSource::SetLooping(bool loop) 
+void XAudio2SoundSource::SetLooping(bool loop)
 {
     impl->isLooping = loop;
 }
@@ -615,7 +614,7 @@ XAudio2SoundSourceVoice* XAudio2SoundSource::DetachVoice()
 {
     if (impl->sourceVoice != nullptr)
         impl->invalidated |= SoundSourceChange::VOICE;
-    
+
     auto result = impl->sourceVoice;
     impl->sourceVoice = nullptr;
     return result;
@@ -634,7 +633,7 @@ void XAudio2SoundSource::SetVoice(XAudio2SoundSourceVoice* voice)
 void XAudio2SoundSource::EnqueueBufferAndPlay()
 {
     if (impl->sourceVoice != nullptr && impl->buffer != nullptr)
-    {        
+    {
         impl->sourceVoice->Stop();
 
         XAUDIO2_BUFFER xbuffer;
@@ -642,7 +641,7 @@ void XAudio2SoundSource::EnqueueBufferAndPlay()
         xbuffer.pAudioData = impl->buffer->GetDataBytes();
         xbuffer.AudioBytes = static_cast<UINT32>(impl->buffer->GetDataByteCount());
         xbuffer.LoopCount = impl->isLooping ? XAUDIO2_LOOP_INFINITE : 0;
-        xbuffer.Flags = XAUDIO2_END_OF_STREAM;        
+        xbuffer.Flags = XAUDIO2_END_OF_STREAM;
         xbuffer.PlayBegin = static_cast<UINT32>(impl->soundFormat.GetSampleByteOffset(impl->timeOffset));
         impl->sourceVoice->xaudioSourceVoice->SubmitSourceBuffer(&xbuffer);
 
@@ -651,61 +650,53 @@ void XAudio2SoundSource::EnqueueBufferAndPlay()
     }
 }
 
-void XAudio2SoundSource::GetOrientation(float& forwardX, float& forwardY, float& forwardZ, float& upX, float& upY, float& upZ) const
+void XAudio2SoundSource::GetOrientation(MathVector3& forward, MathVector3& up) const
 {
-    forwardX = impl->x3dEmitter.OrientFront.x;
-    forwardY = impl->x3dEmitter.OrientFront.y;
-    forwardZ = impl->x3dEmitter.OrientFront.z;
-    upX = impl->x3dEmitter.OrientTop.x;
-    upY = impl->x3dEmitter.OrientTop.y;
-    upZ = impl->x3dEmitter.OrientTop.z;
+    forward = MathVector3(impl->x3dEmitter.OrientFront.x, impl->x3dEmitter.OrientFront.y, impl->x3dEmitter.OrientFront.z);
+    up = MathVector3(impl->x3dEmitter.OrientTop.x, impl->x3dEmitter.OrientTop.y, impl->x3dEmitter.OrientTop.z);
 }
 
-void XAudio2SoundSource::SetOrientation(float forwardX, float forwardY, float forwardZ, float upX, float upY, float upZ)
+void XAudio2SoundSource::SetOrientation(const MathVector3& forward, const MathVector3& up)
 {
-    impl->x3dEmitter.OrientFront.x = forwardX;
-    impl->x3dEmitter.OrientFront.y = forwardY;
-    impl->x3dEmitter.OrientFront.z = forwardZ;
-    impl->x3dEmitter.OrientTop.x = upX;
-    impl->x3dEmitter.OrientTop.y = upY;
-    impl->x3dEmitter.OrientTop.z = upZ;
+    impl->x3dEmitter.OrientFront.x = forward(0);
+    impl->x3dEmitter.OrientFront.y = forward(1);
+    impl->x3dEmitter.OrientFront.z = forward(2);
+    impl->x3dEmitter.OrientTop.x = up(0);
+    impl->x3dEmitter.OrientTop.y = up(1);
+    impl->x3dEmitter.OrientTop.z = up(2);
 
     impl->invalidated |= SoundSourceChange::ORIENTATION;
 }
 
-void XAudio2SoundSource::GetPosition(float& x, float& y, float& z) const
+void XAudio2SoundSource::GetPosition(MathVector3& value) const
 {
-    x = impl->x3dEmitter.Position.x;
-    y = impl->x3dEmitter.Position.y;
-    z = impl->x3dEmitter.Position.z;
+    value = MathVector3(impl->x3dEmitter.Position.x, impl->x3dEmitter.Position.y, impl->x3dEmitter.Position.z);
 }
 
-void XAudio2SoundSource::SetPosition(float x, float y, float z)
+void XAudio2SoundSource::SetPosition(const MathVector3& value)
 {
-    if (x != impl->x3dEmitter.Position.x || y != impl->x3dEmitter.Position.y || z != impl->x3dEmitter.Position.z)
+    if (value(0) != impl->x3dEmitter.Position.x || value(1) != impl->x3dEmitter.Position.y || value(2) != impl->x3dEmitter.Position.z)
     {
-        impl->x3dEmitter.Position.x = x;
-        impl->x3dEmitter.Position.y = y;
-        impl->x3dEmitter.Position.z = z;
+        impl->x3dEmitter.Position.x = value(0);
+        impl->x3dEmitter.Position.y = value(1);
+        impl->x3dEmitter.Position.z = value(2);
 
         impl->invalidated |= SoundSourceChange::POSITION;
     }
 }
 
-void XAudio2SoundSource::GetVelocity(float& x, float& y, float& z) const
+void XAudio2SoundSource::GetVelocity(MathVector3& value) const
 {
-    x = impl->x3dEmitter.Velocity.x;
-    y = impl->x3dEmitter.Velocity.y;
-    z = impl->x3dEmitter.Velocity.z;
+    value = MathVector3(impl->x3dEmitter.Velocity.x, impl->x3dEmitter.Velocity.y, impl->x3dEmitter.Velocity.z);
 }
 
-void XAudio2SoundSource::SetVelocity(float x, float y, float z)
+void XAudio2SoundSource::SetVelocity(const MathVector3& value)
 {
-    if (x != impl->x3dEmitter.Velocity.x || y != impl->x3dEmitter.Velocity.y || z != impl->x3dEmitter.Velocity.z)
+    if (value(0) != impl->x3dEmitter.Velocity.x || value(1) != impl->x3dEmitter.Velocity.y || value(2) != impl->x3dEmitter.Velocity.z)
     {
-        impl->x3dEmitter.Velocity.x = x;
-        impl->x3dEmitter.Velocity.y = y;
-        impl->x3dEmitter.Velocity.z = z;
+        impl->x3dEmitter.Velocity.x = value(0);
+        impl->x3dEmitter.Velocity.y = value(1);
+        impl->x3dEmitter.Velocity.z = value(2);
 
         impl->invalidated |= SoundSourceChange::VELOCITY;
     }

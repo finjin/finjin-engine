@@ -21,15 +21,17 @@
 #include <shellapi.h>
 #include <vector>
 
+using namespace Finjin::Engine;
+
+
+//Macros------------------------------------------------------------------------
 #define BORDERLESS_STYLE WS_POPUP | WS_VISIBLE
 #define BORDERED_STYLE WS_OVERLAPPEDWINDOW | WS_VISIBLE
 
 #define USE_MESSAGE_BOX_FOR_MESSAGES 1
 
-using namespace Finjin::Engine;
 
-
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct OSWindow::Impl : public AllocatedClass
 {
     Impl(Allocator* allocator, OSWindow* osWindow, void* clientData);
@@ -43,7 +45,7 @@ struct OSWindow::Impl : public AllocatedClass
     OSWindowSize minSize;
     HWND windowHandle;
     void* clientData;
-    
+
     WindowSize windowSize;
     StaticVector<OSWindowEventListener*, EngineConstants::MAX_WINDOW_LISTENERS> listeners;
 
@@ -57,14 +59,14 @@ struct OSWindow::Impl : public AllocatedClass
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     auto osWindow = reinterpret_cast<OSWindow*>(GetWindowLongPtrW(hWnd, GWLP_USERDATA));
     auto impl = osWindow ? osWindow->GetImpl() : nullptr;
 
     switch (message)
-    {    
+    {
         case WM_CREATE:
         {
             auto cs = reinterpret_cast<CREATESTRUCT*>(lParam);
@@ -80,7 +82,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         case WM_CLOSE:
         {
-            osWindow->NotifyListenersClosing();            
+            osWindow->NotifyListenersClosing();
             break;
         }
         case WM_ENTERSIZEMOVE:
@@ -92,9 +94,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_EXITSIZEMOVE:
         {
             impl->inSizeMove = false;
-            
+
             auto sizeMoveStop = osWindow->GetRect();
-            
+
             if (impl->sizeMoveStart.GetPosition() != sizeMoveStop.GetPosition())
             {
                 osWindow->GetWindowSize().WindowMoved(impl->IsMaximized());
@@ -117,7 +119,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             /*switch (wParam)
             {
-                case SIZE_RESTORED: 
+                case SIZE_RESTORED:
                 case SIZE_MINIMIZED:
                 case SIZE_MAXIMIZED:
                 case SIZE_MAXSHOW:
@@ -132,15 +134,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 if (wParam == SIZE_MAXIMIZED)
                     FINJIN_DEBUG_LOG_INFO("WM_SIZE: It is maximized");
-                
+
                 osWindow->GetWindowSize().WindowResized(impl->IsMaximized());
 
                 for (auto listener : impl->listeners)
                     listener->WindowResized(osWindow);
             }
-            
+
             break;
-        }            
+        }
         case WM_MOVE:
         {
             //auto x = LOWORD(lParam);
@@ -153,7 +155,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 for (auto listener : impl->listeners)
                     listener->WindowMoved(osWindow);
             }
-            
+
             break;
         }
         case WM_SETFOCUS:
@@ -173,20 +175,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 auto lpMMI = reinterpret_cast<LPMINMAXINFO>(lParam);
                 if (impl->lockSize.IsSet())
                 {
-                    lpMMI->ptMinTrackSize.x = impl->lockSize.value.width;
-                    lpMMI->ptMinTrackSize.y = impl->lockSize.value.height;
-                    lpMMI->ptMaxTrackSize.x = impl->lockSize.value.width;
-                    lpMMI->ptMaxTrackSize.y = impl->lockSize.value.height;
+                    lpMMI->ptMinTrackSize.x = static_cast<LONG>(impl->lockSize.value.width);
+                    lpMMI->ptMinTrackSize.y = static_cast<LONG>(impl->lockSize.value.height);
+                    lpMMI->ptMaxTrackSize.x = static_cast<LONG>(impl->lockSize.value.width);
+                    lpMMI->ptMaxTrackSize.y = static_cast<LONG>(impl->lockSize.value.height);
                 }
                 else
                 {
-                    lpMMI->ptMinTrackSize.x = impl->minSize.width;
-                    lpMMI->ptMinTrackSize.y = impl->minSize.height;
+                    lpMMI->ptMinTrackSize.x = static_cast<LONG>(impl->minSize.width);
+                    lpMMI->ptMinTrackSize.y = static_cast<LONG>(impl->minSize.height);
                     lpMMI->ptMaxTrackSize.x = 32000;
                     lpMMI->ptMaxTrackSize.y = 32000;
                 }
             }
-            
+
             break;
         }
         case WM_DROPFILES:
@@ -199,7 +201,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 auto fileCount = DragQueryFileW(hDrop, (UINT)-1, nullptr, 0);
                 if (fileCount > impl->droppedFiles.size())
                     impl->droppedFiles.resize(fileCount);
-                
+
                 //Get the dropped file names
                 Path droppedFile;
                 for (UINT fileIndex = 0; fileIndex < fileCount; fileIndex++)
@@ -208,18 +210,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     if (bufferLength > impl->droppedFileCharBuffer.size())
                         impl->droppedFileCharBuffer.resize(bufferLength);
 
-                    auto fileNameLength = DragQueryFileW(hDrop, fileIndex, impl->droppedFileCharBuffer.data(), impl->droppedFileCharBuffer.size());
+                    auto fileNameLength = DragQueryFileW(hDrop, fileIndex, impl->droppedFileCharBuffer.data(), static_cast<UINT>(impl->droppedFileCharBuffer.size()));
                     droppedFile.assign(impl->droppedFileCharBuffer.data(), fileNameLength);
                     impl->droppedFiles[fileIndex] = droppedFile;
                 }
-                                
+
                 DragFinish(hDrop);
-                
+
                 //Notify window listener
                 for (auto listener : impl->listeners)
                     listener->WindowOnDropFiles(osWindow, impl->droppedFiles.data(), fileCount);
             }
-            
+
             break;
         }
         case WM_ERASEBKGND:
@@ -227,11 +229,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             return 1; //Indicates background has been erased and nothing else should be done
         }
     }
-    
+
     return DefWindowProcW(hWnd, message, wParam, lParam);
 }
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //OSWindow::Impl
 OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData) : AllocatedClass(allocator)
@@ -241,7 +243,7 @@ OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData)
     this->clientData = clientData;
     this->creating = true;
     this->inSizeMove = false;
-    this->hasFocus = false;        
+    this->hasFocus = false;
     this->minSize = OSWindowSize(100, 100);
     this->droppedFileCharBuffer.resize(MAX_PATH + 1); //This will be resized if necessary
     this->droppedFiles.resize(10); //This will be resized if necessary
@@ -256,10 +258,10 @@ bool OSWindow::Impl::IsMaximized() const
 }
 
 //OSWindow
-OSWindow::OSWindow(Allocator* allocator, void* clientData) : 
-    AllocatedClass(allocator), 
+OSWindow::OSWindow(Allocator* allocator, void* clientData) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<Impl>(allocator, FINJIN_CALLER_ARGUMENTS, this, clientData))
-{    
+{
 }
 
 OSWindow::~OSWindow()
@@ -272,7 +274,7 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
     FINJIN_ERROR_METHOD_START(error);
 
     const auto WINDOW_CLASS_NAME = L"FinjinAppWindow";
-    
+
     auto hInstance = GetModuleHandleW(nullptr);
 
     static bool registeredClass = false;
@@ -301,20 +303,20 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
 
     //Create the window
     Utf8StringToWideString internalNameW(internalName);
-    impl->windowHandle = CreateWindowW(WINDOW_CLASS_NAME, internalNameW.c_str(), BORDERED_STYLE, rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight(), 0L, 0L, hInstance, this);
+    impl->windowHandle = CreateWindowW(WINDOW_CLASS_NAME, internalNameW.c_str(), BORDERED_STYLE, rect.GetX(), rect.GetY(), static_cast<int>(rect.GetWidth()), static_cast<int>(rect.GetHeight()), 0L, 0L, hInstance, this);
     if (impl->windowHandle == nullptr)
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create window '%1%'.", internalName.c_str()));
         return;
     }
-    
+
     SetClientSize(rect.GetWidth(), rect.GetHeight());
-    
+
     Utf8StringToWideString titleW(titleOrSubtitle);
     SetWindowTextW(impl->windowHandle, titleW.c_str());
-    
+
     Raise();
-    
+
     impl->hasFocus = true;
 
     impl->creating = false;
@@ -327,7 +329,7 @@ void OSWindow::Destroy()
     if (impl->windowHandle != nullptr)
     {
         DestroyWindow(impl->windowHandle);
-        impl->windowHandle = nullptr;        
+        impl->windowHandle = nullptr;
     }
 }
 
@@ -342,7 +344,7 @@ void OSWindow::ShowMessage(const Utf8String& message, const Utf8String& title)
     Utf8StringToWideString messageW(message);
     Utf8StringToWideString titleW(title);
     MessageBoxExW(reinterpret_cast<HWND>(impl->windowHandle), messageW.c_str(), titleW.c_str(), MB_OK, 0);
-#else    
+#else
     std::cout << title << ": " << message << std::endl;
 #endif
 }
@@ -378,9 +380,9 @@ void OSWindow::ApplyWindowSize()
         SetBorderedStyle();
     else
         SetBorderlessStyle();
-        
+
     if (bounds.IsMaximized())
-        Maximize(); 
+        Maximize();
     else
         Move(bounds.x, bounds.y, bounds.width, bounds.height);
 
@@ -404,7 +406,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
     {
         switch (impl->windowSize.GetState())
         {
-            case WindowSize::WINDOWED_NORMAL:
+            case WindowSizeState::WINDOWED_NORMAL:
             {
                 auto newWidth = std::min(bounds.width, displayRect.GetWidth());
                 auto newHeight = std::min(bounds.height, displayRect.GetHeight());
@@ -418,7 +420,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
 
                 break;
             }
-            case WindowSize::WINDOWED_MAXIMIZED:
+            case WindowSizeState::WINDOWED_MAXIMIZED:
             {
                 auto newWidth = displayRect.GetWidth();
                 auto newHeight = displayRect.GetHeight();
@@ -432,7 +434,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
 
                 break;
             }
-            case WindowSize::BORDERLESS_FULLSCREEN:
+            case WindowSizeState::BORDERLESS_FULLSCREEN:
             {
                 if (!displayRect.Contains(bounds.x, bounds.y))
                 {
@@ -444,7 +446,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
 
                 break;
             }
-            case WindowSize::EXCLUSIVE_FULLSCREEN:
+            case WindowSizeState::EXCLUSIVE_FULLSCREEN:
             {
                 break;
             }
@@ -480,13 +482,13 @@ bool OSWindow::IsSizeLocked() const
 
 void OSWindow::LockSize(OSWindowSize size)
 {
-    impl->lockSize = size;    
+    impl->lockSize = size;
 }
 
 void OSWindow::UnlockSize(OSWindowSize minSize)
 {
     impl->minSize = minSize;
-    impl->lockSize.Reset();    
+    impl->lockSize.Reset();
 }
 
 bool OSWindow::HasFocus() const
@@ -522,9 +524,9 @@ int OSWindow::GetDisplayID() const
     for (auto& display : displays)
     {
         if (display.monitorHandle == monitorHandle)
-            return display.index;
+            return static_cast<int>(display.index);
     }
-    
+
     return 0;
 }
 
@@ -600,7 +602,7 @@ void OSWindow::SetClientSize(OSWindowDimension width, OSWindowDimension height)
 {
     auto windowRect = GetRect();
     auto clientRect = GetClientSize();
-    
+
     if (width > clientRect.width)
         windowRect.width += width - clientRect.width;
     else
@@ -624,7 +626,7 @@ bool OSWindow::Move(OSWindowCoordinate x, OSWindowCoordinate y)
 void OSWindow::Move(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height)
 {
     FINJIN_DEBUG_LOG_INFO("OSWindow::Move: (%1%, %2%) @ (%3% x %4%)", x, y, width, height);
-    MoveWindow(impl->windowHandle, x, y, width, height, TRUE);
+    MoveWindow(impl->windowHandle, x, y, static_cast<int>(width), static_cast<int>(height), TRUE);
 }
 
 bool OSWindow::HasWindowHandle() const
@@ -693,11 +695,11 @@ bool OSWindow::CenterCursor()
     auto x = windowRect.GetX() + clientRect.GetX();
     auto y = windowRect.GetY() + clientRect.GetY();
 
-    auto displayRect = GetDisplayRect();   
+    auto displayRect = GetDisplayRect();
     x += displayRect.x;
     y += displayRect.y;
-    
-    SetCursorPos(x + clientRect.GetWidth()/2, y + clientRect.GetHeight()/2);
+
+    SetCursorPos(static_cast<int>(x + clientRect.GetWidth() / 2), static_cast<int>(y + clientRect.GetHeight()/2));
 
     return true;
 }

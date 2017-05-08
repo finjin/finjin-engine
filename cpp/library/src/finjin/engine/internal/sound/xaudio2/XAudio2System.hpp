@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/SoundSystemCommonSettings.hpp"
 #include "XAudio2Context.hpp"
 
 
-//Classes----------------------------------------------------------------------
-namespace Finjin { namespace Engine {    
+//Types-------------------------------------------------------------------------
+namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 

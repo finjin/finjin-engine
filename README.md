@@ -1,10 +1,10 @@
 # finjin-engine
-The Finjin engine is a multiplatform 3D simulation engine suitable for use in the creation of games and other interactive 3D applications.
+The Finjin engine is a multiplatform 3D simulation and visualization engine suitable for use in the creation of games and other interactive 3D applications.
 
 ## Features
-  * Natively supports Windows (Win32 and UWP), with support for other desktop and mobile operating systems coming soon.
+  * Natively supports Windows (Win32 and UWP), Android, Linux, macOS, iOS, and tvOS.
+  * Utilizes the newest 3D graphics interfaces (Direct3D 12, Vulkan, and Metal) for improved graphics performance.
   * Driven by a multithreaded job and rendering system that automatically scales work across all CPU cores.
-  * Utilizes the newest 3D graphics interfaces for improved graphics performance.
   * Supports multiple windows across multiple monitors.
   * Accepts inputs from a variety of input devices using a configuration-driven input binding system.
   
@@ -35,4 +35,5 @@ cpp/library/              Main source tree.
       input/              Input system implementation.
       sound/              Sound system implementation.
       vr/                 Virtual reality system implementation.
+tools/                    Various utility scripts.
 ```

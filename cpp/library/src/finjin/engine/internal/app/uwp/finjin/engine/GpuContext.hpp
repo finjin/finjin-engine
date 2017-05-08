@@ -14,8 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/gpu/d3d12/D3D12GpuContext.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using GpuContext = D3D12GpuContext;
     using GpuContextSettings = D3D12GpuContext::Settings;

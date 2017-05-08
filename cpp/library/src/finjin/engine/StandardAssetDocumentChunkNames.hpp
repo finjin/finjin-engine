@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #if defined(FINJIN_EXPORTER)
     #include "finjin/common/WxChunkName.hpp"
     typedef Finjin::Common::WxChunkName FinjinChunkName;
@@ -24,9 +24,9 @@
 #endif
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     struct StandardAssetDocumentChunkNames
     {
         static const FinjinChunkName ATTENUATION;

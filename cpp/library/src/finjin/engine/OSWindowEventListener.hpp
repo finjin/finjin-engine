@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Path.hpp"
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/PointerType.hpp"
 #include "finjin/engine/InputCoordinate.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -37,36 +37,36 @@ namespace Finjin { namespace Engine {
         /** Called when the window is resized */
         virtual void WindowMoved(OSWindow* osWindow) {}
         virtual void WindowResized(OSWindow* osWindow) {}
-        
+
         virtual void WindowGainedFocus(OSWindow* osWindow) {}
         virtual void WindowLostFocus(OSWindow* osWindow) {}
-        
+
         /** Called just before the window is closed */
         virtual void WindowClosing(OSWindow* osWindow)  {}
 
         virtual void WindowOnKeyDown(OSWindow* osWindow, int softwareKey, int hardwareCode, bool controlDown, bool shiftDown, bool altDown) {}
         virtual void WindowOnKeyUp(OSWindow* osWindow, int softwareKey, int hardwareCode, bool controlDown, bool shiftDown, bool altDown) {}
-        
+
         struct Buttons
         {
-            Buttons() { this->buttons = 0; this->used = 0; }            
-            Buttons(int buttons) { this->buttons = buttons; this->used = 0xffffffff; }            
+            Buttons() { this->buttons = 0; this->used = 0; }
+            Buttons(int buttons) { this->buttons = buttons; this->used = 0xffffffff; }
             Buttons(int buttons, int used) { this->buttons = buttons; this->used = used; }
-            
+
             Buttons Inverse() const { return Buttons(~this->buttons, this->used); }
-            
-            bool IsUsed(size_t index) const { return (this->used & (1 << index)) != 0; }            
+
+            bool IsUsed(size_t index) const { return (this->used & (1 << index)) != 0; }
             bool IsPressed(size_t index) const { return (this->buttons & (1 << index)) != 0; }
-            
+
             int buttons;
             int used;
         };
-        
+
         virtual void WindowOnMouseWheel(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons, float wheelDelta) {}
-        virtual void WindowOnPointerMove(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons) {}        
+        virtual void WindowOnPointerMove(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons) {}
         virtual void WindowOnPointerDown(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons) {}
         virtual void WindowOnPointerUp(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons) {}
-                
+
         virtual bool WindowOnDropFiles(OSWindow* osWindow, const Path* fileNames, size_t count) { return false; }
 
         static int PackMouseButtons(bool left, bool right, bool middle, bool extended1 = false, bool extended2 = false)

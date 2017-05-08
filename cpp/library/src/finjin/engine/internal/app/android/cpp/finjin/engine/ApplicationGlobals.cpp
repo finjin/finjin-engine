@@ -19,7 +19,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 ApplicationGlobals::ApplicationGlobals()
 {
     this->alooperIdentifierGenerator = LOOPER_ID_USER;

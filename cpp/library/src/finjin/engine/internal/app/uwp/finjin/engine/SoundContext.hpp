@@ -14,11 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/internal/sound/xaudio2/XAudio2Context.hpp"
 #include "finjin/engine/internal/sound/xaudio2/XAudio2SoundSource.hpp"
 #include "finjin/engine/internal/sound/xaudio2/XAudio2SoundBuffer.hpp"
 #include "finjin/engine/internal/sound/xaudio2/XAudio2SoundGroup.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using SoundContext = XAudio2Context;
     using SoundContextSettings = XAudio2Context::Settings;

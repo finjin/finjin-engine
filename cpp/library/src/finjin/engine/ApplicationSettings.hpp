@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/CommandLineArgsProcessor.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Path.hpp"
@@ -22,7 +22,7 @@
 #include "OSWindowDefs.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -31,9 +31,9 @@ namespace Finjin { namespace Engine {
     {
     public:
         ApplicationSettings();
-        
+
         void ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
-        
+
     public:
         Setting<Path> additionalReadApplicationAssetsDirectory; //Additional directory for ApplicationFileSystem::READ_APPLICATION_ASSETS
         Setting<OSWindowDimension> windowWidth;

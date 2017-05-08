@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
@@ -23,7 +23,7 @@
 #include "finjin/engine/WindowSize.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -36,7 +36,7 @@ namespace Finjin { namespace Engine {
 
         void Create
             (
-            const Utf8String& internalName, 
+            const Utf8String& internalName,
             const Utf8String& titleOrSubtitle,
             const Utf8String& displayName,
             OSWindowRect rect,
@@ -59,7 +59,7 @@ namespace Finjin { namespace Engine {
         const WindowSize& GetWindowSize() const;
 
         bool IsMinimized() const;
-        
+
         bool IsVisible() const;
 
         bool HasFocus() const;
@@ -72,17 +72,17 @@ namespace Finjin { namespace Engine {
         OSWindowRect GetDisplayVisibleRect() const;
 
         OSWindowRect GetRect() const;
-        
+
         OSWindowSize GetClientSize() const;
         void SetClientSize(OSWindowDimension width, OSWindowDimension height);
-        
+
         bool Move(OSWindowCoordinate x, OSWindowCoordinate y);
 
         bool HasWindowHandle() const;
         void ClearSystemWindowHandle();
 
         void* GetWindowHandle() const;
-        
+
         size_t GetWindowEventListenerCount() const;
         OSWindowEventListener* GetWindowEventListener(size_t index);
         void AddWindowEventListener(OSWindowEventListener* listener);
@@ -97,7 +97,7 @@ namespace Finjin { namespace Engine {
         void LimitBounds(WindowBounds& bounds) const;
 
         void Tick();
-        
+
         //Windows-specific methods------------------------------
         bool IsSizeLocked() const;
 
@@ -120,6 +120,6 @@ namespace Finjin { namespace Engine {
 
         void Maximize(bool maximize = true);
 
-        std::unique_ptr<Impl> impl;        
+        std::unique_ptr<Impl> impl;
     };
 } }

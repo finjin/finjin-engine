@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/Math.hpp"
+#include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/EventCollection.hpp"
 #include "finjin/engine/InputBindings.hpp"
-#include "finjin/common/Utf8String.hpp"
-#include "finjin/common/Math.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class FlyingCameraEvents : public EventCollectionFlags<>
@@ -32,7 +32,7 @@ namespace Finjin { namespace Engine {
             TAP,
 
             SWIPE,
-            
+
             MOUSE_X,
             MOUSE_Y,
             MOUSE_LEFT_BUTTON_DOWN,
@@ -41,17 +41,17 @@ namespace Finjin { namespace Engine {
             MOUSE_RIGHT_BUTTON_UP,
 
             MOVE,
-            
+
             PAN_ORBIT,
-            
+
             LOOK,
-            
+
             SELECT_OBJECT,
             DESELECT_OBJECT,
-            
+
             CHANGE_CAMERA,
             TOGGLE_VIEW_CAMERA_LOCK,
-            
+
             SET_DOLLY_MODE,
             POP_DOLLY,
 
@@ -68,14 +68,14 @@ namespace Finjin { namespace Engine {
             ESCAPE,
             MENU
         };
-        
+
         FlyingCameraEvents()
         {
             Reset();
         }
 
         void Reset()
-        {   
+        {
             ClearFlags();
 
             this->tap = MathVector2::Zero();
@@ -90,7 +90,7 @@ namespace Finjin { namespace Engine {
             this->usedGameController = false;
             this->usedTouchScreen = false;
         }
-        
+
     public:
         //An absolute tap position on the screen, in DIPS
         MathVector2 tap;
@@ -103,12 +103,12 @@ namespace Finjin { namespace Engine {
 
         /**
          * The components represent the amount of movement where:
-         *  +x is right, -x is left, 
+         *  +x is right, -x is left,
          *  +y is forward, -y is backward
          * The MOVE event must be set for this to be used
          */
         MathVector2 move;
-        
+
         MathVector2 panOrbit;
 
         /**
@@ -128,8 +128,6 @@ namespace Finjin { namespace Engine {
     class FlyingCameraInputBindings : public InputBindings<FlyingCameraEvents>
     {
     public:
-        static const Utf8String DEFAULT_BINDINGS_FILE_NAME;
-
         enum //InputActionID
         {
             TAP_DOWN_X,
@@ -149,34 +147,36 @@ namespace Finjin { namespace Engine {
             MOVE_BACKWARD,
             MOVE_LEFT,
             MOVE_RIGHT,
-            
+
             PAN_ORBIT_UP,
             PAN_ORBIT_DOWN,
             PAN_ORBIT_LEFT,
             PAN_ORBIT_RIGHT,
-            
+
             LOOK_UP,
             LOOK_DOWN,
             LOOK_LEFT,
             LOOK_RIGHT,
-            
-            SET_DOLLY_MODE,            
-            SET_PAN_OR_ORBIT_MODE,            
+
+            SET_DOLLY_MODE,
+            SET_PAN_OR_ORBIT_MODE,
             SET_FREE_LOOK_MODE,
-            
+
             ZOOM_TO_FIT,
 
             SELECT_OBJECT,
             DESELECT_OBJECT,
-            
+
             SCREENSHOT,
 
             ESCAPE,
             MENU
         };
-        
+
     public:
         FlyingCameraInputBindings();
+
+        static const Utf8String& GetDefaultBindingsFileName();
 
     protected:
         void ProcessInputAction

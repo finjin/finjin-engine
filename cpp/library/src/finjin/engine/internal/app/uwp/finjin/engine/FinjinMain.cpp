@@ -33,22 +33,15 @@ using namespace Windows::Graphics::Display;
 using namespace Windows::System;
 
 
-//Library references-----------------------------------------------------------
+//Library references------------------------------------------------------------
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
-
-#if FINJIN_DEBUG
-    #pragma comment(lib, "boost_system-vc140-mt-gd-1_59")
-#else
-    #pragma comment(lib, "boost_system-vc140-mt-1_59")
-#endif
-
 #pragma comment(lib, "Kernel32")
 #pragma comment(lib, "Shell32")
 #pragma comment(lib, "winmm")
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 ref class ApplicationFrameworkView sealed : public IFrameworkView
 {
 public:
@@ -66,7 +59,7 @@ protected:
     void OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args);
     void OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args);
     void OnResuming(Platform::Object^ sender, Platform::Object^ args);
-    
+
     //DisplayInformation event handlers
     void OnDpiChanged(DisplayInformation^ sender, Platform::Object^ args);
     void OnOrientationChanged(DisplayInformation^ sender, Platform::Object^ args);
@@ -91,11 +84,11 @@ private:
 };
 
 
-//Implementation---------------------------------------------------------------
-ApplicationFrameworkView::ApplicationFrameworkView(intptr_t _applicationDelegate, Platform::Array<Platform::String^>^ _args) : 
-    applicationDelegate(reinterpret_cast<ApplicationDelegate*>(_applicationDelegate)), 
+//Implementation----------------------------------------------------------------
+ApplicationFrameworkView::ApplicationFrameworkView(intptr_t _applicationDelegate, Platform::Array<Platform::String^>^ _args) :
+    applicationDelegate(reinterpret_cast<ApplicationDelegate*>(_applicationDelegate)),
     args(_args)
-{    
+{
 }
 
 void ApplicationFrameworkView::Initialize(CoreApplicationView^ applicationView)
@@ -105,7 +98,7 @@ void ApplicationFrameworkView::Initialize(CoreApplicationView^ applicationView)
     //Register event handlers for app lifecycle. This example includes Activated, so that we can make the CoreWindow active and start rendering on the window.
     applicationView->Activated += ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &ApplicationFrameworkView::OnActivated);
     CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs^>(this, &ApplicationFrameworkView::OnSuspending);
-    CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &ApplicationFrameworkView::OnResuming);    
+    CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &ApplicationFrameworkView::OnResuming);
 }
 
 void ApplicationFrameworkView::SetWindow(CoreWindow^ window)
@@ -131,7 +124,7 @@ void ApplicationFrameworkView::Load(Platform::String^ entryPoint)
         argsProcessor.Create(this->args->Length);
         for (unsigned int argIndex = 0; argIndex < this->args->Length; argIndex++)
             argsProcessor[argIndex] = this->args[argIndex]->Data();
-        
+
         //Run
         FINJIN_DECLARE_ERROR(error);
         this->app->ReadCommandLineSettings(argsProcessor, error);
@@ -147,7 +140,7 @@ void ApplicationFrameworkView::Load(Platform::String^ entryPoint)
             FINJIN_DEBUG_LOG_ERROR(error.ToString().c_str());
             return;
         }
-    }        
+    }
 }
 
 void ApplicationFrameworkView::Run()
@@ -161,19 +154,19 @@ void ApplicationFrameworkView::Run()
     this->app->MainLoop(error);
     if (error)
     {
-        this->app->ReportError(error);        
+        this->app->ReportError(error);
     }
 
     //Shut down
     this->app->Destroy();
     this->app.reset();
-    
+
     this->applicationDelegate.reset();
 }
 
 void ApplicationFrameworkView::Uninitialize()
 {
-    //Called if IFrameworkView class is torn down while the app is in the foreground        
+    //Called if IFrameworkView class is torn down while the app is in the foreground
 }
 
 void ApplicationFrameworkView::OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args)
@@ -184,12 +177,12 @@ void ApplicationFrameworkView::OnActivated(CoreApplicationView^ applicationView,
 
 void ApplicationFrameworkView::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
 {
-    //Save app state asynchronously after requesting a deferral. Holding a deferral indicates that the application is busy performing suspending operations. 
+    //Save app state asynchronously after requesting a deferral. Holding a deferral indicates that the application is busy performing suspending operations.
     //Be aware that a deferral may not be held indefinitely. After about five seconds, the app will be forced to exit.
 
     FINJIN_DECLARE_ERROR(error);
     this->app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::PAUSE), error);
-    
+
     SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
     create_task([deferral]()
     {
@@ -201,8 +194,8 @@ void ApplicationFrameworkView::OnSuspending(Platform::Object^ sender, Suspending
 
 void ApplicationFrameworkView::OnResuming(Platform::Object^ sender, Platform::Object^ args)
 {
-    //Restore any data or state that was unloaded on suspend. 
-    //By default, data and state are persisted when resuming from suspend. 
+    //Restore any data or state that was unloaded on suspend.
+    //By default, data and state are persisted when resuming from suspend.
     //Note that this event does not occur if the app was previously terminated.
 
     FINJIN_DECLARE_ERROR(error);
@@ -221,11 +214,11 @@ void ApplicationFrameworkView::OnOrientationChanged(DisplayInformation^ sender, 
 }
 
 void ApplicationFrameworkView::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
-{    
+{
 }
 
 //ApplicationFrameworkViewSource
-ApplicationFrameworkViewSource::ApplicationFrameworkViewSource(intptr_t _applicationDelegate, Platform::Array<Platform::String^>^ _args) : 
+ApplicationFrameworkViewSource::ApplicationFrameworkViewSource(intptr_t _applicationDelegate, Platform::Array<Platform::String^>^ _args) :
     applicationDelegate(_applicationDelegate),
     args(_args)
 {
@@ -248,7 +241,7 @@ IFrameworkView^ ApplicationFrameworkViewSource::CreateView()
 }
 
 
-//ApplicationFrameworkView-------------------------------------------------------------------------
+//ApplicationFrameworkView------------------------------------------------------
 int FinjinMain(ApplicationDelegate* applicationDelegate, Platform::Array<Platform::String^>^ args)
 {
     auto mainSource = ref new ApplicationFrameworkViewSource(reinterpret_cast<intptr_t>(applicationDelegate), args);

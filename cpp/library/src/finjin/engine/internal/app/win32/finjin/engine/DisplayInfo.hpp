@@ -14,24 +14,24 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/OSWindowDefs.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class DisplayInfo
     {
-    public:    
+    public:
         DisplayInfo();
 
     public:
-        size_t index;        
+        size_t index;
         bool isPrimary;
         OSWindowRect frame;
         OSWindowRect clientFrame;
@@ -48,6 +48,6 @@ namespace Finjin { namespace Engine {
         void SortLeftToRight();
 
         const DisplayInfo* GetByName(const Utf8String& name) const;
-    };    
+    };
 
 } }

@@ -14,15 +14,15 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/NumericStruct.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     //Metadata common to structured and constants buffers------------------
     class GpuStructuredAndConstantBufferStructMetadata
     {
@@ -32,9 +32,9 @@ namespace Finjin { namespace Engine {
             NONE,
 
             ENVIRONMENT_MATRIX,
-            WORLD_MATRIX,
-            INVERSE_WORLD_MATRIX,
-            INVERSE_TRANSPOSE_WORLD_MATRIX,
+            MODEL_MATRIX,
+            INVERSE_MODEL_MATRIX,
+            INVERSE_TRANSPOSE_MODEL_MATRIX,
             VIEW_MATRIX,
             INVERSE_VIEW_MATRIX,
             INVERSE_TRANSPOSE_VIEW_MATRIX,
@@ -86,7 +86,7 @@ namespace Finjin { namespace Engine {
             MAP_OPACITY_AMOUNT,
             MAP_ENVIRONMENT_AMOUNT,
             MAP_SHININESS_AMOUNT,
-            
+
             COUNT
         };
 
@@ -109,9 +109,9 @@ namespace Finjin { namespace Engine {
             static StaticUnorderedMap<size_t, ElementID, (size_t)ElementID::COUNT, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT(ElementID::COUNT), MapPairConstructNone<size_t, ElementID>, PassthroughHash> lookup
                 (
                 Utf8String::Hash("environment-matrix"), ElementID::ENVIRONMENT_MATRIX,
-                Utf8String::Hash("world-matrix"), ElementID::WORLD_MATRIX,
-                Utf8String::Hash("inverse-world-matrix"), ElementID::INVERSE_WORLD_MATRIX,
-                Utf8String::Hash("inverse-transpose-world-matrix"), ElementID::INVERSE_TRANSPOSE_WORLD_MATRIX,
+                Utf8String::Hash("model-matrix"), ElementID::MODEL_MATRIX,
+                Utf8String::Hash("inverse-model-matrix"), ElementID::INVERSE_MODEL_MATRIX,
+                Utf8String::Hash("inverse-transpose-model-matrix"), ElementID::INVERSE_TRANSPOSE_MODEL_MATRIX,
                 Utf8String::Hash("view-matrix"), ElementID::VIEW_MATRIX,
                 Utf8String::Hash("inverse-view-matrix"), ElementID::INVERSE_VIEW_MATRIX,
                 Utf8String::Hash("inverse-transpose-view-matrix"), ElementID::INVERSE_TRANSPOSE_VIEW_MATRIX,
@@ -190,7 +190,7 @@ namespace Finjin { namespace Engine {
 
 
     //Generic rendering GPU structured buffer struct
-    class GpuStructuredBufferStructMetadata : public GpuStructuredAndConstantBufferStructMetadata
+    /*class GpuStructuredBufferStructMetadata : public GpuStructuredAndConstantBufferStructMetadata
     {
     public:
         static const Utf8String& GetConfigSectionName()
@@ -200,8 +200,7 @@ namespace Finjin { namespace Engine {
         }
     };
     using GpuRenderingStructuredBufferStruct = NumericStruct<GpuStructuredBufferStructMetadata>;
-    using GpuRenderingStructuredBuffer = NumericStructInstance<GpuRenderingStructuredBufferStruct>;
-
+    using GpuRenderingStructuredBuffer = NumericStructInstance<GpuRenderingStructuredBufferStruct>;*/
 
     //Vertex/input format-------------------------------------------------
     class InputFormatStructMetadata
@@ -234,14 +233,14 @@ namespace Finjin { namespace Engine {
             NONE,
 
             BINORMAL, //float4
-            BLEND_INDICES_0, //uint
+            /*BLEND_INDICES_0, //uint
             BLEND_INDICES_1, //uint
             BLEND_INDICES_2, //uint
             BLEND_INDICES_3, //uint
             BLEND_WEIGHT_0, //float
             BLEND_WEIGHT_1, //float
             BLEND_WEIGHT_2, //float
-            BLEND_WEIGHT_3, //float
+            BLEND_WEIGHT_3, //float*/
             COLOR_0, //float4
             COLOR_1, //float4
             COLOR_2, //float4
@@ -272,14 +271,14 @@ namespace Finjin { namespace Engine {
             static StaticUnorderedMap<size_t, ElementID, (size_t)ElementID::COUNT + extra, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT((size_t)ElementID::COUNT + extra), MapPairConstructNone<size_t, ElementID>, PassthroughHash> lookup
                 (
                 Utf8String::Hash("binormal"), ElementID::BINORMAL,
-                Utf8String::Hash("blend-indices-0"), ElementID::BLEND_INDICES_0,
+                /*Utf8String::Hash("blend-indices-0"), ElementID::BLEND_INDICES_0,
                 Utf8String::Hash("blend-indices-1"), ElementID::BLEND_INDICES_1,
                 Utf8String::Hash("blend-indices-2"), ElementID::BLEND_INDICES_2,
                 Utf8String::Hash("blend-indices-3"), ElementID::BLEND_INDICES_3,
                 Utf8String::Hash("blend-weight-0"), ElementID::BLEND_WEIGHT_0,
                 Utf8String::Hash("blend-weight-1"), ElementID::BLEND_WEIGHT_1,
                 Utf8String::Hash("blend-weight-2"), ElementID::BLEND_WEIGHT_2,
-                Utf8String::Hash("blend-weight-3"), ElementID::BLEND_WEIGHT_3,
+                Utf8String::Hash("blend-weight-3"), ElementID::BLEND_WEIGHT_3,*/
                 Utf8String::Hash("color"), ElementID::COLOR_0,
                 Utf8String::Hash("color-0"), ElementID::COLOR_0,
                 Utf8String::Hash("color-1"), ElementID::COLOR_1,
@@ -298,7 +297,7 @@ namespace Finjin { namespace Engine {
                 Utf8String::Hash("tex-coord-4"), ElementID::TEX_COORD_4,
                 Utf8String::Hash("tex-coord-5"), ElementID::TEX_COORD_5,
                 Utf8String::Hash("tex-coord-6"), ElementID::TEX_COORD_6,
-                Utf8String::Hash("tex-coord-7"), ElementID::TEX_COORD_7                
+                Utf8String::Hash("tex-coord-7"), ElementID::TEX_COORD_7
                 );
 
             Utf8StringHash hash;

@@ -14,36 +14,36 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "XAudio2AdapterID.hpp"
-#include "finjin/common/Vector.hpp"
+//Includes----------------------------------------------------------------------
+#include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
+#include "XAudio2AdapterID.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     struct XAudio2AdapterDescription
     {
         XAudio2AdapterID adapterID;
-        
+
         XAudio2AdapterDescription()
-        {            
+        {
         }
-        
+
         const XAudio2AdapterID& GetAdapterID() const
         {
             return this->adapterID;
         }
-    };    
+    };
     class XAudio2AdapterDescriptions : public StaticVector<XAudio2AdapterDescription, EngineConstants::MAX_SOUND_ADAPTERS>
     {
     public:
         void SortBestToWorst();
-        
+
         const XAudio2AdapterDescription* GetByAdapterID(const XAudio2AdapterID& adapterID) const;
     };
-    
+
 } }

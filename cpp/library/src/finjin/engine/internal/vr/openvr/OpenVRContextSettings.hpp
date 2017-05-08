@@ -14,16 +14,16 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/VRContextCommonSettings.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class OpenVRContext;
 
     struct OpenVRContextSettings : VRContextCommonSettings
@@ -32,5 +32,5 @@ namespace Finjin { namespace Engine {
 
         FINJIN_VR_CONTEXT_DEVICE_CALLBACKS(OpenVRContext);
     };
-    
+
 } }

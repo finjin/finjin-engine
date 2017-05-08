@@ -18,7 +18,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 const Utf8String& XInputSystem::GetSystemInternalName()
 {
     static const Utf8String value("xinput");

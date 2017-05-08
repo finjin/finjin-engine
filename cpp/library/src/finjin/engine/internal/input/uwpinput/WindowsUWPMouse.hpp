@@ -14,11 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "WindowsUWPInputDevice.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -46,7 +46,7 @@ namespace Finjin { namespace Engine {
 
         const Utf8String& GetProductDescriptor() const;
         const Utf8String& GetInstanceDescriptor() const;
-        
+
         size_t GetButtonCount() const;
         InputButton* GetButton(size_t index);
 

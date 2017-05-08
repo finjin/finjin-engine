@@ -20,7 +20,8 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
+
 //DisplayInfo
 DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0)
 {
@@ -37,24 +38,24 @@ void DisplayInfos::Enumerate()
 {
     auto screens = [UIScreen screens];
     auto mainScreen = [UIScreen mainScreen];
-    
+
     resize(static_cast<size_t>(screens.count));
-    
+
     //First display will be main display
     for (size_t i = 0; i < size(); i++)
     {
         DisplayInfo& displayInfo = (*this)[i];
-        
+
         displayInfo.index = i;
-        
+
         displayInfo.isPrimary = screens[i] == mainScreen;
-        
+
         displayInfo.density = screens[i].nativeScale;
-        
+
         displayInfo.hasSmallScreen = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone;
         displayInfo.hasTouchScreen = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone || [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
         displayInfo.usesScreenEdgePadding = !displayInfo.hasSmallScreen;
-        
+
         auto rect = screens[i].bounds;
         displayInfo.frame.x = rect.origin.x;
         displayInfo.frame.y = rect.origin.y;

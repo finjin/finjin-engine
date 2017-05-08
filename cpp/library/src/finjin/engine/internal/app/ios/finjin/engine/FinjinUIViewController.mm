@@ -11,12 +11,13 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinUIViewController.h"
 #import "FinjinUIView.h"
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 @interface FinjinUIViewController ()
 @end
 
@@ -28,7 +29,7 @@
 {
     auto size = self.preferredContentSize;
     FinjinUIView* view = [[FinjinUIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-            
+
     [self setView:view];
 }
 

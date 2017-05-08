@@ -14,22 +14,24 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "DInputGameController.hpp"
-#include "DInputDevice.hpp"
-#include "Win32InputContext.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/engine/InputDeviceSerializer.hpp"
 #include "finjin/engine/OSWindow.hpp"
+#include "DInputDevice.hpp"
+#include "Win32InputContext.hpp"
 
+using namespace Finjin::Engine;
+
+
+//Macros------------------------------------------------------------------------
 #define DINPUT_AXIS_MIN -32767
 #define DINPUT_AXIS_MAX 32767
 
 #define CUSTOM_DEAD_ZONE 8689 //Same as XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE
 
-using namespace Finjin::Engine;
 
-
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct DInputGameController::Impl : public DInputDevice
 {
     Impl()
@@ -57,19 +59,19 @@ struct DInputGameController::Impl : public DInputDevice
     HapticFeedbackSettings forceFeedback;
 };
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, void* data)
 {
     auto gameController = static_cast<DInputGameController*>(data);
     auto impl = gameController->GetImpl();
 
-    if (did->dwType & DIDFT_BUTTON) 
+    if (did->dwType & DIDFT_BUTTON)
     {
         if (impl->state.buttons.full())
             return DIENUM_CONTINUE; //Skip
 
         auto buttonIndex = impl->state.buttons.size();
-        
+
         DInputButton button;
         button
             .SetIndex(buttonIndex)
@@ -77,13 +79,13 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
         button.dinputOffset = DIJOFS_BUTTON(buttonIndex);
         impl->state.buttons.push_back(button);
     }
-    else if (did->dwType & DIDFT_POV) 
+    else if (did->dwType & DIDFT_POV)
     {
         if (impl->state.povs.full())
             return DIENUM_CONTINUE; //Skip
 
         auto povIndex = impl->state.povs.size();
-        
+
         auto inputSemantic = povIndex == 0 ? InputComponentSemantic::TOGGLE_ALL : InputComponentSemantic::NONE;
 
         DInputPov pov;
@@ -98,11 +100,11 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
     {
         if (impl->state.axes.full())
             return DIENUM_CONTINUE; //Skip
-        
+
         auto inputSemantic = InputComponentSemantic::NONE;
-        
+
         auto axisIndex = impl->state.axes.size();
-        
+
         int axisMin = DINPUT_AXIS_MIN;
         int axisMax = DINPUT_AXIS_MAX;
 
@@ -123,7 +125,7 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
         }
         else if (IsEqualGUID(did->guidType, GUID_ZAxis))
         {
-            dinputOffset = DIJOFS_Z;            
+            dinputOffset = DIJOFS_Z;
         }
         else if (IsEqualGUID(did->guidType, GUID_RxAxis))
             dinputOffset = DIJOFS_RX;
@@ -136,7 +138,7 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
             axisMin = 0;
             dinputOffset = DIJOFS_SLIDER(impl->sliderCount++);
         }
-        
+
         if (FAILED(impl->SetPropertyDWord(DIPROP_DEADZONE, did->dwType, DIPH_BYID, 0)))
             return DIENUM_CONTINUE; //Skip
 
@@ -164,9 +166,9 @@ static BOOL CALLBACK EnumComponentsCallback(const DIDEVICEOBJECTINSTANCE* did, v
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 DInputGameController::DInputGameController() : impl(new Impl)
-{    
+{
 }
 
 DInputGameController::~DInputGameController()
@@ -185,7 +187,7 @@ void DInputGameController::Create(Win32InputContext* context, const DInputDevice
         return;
     }
 
-    //Set game controller cooperative level        
+    //Set game controller cooperative level
     if (FAILED(impl->dinputDevice->SetCooperativeLevel(static_cast<HWND>(context->GetSettings().osWindow->GetWindowHandle()), DISCL_EXCLUSIVE | DISCL_FOREGROUND)))
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to set DirectInput cooperative level for game controller '%1%'", config.GetDebugName()));
@@ -270,7 +272,7 @@ void DInputGameController::Update(SimpleTimeDelta elapsedTime, bool isFirstUpdat
         else
             _StopForce(impl->forceFeedback);
     }
-} 
+}
 
 void DInputGameController::ClearChanged()
 {

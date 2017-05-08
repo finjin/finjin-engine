@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/NvAndroidNativeAppGlue.h"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/DefaultAllocator.hpp"
+#include "finjin/common/NvAndroidNativeAppGlue.h"
 #include "finjin/common/PassthroughSystemAllocator.hpp"
 
 
-//Macros-----------------------------------------------------------------------
-#define FINJIN_ENGINE_IMPLEMENT_MAIN(AppDelegate)\
+//Macros------------------------------------------------------------------------
+#define FINJIN_ENGINE_MAIN(AppDelegate)\
     void android_main(android_app* androidApp)\
     {\
         void FinjinMain(ApplicationDelegate* del, android_app* androidApp);\

@@ -15,11 +15,7 @@
 #include "FinjinPrecompiled.hpp"
 #include "GenericGpuNumericStructs.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
-
-
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------

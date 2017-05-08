@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/Error.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Error.hpp"
 #include "DInputDeviceComponents.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -35,7 +35,7 @@ namespace Finjin { namespace Engine {
         ~DInputGameController();
 
         void Create(Win32InputContext* context, const DInputDeviceConfiguration& config, Error& error);
-        void Destroy();        
+        void Destroy();
 
         void Update(SimpleTimeDelta elapsedTime, bool isFirstUpdate);
 
@@ -75,7 +75,7 @@ namespace Finjin { namespace Engine {
         void _StopForce(HapticFeedbackSettings& force);
 
     public:
-        std::unique_ptr<Impl> impl;        
+        std::unique_ptr<Impl> impl;
     };
 
 } }

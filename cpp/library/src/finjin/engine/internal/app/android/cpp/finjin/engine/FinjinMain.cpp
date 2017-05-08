@@ -14,13 +14,13 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "finjin/engine/ApplicationDelegate.hpp"
-#include "finjin/engine/Application.hpp"
 #include "finjin/common/NvAndroidNativeAppGlue.h"
+#include "finjin/engine/Application.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 void FinjinMain(ApplicationDelegate* del, android_app* androidApp)
 {
     FINJIN_DECLARE_ERROR(error);

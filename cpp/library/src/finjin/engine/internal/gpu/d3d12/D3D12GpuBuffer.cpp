@@ -21,7 +21,11 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Macros------------------------------------------------------------------------
+#define CONSERVATIVE_MEMORY_MAPPING 0
+
+
+//Implementation----------------------------------------------------------------
 
 //D3D12GpuBuffer
 D3D12GpuBuffer::D3D12GpuBuffer()
@@ -62,47 +66,29 @@ bool D3D12GpuBuffer::CreateVertexBuffer(FinjinMesh::VertexBuffer& meshAssetVerte
     if (meshAssetVertexBuffer.empty())
         return false;
 
-    auto vertexSize = meshAssetVertexBuffer.GetVertexSize();
-
-    this->elementStride = vertexSize;
+    //Create interleaved vertex buffer
+    this->inputFormat = inputFormat;
+    this->elementStride = meshAssetVertexBuffer.GetVertexSize();
     this->byteSize = this->elementStride * meshAssetVertexBuffer.vertexCount;
     if (!this->cpu.Create(this->byteSize, allocator))
     {
         FINJIN_SET_ERROR(error, "Failed to create vertex buffer CPU buffer.");
         return false;
     }
-
     this->cpuPointer = this->cpu.data();
-
-    size_t elementOffset = 0;
-    for (size_t channelIndex = 0; channelIndex < meshAssetVertexBuffer.channels.size(); channelIndex++)
+    if (!meshAssetVertexBuffer.Interleave(this->cpu))
     {
-        auto& channel = meshAssetVertexBuffer.channels[channelIndex];
-        auto channelBytes = channel.GetBytes();
-
-        auto& formatElement = meshAssetVertexBuffer.formatElements[channelIndex]; //Each format corresponds to a channel
-        auto elementSize = NumericStructElementTypeUtilities::GetSimpleTypeSizeInBytes(formatElement.type);
-
-        auto vertex = this->cpuPointer + elementOffset;
-        for (size_t vertexIndex = 0; vertexIndex < meshAssetVertexBuffer.vertexCount; vertexIndex++)
-        {
-            FINJIN_COPY_MEMORY(vertex, channelBytes, elementSize);
-
-            vertex += vertexSize;
-            channelBytes += elementSize;
-        }
-
-        elementOffset += elementSize;
+        FINJIN_SET_ERROR(error, "Failed to interleave vertex data.");
+        return false;
     }
 
+    //Create uploader and vertex buffer
     this->gpu = D3D12Utilities::CreateDefaultBufferAndUploader(device, this->cpuPointer, this->byteSize, this->uploader, error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to create vertex buffer GPU buffer.");
         return false;
     }
-
-    this->inputFormat = inputFormat;
 
     return true;
 }
@@ -118,7 +104,7 @@ void D3D12GpuBuffer::Destroy()
     this->inputFormat = nullptr;
 }
 
-bool D3D12GpuBuffer::Upload(ID3D12GraphicsCommandList* cmdList)
+bool D3D12GpuBuffer::Upload(ID3D12GraphicsCommandList* commandList)
 {
     if (this->byteSize == 0)
         return false;
@@ -128,13 +114,11 @@ bool D3D12GpuBuffer::Upload(ID3D12GraphicsCommandList* cmdList)
     subResourceData.RowPitch = this->byteSize;
     subResourceData.SlicePitch = subResourceData.RowPitch;
 
-    cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->gpu.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST));
-    
-    {
-        UpdateSubresources<1>(cmdList, this->gpu.Get(), this->uploader.Get(), 0, 0, 1, &subResourceData);
-    }
-    
-    cmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->gpu.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->gpu.Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST));
+
+    UpdateSubresources<1>(commandList, this->gpu.Get(), this->uploader.Get(), 0, 0, 1, &subResourceData);
+
+    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->gpu.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
 
     return true;
 }
@@ -156,11 +140,12 @@ void D3D12GpuRenderingConstantBuffer::Create(ID3D12Device* device, const GpuRend
 
     this->numericStruct = &bufferStruct;
     this->instanceCount = instanceCount;
-    
+
     if (instanceCount == 0)
         return;
 
     auto paddedTotalSize = D3D12Utilities::GetConstantBufferAlignedSize(bufferStruct.paddedTotalSize, bufferStruct.totalSize, instanceCount);
+    //std::cout << "Creating constant buffer " << bufferStruct.typeName << " with size " << paddedTotalSize << std::endl;
 
     auto result = device->CreateCommittedResource
         (
@@ -173,32 +158,62 @@ void D3D12GpuRenderingConstantBuffer::Create(ID3D12Device* device, const GpuRend
         );
     if (FINJIN_CHECK_HRESULT_FAILED(result))
     {
-        FINJIN_SET_ERROR(error, "Failed to create upload resource.");
+        FINJIN_SET_ERROR(error, "Failed to create constant buffer.");
         return;
     }
 
+#if CONSERVATIVE_MEMORY_MAPPING
+    //Map the buffer only when necessary
+    StartWrites();
+    SetDefaults();
+    FinishWrites();
+#else
+    //Map the buffer and leave it mapped
     result = this->resource->Map(0, nullptr, reinterpret_cast<void**>(&this->structInstanceBuffer));
     if (FINJIN_CHECK_HRESULT_FAILED(result))
     {
-        FINJIN_SET_ERROR(error, "Failed to map upload resource.");
+        FINJIN_SET_ERROR(error, "Failed to map constant buffer.");
         return;
     }
 
     SetDefaults();
+#endif
 }
 
 void D3D12GpuRenderingConstantBuffer::Destroy()
 {
+    if (this->resource != nullptr && this->structInstanceBuffer != nullptr)
+        this->resource->Unmap(0, nullptr);
+
+    this->resource = nullptr;
+
+    this->structInstanceBuffer = nullptr;
+}
+
+void D3D12GpuRenderingConstantBuffer::StartWrites()
+{
+#if CONSERVATIVE_MEMORY_MAPPING
+    assert(this->structInstanceBuffer == nullptr);
+
+    auto result = this->resource->Map(0, nullptr, reinterpret_cast<void**>(&this->structInstanceBuffer));
+    if (FINJIN_CHECK_HRESULT_FAILED(result))
+    {
+        assert(0 && "Failed to map constant buffer.");
+        return;
+    }
+#endif
+}
+
+void D3D12GpuRenderingConstantBuffer::FinishWrites()
+{
+#if CONSERVATIVE_MEMORY_MAPPING
     if (this->structInstanceBuffer != nullptr)
     {
-        if (this->resource != nullptr)
-        {
-            this->resource->Unmap(0, nullptr);
-            this->resource = nullptr;
-        }
+        this->resource->Unmap(0, nullptr);
 
         this->structInstanceBuffer = nullptr;
     }
+#endif
 }
 
 ID3D12Resource* D3D12GpuRenderingConstantBuffer::GetResource() const
@@ -206,7 +221,22 @@ ID3D12Resource* D3D12GpuRenderingConstantBuffer::GetResource() const
     return this->resource.Get();
 }
 
-//D3D12GpuRenderingStructuredBufferResource
+/*class D3D12GpuRenderingStructuredBufferResource : public GpuRenderingStructuredBuffer
+{
+public:
+    D3D12GpuRenderingStructuredBufferResource();
+    ~D3D12GpuRenderingStructuredBufferResource();
+
+    void Create(ID3D12Device* device, const GpuRenderingStructuredBufferStruct& bufferStruct, size_t instanceCount, Error& error);
+    void Destroy();
+
+    ID3D12Resource* GetResource() const;
+
+private:
+    Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+};*/
+
+/*//D3D12GpuRenderingStructuredBufferResource
 D3D12GpuRenderingStructuredBufferResource::D3D12GpuRenderingStructuredBufferResource()
 {
     this->resource = nullptr;
@@ -223,7 +253,7 @@ void D3D12GpuRenderingStructuredBufferResource::Create(ID3D12Device* device, con
 
     this->numericStruct = &bufferStruct;
     this->instanceCount = instanceCount;
-    
+
     if (instanceCount == 0)
         return;
 
@@ -256,21 +286,18 @@ void D3D12GpuRenderingStructuredBufferResource::Create(ID3D12Device* device, con
 
 void D3D12GpuRenderingStructuredBufferResource::Destroy()
 {
-    if (this->structInstanceBuffer != nullptr)
-    {
-        if (this->resource != nullptr)
-        {
-            this->resource->Unmap(0, nullptr);
-            this->resource = nullptr;
-        }
+    if (this->resource != nullptr && this->structInstanceBuffer != nullptr)
+        this->resource->Unmap(0, nullptr);
 
-        this->structInstanceBuffer = nullptr;
-    }
+    this->resource = nullptr;
+
+    this->structInstanceBuffer = nullptr;
 }
 
 ID3D12Resource* D3D12GpuRenderingStructuredBufferResource::GetResource() const
 {
     return this->resource.Get();
 }
+*/
 
 #endif

@@ -16,16 +16,15 @@
 #include "DInputDevice.hpp"
 #include "Win32InputContext.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 DInputDevice::DInputDevice()
 {
     this->context = nullptr;
 
-    this->dinputDevice = nullptr;    
+    this->dinputDevice = nullptr;
 
     FINJIN_ZERO_ITEM(this->dinputCapabilities);
     this->dinputCapabilities.dwSize = sizeof(this->dinputCapabilities);
@@ -41,19 +40,19 @@ void DInputDevice::Create(Win32InputContext* context, const DInputDeviceConfigur
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto dinput = (IDInput)context->GetDInput();
+    auto dinput = static_cast<IDInput>(context->GetDInput());
 
     this->context = context;
-    this->config = config;  
+    this->config = config;
     this->displayName = config.productName;
 
-    LPDIRECTINPUTDEVICE8 device;    
+    LPDIRECTINPUTDEVICE8 device;
     if (FAILED(dinput->CreateDevice(config.instanceGuid, &device, nullptr)))
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create DirectInput device '%1%'", config.GetDebugName()));
         return;
     }
-    
+
     if (FAILED(device->QueryInterface(IID_DirectInputDevice, (void**)&this->dinputDevice)))
     {
         device->Release();
@@ -64,21 +63,21 @@ void DInputDevice::Create(Win32InputContext* context, const DInputDeviceConfigur
 
     device->Release();
 
-    //Get device capabilities    
+    //Get device capabilities
     if (FAILED(this->dinputDevice->GetCapabilities(&this->dinputCapabilities)))
     {
         Destroy();
 
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get DirectInput capabilities for device '%1%'", config.GetDebugName()));
         return;
-    }    
+    }
 }
 
-void DInputDevice::Destroy()  
+void DInputDevice::Destroy()
 {
     if (this->dinputDevice != nullptr)
     {
-        this->dinputDevice->Unacquire();                    
+        this->dinputDevice->Unacquire();
         this->dinputDevice->Release();
         this->dinputDevice = nullptr;
     }
@@ -113,6 +112,6 @@ HRESULT DInputDevice::SetPropertyRange(const GUID& guidProperty, DWORD object, D
     propRange.diph.dwObj = object;
     propRange.diph.dwHow = how;
     propRange.lMin = minValue;
-    propRange.lMax = maxValue;    
+    propRange.lMax = maxValue;
     return this->dinputDevice->SetProperty(guidProperty, &propRange.diph);
 }

@@ -15,11 +15,10 @@
 #include "FinjinPrecompiled.hpp"
 #include "AssetClassFileReader.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 AssetClassFileReader::AssetClassFileReader()
 {
     this->reader = nullptr;
@@ -36,7 +35,7 @@ void AssetClassFileReader::Create(AssetFileReader& reader, const AssetPathSelect
         FINJIN_SET_ERROR(error, "Failed to create selector.");
         return;
     }
-    
+
     this->directories.maximize();
     for (auto& directory : this->directories)
     {
@@ -47,7 +46,7 @@ void AssetClassFileReader::Create(AssetFileReader& reader, const AssetPathSelect
         }
     }
     this->directories.clear();
-    
+
     //Set up selector by copying from another selector and replacing the prefix
     this->selector = initialSelector;
     this->selector.SetAssetClassDirectoryName(assetClass);

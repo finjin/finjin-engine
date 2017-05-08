@@ -14,10 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "SoundAdapterID.hpp"
-
 #include "finjin/engine/internal/sound/openal/OpenALAdapterDescription.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
     using SoundAdapterDescriptions = OpenALAdapterDescriptions;
 } }

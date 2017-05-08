@@ -16,23 +16,22 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/AllocatedQueue.hpp"
-#include "finjin/common/AllocatedUnorderedMap.hpp"
-#include "finjin/common/AllocatedUnorderedSet.hpp"
-#include "finjin/common/AllocatedVector.hpp"
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/ChunkName.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/Convert.hpp"
+#include "finjin/common/DynamicQueue.hpp"
+#include "finjin/common/DynamicUnorderedMap.hpp"
+#include "finjin/common/DynamicUnorderedSet.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/EnumBitwise.hpp"
 #include "finjin/common/IntrusiveList.hpp"
 #include "finjin/common/Math.hpp"
-#include "finjin/common/Path.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/Asset.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -72,7 +71,7 @@ namespace Finjin { namespace Engine {
     struct UserDataTypesConstants
     {
         enum { MAX_SUPERS = 4 };
-        enum { MAX_USAGES = 4 }; //Number of non-zero entries in UserDataUsage enum 
+        enum { MAX_USAGES = 4 }; //Number of non-zero entries in UserDataUsage enum
         enum { MAX_SECTION_DEPTH = 3 };
     };
 
@@ -162,9 +161,9 @@ namespace Finjin { namespace Engine {
         }
 
     protected:
-        AllocatedUnorderedSet<T*> visited;
-        AllocatedQueue<T*> toVisit;
-        AllocatedVector<T*> inOrderObjects;
+        DynamicUnorderedSet<T*> visited;
+        DynamicQueue<T*> toVisit;
+        DynamicVector<T*> inOrderObjects;
     };
 
     template <typename T>
@@ -172,7 +171,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = UserDataItemsStateBase<T>;
-        using Items = AllocatedVector<typename T::Item>;
+        using Items = DynamicVector<typename T::Item>;
         using iterator = typename Items::iterator;
 
         void Create(size_t maxObjects, size_t maxItems, Allocator* allocator, Error& error)
@@ -235,7 +234,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = UserDataItemsStateBase<T>;
-        using Items = AllocatedVector<typename T::Item*>;
+        using Items = DynamicVector<typename T::Item*>;
         using iterator = typename Items::iterator;
 
         void Create(size_t maxObjects, size_t maxItems, Allocator* allocator, Error& error)
@@ -450,7 +449,7 @@ namespace Finjin { namespace Engine {
         StaticVector<SuperReference, UserDataTypesConstants::MAX_SUPERS> supers;
 
         /** All the enum items. Does not include the items from supers. */
-        AllocatedVector<Item> items;
+        DynamicVector<Item> items;
 
         UserDataEnum* next;
     };
@@ -463,7 +462,7 @@ namespace Finjin { namespace Engine {
             this->usage = UserDataUsage::ANY;
             this->next = nullptr;
             for (auto item = this->supers.begin(); item != this->supers.max_end(); ++item)
-                item->name.Create(allocator);            
+                item->name.Create(allocator);
         }
 
         /** Determines whether the class can be used in the specified way. */
@@ -571,7 +570,7 @@ namespace Finjin { namespace Engine {
         StaticVector<SuperReference, UserDataTypesConstants::MAX_SUPERS> supers;
 
         /** All the items. Does not include the items from supers. */
-        AllocatedVector<Item> items;
+        DynamicVector<Item> items;
 
         UserDataClass* next;
     };
@@ -738,10 +737,10 @@ namespace Finjin { namespace Engine {
 
         Utf8String userDataClassName;
         UserDataClass* userDataClass;
-        AllocatedVector<PropertyInstance*> propertyInstances;
+        DynamicVector<PropertyInstance*> propertyInstances;
     };
 
-    class FINJIN_ASSET_CLASS(UserDataTypes) : public AllocatedClass
+    FINJIN_ASSET_CLASS class UserDataTypes : public AllocatedClass
     {
     public:
         using Super = AllocatedClass;
@@ -761,7 +760,7 @@ namespace Finjin { namespace Engine {
         const UserDataClass* GetClass(size_t index, UserDataUsage usage) const;
 
         void CreateLookups(Allocator* allocator, Error& error);
-        
+
         void ResolveInternalDependencies(Error& error);
 
         EnumList& GetEnums();
@@ -786,11 +785,11 @@ namespace Finjin { namespace Engine {
 
         //All the enums.
         EnumList enums;
-        AllocatedUnorderedMap<Utf8String, UserDataEnum*> enumsByName;
+        DynamicUnorderedMap<Utf8String, UserDataEnum*> enumsByName;
 
         //All the classes.
         ClassList classes;
-        AllocatedUnorderedMap<Utf8String, UserDataClass*> classesByName;
+        DynamicUnorderedMap<Utf8String, UserDataClass*> classesByName;
     };
-    
+
 } }

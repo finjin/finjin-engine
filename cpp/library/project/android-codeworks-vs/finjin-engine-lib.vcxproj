@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportDescription.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\ApplicationViewportsController.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\Asset.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\AssetClass.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetClassFileReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetCountsSettings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetPath.cpp" />
@@ -30,7 +31,11 @@
     <ClCompile Include="..\..\src\finjin\engine\AssetReference.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetReadHandle.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\AssetReadQueue.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ASTCReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\Camera.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\CameraState.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\DDSReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\DXGIIncludes.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\FinjinSceneAssets.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\FinjinSceneReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\GenericGpuNumericStructs.cpp" />
@@ -55,13 +60,35 @@
     <ClCompile Include="..\..\src\finjin\engine\InputConstants.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\InputCoordinate.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\InputSource.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDescriptorSetLayout.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameBuffer.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameStage.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuBuffer.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextImpl.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextSettings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuDescription.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanIncludes.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputFormat.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLight.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMaterial.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMemoryResource.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMesh.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipeline.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineLayout.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPresentModes.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPrimaryQueues.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanQueueFamilyIndexes.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanRenderTarget.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanResources.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanShader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanStaticMeshRenderer.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSurfaceFormats.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemImpl.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemSettings.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTexture.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidAccelerometer.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidGameController.cpp" />
@@ -77,8 +104,11 @@
     <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSoundSource.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSystem.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\JobPipelineStage.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\KTXReader.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\LightState.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\MemorySettings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\PlatformCapabilities_General.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\PVRReader.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\ShaderFeatureFlag.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\ShaderFeatures.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\SoundContextCommonSettings.cpp" />
@@ -88,6 +118,7 @@
     <ClCompile Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\StringTable.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\TextureDimension.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\UserDataTypes.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\VRGameControllerInputBindings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp" />
@@ -116,13 +147,16 @@
     <ClInclude Include="..\..\src\finjin\engine\AssetReference.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\AssetReadHandle.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\AssetReadQueue.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ASTCReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\Camera.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\CameraState.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ContextEventInfo.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\DDSReader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\DXGIIncludes.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FinjinSceneAssets.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FinjinSceneReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\GenericGpuNumericStructs.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\GpuSerializers.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\gl_format.h" />
     <ClInclude Include="..\..\src\finjin\engine\GpuSystemCommonSettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputSystemCommonSettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.hpp" />
@@ -152,18 +186,44 @@
     <ClInclude Include="..\..\src\finjin\engine\InputCoordinate.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputDeviceSerializer.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputSource.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDepthBuffer.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFunctions.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\vk_platform.h" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\vulkan.h" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanBufferView.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDescriptorPool.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanDescriptorSetLayout.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameBuffer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanFrameStage.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuBuffer.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextImpl.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuContextSettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanGpuDescription.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputElementDescriptions.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanIncludes.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanInputFormat.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLayerProperties.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanLight.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMaterial.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMemoryResource.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanMesh.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanNamePointers.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipeline.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineLayout.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPresentModes.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPrimaryQueues.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPushConstant.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanQueueFamilyIndexes.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanRenderableEntity.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanRenderTarget.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanResources.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanShader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanShaderType.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanStaticMeshRenderer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanStaticMeshRendererFrameState.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSurfaceFormats.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystem.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTextureLoader.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemImpl.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSystemSettings.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTexture.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanUtilities.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidAccelerometer.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\input\androidinput\AndroidGameController.hpp" />
@@ -183,6 +243,7 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESSystem.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESUtilities.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\JobPipelineStage.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\KTXReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\LightState.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\MemorySettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\OSWindowDefs.hpp" />
@@ -190,6 +251,7 @@
     <ClInclude Include="..\..\src\finjin\engine\PerFrameObjectAllocator.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\PlatformCapabilities.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\PointerType.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\PVRReader.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ShaderFeatureFlag.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ShaderFeatures.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\SoundContextCommonSettings.hpp" />
@@ -203,6 +265,7 @@
     <ClInclude Include="..\..\src\finjin\engine\StandardAssetDocumentPropertyValues.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\StandardGameControllerInputBindings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\StringTable.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\TextureDimension.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\UserDataTypes.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\VRGameControllerInputBindings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp" />
@@ -251,7 +314,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.13.0\Include;C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -264,7 +327,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.13.0\Include;C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -277,7 +340,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.0.13.0\Include;C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>

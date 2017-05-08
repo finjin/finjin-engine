@@ -14,26 +14,33 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Math.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     struct D3D12RenderableEntity
     {
-        MathMatrix44 worldMatrix;
-        MathMatrix44 worldInverseMatrix;
-        MathMatrix44 worldInverseTransposeMatrix;
+        D3D12RenderableEntity()
+        {
+            this->entity = nullptr;
+            this->subentityIndex = 0;
+            this->gpuBufferIndex = 0;
+        }
+
+        MathMatrix4 worldMatrix;
+        MathMatrix4 worldInverseMatrix;
+        MathMatrix4 worldInverseTransposeMatrix;
         MathVector4 ambientLightColor;
         std::array<uint32_t, EngineConstants::MAX_LIGHTS_PER_OBJECT> lightIndex;
         FinjinSceneObjectEntity* entity;
         size_t subentityIndex;
-        uint32_t gpuBufferIndex; //Index into constant buffer or structured buffer corresponding to this renderable
+        uint32_t gpuBufferIndex; //Index into constant buffer corresponding to this renderable
     };
-    
+
 } }

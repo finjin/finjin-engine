@@ -21,9 +21,9 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12SystemImpl::D3D12SystemImpl(Allocator* allocator) : AllocatedClass(allocator)
-{    
+{
 }
 
 const D3D12GpuOutputs* D3D12SystemImpl::GetAdapterOutputs(const D3D12GpuID& gpuID) const
@@ -53,8 +53,8 @@ bool D3D12SystemImpl::IsDebugEnabled() const
 void D3D12SystemImpl::EnumerateHardwareGpus()
 {
     Microsoft::WRL::ComPtr<IDXGIAdapter1> adapter;
-    for (UINT adapterIndex = 0; 
-        !this->hardwareGpuDescriptions.full() && this->dxgiFactory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND; 
+    for (UINT adapterIndex = 0;
+        !this->hardwareGpuDescriptions.full() && this->dxgiFactory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND;
         adapterIndex++)
     {
         DXGI_ADAPTER_DESC1 dxgiDesc;
@@ -70,7 +70,7 @@ void D3D12SystemImpl::EnumerateHardwareGpus()
                 auto gpuIndex = this->hardwareGpuDescriptions.size();
                 this->hardwareGpuDescriptions.push_back();
                 auto& desc = this->hardwareGpuDescriptions[gpuIndex];
-                
+
                 desc.index = adapterIndex;
                 desc.desc = dxgiDesc;
 
@@ -100,7 +100,7 @@ void D3D12SystemImpl::EnumerateSoftwareGpus()
             FINJIN_ZERO_ITEM(desc.desc);
             FINJIN_COPY_MEMORY(&desc.desc, &dxgiDesc, sizeof(desc.desc));
 
-            //EnumerateAdapterOutputs(adapter.Get(), desc.outputs); //Software GPUs don't have outputs, so no need to enumerate them
+            //Note: Software GPUs don't have outputs, so no need to enumerate them
 
             EnumerateDeviceFeatures(device.Get(), desc.features);
         }
@@ -167,31 +167,59 @@ void D3D12SystemImpl::GetHardwareD3DAdapter(D3D12GpuID& gpuID, IDXGIAdapter1** p
 
 void D3D12SystemImpl::EnumerateDeviceFeatures(ID3D12Device* device, D3D12GpuFeatures& features)
 {
-    //Feature level
-    D3D_FEATURE_LEVEL d3dFeatureLevelsList[] =
+    //Feature level---------------------------
+    StaticVector<D3D_FEATURE_LEVEL, 32> d3dFeatureLevelsList;
     {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_11_1,
-        D3D_FEATURE_LEVEL_12_0,
-        D3D_FEATURE_LEVEL_12_1,
-    };
-    D3D12_FEATURE_DATA_FEATURE_LEVELS d3dFeatureLevels;
-    d3dFeatureLevels.NumFeatureLevels = ARRAYSIZE(d3dFeatureLevelsList);
-    d3dFeatureLevels.pFeatureLevelsRequested = d3dFeatureLevelsList;
-    if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_FEATURE_LEVELS, &d3dFeatureLevels, sizeof(d3dFeatureLevels))))
-        features.d3dMaximumFeatureLevel = d3dFeatureLevels.MaxSupportedFeatureLevel;
+        d3dFeatureLevelsList.maximize();
+        auto count = D3D12GpuFeatures::GetStandardFeatureLevelsLowestToHighest(d3dFeatureLevelsList.data(), d3dFeatureLevelsList.max_size());
+        d3dFeatureLevelsList.resize(count);
+    }
 
-    //General options
+    D3D_FEATURE_LEVEL maxFeatureLevel = d3dFeatureLevelsList.front();
+    D3D12_FEATURE_DATA_FEATURE_LEVELS d3dFeatureLevels;
+    d3dFeatureLevels.NumFeatureLevels = static_cast<UINT>(d3dFeatureLevelsList.size());
+    d3dFeatureLevels.pFeatureLevelsRequested = d3dFeatureLevelsList.data();
+    if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_FEATURE_LEVELS, &d3dFeatureLevels, sizeof(d3dFeatureLevels))))
+        maxFeatureLevel = d3dFeatureLevels.MaxSupportedFeatureLevel;
+    features.SetStandardFeatures(maxFeatureLevel);
+
+    //Max shader model--------------------------
+    features.maxShaderModel = (D3D_SHADER_MODEL)0;
+    for (auto shaderModel : { D3D_SHADER_MODEL_6_0, D3D_SHADER_MODEL_5_1 })
+    {
+        D3D12_FEATURE_DATA_SHADER_MODEL maxShaderModel;
+        maxShaderModel.HighestShaderModel = shaderModel;
+
+        //Note: This does not appear to ever succeed on my desktop Win10/GTX 980 machine
+        if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &maxShaderModel, sizeof(maxShaderModel))))
+        {
+            features.maxShaderModel = shaderModel;
+            break;
+        }
+    }
+    if (features.maxShaderModel == (D3D_SHADER_MODEL)0)
+        features.maxShaderModel = D3D_SHADER_MODEL_5_1; //D3D12 = 5.1 minimum
+
+    //Options-------------------------------
+
+    //General
     if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &features.options, sizeof(features.options))))
     {
+        //This will always succeed
     }
-
-    //Virtual address support
-    if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &features.gpuVirtualSupport, sizeof(features.gpuVirtualSupport))))
+    //More
+    if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS1, &features.options1, sizeof(features.options1))))
     {
+        //This will always succeed
     }
 
-    //Architecture
+    //Virtual address support--------------
+    if (SUCCEEDED(device->CheckFeatureSupport(D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT, &features.gpuVirtualAddressSupport, sizeof(features.gpuVirtualAddressSupport))))
+    {
+        //This will always succeed
+    }
+
+    //Architecture---------------------
     D3D12_FEATURE_DATA_ARCHITECTURE architecture;
     for (architecture.NodeIndex = 0; architecture.NodeIndex < features.dataArchitectures.max_size(); architecture.NodeIndex++)
     {
@@ -201,7 +229,7 @@ void D3D12SystemImpl::EnumerateDeviceFeatures(ID3D12Device* device, D3D12GpuFeat
             break;
     }
 
-    //Supported formats
+    //Supported formats--------------------
     D3D12_FEATURE_DATA_FORMAT_SUPPORT formatSupport;
     for (formatSupport.Format = static_cast<DXGI_FORMAT>(DXGI_FORMAT_UNKNOWN + 1);
         formatSupport.Format <= static_cast<DXGI_FORMAT>(features.formatSupport.max_size());

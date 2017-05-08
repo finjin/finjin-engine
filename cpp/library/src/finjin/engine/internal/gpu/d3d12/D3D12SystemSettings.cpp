@@ -22,7 +22,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12SystemSettings::D3D12SystemSettings()
 {
     this->softwareGpuRequirement = SoftwareGpuRequirement::DISALLOW;
@@ -30,18 +30,6 @@ D3D12SystemSettings::D3D12SystemSettings()
     this->enableDebug = FINJIN_DEBUG ? true : false;
 
     this->d3dMinimumFeatureLevel = D3D_FEATURE_LEVEL_11_1;// D3D_FEATURE_LEVEL_12_0;
-}
-
-void D3D12SystemSettings::SetMinimumFeatureLevel(const Utf8String& s, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    this->d3dMinimumFeatureLevel = D3D12Utilities::ParseFeatureLevel(s, error);
-    if (error)
-    {
-        FINJIN_SET_ERROR(error, "Failed to parse Direct3D 12 feature level.");
-        return;
-    }
 }
 
 #endif

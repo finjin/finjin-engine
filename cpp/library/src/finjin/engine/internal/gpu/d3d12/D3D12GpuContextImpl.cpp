@@ -19,24 +19,19 @@
 #include "D3D12GpuContextImpl.hpp"
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/DebugLog.hpp"
-#include "finjin/common/Math.hpp"
-#include "finjin/common/MemorySize.hpp"
 #include "finjin/common/PNGReader.hpp"
 #include "finjin/common/WrappedFileReader.hpp"
 #include "finjin/engine/DDSReader.hpp"
-#include "finjin/engine/StandardAssetDocumentPropertyValues.hpp"
-#include "finjin/engine/GpuSerializers.hpp"
 #include "finjin/engine/OSWindow.hpp"
+#include "finjin/engine/StandardAssetDocumentPropertyValues.hpp"
 #include "D3D12System.hpp"
 #include "D3D12SystemImpl.hpp"
 #include "D3D12Utilities.hpp"
-#include "d3dx12.h"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //D3D12GpuContextImpl::InternalSettings
 D3D12GpuContextImpl::InternalSettings::InternalSettings()
@@ -51,14 +46,14 @@ void D3D12GpuContextImpl::InternalSettings::ParseSettings(const ByteBufferReader
     ConfigDocumentReader reader;
     if (reader.Start(configFileBuffer) != nullptr)
     {
+        DefaultBufferPackingRules<GpuInputFormatStruct> packingRules(1, sizeof(float), 1);
+
         GpuInputFormatStruct::Create
             (
             this->inputFormats,
             this->contextImpl->GetAllocator(),
             reader,
-            1,
-            sizeof(float),
-            1,
+            packingRules,
             GpuInputFormatStruct::Defines::NONE,
             error
             );
@@ -73,7 +68,7 @@ void D3D12GpuContextImpl::InternalSettings::ParseSettings(const ByteBufferReader
             switch (line->GetType())
             {
                 case ConfigDocumentLine::Type::KEY_AND_VALUE:
-                {                    
+                {
                     if (line->GetDepth() == 0)
                     {
                         Utf8StringView key, value;
@@ -133,7 +128,7 @@ void D3D12GpuContextImpl::InternalSettings::Validate(Error& error)
     //maxTextures and maxLights are not checked since it is conceivable that they are not needed
 }
 
-GpuInputFormatStruct* D3D12GpuContextImpl::InternalSettings::GetInputFormat(const Utf8String& typeName, const AllocatedVector<FinjinVertexElementFormat>& elements)
+GpuInputFormatStruct* D3D12GpuContextImpl::InternalSettings::GetInputFormat(const Utf8String& typeName, const DynamicVector<FinjinVertexElementFormat>& elements)
 {
     if (!typeName.empty())
     {
@@ -143,7 +138,6 @@ GpuInputFormatStruct* D3D12GpuContextImpl::InternalSettings::GetInputFormat(cons
             if (inputFormat.GetTypeName() == typeName)
                 return &inputFormat;
         }
-        return nullptr;
     }
     else
     {
@@ -164,8 +158,9 @@ GpuInputFormatStruct* D3D12GpuContextImpl::InternalSettings::GetInputFormat(cons
                     return &inputFormat;
             }
         }
-        return nullptr;
     }
+
+    return nullptr;
 }
 
 //D3D12GpuContextImpl
@@ -255,11 +250,10 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
     }
 
     //Determine some settings-------------------------------------------
-    this->renderingPixelBounds = this->settings.osWindow->GetWindowSize().GetSafeCurrentBounds();
-    this->renderingPixelBounds.Scale(this->settings.osWindow->GetDisplayDensity());
-    
-    this->settings.frameCount.actual = this->settings.frameCount.requested;
-    this->frameBuffers.resize(this->settings.frameCount.actual);
+    UpdateCachedFrameBufferSize();
+
+    this->settings.frameBufferCount.actual = this->settings.frameBufferCount.requested;
+    this->frameBuffers.resize(this->settings.frameBufferCount.actual);
     for (size_t i = 0; i < this->frameBuffers.size(); i++)
     {
         auto& frameBuffer = this->frameBuffers[i];
@@ -267,17 +261,39 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
         frameBuffer.SetIndex(i);
     }
 
-    this->settings.jobProcessingPipelineSize = GpuContextCommonSettings::CalculateJobPipelineSize(this->settings.frameCount.actual);
+    this->settings.jobProcessingPipelineSize = GpuContextCommonSettings::CalculateJobPipelineSize(this->settings.frameBufferCount.actual);
     this->frameStages.resize(this->settings.jobProcessingPipelineSize);
     for (size_t i = 0; i < this->frameStages.size(); i++)
         this->frameStages[i].index = i;
 
+    if (this->settings.colorFormat.actual == DXGI_FORMAT_UNKNOWN)
+    {
+        if (this->settings.colorFormat.requested == DXGI_FORMAT_UNKNOWN)
+            this->settings.colorFormat.actual = DXGI_FORMAT_R8G8B8A8_UNORM;
+        else
+            this->settings.colorFormat.actual = this->settings.colorFormat.requested;
+    }
+
+    //DXGI_FORMAT_D32_FLOAT_S8X24_UINT, DXGI_FORMAT_D32_FLOAT, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D16_UNORM
+    if (this->settings.depthStencilFormat.actual == DXGI_FORMAT_UNKNOWN)
+    {
+        if (this->settings.depthStencilFormat.requested == DXGI_FORMAT_UNKNOWN)
+        {
+            if (this->settings.stencilRequired)
+                this->settings.depthStencilFormat.actual = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+            else
+                this->settings.depthStencilFormat.actual = DXGI_FORMAT_D32_FLOAT;
+        }
+        else
+            this->settings.depthStencilFormat.actual = this->settings.depthStencilFormat.requested;
+    }
+
     //Multisample quality levels
     D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS qualityLevels;
-    qualityLevels.Format = this->settings.colorFormat;
+    qualityLevels.Format = this->settings.colorFormat.actual;
     qualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
-    for (qualityLevels.SampleCount = 1; 
-        qualityLevels.SampleCount <= D3D12_MAX_MULTISAMPLE_SAMPLE_COUNT && 
+    for (qualityLevels.SampleCount = 1;
+        qualityLevels.SampleCount <= D3D12_MAX_MULTISAMPLE_SAMPLE_COUNT &&
         !this->desc.features.multisampleQualityLevels.full(); qualityLevels.SampleCount++)
     {
         if (SUCCEEDED(this->device->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &qualityLevels, sizeof(qualityLevels))))
@@ -297,19 +313,35 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
             break;
         }
     }
+}
 
-    //Set up asset readers
-    this->settings.initialAssetFileSelector.Set(AssetPathComponent::GPU_SHADER_MODEL, "5.1"); //D3D12 = shader model 5.1
+void D3D12GpuContextImpl::CreateDeviceSupportObjects(Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    //Set more selector settings
+    Utf8String shaderModelString;
+    if (D3D12Utilities::ShaderModelToString(shaderModelString, this->desc.features.maxShaderModel).HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to convert shader model to string.");
+        return;
+    }
+    this->settings.initialAssetFileSelector.Set(AssetPathComponent::GPU_SHADER_MODEL, shaderModelString);
+
     Utf8String featureLevelString;
-    if (D3D12Utilities::FeatureLevelToString(featureLevelString, this->desc.features.d3dMaximumFeatureLevel).HasError())
+    if (D3D12Utilities::FeatureLevelToString(featureLevelString, this->desc.features.standardFeatures.featureLevel).HasError())
     {
         FINJIN_SET_ERROR(error, "Failed to convert feature level to string.");
         return;
     }
     this->settings.initialAssetFileSelector.Set(AssetPathComponent::GPU_FEATURE_LEVEL, featureLevelString);
-    this->settings.initialAssetFileSelector.Set(AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT, "dxt");
+
+    if (this->desc.features.standardFeatures.bc6bc7Compression && this->desc.features.standardFeatures.bc4bc5Compression)
+        this->settings.initialAssetFileSelector.Set(AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT, "bc");
+
     this->settings.initialAssetFileSelector.Set(AssetPathComponent::GPU_MODEL, this->desc.desc.Description);
-        
+
+    //Set up asset readers
     this->settingsAssetClassFileReader.Create(*this->settings.assetFileReader, this->settings.initialAssetFileSelector, AssetClass::SETTINGS, GetAllocator(), error);
     if (error)
     {
@@ -323,13 +355,64 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
         FINJIN_SET_ERROR(error, "Failed to create shader asset file reader.");
         return;
     }
-    
-    this->settings.osWindow->AddWindowEventListener(this);
-}
 
-void D3D12GpuContextImpl::CreateDeviceSupportObjects(Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
+    //Read internal settings
+    this->internalSettings.contextImpl = this;
+    this->settingsAssetClassFileReader.ReadAndParseSettingsFiles(this->internalSettings, this->readBuffer, this->settings.contextSettingsFileNames, error);
+    if (error)
+    {
+        FINJIN_SET_ERROR(error, "Failed to read internal settings.");
+        return;
+    }
+    this->internalSettings.Validate(error);
+    if (error)
+    {
+        FINJIN_SET_ERROR_NO_MESSAGE(error);
+        return;
+    }
+
+    D3D12InputFormat::CreateUnorderedMap(this->assetResources.inputFormatsByNameHash, GetAllocator(), this->internalSettings.inputFormats, error);
+    if (error)
+    {
+        FINJIN_SET_ERROR(error, "Failed to create input formats.");
+        return;
+    }
+
+    auto maxTextures = this->settings.max2DTextures + this->settings.maxCubeTextures + this->settings.max3DTextures;
+    if (!this->assetResources.texturesByNameHash.Create(maxTextures, maxTextures, GetAllocator(), GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to create textures lookup.");
+        return;
+    }
+
+    for (auto& shadersByNameHash : this->assetResources.shadersByShaderTypeAndNameHash)
+    {
+        if (!shadersByNameHash.Create(this->settings.maxShaders, this->settings.maxShaders, GetAllocator(), GetAllocator()))
+        {
+            FINJIN_SET_ERROR(error, "Failed to create shaders lookup.");
+            return;
+        }
+    }
+
+    if (!this->assetResources.materialsByNameHash.Create(this->settings.maxMaterials, this->settings.maxMaterials, GetAllocator(), GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to create materials lookup.");
+        return;
+    }
+
+    if (!this->assetResources.meshesByNameHash.Create(this->settings.maxMeshes, this->settings.maxMeshes, GetAllocator(), GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate mesh lookup.");
+        return;
+    }
+
+    if (!this->lights.Create(this->settings.maxLights, GetAllocator(), GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate light lookup.");
+        return;
+    }
+    for (size_t i = 0; i < this->lights.items.size(); i++)
+        this->lights.items[i].gpuBufferIndex = i;
 
     CreateGraphicsCommandQueue(error);
     if (error)
@@ -373,24 +456,24 @@ void D3D12GpuContextImpl::CreateDeviceSupportObjects(Error& error)
         }
     }
 
-    //SRV heap for textures    
-    {   
+    //SRV heap for textures
+    {
         size_t textureOffset = 0;
-        
-        this->resources.textureOffsetsByType[D3D12Texture::Type::STANDARD_2D].SetOffsetAndCount(textureOffset, this->settings.max2DTextures); 
+
+        this->assetResources.textureOffsetsByDimension[TextureDimension::DIMENSION_2D].SetOffsetAndCount(textureOffset, this->settings.max2DTextures);
         textureOffset += this->settings.max2DTextures;
-        
-        this->resources.textureOffsetsByType[D3D12Texture::Type::CUBE].SetOffsetAndCount(textureOffset, this->settings.maxCubeTextures); 
+
+        this->assetResources.textureOffsetsByDimension[TextureDimension::DIMENSION_CUBE].SetOffsetAndCount(textureOffset, this->settings.maxCubeTextures);
         textureOffset += this->settings.maxCubeTextures;
 
-        this->resources.textureOffsetsByType[D3D12Texture::Type::VOLUME].SetOffsetAndCount(textureOffset, this->settings.max3DTextures); 
+        this->assetResources.textureOffsetsByDimension[TextureDimension::DIMENSION_3D].SetOffsetAndCount(textureOffset, this->settings.max3DTextures);
         textureOffset += this->settings.max3DTextures;
 
         D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-        srvHeapDesc.NumDescriptors = textureOffset;
+        srvHeapDesc.NumDescriptors = static_cast<UINT>(textureOffset);
         srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-        this->srvTextureDescHeap.Create(this->device.Get(), srvHeapDesc, error);
+        this->textureResources.srvTextureDescHeap.Create(this->device.Get(), srvHeapDesc, error);
         if (error)
         {
             FINJIN_SET_ERROR(error, "Failed to create texture SRV heap.");
@@ -410,7 +493,7 @@ void D3D12GpuContextImpl::CreateDeviceSupportObjects(Error& error)
 
         if (!frameBuffer.graphicsCommandLists.Create(this->settings.maxGpuCommandListsPerStage, GetAllocator(), nullptr))
         {
-            FINJIN_SET_ERROR(error, "Failed to create command lists");
+            FINJIN_SET_ERROR(error, "Failed to create command lists.");
             return;
         }
         for (size_t i = 0; i < frameBuffer.graphicsCommandLists.size(); i++)
@@ -453,8 +536,12 @@ void D3D12GpuContextImpl::CreateDeviceSupportObjects(Error& error)
     }
 
     //Allocate some working buffers
-    auto subresourceDimensionCount = RoundToInt(log2(std::max(D3D12_REQ_TEXTURE1D_ARRAY_AXIS_DIMENSION, D3D12_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION)));
-    UINT predictedSubresourceCount = D3D12_REQ_MIP_LEVELS * subresourceDimensionCount;
+    //TODO: Going forward it would make sense to declare in the application settings the maximum allowed sizes, rather than use the absolute maximums for 'arrayCount' and 3D texture dimension/depth
+    auto mipCount = RoundToInt(log2(this->desc.features.standardFeatures.maxTextureDimension)) + 1; //Less or equal to D3D12_REQ_MIP_LEVELS
+    auto arrayCount = 1; //std::max(D3D12_REQ_TEXTURE1D_ARRAY_AXIS_DIMENSION, D3D12_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION);
+    UINT predictedSubresourceCount = mipCount * arrayCount;
+    if (this->settings.max3DTextures > 0)
+        predictedSubresourceCount *= D3D12_REQ_TEXTURECUBE_DIMENSION; //Depth
     if (!this->preallocatedSubresourceData.Create(predictedSubresourceCount, GetAllocator()))
     {
         FINJIN_SET_ERROR(error, "Failed to create subresource data table.");
@@ -464,6 +551,13 @@ void D3D12GpuContextImpl::CreateDeviceSupportObjects(Error& error)
     if (!this->preallocatedFootprintSubresourceData.Create((sizeof(D3D12_PLACED_SUBRESOURCE_FOOTPRINT) + sizeof(UINT) + sizeof(uint64_t)) * predictedSubresourceCount, GetAllocator()))
     {
         FINJIN_SET_ERROR(error, "Failed to create footprint subresource data table.");
+        return;
+    }
+
+    CreateScreenSizeDependentResources(error);
+    if (error)
+    {
+        FINJIN_SET_ERROR(error, "Failed to create GPU core assets.");
         return;
     }
 }
@@ -477,6 +571,15 @@ void D3D12GpuContextImpl::CreateRenderers(Error& error)
         //Settings
         D3D12StaticMeshRenderer::Settings staticMeshRendererSettings;
         staticMeshRendererSettings.contextImpl = this;
+        for (auto fileName : { "gpu-context-static-mesh-renderer-root-signatures.cfg", "gpu-context-static-mesh-renderer-render-states.cfg" })
+        {
+            this->settings.staticMeshRendererSettingsFileNames.AddLocalFile(fileName, error);
+            if (error)
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' GPU context static mesh renderer settings file.", fileName));
+                return;
+            }
+        }
         this->settingsAssetClassFileReader.ReadAndParseSettingsFiles(staticMeshRendererSettings, this->readBuffer, this->settings.staticMeshRendererSettingsFileNames, error);
         if (error)
         {
@@ -488,7 +591,7 @@ void D3D12GpuContextImpl::CreateRenderers(Error& error)
         this->staticMeshRenderer.Create(std::move(staticMeshRendererSettings), error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, "Failed to initialize static mesh renderer.");
+            FINJIN_SET_ERROR(error, "Failed to create static mesh renderer.");
             return;
         }
     }
@@ -501,8 +604,6 @@ void D3D12GpuContextImpl::Create(const D3D12GpuContextSettings& settings, Error&
     assert(settings.osWindow != nullptr);
     assert(settings.assetFileReader != nullptr);
 
-    this->initializationStatus.SetStatus(OperationStatus::STARTED);
-
     //Copy settings
     this->settings = settings;
 
@@ -512,114 +613,45 @@ void D3D12GpuContextImpl::Create(const D3D12GpuContextSettings& settings, Error&
         return;
     }
 
-    //Create device----------------------------------
-    this->CreateDevice(error);
+    //Create device
+    CreateDevice(error);
     if (error)
     {
-        this->initializationStatus.SetStatus(OperationStatus::FAILURE);
-
         FINJIN_SET_ERROR(error, "Failed to find a suitable D3D12 device.");
         return;
     }
 
-    //Read internal settings
-    this->internalSettings.contextImpl = this;
-    this->settingsAssetClassFileReader.ReadAndParseSettingsFiles(this->internalSettings, this->readBuffer, this->settings.contextSettingsFileNames, error);
+    //Create other objects
+    CreateDeviceSupportObjects(error);
     if (error)
     {
-        FINJIN_SET_ERROR(error, "Failed to read internal settings.");
-        return;
-    }
-    this->internalSettings.Validate(error);
-    if (error)
-    {
-        this->initializationStatus.SetStatus(OperationStatus::FAILURE);
-
-        FINJIN_SET_ERROR_NO_MESSAGE(error);
+        FINJIN_SET_ERROR(error, "Failed to create support objects.");
         return;
     }
 
-    D3D12InputFormat::CreateUnorderedMap(this->resources.inputFormatsByNameHash, GetAllocator(), this->internalSettings.inputFormats, error);
-    if (error)
-    {
-        FINJIN_SET_ERROR(error, "Failed to create input formats.");
-        return;
-    }
-
-    auto maxTextures = this->settings.max2DTextures + this->settings.maxCubeTextures + this->settings.max3DTextures;
-    if (!this->resources.texturesByNameHash.Create(maxTextures, maxTextures, GetAllocator(), GetAllocator()))
-    {
-        FINJIN_SET_ERROR(error, "Failed to create textures lookup.");
-        return;
-    }
-
-    for (auto& shadersByNameHash : this->resources.shadersByShaderTypeAndNameHash)
-    {
-        if (!shadersByNameHash.Create(this->settings.maxShaders, this->settings.maxShaders, GetAllocator(), GetAllocator()))
-        {
-            FINJIN_SET_ERROR(error, "Failed to create shaders lookup.");
-            return;
-        }
-    }
-
-    if (!this->resources.materialsByNameHash.Create(this->settings.maxMaterials, this->settings.maxMaterials, GetAllocator(), GetAllocator()))
-    {
-        FINJIN_SET_ERROR(error, "Failed to create materials lookup.");
-        return;
-    }
-
-    if (!this->resources.meshesByNameHash.Create(this->settings.maxMeshes, this->settings.maxMeshes, GetAllocator(), GetAllocator()))
-    {
-        FINJIN_SET_ERROR(error, "Failed to allocate mesh lookup.");
-        return;
-    }
-
-    if (!this->lights.Create(this->settings.maxLights, GetAllocator(), GetAllocator()))
-    {
-        FINJIN_SET_ERROR(error, "Failed to allocate light lookup.");
-        return;
-    }
-    for (size_t i = 0; i < this->lights.items.size(); i++)
-        this->lights.items[i].gpuBufferIndex = i;
-
-    //Create other objects--------------------------
-    this->CreateDeviceSupportObjects(error);
-    if (error)
-    {
-        this->initializationStatus.SetStatus(OperationStatus::FAILURE);
-
-        FINJIN_SET_ERROR(error, "Failed to initialize pipeline.");
-        return;
-    }
-
-    //Renderers---------------------------------
-    this->CreateRenderers(error);
+    //Renderers
+    CreateRenderers(error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to create renderers.");
         return;
     }
 
-    //Core assets-------------------------------
-    this->CreateCoreAssets(error);
-    if (error)
-    {
-        FINJIN_SET_ERROR(error, "Failed to create GPU core assets.");
-        return;
-    }
-
-    //Done
-    this->initializationStatus.SetStatus(OperationStatus::SUCCESS);
+    this->settings.osWindow->AddWindowEventListener(this);
 }
 
 void D3D12GpuContextImpl::Destroy()
 {
-    //Ensure that the GPU is no longer referencing resources that are about to be cleaned up by the destructor.    
-    //FlushGpu(); This is problematic if calling shutdown during an error on intialization. Might not be needed
+    //Wait for the device to go idle
+    if (this->device != nullptr && this->fenceEventHandle != nullptr)
+    {
+        auto value = EmitFenceValue();
+        WaitForFenceValue(value);
+    }
 
     this->settings.osWindow->RemoveWindowEventListener(this);
 
-#if !FINJIN_TARGET_OS_IS_WINDOWS_UWP
+#if !FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
     //Full screen state should always be false before shutting down
     if (this->swapChain != nullptr)
     {
@@ -635,7 +667,11 @@ void D3D12GpuContextImpl::Destroy()
         this->fenceEventHandle = nullptr;
     }
 
-    //The remaining resources are implicitly released by their smart pointers after this D3D12GpuContextImpl is destroyed
+    this->staticMeshRenderer.Destroy();
+
+    this->assetResources.Destroy();
+
+    //The remaining resources are released by their smart pointers after this D3D12GpuContextImpl is destroyed
 }
 
 void D3D12GpuContextImpl::GetBestFullScreenDisplayMode(D3D12DisplayMode& bestDisplayMode, size_t width, size_t height, D3D12RefreshRate refresh, HMONITOR theMonitor, Error& error)
@@ -666,8 +702,8 @@ void D3D12GpuContextImpl::GetBestFullScreenDisplayMode(D3D12DisplayMode& bestDis
         }
     }
 
-    D3D12DisplayMode desiredDisplayMode(width, height, this->settings.colorFormat, refresh);
-    D3D12DisplayMode defaultDisplayMode(fullScreenRect.width, fullScreenRect.height, this->settings.colorFormat, D3D12RefreshRate(60, 1)); //This seems like a reasonable refresh
+    D3D12DisplayMode desiredDisplayMode(width, height, this->settings.colorFormat.actual, refresh);
+    D3D12DisplayMode defaultDisplayMode(fullScreenRect.width, fullScreenRect.height, this->settings.colorFormat.actual, D3D12RefreshRate(60, 1)); //This seems like a reasonable refresh
     if (!fullScreenRect.IsEmpty())
     {
         if (fullScreenAdapterOutput.FindBestDisplayMode(bestDisplayMode, desiredDisplayMode))
@@ -700,7 +736,7 @@ bool D3D12GpuContextImpl::ToggleFullScreenExclusive(Error& error)
 
     FINJIN_ERROR_METHOD_START(error);
 
-#if !FINJIN_TARGET_OS_IS_WINDOWS_UWP
+#if !FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
     BOOL fullscreenState;
     if (FINJIN_CHECK_HRESULT_FAILED(this->swapChain->GetFullscreenState(&fullscreenState, nullptr)))
     {
@@ -730,7 +766,7 @@ bool D3D12GpuContextImpl::StartResizeTargets(bool minimized, Error& error)
     auto callerNeedsToFinishResize = false;
 
     //Release the resources holding references to the swap chain
-    DestroyScreenSizeDependentResources();
+    DestroyScreenSizeDependentResources(true);
 
     if (this->settings.osWindow->GetWindowSize().IsFullScreenExclusive())
     {
@@ -738,14 +774,11 @@ bool D3D12GpuContextImpl::StartResizeTargets(bool minimized, Error& error)
 
         callerNeedsToFinishResize = true;
 
-        //Get window size
-        auto windowBounds = GetRenderingPixelBounds();
-
         //Set up mode description
         DXGI_MODE_DESC modeDesc = {};
-        modeDesc.Width = static_cast<UINT>(windowBounds.GetClientWidth());
-        modeDesc.Height = static_cast<UINT>(windowBounds.GetClientHeight());
-        //modeDesc.Format = this->settings.colorFormat; //NOTE: These couple of lines do not work! Will cause the driver to fallback to some weird mode
+        modeDesc.Width = static_cast<UINT>(this->renderingPixelBounds.GetClientWidth());
+        modeDesc.Height = static_cast<UINT>(this->renderingPixelBounds.GetClientHeight());
+        //modeDesc.Format = this->settings.colorFormat; //NOTE: These couple of lines do not work! Will cause the driver to fall back to some weird mode
         //modeDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         //modeDesc.Scaling = DXGI_MODE_SCALING_CENTERED;
 
@@ -787,9 +820,8 @@ void D3D12GpuContextImpl::FinishResizeTargets(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto windowBounds = GetRenderingPixelBounds();
-    auto resizeWidth = static_cast<UINT>(windowBounds.GetClientWidth());
-    auto resizeHeight = static_cast<UINT>(windowBounds.GetClientHeight());
+    auto resizeWidth = static_cast<UINT>(this->renderingPixelBounds.GetClientWidth());
+    auto resizeHeight = static_cast<UINT>(this->renderingPixelBounds.GetClientHeight());
 
     FINJIN_DEBUG_LOG_INFO("D3D12GpuContextImpl::FinishResizeTargets: %1% x %2%", resizeWidth, resizeHeight);
 
@@ -813,33 +845,11 @@ void D3D12GpuContextImpl::FinishResizeTargets(Error& error)
     this->nextFrameBufferIndex = this->swapChain->GetCurrentBackBufferIndex();
 }
 
-uint64_t D3D12GpuContextImpl::FlushGpu(Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    auto v = EmitFenceValue();
-    WaitForFenceValue(v, error);
-    if (error)
-        FINJIN_SET_ERROR(error, "Failed to wait for fence value while flushing.");
-    return v;
-}
-
 uint64_t D3D12GpuContextImpl::FlushGpu()
 {
     auto v = EmitFenceValue();
     WaitForFenceValue(v);
     return v;
-}
-
-uint64_t D3D12GpuContextImpl::EmitFenceValue(Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    auto emittedValue = this->fenceValue++;
-    if (FINJIN_CHECK_HRESULT_FAILED(this->graphicsCommandQueue->Signal(this->fence.Get(), emittedValue)))
-        FINJIN_SET_ERROR(error, "Failed to signal fence value in graphics command queue.");
-
-    return emittedValue;
 }
 
 uint64_t D3D12GpuContextImpl::EmitFenceValue()
@@ -850,23 +860,6 @@ uint64_t D3D12GpuContextImpl::EmitFenceValue()
     }
 
     return emittedValue;
-}
-
-void D3D12GpuContextImpl::WaitForFenceValue(uint64_t v, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    const uint64_t lastCompletedFence = this->fence->GetCompletedValue();
-    if (lastCompletedFence < v)
-    {
-        if (FINJIN_CHECK_HRESULT_FAILED(this->fence->SetEventOnCompletion(v, this->fenceEventHandle)))
-        {
-            FINJIN_SET_ERROR(error, "Failed to set completion event for fence.");
-            return;
-        }
-
-        WaitForSingleObjectEx(this->fenceEventHandle, INFINITE, FALSE);
-    }
 }
 
 void D3D12GpuContextImpl::WaitForFenceValue(uint64_t v)
@@ -898,8 +891,7 @@ WindowBounds D3D12GpuContextImpl::GetRenderingPixelBounds()
 
 void D3D12GpuContextImpl::WindowResized(OSWindow* osWindow)
 {
-    this->renderingPixelBounds = this->settings.osWindow->GetWindowSize().GetSafeCurrentBounds();
-    this->renderingPixelBounds.Scale(this->settings.osWindow->GetDisplayDensity());
+    UpdateCachedFrameBufferSize();
 
     //FINJIN_DEBUG_LOG_INFO("New resized size: %1% x %2%", this->renderingPixelBounds.GetClientWidth(), this->renderingPixelBounds.GetClientHeight());
 }
@@ -924,7 +916,6 @@ void D3D12GpuContextImpl::CreateSwapChain(Error& error)
 
     auto systemImpl = this->d3dSystem->GetImpl();
 
-    auto windowBounds = GetRenderingPixelBounds();
     UINT bestWidth = 0;
     UINT bestHeight = 0;
     UINT bestRefreshRateNumerator = 0;
@@ -936,8 +927,8 @@ void D3D12GpuContextImpl::CreateSwapChain(Error& error)
         GetBestFullScreenDisplayMode
             (
             bestDisplayMode,
-            static_cast<size_t>(windowBounds.GetClientWidth()),
-            static_cast<size_t>(windowBounds.GetClientHeight()),
+            static_cast<size_t>(this->renderingPixelBounds.GetClientWidth()),
+            static_cast<size_t>(this->renderingPixelBounds.GetClientHeight()),
             D3D12RefreshRate::GetDefault(),
             (HMONITOR)this->settings.osWindow->GetMonitorHandle(),
             error
@@ -955,17 +946,17 @@ void D3D12GpuContextImpl::CreateSwapChain(Error& error)
     }
     else
     {
-        bestWidth = static_cast<UINT>(windowBounds.GetClientWidth());
-        bestHeight = static_cast<UINT>(windowBounds.GetClientHeight());
+        bestWidth = static_cast<UINT>(this->renderingPixelBounds.GetClientWidth());
+        bestHeight = static_cast<UINT>(this->renderingPixelBounds.GetClientHeight());
     }
-        
-#if FINJIN_TARGET_OS_IS_WINDOWS_UWP
+
+#if FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
     DXGI_SWAP_CHAIN_DESC1 swapChainDescription = {};
-    swapChainDescription.Width = bestWidth;    //Match the size of the window.
+    swapChainDescription.Width = bestWidth; //Match the size of the window.
     swapChainDescription.Height = bestHeight;
-    swapChainDescription.Format = this->settings.colorFormat;
+    swapChainDescription.Format = this->settings.colorFormat.actual;
     swapChainDescription.SampleDesc.Count = this->settings.multisampleCount.actual;
-    swapChainDescription.SampleDesc.Quality = this->settings.multisampleQuality.actual;    
+    swapChainDescription.SampleDesc.Quality = this->settings.multisampleQuality.actual;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDescription.BufferCount = static_cast<UINT>(this->frameBuffers.size());
     swapChainDescription.Scaling = DXGI_SCALING_STRETCH;//DisplayMetrics::SupportHighResolutions ? DXGI_SCALING_NONE : DXGI_SCALING_STRETCH;
@@ -981,7 +972,7 @@ void D3D12GpuContextImpl::CreateSwapChain(Error& error)
     swapChainDescription.BufferDesc.Height = bestHeight;
     swapChainDescription.BufferDesc.RefreshRate.Numerator = bestRefreshRateNumerator;
     swapChainDescription.BufferDesc.RefreshRate.Denominator = bestRefreshRateDenominator;
-    swapChainDescription.BufferDesc.Format = this->settings.colorFormat;
+    swapChainDescription.BufferDesc.Format = this->settings.colorFormat.actual;
     swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDescription.OutputWindow = static_cast<HWND>(this->settings.osWindow->GetWindowHandle());
@@ -1003,7 +994,7 @@ void D3D12GpuContextImpl::CreateSwapChain(Error& error)
         return;
     }
 
-#if !FINJIN_TARGET_OS_IS_WINDOWS_UWP
+#if !FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
     if (FINJIN_CHECK_HRESULT_FAILED(systemImpl->dxgiFactory->MakeWindowAssociation(static_cast<HWND>(this->settings.osWindow->GetWindowHandle()), DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES)))
     {
         FINJIN_SET_ERROR(error, "Failed to set alt+enter window behavior.");
@@ -1040,7 +1031,7 @@ bool D3D12GpuContextImpl::ResolveMaterialMaps(FinjinMaterial& material)
                 auto& d3d12Map = d3d12Material->maps[map.gpuMaterialMapIndex];
                 if (d3d12Map.texture == nullptr)
                 {
-                    d3d12Map.texture = this->resources.GetTextureByName(map.textureHandle.assetRef.objectName);
+                    d3d12Map.texture = this->assetResources.GetTextureByName(map.textureHandle.assetRef.objectName);
                     if (d3d12Map.texture == nullptr)
                         isFullyResolved = false; //Failed to find the texture
                 }
@@ -1058,13 +1049,13 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
 
     std::unique_lock<FiberSpinLock> thisLock(this->createLock);
 
-    this->resources.ValidateTextureForCreation(texture->name, error);
+    this->assetResources.ValidateTextureForCreation(texture->name, error);
     if (error)
     {
         FINJIN_SET_ERROR_NO_MESSAGE(error);
         return nullptr;
     }
-    
+
     ByteBufferReader reader(texture->fileBytes);
 
     auto isDDS = false;
@@ -1085,43 +1076,43 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
             return nullptr;
         }
     }
-    else if (wrappedReadHeaderResult == WrappedFileReader::ReadHeaderResult::INVALID_MAGIC_VALUE)
+    else if (wrappedReadHeaderResult == WrappedFileReader::ReadHeaderResult::INVALID_SIGNATURE_VALUE)
     {
         //Not a wrapped file
-        reader.ResetOffset();
     }
     else
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unexpected failure while reading file: %1%", wrappedFileReader.GetReadHeaderResultString(wrappedReadHeaderResult)));
         return nullptr;
     }
-    
+
 
     D3D12Texture* d3d12Texture = nullptr;
-    
+
     if (d3d12Texture == nullptr && (isDDS || !foundWrappedFormat))
     {
         DDSReader ddsReader;
-        auto ddsReadHeaderResult = ddsReader.ReadHeader(reader.data_left(), reader.size_left());
+        auto ddsReadHeaderResult = ddsReader.ReadHeader(reader);
         if (ddsReadHeaderResult == DDSReader::ReadHeaderResult::SUCCESS)
         {
-            auto addedTexture = this->resources.texturesByNameHash.GetOrAdd(texture->name.GetHash());
+            auto addedTexture = this->assetResources.texturesByNameHash.GetOrAdd(texture->name.GetHash());
             if (addedTexture.HasErrorOrValue(nullptr))
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add texture '%1%' to collection.", texture->name));
                 return nullptr;
             }
+
             d3d12Texture = addedTexture.value;
-            d3d12Texture->textureData.Create(reader.data_left(), reader.size_left(), GetAllocator());
 
-            if (ddsReader.GetHeader().IsCube())
-                d3d12Texture->type = D3D12Texture::Type::CUBE;
-            else if (ddsReader.GetHeader().IsVolume())
-                d3d12Texture->type = D3D12Texture::Type::VOLUME;
-            else
-                d3d12Texture->type = D3D12Texture::Type::STANDARD_2D;
+            if (!d3d12Texture->textureData.Create(reader.data_left(), reader.size_left(), GetAllocator()))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate memory for texture '%1%'.", texture->name));
+                return nullptr;
+            }
 
-            D3D12Utilities::CreateDDSTextureResourceFromMemory
+            d3d12Texture->textureDimension = ddsReader.GetDimension();
+
+            d3d12Texture->CreateFromDDS
                 (
                 ddsReader,
                 this->device.Get(),
@@ -1129,21 +1120,19 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
                 d3d12Texture->textureData.size(), //reader.size_left(),
                 this->preallocatedSubresourceData,
                 this->preallocatedFootprintSubresourceData,
-                d3d12Texture->resource,
-                d3d12Texture->uploadHeapResource,
                 0,
                 error
                 );
             if (error)
             {
                 d3d12Texture->HandleCreationFailure();
-                this->resources.texturesByNameHash.remove(texture->name.GetHash());
+                this->assetResources.texturesByNameHash.remove(texture->name.GetHash());
 
                 FINJIN_SET_ERROR(error, "Failed to create texture for DDS texture file.");
                 return nullptr;
             }
         }
-        else if (ddsReadHeaderResult == DDSReader::ReadHeaderResult::INVALID_MAGIC_VALUE)
+        else if (ddsReadHeaderResult == DDSReader::ReadHeaderResult::INVALID_SIGNATURE)
         {
             //Do nothing
         }
@@ -1151,7 +1140,7 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
         {
             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read header for DDS texture: %1%", ddsReader.GetReadHeaderResultString(ddsReadHeaderResult)));
             return nullptr;
-        }        
+        }
     }
 
     if (d3d12Texture == nullptr && (isPNG || !foundWrappedFormat))
@@ -1160,21 +1149,27 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
         pngReader.SetConvert16bitTo8bit(true);
         pngReader.SetAddAlpha(true);
 
-        auto pngDecompressResult = pngReader.DecompressImage(reader, this->readBuffer);
-        if (pngDecompressResult == PNGReader::DecompressResult::SUCCESS)
+        auto pngReadResult = pngReader.ReadImage(reader, this->readBuffer);
+        if (pngReadResult == PNGReader::ReadResult::SUCCESS)
         {
-            auto addedTexture = this->resources.texturesByNameHash.GetOrAdd(texture->name.GetHash());
+            auto addedTexture = this->assetResources.texturesByNameHash.GetOrAdd(texture->name.GetHash());
             if (addedTexture.HasErrorOrValue(nullptr))
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add texture '%1%' to collection.", texture->name));
                 return nullptr;
             }
+
             d3d12Texture = addedTexture.value;
-            d3d12Texture->textureData.Create(this->readBuffer.data(), this->readBuffer.size(), GetAllocator());
 
-            d3d12Texture->type = D3D12Texture::Type::STANDARD_2D;
+            if (!d3d12Texture->textureData.Create(this->readBuffer.data(), this->readBuffer.size(), GetAllocator()))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate memory for texture '%1%'.", texture->name));
+                return nullptr;
+            }
 
-            D3D12Utilities::CreatePNGTextureResourceFromMemory
+            d3d12Texture->textureDimension = TextureDimension::DIMENSION_2D;
+
+            d3d12Texture->CreateFromPNG
                 (
                 pngReader,
                 this->device.Get(),
@@ -1182,41 +1177,39 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
                 d3d12Texture->textureData.size(), //this->readBuffer.size()
                 this->preallocatedSubresourceData,
                 this->preallocatedFootprintSubresourceData,
-                d3d12Texture->resource,
-                d3d12Texture->uploadHeapResource,
                 0,
                 error
                 );
             if (error)
             {
                 d3d12Texture->HandleCreationFailure();
-                this->resources.texturesByNameHash.remove(texture->name.GetHash());
+                this->assetResources.texturesByNameHash.remove(texture->name.GetHash());
 
                 FINJIN_SET_ERROR(error, "Failed to create texture for PNG texture file.");
                 return nullptr;
             }
         }
-        else if (pngDecompressResult == PNGReader::DecompressResult::INVALID_SIGNATURE)
+        else if (pngReadResult == PNGReader::ReadResult::INVALID_SIGNATURE)
         {
             //Do nothing
         }
         else
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to decompress PNG texture: %1%", pngReader.GetDecompressResultString(pngDecompressResult)));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read PNG texture: %1%", pngReader.GetReadResultString(pngReadResult)));
             return nullptr;
         }
     }
-    
+
     if (d3d12Texture == nullptr)
     {
-        FINJIN_SET_ERROR(error, "The texture file contained an invalid magic value/signature.");
+        FINJIN_SET_ERROR(error, "The texture file contained an invalid signature.");
         return nullptr;
     }
 
     if (!d3d12Texture->subresourceData.Create(this->preallocatedSubresourceData.size(), GetAllocator()))
     {
         d3d12Texture->HandleCreationFailure();
-        this->resources.texturesByNameHash.remove(texture->name.GetHash());
+        this->assetResources.texturesByNameHash.remove(texture->name.GetHash());
 
         FINJIN_SET_ERROR(error, "Failed to create subresource data.");
         return nullptr;
@@ -1227,35 +1220,35 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
     if (!d3d12Texture->footprintSubresourceData.Create(this->preallocatedFootprintSubresourceData.data(), this->preallocatedFootprintSubresourceData.size(), GetAllocator()))
     {
         d3d12Texture->HandleCreationFailure();
-        this->resources.texturesByNameHash.remove(texture->name.GetHash());
+        this->assetResources.texturesByNameHash.remove(texture->name.GetHash());
 
         FINJIN_SET_ERROR(error, "Failed to create footprint subresource data.");
         return nullptr;
     }
     assert(!d3d12Texture->footprintSubresourceData.empty());
 
-    auto d3d12TextureIndex = this->resources.textureOffsetsByType[d3d12Texture->type].GetCurrentOffset();
+    auto d3d12TextureIndex = this->assetResources.textureOffsetsByDimension[d3d12Texture->textureDimension].GetCurrentOffset();
     d3d12Texture->textureIndex = d3d12TextureIndex;
     if (d3d12Texture->name.assign(texture->name).HasError())
     {
         d3d12Texture->HandleCreationFailure();
-        this->resources.texturesByNameHash.remove(texture->name.GetHash());
+        this->assetResources.texturesByNameHash.remove(texture->name.GetHash());
 
         FINJIN_SET_ERROR(error, "Failed to assign texture name.");
         return nullptr;
     }
 
-    //Fill out the heap with actual descriptors
-    CD3DX12_CPU_DESCRIPTOR_HANDLE srvHandle(this->srvTextureDescHeap.GetCpuHeapStart(), d3d12Texture->textureIndex, this->srvTextureDescHeap.descriptorSize);
+    //Add descriptor to heap
+    CD3DX12_CPU_DESCRIPTOR_HANDLE srvHandle(this->textureResources.srvTextureDescHeap.GetCpuHeapStart(), d3d12Texture->textureIndex, this->textureResources.srvTextureDescHeap.descriptorSize);
 
     auto textureResourceDesc = d3d12Texture->resource->GetDesc();
-    
+
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = textureResourceDesc.Format;    
+    srvDesc.Format = textureResourceDesc.Format;
     switch (textureResourceDesc.Dimension)
     {
-        case D3D12_RESOURCE_DIMENSION_TEXTURE1D: 
+        case D3D12_RESOURCE_DIMENSION_TEXTURE1D:
         {
             if (textureResourceDesc.DepthOrArraySize == 1)
                 srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1D;
@@ -1263,31 +1256,33 @@ D3D12Texture* D3D12GpuContextImpl::CreateTextureFromMainThread(FinjinTexture* te
                 srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
             break;
         }
-        case D3D12_RESOURCE_DIMENSION_TEXTURE2D: 
+        case D3D12_RESOURCE_DIMENSION_TEXTURE2D:
         {
             if (textureResourceDesc.DepthOrArraySize == 1)
                 srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
             else
                 srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+
+            srvDesc.Texture2D.MostDetailedMip = 0;
+            srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
+            srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+
             break;
         }
-        case D3D12_RESOURCE_DIMENSION_TEXTURE3D: 
+        case D3D12_RESOURCE_DIMENSION_TEXTURE3D:
         {
             srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE3D;
             break;
         }
     }
-    srvDesc.Texture2D.MostDetailedMip = 0;
-    srvDesc.Texture2D.MipLevels = textureResourceDesc.MipLevels;
-    srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
     this->device->CreateShaderResourceView(d3d12Texture->resource.Get(), &srvDesc, srvHandle);
-    
-    d3d12Texture->isResidentCountdown = (size_t)-1; //Infinite countdown. Not set properly until UploadTexture() is called
-    d3d12Texture->waitingToBeResidentNext = this->resources.waitingToBeResidentTexturesHead;
-    this->resources.waitingToBeResidentTexturesHead = d3d12Texture;
 
-    this->resources.textureOffsetsByType[d3d12Texture->type].count++;
+    d3d12Texture->isResidentCountdown = (size_t)-1; //Infinite countdown. Not set properly until UploadTexture() is called
+    d3d12Texture->waitingToBeResidentNext = this->assetResources.waitingToBeResidentTexturesHead;
+    this->assetResources.waitingToBeResidentTexturesHead = d3d12Texture;
+
+    this->assetResources.textureOffsetsByDimension[d3d12Texture->textureDimension].count++;
 
     texture->gpuTexture = d3d12Texture;
 
@@ -1311,30 +1306,32 @@ void D3D12GpuContextImpl::UploadTexture(ID3D12GraphicsCommandList* commandList, 
 
         uint64_t requiredSize = 0;
         device->GetCopyableFootprints(&textureDesc, 0, num2DSubresources, 0, footprints, pNumRows, pRowSizesInBytes, &requiredSize);
-                
+
         UpdateSubresources
             (
-            commandList, 
-            d3d12Texture->resource.Get(), 
-            d3d12Texture->uploadHeapResource.Get(), 
-            0, 
-            num2DSubresources, 
-            requiredSize, 
-            footprints, 
-            pNumRows, 
-            pRowSizesInBytes, 
+            commandList,
+            d3d12Texture->resource.Get(),
+            d3d12Texture->uploadHeapResource.Get(),
+            0,
+            num2DSubresources,
+            requiredSize,
+            footprints,
+            pNumRows,
+            pRowSizesInBytes,
             d3d12Texture->subresourceData.data()
             );
     }
-            
+
     commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(d3d12Texture->resource.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-    
-    d3d12Texture->isResidentCountdown = this->settings.frameCount.actual;
+
+    d3d12Texture->isResidentCountdown = this->settings.frameBufferCount.actual + 1;
 }
 
 void* D3D12GpuContextImpl::CreateLightFromMainThread(FinjinSceneObjectLight* light, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
+
+    std::unique_lock<FiberSpinLock> thisLock(this->createLock);
 
     auto d3d12Light = this->lights.Use();
     if (d3d12Light == nullptr)
@@ -1344,7 +1341,7 @@ void* D3D12GpuContextImpl::CreateLightFromMainThread(FinjinSceneObjectLight* lig
     }
 
     d3d12Light->finjinLight = light;
-    
+
     light->gpuLight = d3d12Light;
 
     return d3d12Light;
@@ -1354,26 +1351,26 @@ void* D3D12GpuContextImpl::CreateMaterial(ID3D12GraphicsCommandList* commandList
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    this->resources.ValidateMaterialForCreation(material->name, error);
+    this->assetResources.ValidateMaterialForCreation(material->name, error);
     if (error)
     {
         FINJIN_SET_ERROR_NO_MESSAGE(error);
         return nullptr;
     }
 
-    auto d3d12MaterialIndex = this->resources.materialsByNameHash.size();
+    auto d3d12MaterialIndex = this->assetResources.materialsByNameHash.size();
 
-    auto addedMaterial = this->resources.materialsByNameHash.GetOrAdd(material->name.GetHash());
+    auto addedMaterial = this->assetResources.materialsByNameHash.GetOrAdd(material->name.GetHash());
     if (addedMaterial.HasErrorOrValue(nullptr))
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add material '%1%' to collection.", material->name));
         return nullptr;
     }
-    
+
     auto& d3d12Material = *addedMaterial.value;
     d3d12Material.finjinMaterial = material;
     d3d12Material.gpuBufferIndex = d3d12MaterialIndex;
-    
+
     material->gpuMaterial = &d3d12Material;
 
     for (auto& map : material->maps)
@@ -1402,27 +1399,27 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
 
     std::unique_lock<FiberSpinLock> thisLock(this->createLock);
 
-    this->resources.ValidateMeshForCreation(mesh->name, error);
+    this->assetResources.ValidateMeshForCreation(mesh->name, error);
     if (error)
     {
         FINJIN_SET_ERROR_NO_MESSAGE(error);
         return nullptr;
     }
 
-    auto addedMesh = this->resources.meshesByNameHash.GetOrAdd(mesh->name.GetHash());
+    auto addedMesh = this->assetResources.meshesByNameHash.GetOrAdd(mesh->name.GetHash());
     if (addedMesh.HasErrorOrValue(nullptr))
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add mesh '%1%' to collection.", mesh->name));
         return nullptr;
     }
-    
+
     auto& d3d12Mesh = *addedMesh.value;
-    
+
     d3d12Mesh.sharedIndexBuffer.CreateIndexBuffer(mesh->indexBuffer, GetAllocator(), this->device.Get(), error);
     if (error)
     {
         d3d12Mesh.HandleCreationFailure();
-        this->resources.meshesByNameHash.remove(mesh->name.GetHash());
+        this->assetResources.meshesByNameHash.remove(mesh->name.GetHash());
 
         FINJIN_SET_ERROR(error, "Failed to create main mesh index buffer.");
         return nullptr;
@@ -1433,7 +1430,7 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
         if (!d3d12Mesh.sharedVertexBuffers.Create(mesh->vertexBuffers.size(), GetAllocator()))
         {
             d3d12Mesh.HandleCreationFailure();
-            this->resources.meshesByNameHash.remove(mesh->name.GetHash());
+            this->assetResources.meshesByNameHash.remove(mesh->name.GetHash());
 
             FINJIN_SET_ERROR(error, "Failed to create shared vertex buffers collection.");
             return nullptr;
@@ -1454,7 +1451,7 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
     if (!d3d12Mesh.submeshes.Create(mesh->submeshes.size(), GetAllocator(), &d3d12Mesh))
     {
         d3d12Mesh.HandleCreationFailure();
-        this->resources.meshesByNameHash.remove(mesh->name.GetHash());
+        this->assetResources.meshesByNameHash.remove(mesh->name.GetHash());
 
         FINJIN_SET_ERROR(error, "Failed to create submeshes collection.");
         return nullptr;
@@ -1465,17 +1462,18 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
         auto& d3d12Submesh = d3d12Mesh.submeshes[submeshIndex];
         auto& submesh = mesh->submeshes[submeshIndex];
 
-        d3d12Submesh.vertexBufferIndex = submesh.vertexBufferRange.bufferIndex;
-        d3d12Submesh.indexCount = submesh.indexBufferRange.count;
-        d3d12Submesh.startIndexLocation = submesh.indexBufferRange.startIndex;
-        d3d12Submesh.baseVertexLocation = submesh.vertexBufferRange.startIndex;
+        d3d12Submesh.vertexBufferIndex = static_cast<UINT>(submesh.vertexBufferRange.bufferIndex);
+        d3d12Submesh.startIndexLocation = static_cast<UINT>(submesh.indexBufferRange.startIndex);
+        d3d12Submesh.indexCount = static_cast<UINT>(submesh.indexBufferRange.count);
+        d3d12Submesh.baseVertexLocation = static_cast<UINT>(submesh.vertexBufferRange.startIndex);
+        d3d12Submesh.vertexCount = static_cast<UINT>(submesh.vertexBufferRange.count);
 
         auto inputFormat = this->internalSettings.GetInputFormat(submesh.vertexBuffer.formatName, submesh.vertexBuffer.formatElements);
         d3d12Submesh.vertexBuffer.CreateVertexBuffer(submesh.vertexBuffer, inputFormat, GetAllocator(), this->device.Get(), error);
         if (error)
         {
             d3d12Mesh.HandleCreationFailure();
-            this->resources.meshesByNameHash.remove(mesh->name.GetHash());
+            this->assetResources.meshesByNameHash.remove(mesh->name.GetHash());
 
             FINJIN_SET_ERROR(error, "Failed to create submesh vertex buffer.");
             return nullptr;
@@ -1485,7 +1483,7 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
         if (error)
         {
             d3d12Mesh.HandleCreationFailure();
-            this->resources.meshesByNameHash.remove(mesh->name.GetHash());
+            this->assetResources.meshesByNameHash.remove(mesh->name.GetHash());
 
             FINJIN_SET_ERROR(error, "Failed to create submesh index buffer.");
             return nullptr;
@@ -1493,8 +1491,8 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
     }
 
     d3d12Mesh.isResidentCountdown = (size_t)-1; //Infinite countdown. Not set properly until UploadMesh() is called
-    d3d12Mesh.waitingToBeResidentNext = this->resources.waitingToBeResidentMeshesHead;
-    this->resources.waitingToBeResidentMeshesHead = &d3d12Mesh;
+    d3d12Mesh.waitingToBeResidentNext = this->assetResources.waitingToBeResidentMeshesHead;
+    this->assetResources.waitingToBeResidentMeshesHead = &d3d12Mesh;
 
     mesh->gpuMesh = &d3d12Mesh;
     d3d12Mesh.finjinMesh = mesh;
@@ -1512,16 +1510,16 @@ void D3D12GpuContextImpl::UploadMesh(ID3D12GraphicsCommandList* commandList, Fin
 
     for (size_t vertexBufferIndex = 0; vertexBufferIndex < mesh->vertexBuffers.size(); vertexBufferIndex++)
         d3d12Mesh->sharedVertexBuffers[vertexBufferIndex].Upload(commandList);
-    
+
     for (size_t submeshIndex = 0; submeshIndex < mesh->submeshes.size(); submeshIndex++)
     {
         auto& d3d12Submesh = d3d12Mesh->submeshes[submeshIndex];
-        
+
         d3d12Submesh.vertexBuffer.Upload(commandList);
         d3d12Submesh.indexBuffer.Upload(commandList);
     }
 
-    d3d12Mesh->isResidentCountdown = this->settings.frameCount.actual;
+    d3d12Mesh->isResidentCountdown = this->settings.frameBufferCount.actual + 1;
 }
 
 void D3D12GpuContextImpl::CreateShader(D3D12ShaderType shaderType, const Utf8String& name, const uint8_t* bytes, size_t byteCount, bool makeLocalCopy, Error& error)
@@ -1530,7 +1528,7 @@ void D3D12GpuContextImpl::CreateShader(D3D12ShaderType shaderType, const Utf8Str
 
     std::unique_lock<FiberSpinLock> thisLock(this->createLock);
 
-    auto isNewResource = this->resources.ValidateShaderForCreation(shaderType, name, error);
+    auto isNewResource = this->assetResources.ValidateShaderForCreation(shaderType, name, error);
     if (error)
     {
         FINJIN_SET_ERROR_NO_MESSAGE(error);
@@ -1539,7 +1537,7 @@ void D3D12GpuContextImpl::CreateShader(D3D12ShaderType shaderType, const Utf8Str
     if (!isNewResource)
         return;
 
-    auto& shadersByNameHash = this->resources.shadersByShaderTypeAndNameHash[shaderType];
+    auto& shadersByNameHash = this->assetResources.shadersByShaderTypeAndNameHash[shaderType];
     auto addedShader = shadersByNameHash.GetOrAdd(name.GetHash());
     if (addedShader.HasErrorOrValue(nullptr))
     {
@@ -1549,30 +1547,15 @@ void D3D12GpuContextImpl::CreateShader(D3D12ShaderType shaderType, const Utf8Str
 
     auto& d3d12Shader = *addedShader.value;
 
-    if (d3d12Shader.name.assign(name).HasError())
+    d3d12Shader.Create(GetAllocator(), name, bytes, byteCount, makeLocalCopy, error);
+    if (error)
     {
-        d3d12Shader.HandeCreationFailed();
+        d3d12Shader.HandleCreationFailed();
         shadersByNameHash.remove(name.GetHash());
 
-        FINJIN_SET_ERROR(error, "Failed to assign shader name.");
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create shader '%1%'.", name));
         return;
     }
-
-    if (makeLocalCopy)
-    {
-        if (!d3d12Shader.localBytes.Create(byteCount, GetAllocator()))
-        {
-            d3d12Shader.HandeCreationFailed();
-            shadersByNameHash.remove(name.GetHash());
-
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate shader buffer for '%1%'.", name));
-            return;
-        }
-        FINJIN_COPY_MEMORY(d3d12Shader.localBytes.data(), bytes, byteCount);
-        d3d12Shader.bytes = ByteBufferReader(d3d12Shader.localBytes);
-    }
-    else
-        d3d12Shader.bytes = ByteBufferReader(bytes, byteCount);
 }
 
 void D3D12GpuContextImpl::CreateShader(D3D12ShaderType shaderType, const AssetReference& assetRef, Error& error)
@@ -1581,7 +1564,9 @@ void D3D12GpuContextImpl::CreateShader(D3D12ShaderType shaderType, const AssetRe
 
     std::unique_lock<FiberSpinLock> thisLock(this->createLock);
 
-    auto isNewResource = this->resources.ValidateShaderForCreation(shaderType, assetRef.objectName, error);
+    auto& name = assetRef.objectName;
+
+    auto isNewResource = this->assetResources.ValidateShaderForCreation(shaderType, name, error);
     if (error)
     {
         FINJIN_SET_ERROR_NO_MESSAGE(error);
@@ -1590,102 +1575,39 @@ void D3D12GpuContextImpl::CreateShader(D3D12ShaderType shaderType, const AssetRe
     if (!isNewResource)
         return;
 
-    auto& shadersByNameHash = this->resources.shadersByShaderTypeAndNameHash[shaderType];
-    auto addedShader = shadersByNameHash.GetOrAdd(assetRef.objectName.GetHash());
+    auto& shadersByNameHash = this->assetResources.shadersByShaderTypeAndNameHash[shaderType];
+    auto addedShader = shadersByNameHash.GetOrAdd(name.GetHash());
     if (addedShader.HasErrorOrValue(nullptr))
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add shader '%1%' to collection.", assetRef.objectName));
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add shader '%1%' to collection.", name));
         return;
     }
 
     auto& d3d12Shader = *addedShader.value;
 
-    if (d3d12Shader.name.assign(assetRef.objectName).HasError())
-    {
-        d3d12Shader.HandeCreationFailed();
-        shadersByNameHash.remove(assetRef.objectName.GetHash());
-        
-        FINJIN_SET_ERROR(error, "Failed to assign shader name.");
-        return;
-    }
-
     auto readResult = this->shaderAssetClassFileReader.ReadAsset(this->readBuffer, assetRef);
     if (readResult == FileOperationResult::SUCCESS)
     {
-        if (!d3d12Shader.localBytes.Create(this->readBuffer.size(), GetAllocator()))
+        d3d12Shader.Create(GetAllocator(), name, this->readBuffer.data(), this->readBuffer.size(), true, error);
+        if (error)
         {
-            d3d12Shader.HandeCreationFailed();
-            shadersByNameHash.remove(assetRef.objectName.GetHash());
+            d3d12Shader.HandleCreationFailed();
+            shadersByNameHash.remove(name.GetHash());
 
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate shader buffer for '%1%'.", assetRef.ToUriString()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create shader '%1%'.", name));
             return;
         }
-        
-        FINJIN_COPY_MEMORY(d3d12Shader.localBytes.data(), this->readBuffer.data(), this->readBuffer.size());
-        d3d12Shader.bytes = ByteBufferReader(d3d12Shader.localBytes);
     }
     else
     {
-        d3d12Shader.HandeCreationFailed();
-        shadersByNameHash.remove(assetRef.objectName.GetHash());
+        d3d12Shader.HandleCreationFailed();
+        shadersByNameHash.remove(name.GetHash());
 
         if (readResult == FileOperationResult::NOT_FOUND)
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to preload shader '%1%'. File could not be found.", assetRef.ToUriString()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read shader '%1%'. File could not be found.", assetRef.ToUriString()));
         else
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to preload shader '%1%'. There was an error reading the file.", assetRef.ToUriString()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read shader '%1%'. There was an error reading the file.", assetRef.ToUriString()));
     }
-}
-
-void D3D12GpuContextImpl::CreateCoreAssets(Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    auto d3dSystemImpl = this->d3dSystem->GetImpl();
-    
-    //Load resources----------------------------------------------------------------------------------
-    auto& frameBufferForCreation = this->frameBuffers[0];
-    auto commandAllocator = frameBufferForCreation.commandAllocator.Get();    
-    auto graphicsCommandList = frameBufferForCreation.NewGraphicsCommandList();
-    {
-        if (FINJIN_CHECK_HRESULT_FAILED(commandAllocator->Reset()))
-        {
-            FINJIN_SET_ERROR(error, "Failed to reset command list allocator.");
-            return;
-        }
-        if (FINJIN_CHECK_HRESULT_FAILED(graphicsCommandList->Reset(commandAllocator, nullptr)))
-        {
-            FINJIN_SET_ERROR(error, "Failed to reset command list.");
-            return;
-        }
-
-        CreateScreenSizeDependentResources(error);
-        if (error)
-        {
-            FINJIN_SET_ERROR(error, "Failed to create screen size dependent resources.");
-            return;
-        }
-
-        if (FINJIN_CHECK_HRESULT_FAILED(graphicsCommandList->Close()))
-        {
-            FINJIN_SET_ERROR(error, "Failed to close command list.");
-            return;
-        }
-    }
-
-    //Execute current frame's command list (will begin the vertex buffer copy into the default heap)
-    this->graphicsCommandQueue->ExecuteCommandLists(frameBufferForCreation.commandListsToExecute.size(), frameBufferForCreation.commandListsToExecute.data());
-
-    //Wait for the command list to execute
-    auto fenceValue = FlushGpu(error);
-    if (error)
-    {
-        FINJIN_SET_ERROR(error, "Failed to flush GPU while loading core assets.");
-        return;
-    }
-    for (auto& frameBuffer : this->frameBuffers)
-        frameBuffer.ResetFences(fenceValue);
-
-    frameBufferForCreation.ResetCommandLists();
 }
 
 D3D12RenderTarget* D3D12GpuContextImpl::GetRenderTarget(D3D12FrameStage& frameStage, const Utf8String& name)
@@ -1704,7 +1626,7 @@ void D3D12GpuContextImpl::StartGraphicsCommandList(D3D12FrameStage& frameStage, 
 
     auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 
-    //Clear command list
+    //Clear command allocator if it's the first command list
     auto commandAllocator = frameBuffer.commandAllocator.Get();
     if (frameBuffer.commandListsToExecute.empty())
     {
@@ -1714,14 +1636,15 @@ void D3D12GpuContextImpl::StartGraphicsCommandList(D3D12FrameStage& frameStage, 
             return;
         }
     }
-    
+
+    //Clear command list
     auto commandList = frameBuffer.NewGraphicsCommandList();
     if (commandList == nullptr)
     {
         FINJIN_SET_ERROR(error, "Failed to get an available graphics command list.");
         return;
     }
-    
+
     if (FINJIN_CHECK_HRESULT_FAILED(commandList->Reset(commandAllocator, nullptr)))
     {
         FINJIN_SET_ERROR(error, "Failed to reset command list for population.");
@@ -1736,12 +1659,62 @@ void D3D12GpuContextImpl::FinishGraphicsCommandList(D3D12FrameStage& frameStage,
     auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 
     //Close command list
-    auto commandList = frameBuffer.CurrentGraphicsCommandList();
+    auto commandList = frameBuffer.GetCurrentGraphicsCommandList();
     if (FINJIN_CHECK_HRESULT_FAILED(commandList->Close()))
     {
         FINJIN_SET_ERROR(error, "Failed to close populated command list.");
         return;
     }
+}
+
+D3D12FrameStage& D3D12GpuContextImpl::StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime)
+{
+    auto& frameStage = this->frameStages[index];
+
+    //Hold onto current frame buffer index
+    auto frameBufferIndex = this->nextFrameBufferIndex;
+
+    //Calculate next frame buffer index
+    this->nextFrameBufferIndex = (this->nextFrameBufferIndex + 1) % this->frameBuffers.size();
+
+    //Make sure the buffer has been presented and frame's state can be reused
+    auto& frameBuffer = this->frameBuffers[frameBufferIndex];
+    BusyWaitForFenceValue(frameBuffer.framePresentCompletedFenceValue);
+    frameStage.frameBufferIndex = frameBufferIndex;
+
+    frameStage.elapsedTime = elapsedTime;
+
+    frameStage.totalElapsedTime = totalElapsedTime;
+
+    frameStage.sequenceIndex = this->sequenceIndex++;
+
+    return frameStage;
+}
+
+void D3D12GpuContextImpl::FinishBackFrameBufferRender(D3D12FrameStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    auto successRequired = continueRendering && !modifyingRenderTarget;
+
+    frameBuffer.ExecuteCommandLists(this->graphicsCommandQueue.Get());
+
+    auto presentSyncInterval = static_cast<UINT>(presentSyncIntervalOverride != (size_t)-1 ? presentSyncIntervalOverride : this->settings.presentSyncInterval);
+    auto result = this->swapChain->Present(presentSyncInterval, 0);
+    if (successRequired)
+    {
+        if (FINJIN_CHECK_HRESULT_FAILED(result))
+        {
+            FINJIN_SET_ERROR(error, "Failed to present back buffer.");
+            return;
+        }
+    }
+
+    frameBuffer.ResetCommandLists();
+
+    frameBuffer.framePresentCompletedFenceValue = EmitFenceValue();
 }
 
 void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error)
@@ -1795,7 +1768,8 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
             }
             case GpuCommand::Type::EXECUTE_GRAPHICS_COMMAND_LISTS:
             {
-                frameBuffer.ExecuteCommandLists(this->graphicsCommandQueue.Get());
+                assert(0 && "Not yet supported or needed");
+                //frameBuffer.ExecuteCommandLists(this->graphicsCommandQueue.Get());
                 break;
             }
             case GpuCommand::Type::START_RENDER_TARGET:
@@ -1812,7 +1786,7 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
                         FINJIN_SET_ERROR(error, "Failed to look up render target.");
                         return;
                     }
-                }                
+                }
                 StartRenderTarget(frameStage, renderTarget, dependentRenderTargets, error);
                 if (error)
                 {
@@ -1833,11 +1807,11 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
                     FINJIN_SET_ERROR(error, "Failed to finish render target. There was no render target to finish.");
                     return;
                 }
-                
+
                 if (lastRenderTarget == GetRenderTarget(frameStage, Utf8String::Empty()))
                 {
                     //Main render target finished
-                    auto commandList = frameBuffer.CurrentGraphicsCommandList();
+                    auto commandList = frameBuffer.GetCurrentGraphicsCommandList();
                     assert(commandList != nullptr);
 
                     auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
@@ -1861,7 +1835,7 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
                 auto& command = static_cast<CreateMeshGpuCommand&>(baseCommand);
 
                 auto meshAsset = command.asset;
-                auto commandList = frameBuffer.CurrentGraphicsCommandList();
+                auto commandList = frameBuffer.GetCurrentGraphicsCommandList();
                 assert(commandList != nullptr);
                 UploadMesh(commandList, meshAsset, error);
                 if (error)
@@ -1891,7 +1865,7 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
                 auto& command = static_cast<CreateTextureGpuCommand&>(baseCommand);
 
                 auto textureAsset = command.asset;
-                auto commandList = frameBuffer.CurrentGraphicsCommandList();
+                auto commandList = frameBuffer.GetCurrentGraphicsCommandList();
                 assert(commandList != nullptr);
                 UploadTexture(commandList, textureAsset);
                 if (error)
@@ -1899,7 +1873,7 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to upload texture '%1%'.", textureAsset->name));
                     return;
                 }
-                
+
                 if (command.eventInfo.HasEventID())
                 {
                     if (!events.push_back())
@@ -1921,7 +1895,7 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
                 auto& command = static_cast<CreateMaterialGpuCommand&>(baseCommand);
 
                 auto materialAsset = command.asset;
-                auto commandList = frameBuffer.CurrentGraphicsCommandList();
+                auto commandList = frameBuffer.GetCurrentGraphicsCommandList();
                 assert(commandList != nullptr);
                 auto materialResource = CreateMaterial(commandList, materialAsset, error);
                 if (error)
@@ -2021,13 +1995,14 @@ void D3D12GpuContextImpl::UpdateResourceGpuResidencyStatus()
 
     {
         D3D12Mesh* previous = nullptr;
-        for (auto resource = this->resources.waitingToBeResidentMeshesHead; resource != nullptr; resource = resource->waitingToBeResidentNext)
+        for (auto resource = this->assetResources.waitingToBeResidentMeshesHead; resource != nullptr; resource = resource->waitingToBeResidentNext)
         {
             resource->UpdateResidentOnGpuStatus();
             if (resource->IsResidentOnGpu())
             {
+                //Remove from 'waiting to be resident' list
                 if (previous == nullptr)
-                    this->resources.waitingToBeResidentMeshesHead = resource->waitingToBeResidentNext;
+                    this->assetResources.waitingToBeResidentMeshesHead = resource->waitingToBeResidentNext;
                 else
                     previous->waitingToBeResidentNext = resource->waitingToBeResidentNext;
             }
@@ -2037,13 +2012,14 @@ void D3D12GpuContextImpl::UpdateResourceGpuResidencyStatus()
 
     {
         D3D12Texture* previous = nullptr;
-        for (auto resource = this->resources.waitingToBeResidentTexturesHead; resource != nullptr; resource = resource->waitingToBeResidentNext)
+        for (auto resource = this->assetResources.waitingToBeResidentTexturesHead; resource != nullptr; resource = resource->waitingToBeResidentNext)
         {
             resource->UpdateResidentOnGpuStatus();
             if (resource->IsResidentOnGpu())
             {
+                //Remove from 'waiting to be resident' list
                 if (previous == nullptr)
-                    this->resources.waitingToBeResidentTexturesHead = resource->waitingToBeResidentNext;
+                    this->assetResources.waitingToBeResidentTexturesHead = resource->waitingToBeResidentNext;
                 else
                     previous->waitingToBeResidentNext = resource->waitingToBeResidentNext;
             }
@@ -2065,9 +2041,9 @@ void D3D12GpuContextImpl::StartRenderTarget(D3D12FrameStage& frameStage, D3D12Re
     frameStage.dependentRenderTargets = dependentRenderTargets;
 
     //Get command list---------------------
-    auto commandList = frameBuffer.CurrentGraphicsCommandList();
-    
-    //Set viewport(s)----------------------    
+    auto commandList = frameBuffer.GetCurrentGraphicsCommandList();
+
+    //Set viewport(s)----------------------
     D3D12_VIEWPORT* viewports = nullptr;
     size_t viewportCount = 0;
     if (!renderTarget->viewports.empty())
@@ -2080,7 +2056,7 @@ void D3D12GpuContextImpl::StartRenderTarget(D3D12FrameStage& frameStage, D3D12Re
         viewports = &this->viewport;
         viewportCount = 1;
     }
-    commandList->RSSetViewports(viewportCount, viewports);
+    commandList->RSSetViewports(static_cast<UINT>(viewportCount), viewports);
 
     //Set scissor rectangle(s)----------------------
     D3D12_RECT* scissorRects = nullptr;
@@ -2095,7 +2071,7 @@ void D3D12GpuContextImpl::StartRenderTarget(D3D12FrameStage& frameStage, D3D12Re
         scissorRects = &this->scissorRect;
         scissorRectCount = 1;
     }
-    commandList->RSSetScissorRects(scissorRectCount, scissorRects);
+    commandList->RSSetScissorRects(static_cast<UINT>(scissorRectCount), scissorRects);
 
     //Indicate that the back buffer will be used as a render target
     StaticVector<CD3DX12_RESOURCE_BARRIER, EngineConstants::MAX_RENDER_TARGET_BARRIERS> barriers;
@@ -2117,17 +2093,17 @@ void D3D12GpuContextImpl::StartRenderTarget(D3D12FrameStage& frameStage, D3D12Re
             }
         }
     }
-    commandList->ResourceBarrier(barriers.size(), barriers.data());
+    commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
     //Set render targets----------------------
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(this->swapChainRtvDescHeap.GetCpuHeapStart(), renderTarget->renderTargetResourceHeapIndex, this->swapChainRtvDescHeap.descriptorSize);
-    CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(this->swapChainDsvDescHeap.GetCpuHeapStart(), renderTarget->depthStencilResourceHeapIndex, this->swapChainDsvDescHeap.descriptorSize);
-    commandList->OMSetRenderTargets(renderTarget->renderTargetOutputResources.size(), &rtvHandle, FALSE, renderTarget->HasDepthStencil() ? &dsvHandle : nullptr);
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(this->swapChainRtvDescHeap.GetCpuHeapStart(), static_cast<INT>(renderTarget->renderTargetResourceHeapIndex), static_cast<UINT>(this->swapChainRtvDescHeap.descriptorSize));
+    CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(this->swapChainDsvDescHeap.GetCpuHeapStart(), static_cast<INT>(renderTarget->depthStencilResourceHeapIndex), static_cast<UINT>(this->swapChainDsvDescHeap.descriptorSize));
+    commandList->OMSetRenderTargets(static_cast<UINT>(renderTarget->renderTargetOutputResources.size()), &rtvHandle, FALSE, renderTarget->HasDepthStencil() ? &dsvHandle : nullptr);
 
     //Clear render target and depth stencil----------------------
-    commandList->ClearRenderTargetView(rtvHandle, renderTarget->clearColor.IsSet() ? renderTarget->clearColor.value.data() : this->clearColor.data(), scissorRectCount, scissorRects);
+    commandList->ClearRenderTargetView(rtvHandle, renderTarget->clearColor.IsSet() ? renderTarget->clearColor.value.data() : this->clearColor.data(), static_cast<UINT>(scissorRectCount), scissorRects);
     if (renderTarget->HasDepthStencil())
-        commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, scissorRectCount, scissorRects);
+        commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, static_cast<UINT>(scissorRectCount), scissorRects);
 }
 
 void D3D12GpuContextImpl::FinishRenderTarget(D3D12FrameStage& frameStage, Error& error)
@@ -2150,7 +2126,7 @@ void D3D12GpuContextImpl::FinishRenderTarget(D3D12FrameStage& frameStage, Error&
         }
     }
     {
-        D3D12_RESOURCE_STATES stateAfter = (renderTarget == &frameBuffer.renderTarget) ? D3D12_RESOURCE_STATE_PRESENT : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;        
+        D3D12_RESOURCE_STATES stateAfter = (renderTarget == &frameBuffer.renderTarget) ? D3D12_RESOURCE_STATE_PRESENT : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         for (size_t i = 0; i < renderTarget->renderTargetOutputResources.size(); i++)
         {
             if (barriers.push_back(CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->renderTargetOutputResources[i].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, stateAfter)).HasErrorOrValue(false))
@@ -2158,27 +2134,25 @@ void D3D12GpuContextImpl::FinishRenderTarget(D3D12FrameStage& frameStage, Error&
             }
         }
     }
-    auto commandList = frameBuffer.CurrentGraphicsCommandList();
-    commandList->ResourceBarrier(barriers.size(), barriers.data());
+    auto commandList = frameBuffer.GetCurrentGraphicsCommandList();
+    commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
 void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto windowBounds = GetRenderingPixelBounds();
-
     this->viewport.TopLeftX = 0;
     this->viewport.TopLeftY = 0;
-    this->viewport.Width = RoundToFloat(windowBounds.GetClientWidth());
-    this->viewport.Height = RoundToFloat(windowBounds.GetClientHeight());
+    this->viewport.Width = RoundToFloat(this->renderingPixelBounds.GetClientWidth());
+    this->viewport.Height = RoundToFloat(this->renderingPixelBounds.GetClientHeight());
     this->viewport.MinDepth = 0;
     this->viewport.MaxDepth = this->settings.maxDepthValue;
 
     this->scissorRect.left = 0;
-    this->scissorRect.top = 0;    
-    this->scissorRect.right = static_cast<LONG>(windowBounds.GetClientWidth());
-    this->scissorRect.bottom = static_cast<LONG>(windowBounds.GetClientHeight());
+    this->scissorRect.top = 0;
+    this->scissorRect.right = static_cast<LONG>(this->renderingPixelBounds.GetClientWidth());
+    this->scissorRect.bottom = static_cast<LONG>(this->renderingPixelBounds.GetClientHeight());
 
     //Frame resources
     {
@@ -2211,10 +2185,10 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
         this->frameBuffers[0].renderTarget.CreateDepthStencil
             (
             this->device.Get(),
-            static_cast<UINT>(windowBounds.GetClientWidth()),
-            static_cast<UINT>(windowBounds.GetClientHeight()),
-            this->settings.depthStencilFormat, 
-            this->settings.maxDepthValue, 
+            static_cast<UINT>(this->renderingPixelBounds.GetClientWidth()),
+            static_cast<UINT>(this->renderingPixelBounds.GetClientHeight()),
+            this->settings.depthStencilFormat.actual,
+            this->settings.maxDepthValue,
             this->settings.multisampleCount.actual,
             this->settings.multisampleQuality.actual,
             error
@@ -2222,7 +2196,7 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
 
         //Create view on the resource
         D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
-        depthStencilDesc.Format = this->settings.depthStencilFormat;
+        depthStencilDesc.Format = this->settings.depthStencilFormat.actual;
         depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
         depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
@@ -2238,10 +2212,16 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
     }
 }
 
-void D3D12GpuContextImpl::DestroyScreenSizeDependentResources()
+void D3D12GpuContextImpl::DestroyScreenSizeDependentResources(bool resizing)
 {
     for (auto& frameBuffer : this->frameBuffers)
         frameBuffer.renderTarget.DestroySceenSizeDependentResources();
+}
+
+void D3D12GpuContextImpl::UpdateCachedFrameBufferSize()
+{
+    this->renderingPixelBounds = this->settings.osWindow->GetWindowSize().GetSafeCurrentBounds();
+    this->renderingPixelBounds.Scale(this->settings.osWindow->GetDisplayDensity());
 }
 
 #endif

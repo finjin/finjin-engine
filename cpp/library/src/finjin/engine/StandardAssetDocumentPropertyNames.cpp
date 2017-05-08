@@ -18,7 +18,7 @@
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
+//Static initialization---------------------------------------------------------
 const FinjinChunkPropertyName StandardAssetDocumentPropertyNames::ACTIVE("active");
 const FinjinChunkPropertyName StandardAssetDocumentPropertyNames::AMBIENT_COLOR("ambient-color");
 const FinjinChunkPropertyName StandardAssetDocumentPropertyNames::AMOUNT("amount");

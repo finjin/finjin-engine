@@ -14,25 +14,25 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/InputSystemCommonSettings.hpp"
 #include "WindowsUWPInputContext.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class WindowsUWPInputSystem
-    {    
+    {
     public:
         WindowsUWPInputSystem();
         ~WindowsUWPInputSystem();
 
         struct Settings : InputSystemCommonSettings
-        {            
+        {
         };
 
         void Create(const Settings& settings, Error& error);

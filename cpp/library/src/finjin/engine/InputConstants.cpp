@@ -18,7 +18,7 @@
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static void RemoveLeadingManufacturerDuplicate(Utf8String& productName)
 {
     auto spaceFoundAt = productName.find(' ');
@@ -26,7 +26,7 @@ static void RemoveLeadingManufacturerDuplicate(Utf8String& productName)
     {
         Utf8String maybeManufacturer;
         productName.substr(maybeManufacturer, 0, spaceFoundAt);
-        
+
         auto maybeManufacturerDuplicate = maybeManufacturer;
         maybeManufacturerDuplicate += " ";
         maybeManufacturerDuplicate += maybeManufacturer;
@@ -36,7 +36,7 @@ static void RemoveLeadingManufacturerDuplicate(Utf8String& productName)
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 Utf8String InputDeviceUtilities::MakeInputDeviceIdentifier(const Utf8String& identifierString)
 {
     Utf8String safe;
@@ -64,9 +64,9 @@ Utf8String InputDeviceUtilities::MakeInputDeviceIdentifier(const Utf8String& ide
     }
 
     safe.ReplaceAll("(r)", "");
-    safe.ReplaceAll('.', '-');
-    safe.ReplaceAll(' ', '-');
-    
+    safe.ReplaceAll("(tm)", "");
+    safe.ReplaceAllChars(". ", '-');
+
     RemoveLeadingManufacturerDuplicate(safe);
 
     return safe;

@@ -18,7 +18,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 ApplicationGlobals::ApplicationGlobals()
-{    
+{
 }

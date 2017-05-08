@@ -18,11 +18,7 @@
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
-const InputCoordinate InputCoordinate::ZERO(0, InputCoordinate::Type::DIPS, 1.0f, 1.0f);
-
-
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 InputCoordinate::InputCoordinate()
 {
     Reset();
@@ -36,6 +32,12 @@ InputCoordinate::InputCoordinate(float value, Type type, float screenDensity)
 InputCoordinate::InputCoordinate(float value, Type type, float screenDensity, float uiScale)
 {
     Set(value, type, screenDensity, uiScale);
+}
+
+const InputCoordinate& InputCoordinate::GetZero()
+{
+    static const InputCoordinate value(0, InputCoordinate::Type::DIPS, 1.0f, 1.0f);
+    return value;
 }
 
 void InputCoordinate::Reset()

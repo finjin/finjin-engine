@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
@@ -25,7 +25,7 @@
 #import "FinjinNSWindowController.h"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -33,22 +33,22 @@ namespace Finjin { namespace Engine {
     struct OSWindowImpl : public AllocatedClass
     {
         OSWindowImpl(Allocator* allocator, void* clientData);
-        
+
         void Clear();
-        
+
         CAMetalLayer* GetMetalLayer() const;
-        
+
         bool IsMaximized() const;
 
         void* clientData;
-        
+
         NSString* title;
         Utf8String internalName;
         FinjinNSWindowController* windowController;
-        
+
         WindowSize windowSize;
         StaticVector<OSWindowEventListener*, EngineConstants::MAX_WINDOW_LISTENERS> listeners;
-        
+
         bool destroyed;
     };
 } }

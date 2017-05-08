@@ -14,22 +14,22 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/Error.hpp"
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Error.hpp"
 #include "finjin/common/OperationStatus.hpp"
 #include "OpenVRContextSettings.hpp"
 #include "OpenVRDevice.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class OpenVRSystem;
-                
+
     class OpenVRContext : public AllocatedClass
     {
     public:
@@ -37,12 +37,10 @@ namespace Finjin { namespace Engine {
         ~OpenVRContext();
 
         using Settings = OpenVRContextSettings;
-                
+
         void Create(const Settings& settings, Error& error);
         void Destroy();
 
-        const OperationStatus& GetInitializationStatus() const;
-        
         void GetSelectorComponents(AssetPathSelector& result);
 
         const Settings& GetSettings() const;
@@ -83,10 +81,10 @@ namespace Finjin { namespace Engine {
 
         void AddHapticFeedback(size_t index, const HapticFeedbackSettings* forces, size_t count);
         void StopHapticFeedback(size_t index);
-        
+
     private:
         struct Impl;
         std::unique_ptr<Impl> impl;
     };
-    
+
 } }

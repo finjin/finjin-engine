@@ -11,10 +11,13 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+//Includes----------------------------------------------------------------------
 #import <Cocoa/Cocoa.h>
 #import <MetalKit/MTKView.h>
 #import "FinjinNSViewDelegate.h"
 
+
+//Types-------------------------------------------------------------------------
 @interface FinjinNSView : NSView
 
 @property (nonatomic) id<FinjinNSViewDelegate> delegate;

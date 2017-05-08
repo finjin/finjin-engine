@@ -14,22 +14,22 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class DisplayInfo
     {
-    public:    
+    public:
         DisplayInfo();
-                
+
     public:
         size_t index;
         bool isPrimary;
@@ -46,6 +46,6 @@ namespace Finjin { namespace Engine {
         void Enumerate();
 
         void SortLeftToRight();
-    };    
+    };
 
 } }

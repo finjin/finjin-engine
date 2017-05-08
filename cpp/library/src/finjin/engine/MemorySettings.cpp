@@ -22,7 +22,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 MemorySettings::MemorySettings(Allocator* allocator)
 {
     this->allocator = allocator;
@@ -82,12 +82,12 @@ void MemorySettings::ParseSettings(const ByteBufferReader& configFileBuffer, con
     Setting<MemoryArchitecture> memoryArchitectureSetting(MemoryArchitecture::SEGMENTED); //Must be set
     Setting<MemoryLocation> memoryLocationSetting(MemoryLocation::SYSTEM_DEDICATED); //Optional
     Setting<uint64_t> memorySizeSetting; //Must be set
-    
+
     NamedMemoryArenaSettings namedMemoryArena;
-    
+
     Utf8StringView section, key, value;
     ConfigDocumentReader reader;
-    
+
     for (auto line = reader.Start(configFileBuffer); line != nullptr; line = reader.Next())
     {
         switch (line->GetType())
@@ -125,10 +125,10 @@ void MemorySettings::ParseSettings(const ByteBufferReader& configFileBuffer, con
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse memory size '%1%'.", section));
                         return;
                     }
-                    
+
                     memorySizeSetting = memorySize;
                 }
-                
+
                 break;
             }
             case ConfigDocumentLine::Type::KEY_AND_VALUE:
@@ -145,7 +145,7 @@ void MemorySettings::ParseSettings(const ByteBufferReader& configFileBuffer, con
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add lookup entry for memory size '%1%'.", memorySizeSetting.value));
                         return;
                     }
-                    
+
                     if (section == "arena")
                     {
                         //Note: Alignment is intentionally not part of the file format
@@ -177,7 +177,7 @@ void MemorySettings::ParseSettings(const ByteBufferReader& configFileBuffer, con
                         }
                     }
                 }
-                
+
                 break;
             }
             default: break;

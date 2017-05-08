@@ -11,22 +11,21 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #include "Application.hpp"
 #include "ApplicationDelegate.hpp"
 #include "finjin/common/DebugLog.hpp"
 #import <UIKit/UIKit.h>
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 void Application::InitializeGlobals(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //Set up root file system
     GetFileSystem(ApplicationFileSystem::READ_APPLICATION_ASSETS).AddDirectory(this->standardPaths.applicationBundleDirectory.path, error);
     if (error)
@@ -34,35 +33,35 @@ void Application::InitializeGlobals(Error& error)
         FINJIN_SET_ERROR(error, "Failed to add application assets to file system.");
         return;
     }
-    
+
     //One application window
     this->maxWindows = 1;
-    
+
     //Window properties
     this->canMoveWindows = false;
     this->canResizeWindows = false;
     this->canCloseWindowsInternally = false;
     this->canExitInternally = false;
-    
+
     //Language/country
     auto language = [[NSLocale preferredLanguages] objectAtIndex:0];
     if (language != nullptr)
         SetLanguageAndCountry(language.UTF8String);
-    
+
     //Inputs
     switch ([UIDevice currentDevice].userInterfaceIdiom)
     {
         case UIUserInterfaceIdiomTV: //Fall through
         case UIUserInterfaceIdiomCarPlay: this->hasClipboard = false;
         default: break;
-    }        
+    }
     this->isKeyboardCapable = false;
     this->isMouseCapable = false;
-    
+
     //Layout direction
     if ([UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft)
         this->layoutDirection = LayoutDirection::RIGHT_TO_LEFT;
-    
+
     //Device model/manufacturer + operating system
     this->deviceManufacturer = "Apple";
     switch ([UIDevice currentDevice].userInterfaceIdiom)
@@ -83,7 +82,7 @@ void Application::InitializeGlobals(Error& error)
 void Application::CreateSystems(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     //Input--------------------
     this->inputSystem.Create(this->inputSystemSettings, error);
     if (error)
@@ -91,7 +90,7 @@ void Application::CreateSystems(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize input system.");
         return;
     }
-    
+
     //Sound--------------------
     this->soundSystem.Create(this->soundSystemSettings, error);
     if (error)
@@ -99,7 +98,7 @@ void Application::CreateSystems(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize sound system.");
         return;
     }
-    
+
     //GPU------------------
     this->gpuSystem.Create(this->gpuSystemSettings, error);
     if (error)
@@ -107,7 +106,7 @@ void Application::CreateSystems(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize GPU system.");
         return;
     }
-    
+
     //Notify delegate
     this->applicationDelegate->OnGpusEnumerated(this->gpuSystem.GetHardwareGpuDescriptions(), this->gpuSystem.GetSoftwareGpuDescriptions());
 }
@@ -120,9 +119,9 @@ bool Application::MainLoop(Error& error)
 void Application::ReportError(const Error& error)
 {
     auto errorString = error.ToString();
-    
+
     FINJIN_DEBUG_LOG_ERROR("%1%", errorString);
-    
+
     OSWindow::ShowErrorMessage(errorString, this->applicationDelegate->GetName(ApplicationNameFormat::DISPLAY));
 }
 

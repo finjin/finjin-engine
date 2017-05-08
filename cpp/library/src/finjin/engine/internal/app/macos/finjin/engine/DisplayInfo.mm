@@ -19,15 +19,14 @@
 #import <IOKit/graphics/IOGraphicsLib.h>
 #import <Foundation/NSString.h>
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static void GetNameForDisplayID(Utf8String& name, CGDirectDisplayID displayID)
 {
     NSDictionary* deviceInfo = (__bridge NSDictionary*)IODisplayCreateInfoDictionary(CGDisplayIOServicePort(displayID), kIODisplayOnlyPreferredName);
-    NSDictionary* localizedNames = [deviceInfo objectForKey:[NSString stringWithUTF8String:kDisplayProductName]];    
+    NSDictionary* localizedNames = [deviceInfo objectForKey:[NSString stringWithUTF8String:kDisplayProductName]];
     if ([localizedNames count] > 0)
     {
         NSString* screenName = [localizedNames objectForKey:[[localizedNames allKeys] objectAtIndex:0]];
@@ -38,7 +37,8 @@ static void GetNameForDisplayID(Utf8String& name, CGDirectDisplayID displayID)
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
+
 //DisplayInfo
 DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0)
 {
@@ -54,10 +54,10 @@ void DisplayInfos::Enumerate()
     CGDirectDisplayID displayIDs[MAX_ITEMS];
     uint32_t displayIDCount = 0;
     CGGetActiveDisplayList(MAX_ITEMS, displayIDs, &displayIDCount);
-    
+
     //Resize optimistically, assuming all displays are active
     resize(static_cast<size_t>(displayIDCount));
-    
+
     //Iterate over displays
     //First display will be main display
     size_t okCount = 0;
@@ -66,29 +66,29 @@ void DisplayInfos::Enumerate()
         if (CGDisplayIsActive(displayIDs[i]))
         {
             DisplayInfo& displayInfo = (*this)[okCount];
-            
+
             displayInfo.index = okCount;
-            
+
             displayInfo.isPrimary = CGDisplayIsMain(displayIDs[i]);
-            
+
             GetNameForDisplayID(displayInfo.name, displayIDs[i]);
-            
+
             displayInfo.rotation = CGDisplayRotation(displayIDs[i]);
-            
+
             auto rect = CGDisplayBounds(displayIDs[i]);
             displayInfo.frame.x = rect.origin.x;
             displayInfo.frame.y = rect.origin.y;
             displayInfo.frame.width = rect.size.width;
             displayInfo.frame.height = rect.size.height;
-            
+
             auto displayRef = CGDisplayCopyDisplayMode(displayIDs[i]);
             double pixelsWidth = CGDisplayModeGetPixelWidth(displayRef);
             displayInfo.density = round(pixelsWidth / rect.size.width);
-            
+
             okCount++;
         }
     }
-    
+
     //Call resize again in case some of the displays weren't active
     resize(okCount);
 }

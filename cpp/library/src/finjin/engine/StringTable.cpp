@@ -18,9 +18,9 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 StringTable::StringTable(Allocator* allocator) : AllocatedClass(allocator), name(allocator)
-{   
+{
 }
 
 size_t StringTable::GetCount() const

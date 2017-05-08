@@ -14,13 +14,13 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "XAudio2Context.hpp"
-#include "XAudio2ContextImpl.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
+#include "XAudio2ContextImpl.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static DWORD SpeakerConfigurationToXAudio(SoundSpeakerSetup speakerSetup)
 {
     switch (speakerSetup)
@@ -37,9 +37,9 @@ static DWORD SpeakerConfigurationToXAudio(SoundSpeakerSetup speakerSetup)
 }
 
 
-//Implementation---------------------------------------------------------------
-XAudio2Context::XAudio2Context(Allocator* allocator, XAudio2System* soundSystem) : 
-    AllocatedClass(allocator), 
+//Implementation----------------------------------------------------------------
+XAudio2Context::XAudio2Context(Allocator* allocator, XAudio2System* soundSystem) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<XAudio2ContextImpl>(allocator, FINJIN_CALLER_ARGUMENTS, soundSystem))
 {
 }
@@ -55,8 +55,6 @@ void XAudio2Context::Create(const Settings& settings, Error& error)
     FINJIN_ERROR_METHOD_START(error);
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
-
-    impl->initializationStatus.SetStatus(OperationStatus::STARTED);
 
     //Copy and validate settings-------------------------------
     impl->settings = settings;
@@ -87,16 +85,12 @@ void XAudio2Context::Create(const Settings& settings, Error& error)
     auto totalSoundSourceCount = impl->settings.GetTotalSoundSourceCount();
     if (totalSoundSourceCount == 0)
     {
-        impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-        
         FINJIN_SET_ERROR(error, "A zero sound source count was specified.");
         return;
     }
 
     if (impl->settings.maxSoundBufferCount == 0)
     {
-        impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-        
         FINJIN_SET_ERROR(error, "A zero sound buffer count was specified.");
         return;
     }
@@ -115,11 +109,9 @@ void XAudio2Context::Create(const Settings& settings, Error& error)
         flags &= ~XAUDIO2_DEBUG_ENGINE;
         if (FAILED(XAudio2Create(&impl->xaudioInterface, flags, processor)))
         {
-            impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-            
             FINJIN_SET_ERROR(error, "Failed to create XAudio2 interface.");
             return;
-        }        
+        }
     }
 
     if (flags & XAUDIO2_DEBUG_ENGINE)
@@ -128,7 +120,7 @@ void XAudio2Context::Create(const Settings& settings, Error& error)
         debugConfig.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
         impl->xaudioInterface->SetDebugConfiguration(&debugConfig, 0);
     }
-    
+
     //Create mastering voice
     UINT32 voiceInputChannelCount = XAUDIO2_DEFAULT_CHANNELS;
     LPCWSTR deviceID = nullptr; //Use null so that the system uses a virtual audio client
@@ -142,8 +134,6 @@ void XAudio2Context::Create(const Settings& settings, Error& error)
     if (FAILED(impl->xaudioInterface->CreateMasteringVoice(&impl->masteringVoice, voiceInputChannelCount, impl->settings.playbackSampleRate, masteringVoiceFlags, deviceID, voiceEffectChain, voiceStreamCategory)))
 #endif
     {
-        impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-        
         FINJIN_SET_ERROR(error, "Failed to create XAudio2 mastering voice interface.");
         return;
     }
@@ -189,7 +179,7 @@ void XAudio2Context::Create(const Settings& settings, Error& error)
         source.Create(this);
 
     size_t sourceOffset = 0;
-    
+
     //Sound source lookups
     impl->soundSourceLookups.CreateEmpty(impl->settings.soundFormats.size(), GetAllocator());
     for (size_t soundSourceDescriptorIndex = 0; soundSourceDescriptorIndex < impl->settings.soundSourcePools.size(); soundSourceDescriptorIndex++)
@@ -229,23 +219,19 @@ void XAudio2Context::Create(const Settings& settings, Error& error)
             }
         }
     }
-    
+
     //Sound buffers
     if (!impl->buffers.Create(impl->settings.maxSoundBufferCount, GetAllocator()))
     {
-        impl->initializationStatus.SetStatus(OperationStatus::FAILURE);
-
         FINJIN_SET_ERROR(error, "Failed to create sound buffers.");
         return;
     }
     for (auto& buffer : impl->buffers.items)
         buffer.Create(this);
-
-    impl->initializationStatus.SetStatus(OperationStatus::SUCCESS);
 }
 
 void XAudio2Context::Destroy()
-{   
+{
     impl->sources.Destroy();
     for (auto& soundSourceLookup : impl->soundSourceLookups)
     {
@@ -257,11 +243,11 @@ void XAudio2Context::Destroy()
             sourceVoice.xaudioSourceVoice->DestroyVoice();
             sourceVoice.xaudioSourceVoice = nullptr;
         }
-    }    
+    }
     impl->soundSourceLookups.Destroy();
-        
+
     impl->buffers.Destroy();
-    
+
     if (impl->masteringVoice != nullptr)
     {
         impl->masteringVoice->DestroyVoice();
@@ -275,11 +261,6 @@ void XAudio2Context::Destroy()
     }
 }
 
-const OperationStatus& XAudio2Context::GetInitializationStatus() const
-{
-    return impl->initializationStatus;
-}
-
 void XAudio2Context::GetSelectorComponents(AssetPathSelector& result)
 {
 }
@@ -287,6 +268,32 @@ void XAudio2Context::GetSelectorComponents(AssetPathSelector& result)
 const XAudio2Context::Settings& XAudio2Context::GetSettings() const
 {
     return impl->settings;
+}
+
+size_t XAudio2Context::GetExternalAssetFileExtensions(StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS>& extensions, AssetClass assetClass, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    switch (assetClass)
+    {
+        case AssetClass::SOUND:
+        {
+            size_t count = 0;
+            for (auto ext : { "wav" })
+            {
+                if (extensions.push_back(ext).HasErrorOrValue(false))
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' extension.", ext));
+                    return count;
+                }
+                count++;
+            }
+            return count;
+        }
+        default: break;
+    }
+
+    return 0;
 }
 
 AssetCreationCapability XAudio2Context::GetAssetCreationCapabilities(AssetClass assetClass) const
@@ -301,9 +308,9 @@ void XAudio2Context::Update(SimpleTimeDelta elapsedTime)
     PriorityListenerDistanceSoundSorter<XAudio2SoundSource> priorityListenerDistanceSoundSorter;
     auto soundSorter = (impl->soundSorter != nullptr) ? impl->soundSorter : &priorityListenerDistanceSoundSorter;
     {
-        float x, y, z;
-        impl->listener.GetPosition(x, y, z);
-        soundSorter->SetListener(x, y, z);
+        MathVector3 position;
+        impl->listener.GetPosition(position);
+        soundSorter->SetListener(position);
     }
 
     //Process each lookup

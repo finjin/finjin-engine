@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/Error.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Error.hpp"
 #include "DInputDeviceComponents.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -30,7 +30,7 @@ namespace Finjin { namespace Engine {
 
     class DInputKeyboard
     {
-    public:    
+    public:
         DInputKeyboard();
         ~DInputKeyboard();
 
@@ -67,7 +67,7 @@ namespace Finjin { namespace Engine {
         struct Impl;
         Impl* GetImpl();
 
-    private:        
+    private:
         std::unique_ptr<Impl> impl;
     };
 

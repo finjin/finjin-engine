@@ -18,7 +18,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 bool PlatformCapabilities::GetDisplays(DisplayInfos& displays)
 {
     //Cached displays are never used

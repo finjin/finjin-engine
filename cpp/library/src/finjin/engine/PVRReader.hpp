@@ -14,17 +14,19 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/Allocator.hpp"
 #include "finjin/common/ByteBuffer.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/StaticVector.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     //http://cdn.imgtec.com/sdk-documentation/PVR+File+Format.Specification.pdf
     class PVRReader
     {
@@ -38,11 +40,11 @@ namespace Finjin { namespace Engine {
             PVRTC_II_2BPP = 4,
             PVRTC_II_4BPP = 5,
             ETC1 = 6,
-            DXT1 = 7,
+            //DXT1 = 7, //Same as BC1
             DXT2 = 8,
-            DXT3 = 9,
+            //DXT3 = 9, //Same as BC2
             DXT4 = 10,
-            DXT5 = 11,
+            //DXT5 = 11, //Same as BC3
             BC1 = 7,
             BC2 = 9,
             BC3 = 11,
@@ -85,16 +87,16 @@ namespace Finjin { namespace Engine {
             ASTC_6x5x5 = 48,
             ASTC_6x6x5 = 49,
             ASTC_6x6x6 = 50,
-            
+
             COUNT = 51
         };
-        
+
         enum class ColorSpace : uint32_t
         {
             LINEAR_RGB = 0,
-            SIGNED_RGB = 1
+            SRGB = 1
         };
-        
+
         enum class ChannelType : uint32_t
         {
             UNSIGNED_BYTE_NORMALIZED = 0,
@@ -111,14 +113,14 @@ namespace Finjin { namespace Engine {
             SIGNED_INTEGER = 11,
             FLOAT_32 = 12
         };
-        
+
         struct PixelFormatChannels
         {
             PixelFormatChannels()
             {
                 FINJIN_ZERO_ITEM(*this);
             }
-            
+
             bool Add(uint8_t name, uint8_t bitsPerChannel)
             {
                 if (name != 0 && !this->channelNames.full())
@@ -130,12 +132,12 @@ namespace Finjin { namespace Engine {
                 else
                     return false;
             }
-            
+
             bool HasAlpha() const
             {
                 return this->channelNames.contains('a');
             }
-            
+
             uint32_t GetBitsPerPixel() const
             {
                 uint32_t total = 0;
@@ -143,16 +145,16 @@ namespace Finjin { namespace Engine {
                     total += bits;
                 return total;
             }
-            
+
             uint32_t GetRoundedBytesPerPixel() const
             {
                 return (GetBitsPerPixel() + 7) / 8;
             }
-            
+
             StaticVector<uint8_t, 4> channelNames; //Valid values: 'r', 'g', 'b', 'a'
             StaticVector<uint8_t, 4> bitsPerChannel;
         };
-        
+
     #pragma pack(push, 1)
         struct Header
         {
@@ -160,7 +162,7 @@ namespace Finjin { namespace Engine {
             {
                 FINJIN_ZERO_ITEM(*this);
             }
-            
+
             uint32_t version;
             uint32_t flags;
             uint64_t pixelFormat;
@@ -173,9 +175,10 @@ namespace Finjin { namespace Engine {
             uint32_t faceCount;
             uint32_t mipMapCount;
             uint32_t metadataSize;
-            
+
             bool HasPixelFormatValue() const;
             PixelFormat GetPixelFormatValue() const;
+            const char* GetPixelFormatString() const;
             PixelFormatChannels GetPixelFormatChannels() const;
             ColorSpace GetColorSpace() const;
             ChannelType GetChannelType() const;
@@ -186,75 +189,89 @@ namespace Finjin { namespace Engine {
             bool IsVolumeTexture() const;
         };
     #pragma pack(pop)
-        
+
         struct HeaderExtension
         {
-            HeaderExtension() :
-                normalMapScale(0),
-                normalMapChannels{0, 0, 0, 0},
-                cubeMapFaceOrder{0, 0, 0, 0, 0, 0},
-                textureOrientation{0, 0, 0},
-                border{0, 0, 0}
+            HeaderExtension()
             {
+                Reset();
             }
-            
+
+            void Reset()
+            {
+                this->normalMapScale = 0;
+                FINJIN_ZERO_ITEM(this->normalMapChannels);
+                FINJIN_ZERO_ITEM(this->cubeMapFaceOrder);
+                FINJIN_ZERO_ITEM(this->textureOrientation);
+                FINJIN_ZERO_ITEM(this->border);
+
+                this->atlasRectangles.clear();
+            }
+
             bool HasBorder() const;
             bool IsCubeMap() const;
             bool IsNormalMap() const;
-            
+
             float normalMapScale;
             uint8_t normalMapChannels[4];
-            
+
             uint8_t cubeMapFaceOrder[6];
-            
+
             uint8_t textureOrientation[3];
-            
+
             uint32_t border[3];
-            
+
             struct AtlasRectangle
             {
                 AtlasRectangle() : x(0), y(0), width(0), height(0) {}
                 AtlasRectangle(uint32_t _x, uint32_t _y, uint32_t _width, uint32_t _height) : x(_x), y(_y), width(_width), height(_height) {}
-                
+
                 uint32_t x, y, width, height;
             };
-            StaticVector<AtlasRectangle, 16> atlasRectangles;
+            DynamicVector<AtlasRectangle> atlasRectangles;
         };
-        
+
         PVRReader();
 
         enum class ReadHeaderResult
         {
             SUCCESS,
+            FAILED_TO_READ_SIGNATURE,
+            INVALID_SIGNATURE,
             FAILED_TO_READ_HEADER,
-            INVALID_HEADER_VERSION,
             BAD_METADATA_FOURCC,
             BAD_METADATA_KEY,
             BAD_METADATA_SIZE,
+            FAILED_TO_COUNT_ATLAS_RECTANGLES,
+            FAILED_TO_ALLOCATE_ATLAS_RECTANGLES,
             FAILED_TO_READ_ATLAS_RECTANGLE,
             FAILED_TO_ADD_ATLAS_RECTANGLE,
             FAILED_TO_READ_METADATA_NORMAL_MAP,
             FAILED_TO_READ_METADATA_CUBE_MAP_FACE_ORDER,
             FAILED_TO_READ_METADATA_TEXTURE_ORIENTATION,
-            FAILED_TO_READ_METADATA_BORDER_SIZE
+            FAILED_TO_READ_METADATA_BORDER_SIZE,
+            IMAGE_BYTE_SWAPPING_REQUIRED
         };
-        ReadHeaderResult ReadHeader(ByteBufferReader& reader);
+        ReadHeaderResult ReadHeader(ByteBufferReader& reader, Allocator* allocator);
         Utf8String GetReadHeaderResultString(ReadHeaderResult result) const;
-        
-        void ReadHeader(ByteBufferReader& reader, Error& error);
-        
+
+        void ReadHeader(ByteBufferReader& reader, Allocator* allocator, Error& error);
+
         const Header& GetHeader() const;
         const HeaderExtension& GetHeaderExtension() const;
 
+        bool IsImageByteSwapped() const;
+
         //Return: true to continue reading mips, false to stop
         //Parameters: reader, mip level, surface index, face index, depth index, width, height, mip image size in bytes, mip image bytes
-        using MipLevelFunction = std::function<bool(const PVRReader*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, const void*)>;
-        
-        void ReadMipLevels(ByteBufferReader& reader, MipLevelFunction mipLevelFunction, Error& error);
-    
+        using ImageFunction = std::function<bool(const PVRReader*, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, const void*)>;
+
+        void ReadImages(ByteBufferReader& reader, ImageFunction imageFunction, Error& error);
+
     private:
         Header header;
         HeaderExtension headerExtension;
+        bool swapBytes;
     };
-    
+
 } }

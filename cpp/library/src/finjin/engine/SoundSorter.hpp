@@ -14,9 +14,13 @@
 #pragma once
 
 
-//Classes----------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/Math.hpp"
+
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     /** Base sound sorting class */
     template <typename SoundSource>
     class SoundSorter
@@ -26,9 +30,9 @@ namespace Finjin { namespace Engine {
         virtual ~SoundSorter() {}
 
         /** Updates the sorter. This is only called when the sorter is selected in the sound system */
-        virtual void SetListener(float listenerX, float listenerY, float listenerZ) {}
+        virtual void SetListener(const MathVector3& listener) {}
 
-        /** 
+        /**
          * The sorting function
          * @param s1 [in] - Sound source 1
          * @param s2 [in] - Sound source 2
@@ -37,9 +41,9 @@ namespace Finjin { namespace Engine {
         virtual bool operator () (const SoundSource* s1, const SoundSource* s2) const = 0;
     };
 
-    /** 
-     * Functor class that sorts two sound sources based on their priority, 2D-ness, 
-     * and distance from listener 
+    /**
+     * Functor class that sorts two sound sources based on their priority, 2D-ness,
+     * and distance from listener
      */
     template <typename SoundSource>
     class PriorityListenerDistanceSoundSorter : public SoundSorter<SoundSource>
@@ -47,25 +51,23 @@ namespace Finjin { namespace Engine {
     public:
         PriorityListenerDistanceSoundSorter()
         {
-            this->listenerPosition[0] = this->listenerPosition[1] = this->listenerPosition[2] = 0;
+            this->listenerPosition = MathVector3::Zero();
         }
 
-        void SetListener(float listenerX, float listenerY, float listenerZ) override
+        void SetListener(const MathVector3& position) override
         {
-            this->listenerPosition[0] = listenerX;
-            this->listenerPosition[1] = listenerY;
-            this->listenerPosition[2] = listenerZ;
+            this->listenerPosition = position;
         }
 
         bool operator () (const SoundSource* s1, const SoundSource* s2) const override
         {
             //Note: 0 = higher priority than 1
-            
+
             if (s1->GetPriority() < s2->GetPriority())
                 return true;
             else if (s1->GetPriority() > s2->GetPriority())
                 return false;
-            else 
+            else
             {
                 //Same priority
                 if (s1->IsAmbient() && s2->IsAmbient())
@@ -88,35 +90,32 @@ namespace Finjin { namespace Engine {
                     //Both sounds are 3D
                     return CloserToListener(s1, s2);
                 }
-            }    
+            }
         }
-        
+
     private:
         /** Determines if s1 is closer to the listener than s2, false otherwise */
         bool CloserToListener(const SoundSource* s1, const SoundSource* s2) const
         {
-            float x1, y1, z1;
-            GetRelativePosition(s1, x1, y1, z1);
+            MathVector3 pos1, pos2;
 
-            float x2, y2, z2;
-            GetRelativePosition(s2, x2, y2, z2);
+            GetRelativePosition(s1, pos1);
+            GetRelativePosition(s2, pos2);
 
             //Use squared distance to determine who's closer
-            return (x1*x1 + y1*y1 + z1*z1) < (x2*x2 + y2*y2 + z2*z2);
+            return pos1.dot(pos1) < pos2.dot(pos2);
         }
 
-        void GetRelativePosition(const SoundSource* s, float& x, float& y, float& z) const
+        void GetRelativePosition(const SoundSource* s, MathVector3& pos) const
         {
-            s->GetPosition(x, y, z);
+            s->GetPosition(pos);
 
             //Make position relative to listener
-            x -= this->listenerPosition[0];
-            y -= this->listenerPosition[1];
-            z -= this->listenerPosition[2];
+            pos -= this->listenerPosition;
         }
-        
+
     private:
-        float listenerPosition[3];
+        MathVector3 listenerPosition;
     };
 
     template <typename SoundSource>
@@ -129,5 +128,5 @@ namespace Finjin { namespace Engine {
     private:
         SoundSorter<SoundSource>* soundSorter;
     };
-    
+
 } }

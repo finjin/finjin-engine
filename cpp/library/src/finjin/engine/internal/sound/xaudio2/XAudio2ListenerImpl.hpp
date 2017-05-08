@@ -14,11 +14,11 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "XAudio2Includes.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class XAudio2Context;
@@ -28,10 +28,7 @@ namespace Finjin { namespace Engine {
     public:
         XAudio2ListenerImpl()
         {
-            this->context = nullptr;
-
-            FINJIN_ZERO_ITEM(this->x3dCone);
-            FINJIN_ZERO_ITEM(this->x3dListener);
+            FINJIN_ZERO_ITEM(*this);
         }
 
         XAudio2Context* context;

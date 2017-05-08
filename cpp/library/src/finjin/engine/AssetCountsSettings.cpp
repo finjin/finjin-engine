@@ -20,7 +20,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 AssetCountsSettings::AssetCountsSettings()
 {
     for (auto& item : this->assetCounts)
@@ -48,9 +48,9 @@ void AssetCountsSettings::ParseSettings(const ByteBufferReader& configFileBuffer
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid asset class '%1%'.", key.ToString()));
                     return;
                 }
-                
+
                 this->assetCounts[assetClass] = Convert::ToInteger(value.ToString(), this->assetCounts[assetClass]);
-                
+
                 break;
             }
             default: break;

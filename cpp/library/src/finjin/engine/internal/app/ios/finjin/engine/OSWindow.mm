@@ -26,13 +26,13 @@
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 
 //OSWindowNSWindowDelegate-----------------
-@interface OSWindowViewerUIViewDelegate : NSObject<FinjinUIViewDelegate>
+@interface OSWindowUIViewDelegate : NSObject<FinjinUIViewDelegate>
 @end
 
-@implementation OSWindowViewerUIViewDelegate
+@implementation OSWindowUIViewDelegate
 {
 @public
     OSWindow* osWindow;
@@ -42,15 +42,15 @@ using namespace Finjin::Engine;
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)theEvent
 {
     auto density = osWindow->GetDisplayDensity();
-    
+
     for (UITouch* touch in touches)
     {
         auto pointerID = TouchToPointerID(touch);
-        
+
         auto locationInView = [touch locationInView:osWindow->GetImpl()->GetWindowHandle().subviews.lastObject];
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowOnPointerDown(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
@@ -64,15 +64,15 @@ using namespace Finjin::Engine;
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)theEvent
 {
     auto density = osWindow->GetDisplayDensity();
-    
+
     for (UITouch* touch in touches)
     {
         auto pointerID = TouchToPointerID(touch);
-        
+
         auto locationInView = [touch locationInView:osWindow->GetImpl()->GetWindowHandle().subviews.lastObject];
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowOnPointerUp(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
@@ -81,15 +81,15 @@ using namespace Finjin::Engine;
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)theEvent
 {
     auto density = osWindow->GetDisplayDensity();
-    
+
     for (UITouch* touch in touches)
     {
         auto pointerID = TouchToPointerID(touch);
-        
+
         auto locationInView = [touch locationInView:osWindow->GetImpl()->GetWindowHandle().subviews.lastObject];
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
-        
+
         for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
             osWindow->GetWindowEventListener(i)->WindowOnPointerMove(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
@@ -98,7 +98,7 @@ using namespace Finjin::Engine;
 @end
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static OSWindowRect CGRectToOSRect(CGRect windowFrame)
 {
     return OSWindowRect(windowFrame.origin.x, windowFrame.origin.y, windowFrame.size.width, windowFrame.size.height);
@@ -110,9 +110,9 @@ static CGRect OSRectToCGRect(OSWindowRect windowFrame)
 }
 
 
-//Implementation---------------------------------------------------------------
-OSWindow::OSWindow(Allocator* allocator, void* clientData) : 
-    AllocatedClass(allocator), 
+//Implementation----------------------------------------------------------------
+OSWindow::OSWindow(Allocator* allocator, void* clientData) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<OSWindowImpl>(allocator, FINJIN_CALLER_ARGUMENTS, clientData))
 {
 }
@@ -125,22 +125,22 @@ OSWindow::~OSWindow()
 void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrSubtitle, const Utf8String& displayName, OSWindowRect windowRect, const WindowSize& windowSize, Error& error)
 {
     //Note: There is a ViewerWindow.xib file in this project but it isn't used
-    
+
     FINJIN_ERROR_METHOD_START(error);
 
     //Make copy of settings
     impl->title = [[NSString alloc] initWithUTF8String:titleOrSubtitle.c_str()];
     impl->internalName = internalName;
-    
+
     impl->windowSize = windowSize;
     impl->windowSize.SetWindow(this);
-    
+
     impl->windowController = [FinjinUIWindowController createFromWindowFrame:OSRectToCGRect(windowRect) withScreen:[UIScreen mainScreen]];
-    
-    auto viewDelegate = [[OSWindowViewerUIViewDelegate alloc] init];
+
+    auto viewDelegate = [[OSWindowUIViewDelegate alloc] init];
     viewDelegate->osWindow = this;
     impl->windowController.view.delegate = viewDelegate;
-    
+
     impl->windowSize.SetApplyingToWindow(true);
     Raise();
     impl->windowSize.SetApplyingToWindow(false);
@@ -163,43 +163,43 @@ void OSWindow::ShowMessage(const Utf8String& message, const Utf8String& title)
 {
     NSString* nsMessage = [[NSString alloc] initWithUTF8String:message.c_str()];
     NSString* nsTitle = [[NSString alloc] initWithUTF8String:title.c_str()];
-    
+
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:nsTitle message:nsMessage preferredStyle:UIAlertControllerStyleAlert];
-    
+
     UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
     [alert addAction:defaultAction];
-    
-    [impl->windowController.window.rootViewController presentViewController:alert animated:YES completion:nil];
+
+    [impl->windowController.window.rootViewController presentViewController:alert animated:YES completion:nullptr];
 }
 
 void OSWindow::ShowErrorMessage(const Utf8String& message, const Utf8String& title)
 {
     //OSWindow::ShowErrorMessage(...);
-    //UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"EXCEPTION" message:[NSString stringWithFormat:@"(%s) EXCEPTION: %@",__PRETTY_FUNCTION__,exception.description] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    //UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"EXCEPTION" message:[NSString stringWithFormat:@"(%s) EXCEPTION: %@",__PRETTY_FUNCTION__,exception.description] delegate:nullptr cancelButtonTitle:@"Ok" otherButtonTitles:nullptr];
     //[alertView show];
-    
+
     /*Utf8String errorMessage("Error - " + message);
     NSString* nsMessage = [[NSString alloc] initWithUTF8String:errorMessage.c_str()];
     NSString* nsTitle = [[NSString alloc] initWithUTF8String:title.c_str()];
-    
+
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:nsTitle message:nsMessage preferredStyle:UIAlertControllerStyleAlert];
-    
+
     UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
     [alert addAction:defaultAction];
-    
-    [impl->windowController.window.rootViewController presentViewController:alert animated:YES completion:nil];*/
+
+    [impl->windowController.window.rootViewController presentViewController:alert animated:YES completion:nullptr];*/
 }
 
 void OSWindow::ApplyWindowSize()
 {
     impl->windowSize.SetApplyingToWindow(true);
-    
+
     auto bounds = impl->windowSize.GetCurrentBounds();
-    
+
     LimitBounds(bounds);
-    
+
     Move(bounds.x, bounds.y, bounds.GetClientWidth(), bounds.GetClientHeight(), false);
-    
+
     impl->windowSize.SetApplyingToWindow(false);
 }
 
@@ -317,7 +317,7 @@ bool OSWindow::Move(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimensio
     windowFrame.origin.y = y;
     windowFrame.size.width += (clientWidth - currentContentSize.size.width);
     windowFrame.size.height += (clientHeight - currentContentSize.size.height);
-    
+
     impl->windowController.window.frame = windowFrame;
 
     return true;

@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/Utf8String.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -28,13 +28,13 @@ namespace Finjin { namespace Engine {
     {
     public:
         enum { MAX_CHANNELS = 8 }; //7.1 audio = 8 channels
-        
+
         Utf8String typeName; //A name that can be used to identify or differentiate sound formats. None of the SoundFormat methods set this
 
         int channelCount;
         int bytesPerChannel;
         int samplesPerSecond;
-        
+
         enum class SampleType
         {
             INTEGER, //unsigned 8-bit, signed 16-bit
@@ -60,8 +60,8 @@ namespace Finjin { namespace Engine {
         int GetChannelCount() const;
         int GetBytesPerChannel() const;
         int GetBytesPerSample() const;
-        
-        int GetBytesPerSecond() const;        
+
+        int GetBytesPerSecond() const;
         SimpleTimeCounter CalculateTimeLength(size_t size) const;
         int64_t GetSampleByteOffset(SimpleTimeCounter timeOffset) const;
         int64_t GetSampleFrameOffset(SimpleTimeCounter timeOffset) const;
@@ -69,15 +69,15 @@ namespace Finjin { namespace Engine {
         Utf8String ToTypeName() const;
         static SoundFormat FromTypeName(const Utf8String& name);
 
-        template <typename T>
-        static const SoundFormat* FindByTypeName(const T& formats, const Utf8String& typeName)
+        template <typename Collection>
+        static const SoundFormat* FindByTypeName(const Collection& formats, const Utf8String& typeName)
         {
             return FindByTypeName(formats.data(), formats.size(), typeName);
         }
         static const SoundFormat* FindByTypeName(const SoundFormat* formats, size_t count, const Utf8String& typeName);
 
-        template <typename T>
-        static const SoundFormat* FindByFormat(const T& formats, const SoundFormat& format)
+        template <typename Collection>
+        static const SoundFormat* FindByFormat(const Collection& formats, const SoundFormat& format)
         {
             return FindByFormat(formats.data(), formats.size(), format);
         }

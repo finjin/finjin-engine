@@ -14,9 +14,9 @@
 #pragma once
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     class InputCoordinate
     {
     public:
@@ -24,14 +24,14 @@ namespace Finjin { namespace Engine {
         {
             PIXELS, //Raw pixels
             UIPIXELS, //User interface coordinates
-            DIPS, //Device-independent points. Think of how OS X/iOS use the same coordinates regardless of screen density
+            DIPS, //Device-independent points. Think of how macOS/iOS use the same coordinates regardless of screen density
         };
-        
+
         InputCoordinate();
         InputCoordinate(float value, Type type, float screenDensity);
         InputCoordinate(float value, Type type, float screenDensity, float uiScale);
 
-        static const InputCoordinate ZERO;
+        static const InputCoordinate& GetZero();
 
         void Reset();
 
@@ -46,13 +46,13 @@ namespace Finjin { namespace Engine {
         float ToType(Type type) const;
         void Set(float value, Type type, float screenDensity);
         void Set(float value, Type type, float screenDensity, float uiScale);
-        
+
         float GetScreenDensity() const;
         void SetScreenDensity(float screenDensity);
-        
+
         float GetUIScale() const;
         void SetUIScale(float scale);
-        
+
         InputCoordinate ToPixels() const;
         float ToPixelsValue() const;
         void SetPixels(float value);
@@ -60,7 +60,7 @@ namespace Finjin { namespace Engine {
         InputCoordinate ToUIPixels() const;
         float ToUIPixelsValue() const;
         void SetUIPixels(float value);
-        
+
         InputCoordinate ToDips() const;
         float ToDipsValue() const;
         void SetDips(float value);
@@ -86,7 +86,7 @@ namespace Finjin { namespace Engine {
 
         InputCoordinate& operator /= (float scale);
         InputCoordinate operator / (float scale) const;
-        
+
     private:
         float value;
         float screenDensity;

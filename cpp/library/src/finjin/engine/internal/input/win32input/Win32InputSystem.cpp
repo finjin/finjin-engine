@@ -14,16 +14,16 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "Win32InputSystem.hpp"
-#include "finjin/common/Vector.hpp"
+#include "finjin/common/StaticVector.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct Win32InputSystem::Impl : public AllocatedClass
 {
     Impl(Allocator* allocator) : AllocatedClass(allocator)
-    {        
+    {
     }
 
     Win32InputSystem::Settings settings;
@@ -32,7 +32,7 @@ struct Win32InputSystem::Impl : public AllocatedClass
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 const Utf8String& Win32InputSystem::GetSystemInternalName()
 {
     static const Utf8String value("win32input");
@@ -40,11 +40,11 @@ const Utf8String& Win32InputSystem::GetSystemInternalName()
 }
 
 Win32InputSystem::Win32InputSystem()
-{    
+{
 }
-    
-Win32InputSystem::~Win32InputSystem() 
-{     
+
+Win32InputSystem::~Win32InputSystem()
+{
 }
 
 void Win32InputSystem::Create(const Settings& settings, Error& error)
@@ -120,5 +120,5 @@ void Win32InputSystem::DestroyContext(Win32InputContext* context)
             impl->contexts.erase(it);
 
         context->Destroy();
-    }    
+    }
 }

@@ -14,13 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Allocator.hpp"
+#include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     struct GpuSystemCommonSettings
@@ -30,6 +31,7 @@ namespace Finjin { namespace Engine {
             this->allocator = nullptr;
         }
 
+        Utf8String applicationName;
         Allocator* allocator;
     };
 

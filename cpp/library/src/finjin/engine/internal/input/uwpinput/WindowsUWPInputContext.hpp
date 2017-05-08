@@ -14,34 +14,34 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/AllocatedClass.hpp"
+#include "finjin/common/Chrono.hpp"
+#include "finjin/common/Error.hpp"
+#include "finjin/common/OperationStatus.hpp"
+#include "finjin/common/Path.hpp"
 #include "finjin/engine/InputContextCommonSettings.hpp"
+#include "finjin/engine/InputSource.hpp"
 #include "../xinput/XInputGameController.hpp"
 #include "WindowsUWPKeyboard.hpp"
 #include "WindowsUWPMouse.hpp"
-#include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/Error.hpp"
-#include "finjin/common/Chrono.hpp"
-#include "finjin/engine/InputSource.hpp"
-#include "finjin/common/OperationStatus.hpp"
-#include "finjin/common/Path.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class WindowsUWPInputSystem;
-    
+
     using namespace Finjin::Common;
 
     class WindowsUWPInputContext : public AllocatedClass
-    {    
+    {
     public:
         WindowsUWPInputContext(Allocator* allocator, WindowsUWPInputSystem* inputSystem);
         ~WindowsUWPInputContext();
-        
+
         struct Settings : InputContextCommonSettings
-        {   
+        {
             Settings(Allocator* allocator) : InputContextCommonSettings(allocator)
             {
             }
@@ -50,10 +50,8 @@ namespace Finjin { namespace Engine {
         void Create(const Settings& settings, Error& error);
         void Destroy();
 
-        const OperationStatus& GetInitializationStatus() const;
-
         void GetSelectorComponents(AssetPathSelector& result);
-        
+
         const Settings& GetSettings() const;
 
         void Update(SimpleTimeDelta elapsedTime, InputDevicePollFlag flags = InputDevicePollFlag::NONE);
@@ -61,7 +59,7 @@ namespace Finjin { namespace Engine {
         void Execute(InputEvents& events, InputCommands& commands, Error& error);
 
         void HandleDeviceChanges();
-                
+
         void HandleApplicationViewportLostFocus();
         void HandleApplicationViewportGainedFocus();
 
@@ -109,12 +107,12 @@ namespace Finjin { namespace Engine {
         {
             switch (deviceClass)
             {
-                case InputDeviceClass::KEYBOARD: 
+                case InputDeviceClass::KEYBOARD:
                 {
                     inputBindings.TranslateKeyboardBindings(deviceIndex, GetKeyboard(deviceIndex));
                     break;
                 }
-                case InputDeviceClass::MOUSE: 
+                case InputDeviceClass::MOUSE:
                 {
                     inputBindings.TranslateMouseBindings(deviceIndex, GetMouse(deviceIndex));
                     break;
@@ -122,7 +120,7 @@ namespace Finjin { namespace Engine {
                 case InputDeviceClass::GAME_CONTROLLER:
                 {
                     if (deviceIndex < GetXInputGameControllerCount())
-                        inputBindings.TranslateGameControllerBindings(deviceIndex, GetXInputGameController(deviceIndex));                    
+                        inputBindings.TranslateGameControllerBindings(deviceIndex, GetXInputGameController(deviceIndex));
                     else
                         inputBindings.TranslateGameControllerBindings(deviceIndex, GetExternalGameController(deviceIndex - GetXInputGameControllerCount()));
                     break;
@@ -149,9 +147,9 @@ namespace Finjin { namespace Engine {
             for (size_t index = 0; index < mappingCount; index++)
             {
                 auto& mapping = inputBindings.GetBinding(index);
-                
+
                 auto mappingAllowsSingleTouchWithMultiTouch = AnySet(mapping.triggerCriteria.flags & InputTriggerFlag::TOUCH_ALLOWED_WITH_MULTITOUCH);
-                
+
                 switch (mapping.inputSource.deviceComponent)
                 {
                     case InputDeviceComponent::KEYBOARD_KEY:

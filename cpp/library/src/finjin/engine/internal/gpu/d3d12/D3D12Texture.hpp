@@ -14,16 +14,19 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
+#include "finjin/common/PNGReader.hpp"
+#include "finjin/engine/DDSReader.hpp"
+#include "finjin/engine/TextureDimension.hpp"
 #include "D3D12Includes.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
 
     class D3D12Texture
@@ -31,8 +34,34 @@ namespace Finjin { namespace Engine {
     public:
         D3D12Texture(Allocator* allocator);
 
+        void CreateFromDDS
+            (
+            const DDSReader& ddsReader,
+            ID3D12Device* device,
+            const void* bytes,
+            size_t byteCount,
+            DynamicVector<D3D12_SUBRESOURCE_DATA>& preallocatedSubresourceData,
+            ByteBuffer& preallocatedFootprintSubresourceData,
+            size_t maxDimension,
+            Error& error
+            );
+
+        void CreateFromPNG
+            (
+            const PNGReader& pngReader,
+            ID3D12Device* device,
+            const void* bytes,
+            size_t byteCount,
+            DynamicVector<D3D12_SUBRESOURCE_DATA>& preallocatedSubresourceData,
+            ByteBuffer& preallocatedFootprintSubresourceData,
+            size_t maxDimension,
+            Error& error
+            );
+
+        void Destroy();
+
         void HandleCreationFailure();
-        void DisposeUploaders();
+        void ReleaseUploaders();
 
         bool IsResidentOnGpu() const;
         void UpdateResidentOnGpuStatus();
@@ -41,7 +70,7 @@ namespace Finjin { namespace Engine {
         Microsoft::WRL::ComPtr<ID3D12Resource> resource;
         Microsoft::WRL::ComPtr<ID3D12Resource> uploadHeapResource;
 
-        AllocatedVector<D3D12_SUBRESOURCE_DATA> subresourceData;
+        DynamicVector<D3D12_SUBRESOURCE_DATA> subresourceData;
         ByteBuffer footprintSubresourceData;
 
         ByteBuffer textureData;
@@ -49,15 +78,7 @@ namespace Finjin { namespace Engine {
         Utf8String name;
         uint32_t textureIndex;
 
-        enum class Type
-        {
-            STANDARD_2D,
-            CUBE,
-            VOLUME,
-
-            COUNT
-        };
-        Type type;
+        TextureDimension textureDimension;
 
         size_t isResidentCountdown;
         D3D12Texture* waitingToBeResidentNext;

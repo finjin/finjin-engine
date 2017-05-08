@@ -220,9 +220,6 @@
     <ClInclude Include="..\..\src\finjin\engine\JobPipelineStage.hpp">
       <Filter>Source Files\common\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\GpuSerializers.hpp">
-      <Filter>Source Files\common\gpu</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\app\uwp\finjin\engine\ApplicationGlobals.hpp">
       <Filter>Source Files\internal\app\uwp</Filter>
     </ClInclude>
@@ -521,6 +518,32 @@
       <Filter>Source Files\common\utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12ShaderType.hpp">
+      <Filter>Source Files\internal\gpu\d3d12\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\TextureDimension.hpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\DXGIIncludes.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ASTCReader.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\gl_format.h">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\KTXReader.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\PVRReader.hpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\internal\input\uwpinput\WindowsUWPInputDevice.cpp">
@@ -795,6 +818,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\AssetClass.cpp">
       <Filter>Source Files\common\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\TextureDimension.cpp">
+      <Filter>Source Files\common\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\DXGIIncludes.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ASTCReader.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\KTXReader.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\PVRReader.cpp">
+      <Filter>Source Files\common\external-file-formats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\CameraState.cpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\LightState.cpp">
+      <Filter>Source Files\common\utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

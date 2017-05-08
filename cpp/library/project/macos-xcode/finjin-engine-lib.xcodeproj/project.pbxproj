@@ -48,11 +48,9 @@
 		651283131D0B62A60041C324 /* OSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282FC1D0B62A60041C324 /* OSWindow.mm */; };
 		651283141D0B62A60041C324 /* PlatformCapabilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651282FD1D0B62A60041C324 /* PlatformCapabilities.mm */; };
 		651283191D0B62A60041C324 /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283021D0B62A60041C324 /* Application.mm */; };
-		6512832D1D0B62D80041C324 /* AAPLObjModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512831B1D0B62D80041C324 /* AAPLObjModel.mm */; };
 		651283331D0B62D80041C324 /* MetalDevices.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283211D0B62D80041C324 /* MetalDevices.mm */; };
 		651283351D0B62D80041C324 /* MetalGpuContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283231D0B62D80041C324 /* MetalGpuContext.mm */; };
-		651283371D0B62D80041C324 /* MetalImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283251D0B62D80041C324 /* MetalImageUtilities.mm */; };
-		651283381D0B62D80041C324 /* MetalMathUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 651283261D0B62D80041C324 /* MetalMathUtilities.cpp */; };
+		651283381D0B62D80041C324 /* MetalUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283261D0B62D80041C324 /* MetalUtilities.mm */; };
 		6512833B1D0B62D80041C324 /* MetalSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283291D0B62D80041C324 /* MetalSystem.mm */; };
 		651283471D0B63020041C324 /* MacOSInputContext.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6512833F1D0B63020041C324 /* MacOSInputContext.mm */; };
 		651283491D0B63020041C324 /* MacOSInputSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651283411D0B63020041C324 /* MacOSInputSystem.mm */; };
@@ -75,7 +73,6 @@
 		651288A91D2B0DB40041C324 /* MetalGpuContextImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288A51D2B0DB40041C324 /* MetalGpuContextImpl.mm */; };
 		651288AB1D2B0DB40041C324 /* MetalSystemImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288A71D2B0DB40041C324 /* MetalSystemImpl.mm */; };
 		651288CD1D2B115C0041C324 /* MetalGpuContextSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288C81D2B115C0041C324 /* MetalGpuContextSettings.mm */; };
-		651288CF1D2B115C0041C324 /* MetalJobPipelineStage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288CA1D2B115C0041C324 /* MetalJobPipelineStage.mm */; };
 		651288D31D2B119A0041C324 /* MetalSystemSettings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288D11D2B119A0041C324 /* MetalSystemSettings.mm */; };
 		651288F31D2B2BFB0041C324 /* OSWindowImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651288F11D2B2BFB0041C324 /* OSWindowImpl.mm */; };
 		65430DD01DF1B66D00588409 /* StandardAssetDocumentChunkNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCA1DF1B66D00588409 /* StandardAssetDocumentChunkNames.cpp */; };
@@ -83,12 +80,33 @@
 		65430DD41DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCE1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp */; };
 		65430E6A1DF9AF5D00588409 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E671DF9AF5D00588409 /* Asset.cpp */; };
 		65430E6B1DF9AF5D00588409 /* AssetReference.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E681DF9AF5D00588409 /* AssetReference.cpp */; };
+		655881E01EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */; };
+		655881E61EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */; };
+		655AA7501EB80E8C00C9F22E /* MetalPipelineState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655AA74E1EB80E8C00C9F22E /* MetalPipelineState.mm */; };
 		657AA1641E420EE8004ADA22 /* ShaderFeatures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */; };
 		657AA16E1E44AACE004ADA22 /* ShaderFeatureFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */; };
 		65C860051D90F3DD00348F9E /* MemorySettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C860011D90F3DD00348F9E /* MemorySettings.cpp */; };
 		65CCE9081E6214F30028F91B /* AssetClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65CCE9071E6214F30028F91B /* AssetClass.cpp */; };
-		65CCE90F1E625A230028F91B /* CameraState.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 65CCE90D1E625A230028F91B /* CameraState.hpp */; };
-		65CCE9101E625A230028F91B /* LightState.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 65CCE90E1E625A230028F91B /* LightState.hpp */; };
+		65D24D441EBBCEA90035D5C4 /* FinjinMain.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 65D24D431EBBCEA90035D5C4 /* FinjinMain.hpp */; };
+		65F7C1911EB432880084EC43 /* ASTCReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1881EB432880084EC43 /* ASTCReader.cpp */; };
+		65F7C1931EB432880084EC43 /* DDSReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C18A1EB432880084EC43 /* DDSReader.cpp */; };
+		65F7C1951EB432880084EC43 /* DXGIIncludes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C18C1EB432880084EC43 /* DXGIIncludes.cpp */; };
+		65F7C1981EB432880084EC43 /* KTXReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C18F1EB432880084EC43 /* KTXReader.cpp */; };
+		65F7C19E1EB432FE0084EC43 /* CameraState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C19A1EB432FE0084EC43 /* CameraState.cpp */; };
+		65F7C19F1EB432FE0084EC43 /* LightState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C19B1EB432FE0084EC43 /* LightState.cpp */; };
+		65F7C1A01EB432FE0084EC43 /* TextureDimension.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C19C1EB432FE0084EC43 /* TextureDimension.cpp */; };
+		65F7C1BC1EB433AD0084EC43 /* MetalFrameBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1A31EB433AD0084EC43 /* MetalFrameBuffer.mm */; };
+		65F7C1BE1EB433AD0084EC43 /* MetalFrameStage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1A51EB433AD0084EC43 /* MetalFrameStage.mm */; };
+		65F7C1C01EB433AD0084EC43 /* MetalGpuBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1A71EB433AD0084EC43 /* MetalGpuBuffer.mm */; };
+		65F7C1C21EB433AD0084EC43 /* MetalInputFormat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1A91EB433AD0084EC43 /* MetalInputFormat.mm */; };
+		65F7C1C41EB433AD0084EC43 /* MetalLight.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1AB1EB433AD0084EC43 /* MetalLight.mm */; };
+		65F7C1C61EB433AD0084EC43 /* MetalMaterial.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1AD1EB433AD0084EC43 /* MetalMaterial.mm */; };
+		65F7C1C81EB433AD0084EC43 /* MetalMesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1AF1EB433AD0084EC43 /* MetalMesh.mm */; };
+		65F7C1CA1EB433AD0084EC43 /* MetalResources.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1B11EB433AD0084EC43 /* MetalResources.mm */; };
+		65F7C1CD1EB433AD0084EC43 /* MetalShader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1B41EB433AD0084EC43 /* MetalShader.mm */; };
+		65F7C1D01EB433AD0084EC43 /* MetalStaticMeshRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1B71EB433AD0084EC43 /* MetalStaticMeshRenderer.mm */; };
+		65F7C1D31EB433AE0084EC43 /* MetalTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1BA1EB433AD0084EC43 /* MetalTexture.mm */; };
+		65F7C1D61EB435970084EC43 /* MetalRenderTarget.mm in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1D51EB435970084EC43 /* MetalRenderTarget.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -111,7 +129,6 @@
 		650FA33C1D361E1200535D8D /* SoundContextCommonSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SoundContextCommonSettings.cpp; path = ../../src/finjin/engine/SoundContextCommonSettings.cpp; sourceTree = SOURCE_ROOT; };
 		650FA3511D37379200535D8D /* GenericGpuNumericStructs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GenericGpuNumericStructs.cpp; path = ../../src/finjin/engine/GenericGpuNumericStructs.cpp; sourceTree = SOURCE_ROOT; };
 		650FA3521D37379200535D8D /* GenericGpuNumericStructs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GenericGpuNumericStructs.hpp; path = ../../src/finjin/engine/GenericGpuNumericStructs.hpp; sourceTree = SOURCE_ROOT; };
-		650FA3531D37379200535D8D /* GpuSerializers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuSerializers.hpp; path = ../../src/finjin/engine/GpuSerializers.hpp; sourceTree = SOURCE_ROOT; };
 		650FA3541D37379200535D8D /* GpuSystemCommonSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuSystemCommonSettings.hpp; path = ../../src/finjin/engine/GpuSystemCommonSettings.hpp; sourceTree = SOURCE_ROOT; };
 		650FA3C11D5BA0C400535D8D /* AssetClass.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetClass.hpp; path = ../../src/finjin/engine/AssetClass.hpp; sourceTree = SOURCE_ROOT; };
 		650FA3C21D5BA0C400535D8D /* Asset.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Asset.hpp; path = ../../src/finjin/engine/Asset.hpp; sourceTree = SOURCE_ROOT; };
@@ -205,8 +222,6 @@
 		651283001D0B62A60041C324 /* SoundContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundContext.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/SoundContext.hpp; sourceTree = SOURCE_ROOT; };
 		651283011D0B62A60041C324 /* SoundSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SoundSystem.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/SoundSystem.hpp; sourceTree = SOURCE_ROOT; };
 		651283021D0B62A60041C324 /* Application.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/Application.mm; sourceTree = SOURCE_ROOT; };
-		6512831A1D0B62D80041C324 /* AAPLObjModel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AAPLObjModel.hpp; path = ../../src/finjin/engine/internal/gpu/metal/AAPLObjModel.hpp; sourceTree = SOURCE_ROOT; };
-		6512831B1D0B62D80041C324 /* AAPLObjModel.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AAPLObjModel.mm; path = ../../src/finjin/engine/internal/gpu/metal/AAPLObjModel.mm; sourceTree = SOURCE_ROOT; };
 		6512831C1D0B62D80041C324 /* GpuContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuContext.hpp; path = ../../src/finjin/engine/internal/gpu/metal/GpuContext.hpp; sourceTree = SOURCE_ROOT; };
 		6512831D1D0B62D80041C324 /* GpuDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuDescription.hpp; path = ../../src/finjin/engine/internal/gpu/metal/GpuDescription.hpp; sourceTree = SOURCE_ROOT; };
 		6512831E1D0B62D80041C324 /* GpuID.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GpuID.hpp; path = ../../src/finjin/engine/internal/gpu/metal/GpuID.hpp; sourceTree = SOURCE_ROOT; };
@@ -215,14 +230,10 @@
 		651283211D0B62D80041C324 /* MetalDevices.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalDevices.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalDevices.mm; sourceTree = SOURCE_ROOT; };
 		651283221D0B62D80041C324 /* MetalGpuContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalGpuContext.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContext.hpp; sourceTree = SOURCE_ROOT; };
 		651283231D0B62D80041C324 /* MetalGpuContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalGpuContext.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContext.mm; sourceTree = SOURCE_ROOT; };
-		651283241D0B62D80041C324 /* MetalImageUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalImageUtilities.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalImageUtilities.hpp; sourceTree = SOURCE_ROOT; };
-		651283251D0B62D80041C324 /* MetalImageUtilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalImageUtilities.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalImageUtilities.mm; sourceTree = SOURCE_ROOT; };
-		651283261D0B62D80041C324 /* MetalMathUtilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MetalMathUtilities.cpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalMathUtilities.cpp; sourceTree = SOURCE_ROOT; };
-		651283271D0B62D80041C324 /* MetalMathUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalMathUtilities.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalMathUtilities.hpp; sourceTree = SOURCE_ROOT; };
+		651283261D0B62D80041C324 /* MetalUtilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalUtilities.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalUtilities.mm; sourceTree = SOURCE_ROOT; };
+		651283271D0B62D80041C324 /* MetalUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalUtilities.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalUtilities.hpp; sourceTree = SOURCE_ROOT; };
 		651283281D0B62D80041C324 /* MetalSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalSystem.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystem.hpp; sourceTree = SOURCE_ROOT; };
 		651283291D0B62D80041C324 /* MetalSystem.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalSystem.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystem.mm; sourceTree = SOURCE_ROOT; };
-		6512832A1D0B62D80041C324 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = ../../src/finjin/engine/internal/gpu/metal/Shaders.metal; sourceTree = SOURCE_ROOT; };
-		6512832B1D0B62D80041C324 /* SharedGpuStructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SharedGpuStructures.h; path = ../../src/finjin/engine/internal/gpu/metal/SharedGpuStructures.h; sourceTree = SOURCE_ROOT; };
 		6512833E1D0B63020041C324 /* MacOSInputContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MacOSInputContext.hpp; path = ../../src/finjin/engine/internal/input/macosinput/MacOSInputContext.hpp; sourceTree = SOURCE_ROOT; };
 		6512833F1D0B63020041C324 /* MacOSInputContext.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MacOSInputContext.mm; path = ../../src/finjin/engine/internal/input/macosinput/MacOSInputContext.mm; sourceTree = SOURCE_ROOT; };
 		651283401D0B63020041C324 /* MacOSInputSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MacOSInputSystem.hpp; path = ../../src/finjin/engine/internal/input/macosinput/MacOSInputSystem.hpp; sourceTree = SOURCE_ROOT; };
@@ -272,8 +283,6 @@
 		651288A71D2B0DB40041C324 /* MetalSystemImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalSystemImpl.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystemImpl.mm; sourceTree = SOURCE_ROOT; };
 		651288C71D2B115C0041C324 /* MetalGpuContextSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalGpuContextSettings.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContextSettings.hpp; sourceTree = SOURCE_ROOT; };
 		651288C81D2B115C0041C324 /* MetalGpuContextSettings.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalGpuContextSettings.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuContextSettings.mm; sourceTree = SOURCE_ROOT; };
-		651288C91D2B115C0041C324 /* MetalJobPipelineStage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalJobPipelineStage.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalJobPipelineStage.hpp; sourceTree = SOURCE_ROOT; };
-		651288CA1D2B115C0041C324 /* MetalJobPipelineStage.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalJobPipelineStage.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalJobPipelineStage.mm; sourceTree = SOURCE_ROOT; };
 		651288D01D2B119A0041C324 /* MetalSystemSettings.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalSystemSettings.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystemSettings.hpp; sourceTree = SOURCE_ROOT; };
 		651288D11D2B119A0041C324 /* MetalSystemSettings.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalSystemSettings.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalSystemSettings.mm; sourceTree = SOURCE_ROOT; };
 		651288EE1D2B13460041C324 /* MetalIncludes.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MetalIncludes.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalIncludes.hpp; sourceTree = SOURCE_ROOT; };
@@ -289,6 +298,10 @@
 		65430E681DF9AF5D00588409 /* AssetReference.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetReference.cpp; path = ../../src/finjin/engine/AssetReference.cpp; sourceTree = SOURCE_ROOT; };
 		65430E691DF9AF5D00588409 /* AssetReference.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetReference.hpp; path = ../../src/finjin/engine/AssetReference.hpp; sourceTree = SOURCE_ROOT; };
 		6552804D1E39EDB00057B5A4 /* MetalRenderTarget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MetalRenderTarget.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalRenderTarget.hpp; sourceTree = SOURCE_ROOT; };
+		655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundBufferImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBufferImpl.mm; sourceTree = SOURCE_ROOT; };
+		655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundSourceImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSourceImpl.mm; sourceTree = SOURCE_ROOT; };
+		655AA74E1EB80E8C00C9F22E /* MetalPipelineState.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalPipelineState.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalPipelineState.mm; sourceTree = SOURCE_ROOT; };
+		655AA74F1EB80E8C00C9F22E /* MetalPipelineState.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalPipelineState.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalPipelineState.hpp; sourceTree = SOURCE_ROOT; };
 		657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatures.cpp; path = ../../src/finjin/engine/ShaderFeatures.cpp; sourceTree = SOURCE_ROOT; };
 		657AA1631E420EE8004ADA22 /* ShaderFeatures.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ShaderFeatures.hpp; path = ../../src/finjin/engine/ShaderFeatures.hpp; sourceTree = SOURCE_ROOT; };
 		657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatureFlag.cpp; path = ../../src/finjin/engine/ShaderFeatureFlag.cpp; sourceTree = SOURCE_ROOT; };
@@ -299,6 +312,49 @@
 		65CCE9071E6214F30028F91B /* AssetClass.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetClass.cpp; path = ../../src/finjin/engine/AssetClass.cpp; sourceTree = SOURCE_ROOT; };
 		65CCE90D1E625A230028F91B /* CameraState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CameraState.hpp; path = ../../src/finjin/engine/CameraState.hpp; sourceTree = SOURCE_ROOT; };
 		65CCE90E1E625A230028F91B /* LightState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LightState.hpp; path = ../../src/finjin/engine/LightState.hpp; sourceTree = SOURCE_ROOT; };
+		65D24D431EBBCEA90035D5C4 /* FinjinMain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FinjinMain.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinMain.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1881EB432880084EC43 /* ASTCReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ASTCReader.cpp; path = ../../src/finjin/engine/ASTCReader.cpp; sourceTree = SOURCE_ROOT; };
+		65F7C1891EB432880084EC43 /* ASTCReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ASTCReader.hpp; path = ../../src/finjin/engine/ASTCReader.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C18A1EB432880084EC43 /* DDSReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DDSReader.cpp; path = ../../src/finjin/engine/DDSReader.cpp; sourceTree = SOURCE_ROOT; };
+		65F7C18B1EB432880084EC43 /* DDSReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DDSReader.hpp; path = ../../src/finjin/engine/DDSReader.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C18C1EB432880084EC43 /* DXGIIncludes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DXGIIncludes.cpp; path = ../../src/finjin/engine/DXGIIncludes.cpp; sourceTree = SOURCE_ROOT; };
+		65F7C18D1EB432880084EC43 /* DXGIIncludes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DXGIIncludes.hpp; path = ../../src/finjin/engine/DXGIIncludes.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C18E1EB432880084EC43 /* gl_format.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gl_format.h; path = ../../src/finjin/engine/gl_format.h; sourceTree = SOURCE_ROOT; };
+		65F7C18F1EB432880084EC43 /* KTXReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = KTXReader.cpp; path = ../../src/finjin/engine/KTXReader.cpp; sourceTree = SOURCE_ROOT; };
+		65F7C1901EB432880084EC43 /* KTXReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = KTXReader.hpp; path = ../../src/finjin/engine/KTXReader.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C19A1EB432FE0084EC43 /* CameraState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CameraState.cpp; path = ../../src/finjin/engine/CameraState.cpp; sourceTree = SOURCE_ROOT; };
+		65F7C19B1EB432FE0084EC43 /* LightState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = LightState.cpp; path = ../../src/finjin/engine/LightState.cpp; sourceTree = SOURCE_ROOT; };
+		65F7C19C1EB432FE0084EC43 /* TextureDimension.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TextureDimension.cpp; path = ../../src/finjin/engine/TextureDimension.cpp; sourceTree = SOURCE_ROOT; };
+		65F7C19D1EB432FE0084EC43 /* TextureDimension.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = TextureDimension.hpp; path = ../../src/finjin/engine/TextureDimension.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1A21EB433AD0084EC43 /* MetalFrameBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalFrameBuffer.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalFrameBuffer.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1A31EB433AD0084EC43 /* MetalFrameBuffer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalFrameBuffer.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalFrameBuffer.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1A41EB433AD0084EC43 /* MetalFrameStage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalFrameStage.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalFrameStage.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1A51EB433AD0084EC43 /* MetalFrameStage.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalFrameStage.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalFrameStage.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1A61EB433AD0084EC43 /* MetalGpuBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalGpuBuffer.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuBuffer.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1A71EB433AD0084EC43 /* MetalGpuBuffer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalGpuBuffer.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalGpuBuffer.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1A81EB433AD0084EC43 /* MetalInputFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalInputFormat.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalInputFormat.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1A91EB433AD0084EC43 /* MetalInputFormat.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalInputFormat.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalInputFormat.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1AA1EB433AD0084EC43 /* MetalLight.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalLight.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalLight.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1AB1EB433AD0084EC43 /* MetalLight.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalLight.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalLight.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1AC1EB433AD0084EC43 /* MetalMaterial.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalMaterial.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalMaterial.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1AD1EB433AD0084EC43 /* MetalMaterial.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalMaterial.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalMaterial.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1AE1EB433AD0084EC43 /* MetalMesh.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalMesh.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalMesh.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1AF1EB433AD0084EC43 /* MetalMesh.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalMesh.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalMesh.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1B01EB433AD0084EC43 /* MetalRenderableEntity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalRenderableEntity.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalRenderableEntity.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1B11EB433AD0084EC43 /* MetalResources.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalResources.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalResources.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1B21EB433AD0084EC43 /* MetalResources.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalResources.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalResources.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1B31EB433AD0084EC43 /* MetalShader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalShader.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalShader.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1B41EB433AD0084EC43 /* MetalShader.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalShader.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalShader.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1B51EB433AD0084EC43 /* MetalShaderType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalShaderType.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalShaderType.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1B61EB433AD0084EC43 /* MetalStaticMeshRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalStaticMeshRenderer.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalStaticMeshRenderer.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1B71EB433AD0084EC43 /* MetalStaticMeshRenderer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalStaticMeshRenderer.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalStaticMeshRenderer.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1B81EB433AD0084EC43 /* MetalStaticMeshRendererFrameState.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalStaticMeshRendererFrameState.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalStaticMeshRendererFrameState.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1B91EB433AD0084EC43 /* MetalTexture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalTexture.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalTexture.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1BA1EB433AD0084EC43 /* MetalTexture.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalTexture.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalTexture.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1D51EB435970084EC43 /* MetalRenderTarget.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalRenderTarget.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalRenderTarget.mm; sourceTree = SOURCE_ROOT; };
+		65F7C1D71EB4A7B30084EC43 /* ContextEventInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ContextEventInfo.hpp; path = ../../src/finjin/engine/ContextEventInfo.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1D91EB4A7E40084EC43 /* PerFrameObjectAllocator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PerFrameObjectAllocator.hpp; path = ../../src/finjin/engine/PerFrameObjectAllocator.hpp; sourceTree = SOURCE_ROOT; };
+		65F7C1DB1EB4E44A0084EC43 /* MetalBufferView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalBufferView.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalBufferView.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -425,14 +481,13 @@
 		6512825B1D0B60260041C324 /* metal */ = {
 			isa = PBXGroup;
 			children = (
-				6512831A1D0B62D80041C324 /* AAPLObjModel.hpp */,
-				6512831B1D0B62D80041C324 /* AAPLObjModel.mm */,
-				6512831C1D0B62D80041C324 /* GpuContext.hpp */,
-				6512831D1D0B62D80041C324 /* GpuDescription.hpp */,
-				6512831E1D0B62D80041C324 /* GpuID.hpp */,
-				6512831F1D0B62D80041C324 /* GpuSystem.hpp */,
-				651283201D0B62D80041C324 /* MetalDevices.hpp */,
-				651283211D0B62D80041C324 /* MetalDevices.mm */,
+				65F7C1861EB42F8C0084EC43 /* renderers */,
+				65F7C1871EB42F960084EC43 /* resources */,
+				65F7C1851EB42F810084EC43 /* utilities */,
+				65F7C1A21EB433AD0084EC43 /* MetalFrameBuffer.hpp */,
+				65F7C1A31EB433AD0084EC43 /* MetalFrameBuffer.mm */,
+				65F7C1A41EB433AD0084EC43 /* MetalFrameStage.hpp */,
+				65F7C1A51EB433AD0084EC43 /* MetalFrameStage.mm */,
 				651283221D0B62D80041C324 /* MetalGpuContext.hpp */,
 				651283231D0B62D80041C324 /* MetalGpuContext.mm */,
 				651288A41D2B0DB40041C324 /* MetalGpuContextImpl.hpp */,
@@ -441,22 +496,14 @@
 				651288C81D2B115C0041C324 /* MetalGpuContextSettings.mm */,
 				6512884A1D0CCB180041C324 /* MetalGpuDescription.hpp */,
 				6512884B1D0CCB180041C324 /* MetalGpuDescription.mm */,
-				651283241D0B62D80041C324 /* MetalImageUtilities.hpp */,
-				651283251D0B62D80041C324 /* MetalImageUtilities.mm */,
-				651288EE1D2B13460041C324 /* MetalIncludes.hpp */,
-				651288C91D2B115C0041C324 /* MetalJobPipelineStage.hpp */,
-				651288CA1D2B115C0041C324 /* MetalJobPipelineStage.mm */,
-				651283261D0B62D80041C324 /* MetalMathUtilities.cpp */,
-				651283271D0B62D80041C324 /* MetalMathUtilities.hpp */,
 				6552804D1E39EDB00057B5A4 /* MetalRenderTarget.hpp */,
+				65F7C1D51EB435970084EC43 /* MetalRenderTarget.mm */,
 				651283281D0B62D80041C324 /* MetalSystem.hpp */,
 				651283291D0B62D80041C324 /* MetalSystem.mm */,
 				651288A61D2B0DB40041C324 /* MetalSystemImpl.hpp */,
 				651288A71D2B0DB40041C324 /* MetalSystemImpl.mm */,
 				651288D01D2B119A0041C324 /* MetalSystemSettings.hpp */,
 				651288D11D2B119A0041C324 /* MetalSystemSettings.mm */,
-				6512832A1D0B62D80041C324 /* Shaders.metal */,
-				6512832B1D0B62D80041C324 /* SharedGpuStructures.h */,
 			);
 			name = metal;
 			sourceTree = "<group>";
@@ -496,6 +543,7 @@
 				6512835D1D0B63500041C324 /* AVAudioEngineSoundBuffer.hpp */,
 				6512835E1D0B63500041C324 /* AVAudioEngineSoundBuffer.mm */,
 				6512835F1D0B63500041C324 /* AVAudioEngineSoundBufferImpl.hpp */,
+				655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */,
 				651283601D0B63500041C324 /* AVAudioEngineSoundContext.hpp */,
 				651283611D0B63500041C324 /* AVAudioEngineSoundContext.mm */,
 				651283621D0B63500041C324 /* AVAudioEngineSoundContextImpl.hpp */,
@@ -505,6 +553,7 @@
 				651283661D0B63500041C324 /* AVAudioEngineSoundListener.mm */,
 				651283671D0B63500041C324 /* AVAudioEngineSoundSource.hpp */,
 				651283681D0B63500041C324 /* AVAudioEngineSoundSource.mm */,
+				655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */,
 				651283691D0B63500041C324 /* AVAudioEngineSoundSourceImpl.hpp */,
 				6512836A1D0B63500041C324 /* AVAudioEngineSoundSystem.hpp */,
 				6512836B1D0B63500041C324 /* AVAudioEngineSoundSystem.mm */,
@@ -544,6 +593,7 @@
 				651282ED1D0B62A60041C324 /* ApplicationGlobals.hpp */,
 				651282EE1D0B62A60041C324 /* DisplayInfo.hpp */,
 				651282EF1D0B62A60041C324 /* DisplayInfo.mm */,
+				65D24D431EBBCEA90035D5C4 /* FinjinMain.hpp */,
 				651282F01D0B62A60041C324 /* FinjinNSApplicationDelegate.h */,
 				651282F11D0B62A60041C324 /* FinjinNSApplicationDelegate.mm */,
 				651282F21D0B62A60041C324 /* FinjinNSView.h */,
@@ -593,14 +643,20 @@
 			children = (
 				6508AFB81E34C70700EB826E /* Camera.cpp */,
 				6508AFA91E34C66600EB826E /* Camera.hpp */,
+				65F7C19A1EB432FE0084EC43 /* CameraState.cpp */,
 				65CCE90D1E625A230028F91B /* CameraState.hpp */,
+				65F7C1D71EB4A7B30084EC43 /* ContextEventInfo.hpp */,
 				651282771D0B60C60041C324 /* EventCollection.hpp */,
 				6512828A1D0B60C60041C324 /* JobPipelineStage.cpp */,
 				6512828B1D0B60C60041C324 /* JobPipelineStage.hpp */,
+				65F7C19B1EB432FE0084EC43 /* LightState.cpp */,
 				65CCE90E1E625A230028F91B /* LightState.hpp */,
 				6512828D1D0B60C60041C324 /* OSWindowDefs.hpp */,
 				6512828E1D0B60C60041C324 /* OSWindowEventListener.hpp */,
+				65F7C1D91EB4A7E40084EC43 /* PerFrameObjectAllocator.hpp */,
 				650FA33B1D361E1200535D8D /* ResourcePoolDescription.hpp */,
+				65F7C19C1EB432FE0084EC43 /* TextureDimension.cpp */,
+				65F7C19D1EB432FE0084EC43 /* TextureDimension.hpp */,
 				651288621D137C930041C324 /* WindowBounds.cpp */,
 				651288631D137C930041C324 /* WindowBounds.hpp */,
 				650FA4651D5BBB0B00535D8D /* WindowSize.cpp */,
@@ -666,7 +722,6 @@
 				650FA3521D37379200535D8D /* GenericGpuNumericStructs.hpp */,
 				650FA3391D361E1200535D8D /* GpuContextCommonSettings.cpp */,
 				6512827B1D0B60C60041C324 /* GpuContextCommonSettings.hpp */,
-				650FA3531D37379200535D8D /* GpuSerializers.hpp */,
 				650FA3541D37379200535D8D /* GpuSystemCommonSettings.hpp */,
 				657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */,
 				657AA1631E420EE8004ADA22 /* ShaderFeatures.hpp */,
@@ -679,6 +734,15 @@
 		651282681D0B60860041C324 /* external-file-formats */ = {
 			isa = PBXGroup;
 			children = (
+				65F7C1881EB432880084EC43 /* ASTCReader.cpp */,
+				65F7C1891EB432880084EC43 /* ASTCReader.hpp */,
+				65F7C18A1EB432880084EC43 /* DDSReader.cpp */,
+				65F7C18B1EB432880084EC43 /* DDSReader.hpp */,
+				65F7C18C1EB432880084EC43 /* DXGIIncludes.cpp */,
+				65F7C18D1EB432880084EC43 /* DXGIIncludes.hpp */,
+				65F7C18E1EB432880084EC43 /* gl_format.h */,
+				65F7C18F1EB432880084EC43 /* KTXReader.cpp */,
+				65F7C1901EB432880084EC43 /* KTXReader.hpp */,
 				651282941D0B60C60041C324 /* PVRReader.cpp */,
 				651282951D0B60C60041C324 /* PVRReader.hpp */,
 				6512829E1D0B60C60041C324 /* WAVReader.cpp */,
@@ -702,6 +766,68 @@
 			name = application;
 			sourceTree = "<group>";
 		};
+		65F7C1851EB42F810084EC43 /* utilities */ = {
+			isa = PBXGroup;
+			children = (
+				6512831C1D0B62D80041C324 /* GpuContext.hpp */,
+				6512831D1D0B62D80041C324 /* GpuDescription.hpp */,
+				6512831E1D0B62D80041C324 /* GpuID.hpp */,
+				6512831F1D0B62D80041C324 /* GpuSystem.hpp */,
+				65F7C1DB1EB4E44A0084EC43 /* MetalBufferView.hpp */,
+				651283201D0B62D80041C324 /* MetalDevices.hpp */,
+				651283211D0B62D80041C324 /* MetalDevices.mm */,
+				651288EE1D2B13460041C324 /* MetalIncludes.hpp */,
+				651283271D0B62D80041C324 /* MetalUtilities.hpp */,
+				651283261D0B62D80041C324 /* MetalUtilities.mm */,
+			);
+			name = utilities;
+			sourceTree = "<group>";
+		};
+		65F7C1861EB42F8C0084EC43 /* renderers */ = {
+			isa = PBXGroup;
+			children = (
+				65F7C1D41EB433E90084EC43 /* static-mesh */,
+			);
+			name = renderers;
+			sourceTree = "<group>";
+		};
+		65F7C1871EB42F960084EC43 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				65F7C1A61EB433AD0084EC43 /* MetalGpuBuffer.hpp */,
+				65F7C1A71EB433AD0084EC43 /* MetalGpuBuffer.mm */,
+				65F7C1A81EB433AD0084EC43 /* MetalInputFormat.hpp */,
+				65F7C1A91EB433AD0084EC43 /* MetalInputFormat.mm */,
+				65F7C1AA1EB433AD0084EC43 /* MetalLight.hpp */,
+				65F7C1AB1EB433AD0084EC43 /* MetalLight.mm */,
+				65F7C1AC1EB433AD0084EC43 /* MetalMaterial.hpp */,
+				65F7C1AD1EB433AD0084EC43 /* MetalMaterial.mm */,
+				65F7C1AE1EB433AD0084EC43 /* MetalMesh.hpp */,
+				65F7C1AF1EB433AD0084EC43 /* MetalMesh.mm */,
+				655AA74F1EB80E8C00C9F22E /* MetalPipelineState.hpp */,
+				655AA74E1EB80E8C00C9F22E /* MetalPipelineState.mm */,
+				65F7C1B01EB433AD0084EC43 /* MetalRenderableEntity.hpp */,
+				65F7C1B21EB433AD0084EC43 /* MetalResources.hpp */,
+				65F7C1B11EB433AD0084EC43 /* MetalResources.mm */,
+				65F7C1B31EB433AD0084EC43 /* MetalShader.hpp */,
+				65F7C1B41EB433AD0084EC43 /* MetalShader.mm */,
+				65F7C1B51EB433AD0084EC43 /* MetalShaderType.hpp */,
+				65F7C1B91EB433AD0084EC43 /* MetalTexture.hpp */,
+				65F7C1BA1EB433AD0084EC43 /* MetalTexture.mm */,
+			);
+			name = resources;
+			sourceTree = "<group>";
+		};
+		65F7C1D41EB433E90084EC43 /* static-mesh */ = {
+			isa = PBXGroup;
+			children = (
+				65F7C1B61EB433AD0084EC43 /* MetalStaticMeshRenderer.hpp */,
+				65F7C1B71EB433AD0084EC43 /* MetalStaticMeshRenderer.mm */,
+				65F7C1B81EB433AD0084EC43 /* MetalStaticMeshRendererFrameState.hpp */,
+			);
+			name = "static-mesh";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -709,8 +835,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65CCE90F1E625A230028F91B /* CameraState.hpp in Headers */,
-				65CCE9101E625A230028F91B /* LightState.hpp in Headers */,
+				65D24D441EBBCEA90035D5C4 /* FinjinMain.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -770,6 +895,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				655881E61EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm in Sources */,
+				655881E01EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm in Sources */,
+				655AA7501EB80E8C00C9F22E /* MetalPipelineState.mm in Sources */,
+				65F7C1D61EB435970084EC43 /* MetalRenderTarget.mm in Sources */,
+				65F7C1BC1EB433AD0084EC43 /* MetalFrameBuffer.mm in Sources */,
+				65F7C1BE1EB433AD0084EC43 /* MetalFrameStage.mm in Sources */,
+				65F7C1C01EB433AD0084EC43 /* MetalGpuBuffer.mm in Sources */,
+				65F7C1C21EB433AD0084EC43 /* MetalInputFormat.mm in Sources */,
+				65F7C1C41EB433AD0084EC43 /* MetalLight.mm in Sources */,
+				65F7C1C61EB433AD0084EC43 /* MetalMaterial.mm in Sources */,
+				65F7C1C81EB433AD0084EC43 /* MetalMesh.mm in Sources */,
+				65F7C1CA1EB433AD0084EC43 /* MetalResources.mm in Sources */,
+				65F7C1CD1EB433AD0084EC43 /* MetalShader.mm in Sources */,
+				65F7C1D01EB433AD0084EC43 /* MetalStaticMeshRenderer.mm in Sources */,
+				65F7C1D31EB433AE0084EC43 /* MetalTexture.mm in Sources */,
+				65F7C19E1EB432FE0084EC43 /* CameraState.cpp in Sources */,
+				65F7C19F1EB432FE0084EC43 /* LightState.cpp in Sources */,
+				65F7C1A01EB432FE0084EC43 /* TextureDimension.cpp in Sources */,
+				65F7C1911EB432880084EC43 /* ASTCReader.cpp in Sources */,
+				65F7C1931EB432880084EC43 /* DDSReader.cpp in Sources */,
+				65F7C1951EB432880084EC43 /* DXGIIncludes.cpp in Sources */,
+				65F7C1981EB432880084EC43 /* KTXReader.cpp in Sources */,
 				65CCE9081E6214F30028F91B /* AssetClass.cpp in Sources */,
 				657AA16E1E44AACE004ADA22 /* ShaderFeatureFlag.cpp in Sources */,
 				657AA1641E420EE8004ADA22 /* ShaderFeatures.cpp in Sources */,
@@ -804,7 +951,6 @@
 				651288D31D2B119A0041C324 /* MetalSystemSettings.mm in Sources */,
 				651288A91D2B0DB40041C324 /* MetalGpuContextImpl.mm in Sources */,
 				651288CD1D2B115C0041C324 /* MetalGpuContextSettings.mm in Sources */,
-				651288CF1D2B115C0041C324 /* MetalJobPipelineStage.mm in Sources */,
 				651288AB1D2B0DB40041C324 /* MetalSystemImpl.mm in Sources */,
 				651288641D137C930041C324 /* WindowBounds.cpp in Sources */,
 				6512884D1D0CCB180041C324 /* MetalGpuDescription.mm in Sources */,
@@ -822,11 +968,9 @@
 				651283491D0B63020041C324 /* MacOSInputSystem.mm in Sources */,
 				6512834B1D0B63020041C324 /* MacOSKeyboard.mm in Sources */,
 				6512834D1D0B63020041C324 /* MacOSMouse.mm in Sources */,
-				6512832D1D0B62D80041C324 /* AAPLObjModel.mm in Sources */,
 				651283331D0B62D80041C324 /* MetalDevices.mm in Sources */,
 				651283351D0B62D80041C324 /* MetalGpuContext.mm in Sources */,
-				651283371D0B62D80041C324 /* MetalImageUtilities.mm in Sources */,
-				651283381D0B62D80041C324 /* MetalMathUtilities.cpp in Sources */,
+				651283381D0B62D80041C324 /* MetalUtilities.mm in Sources */,
 				6512833B1D0B62D80041C324 /* MetalSystem.mm in Sources */,
 				651283031D0B62A60041C324 /* ApplicationGlobals.mm in Sources */,
 				651283061D0B62A60041C324 /* DisplayInfo.mm in Sources */,

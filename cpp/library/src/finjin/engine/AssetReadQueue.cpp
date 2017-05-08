@@ -23,11 +23,10 @@
 #include "finjin/common/MemorySize.hpp"
 #include "finjin/common/VirtualFileSystemOperationQueue.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //AssetReadQueue::Settings
 AssetReadQueue::Settings::Settings()
@@ -125,7 +124,7 @@ void AssetReadQueue::Settings::ParseSettings(const ByteBufferReader& configFileB
                         }
                     }
                 }
-                
+
                 break;
             }
             default: break;
@@ -136,7 +135,7 @@ void AssetReadQueue::Settings::ParseSettings(const ByteBufferReader& configFileB
 //AssetReadQueue::InternalAssetReadRequest
 AssetReadQueue::InternalAssetReadRequest::InternalAssetReadRequest(Allocator* allocator) : Super(allocator), assetReadHandle(allocator)
 {
-    this->isFinished = true;    
+    this->isFinished = true;
 }
 
 bool AssetReadQueue::InternalAssetReadRequest::Create(Allocator* allocator)
@@ -234,7 +233,7 @@ void AssetReadQueue::Create(const Settings& settings, Error& error)
         this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_BINARY);
         this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_TEXT);
     #if FINJIN_DEBUG
-        this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_CONFIG);        
+        this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_CONFIG);
         this->settings.streamingFormats.push_back(StreamingFileFormat::STREAMING_JSON);
     #endif
     }
@@ -250,13 +249,13 @@ void AssetReadQueue::Create(const Settings& settings, Error& error)
         FINJIN_SET_ERROR(error, "Failed to create internal asset read queue.");
         return;
     }
-    
+
     if (!this->assetBuffer.CreateEmpty(this->settings.bufferSize, this->settings.allocator))
     {
         FINJIN_SET_ERROR(error, "Failed to create asset buffer.");
         return;
     }
-    
+
     DataChunkReader::Settings readerSettings;
     readerSettings.Create(this->dataChunkReaderFileInput, DefaultDataChunkReaderController::GetInstance());
     readerSettings.maxBytesPerLine = this->settings.streamingMaxBytesPerLine;
@@ -401,7 +400,7 @@ void AssetReadQueue::AddRequest(AssetReadHandle& assetReadHandle, const AssetRea
             return;
         }
     }
-    
+
     if (this->internalAssetReadRequestQueue.full())
     {
         FINJIN_SET_ERROR(error, "The asset read request queue is full.");
@@ -427,7 +426,7 @@ void AssetReadQueue::AddRequest(AssetReadHandle& assetReadHandle, const AssetRea
             {
                 //Starting a read
                 this->dataChunkReaderFileInput.SetHandle(&fileHandle);
-                
+
                 DataHeader dataHeader;
                 this->dataChunkReaders[internalAssetReadRequest.streamingFileFormat]->ReadReaderHeader(dataHeader, error);
                 if (error)
@@ -496,7 +495,7 @@ void AssetReadQueue::AddRequest(AssetReadHandle& assetReadHandle, const AssetRea
     assetReadHandle.sequenceID = this->sequenceID;
 
     internalAssetReadRequest.Start(assetReadRequest, assetReadHandle);
-    
+
     //Advance
     this->sequenceID++;
 }

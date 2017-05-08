@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
@@ -25,7 +25,7 @@
 #include <ostream>
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -71,10 +71,10 @@ namespace Finjin { namespace Engine {
                         CommitReadGameControllerValues(gameControllerValues);
 
                         line->GetSectionName(sectionName);
-                            
+
                         break;
                     }
-                    case ConfigDocumentLine::Type::KEY_AND_VALUE: 
+                    case ConfigDocumentLine::Type::KEY_AND_VALUE:
                     {
                         line->GetKey(key);
                         line->GetValue(value);
@@ -154,7 +154,7 @@ namespace Finjin { namespace Engine {
             ConfigDocumentWriter writer;
             writer.Create(out);
 
-            WriteSettings(writer);
+            //WriteSettings(writer);
             WriteBindings(writer);
         }
 
@@ -293,7 +293,7 @@ namespace Finjin { namespace Engine {
             {
                 auto deviceClass = InputDeviceComponentUtilities::GetDeviceClass(inputSource.deviceComponent); //inputSource.deviceComponent has been set at this point, so this is safe
                 auto deviceClassCount = this->inputContext->GetDeviceCount(deviceClass);
-                
+
                 if (!bindingValues.instanceDescriptor.empty())
                 {
                     //Try to find the matching instance descriptor
@@ -318,9 +318,9 @@ namespace Finjin { namespace Engine {
                             return DeviceIndexReadResult::FOUND_PRODUCT_DESCRIPTOR;
                         }
                     }
-                }                
+                }
             }
-            
+
             if (!bindingValues.deviceIndex.empty())
             {
                 inputSource.deviceIndex = Convert::ToInteger(bindingValues.deviceIndex.ToString(), inputSource.deviceIndex);
@@ -343,7 +343,7 @@ namespace Finjin { namespace Engine {
                     inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
                     break;
                 }
-                
+
                 case InputDeviceComponent::KEYBOARD_KEY:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
@@ -352,7 +352,7 @@ namespace Finjin { namespace Engine {
                     inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
                     break;
                 }
-                
+
                 case InputDeviceComponent::MOUSE_BUTTON:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
@@ -395,7 +395,7 @@ namespace Finjin { namespace Engine {
                     inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
                     inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
                     inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
-                    inputSource.povDirection = PovDirectionUtilities::Parse(bindingValues.direction.ToString());                    
+                    inputSource.povDirection = PovDirectionUtilities::Parse(bindingValues.direction.ToString());
                     break;
                 }
                 case InputDeviceComponent::GAME_CONTROLLER_LOCATOR:
@@ -457,7 +457,7 @@ namespace Finjin { namespace Engine {
                 {
                     break;
                 }
-                
+
                 default: break;
             }
 
@@ -484,9 +484,9 @@ namespace Finjin { namespace Engine {
             return triggerCriteria;
         }
 
-        void WriteSettings(ConfigDocumentWriter& writer)
+        /*void WriteSettings(ConfigDocumentWriter& writer)
         {
-            /*//Determine which settings have changed from their defaults
+            //Determine which settings have changed from their defaults
             auto modifiedMouseSensitivity = this->inputBindings.ModifiedMouseSensitivity();
             auto modifiedGameControllerAxisDeadZones = this->inputBindings.ModifiedGameControllerAxisDeadZones();
             auto modifiedGameControllerAxisSensitivities = this->inputBindings.ModifiedGameControllerAxisSensitivities();
@@ -542,8 +542,8 @@ namespace Finjin { namespace Engine {
                     writer.WriteScopeEnd();
                     writer.WriteNewline();
                 }
-            }*/
-        }
+            }
+        }*/
 
         void WriteBindings(ConfigDocumentWriter& writer)
         {
@@ -589,9 +589,9 @@ namespace Finjin { namespace Engine {
 
                     //Done
                     return;
-                }                
+                }
             }
-            
+
             writer.WriteKeyAndValue("device-index", Convert::ToString(inputSource.deviceIndex));
         }
 
@@ -603,91 +603,91 @@ namespace Finjin { namespace Engine {
                 case InputDeviceComponent::KEYBOARD_KEY:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
-                    if (inputSource.semantic != InputComponentSemantic::NONE)                    
+
+                    if (inputSource.semantic != InputComponentSemantic::NONE)
                         WriteSemantic(writer, inputSource.semantic);
                     else if (inputSource.code != InputSource::NO_COMPONENT_CODE)
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
-                        writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));                    
-                    
+                        writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
+
                     break;
                 }
 
                 case InputDeviceComponent::MOUSE_BUTTON:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     if (inputSource.semantic != InputComponentSemantic::NONE)
                         WriteSemantic(writer, inputSource.semantic);
                     else if (inputSource.code != InputSource::NO_COMPONENT_CODE)
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
-                        writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));                                        
-                    
+                        writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
+
                     break;
                 }
                 case InputDeviceComponent::MOUSE_RELATIVE_AXIS:
                 case InputDeviceComponent::MOUSE_ABSOLUTE_AXIS:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     if (inputSource.semantic != InputComponentSemantic::NONE)
                         WriteSemantic(writer, inputSource.semantic);
                     else if (inputSource.code != InputSource::NO_COMPONENT_CODE)
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
                         writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
-                    
+
                     if (inputSource.direction != 0)
-                        writer.WriteKeyAndValue("direction", Convert::ToString(inputSource.direction));                    
-                    
+                        writer.WriteKeyAndValue("direction", Convert::ToString(inputSource.direction));
+
                     break;
                 }
 
                 case InputDeviceComponent::GAME_CONTROLLER_BUTTON:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     if (inputSource.semantic != InputComponentSemantic::NONE)
                         WriteSemantic(writer, inputSource.semantic);
                     else if (inputSource.code != InputSource::NO_COMPONENT_CODE)
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
-                        writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));                                        
-                    
+                        writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
+
                     break;
                 }
                 case InputDeviceComponent::GAME_CONTROLLER_AXIS:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     if (inputSource.semantic != InputComponentSemantic::NONE)
                         WriteSemantic(writer, inputSource.semantic);
                     else if (inputSource.code != InputSource::NO_COMPONENT_CODE)
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
                         writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
-                    
+
                     if (inputSource.direction != 0)
-                        writer.WriteKeyAndValue("direction", Convert::ToString(inputSource.direction));                    
-                    
+                        writer.WriteKeyAndValue("direction", Convert::ToString(inputSource.direction));
+
                     break;
                 }
                 case InputDeviceComponent::GAME_CONTROLLER_POV:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     if (inputSource.semantic != InputComponentSemantic::NONE)
                         WriteSemantic(writer, inputSource.semantic);
                     else if (inputSource.code != InputSource::NO_COMPONENT_CODE)
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
                         writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
-                    
+
                     if (inputSource.direction != 0)
-                        writer.WriteKeyAndValue("direction", PovDirectionUtilities::ToString(inputSource.povDirection));                    
-                    
+                        writer.WriteKeyAndValue("direction", PovDirectionUtilities::ToString(inputSource.povDirection));
+
                     break;
                 }
                 case InputDeviceComponent::GAME_CONTROLLER_LOCATOR:
@@ -700,19 +700,19 @@ namespace Finjin { namespace Engine {
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
                         writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
-                    
+
                     break;
                 }
-                
+
                 case InputDeviceComponent::TOUCH_COUNT:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     WriteSemantic(writer, inputSource.semantic);
 
                     if (inputSource.touchCount != 0)
-                        writer.WriteKeyAndValue("touch-count", Convert::ToString(inputSource.touchCount));                    
-                    
+                        writer.WriteKeyAndValue("touch-count", Convert::ToString(inputSource.touchCount));
+
                     break;
                 }
                 case InputDeviceComponent::TOUCH_RELATIVE_AXIS:
@@ -729,41 +729,41 @@ namespace Finjin { namespace Engine {
 
                     if (inputSource.direction != 0)
                         writer.WriteKeyAndValue("direction", Convert::ToString(inputSource.direction));
-                    
+
                     break;
                 }
 
                 case InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     WriteSemantic(writer, inputSource.semantic);
 
                     if (inputSource.direction != 0)
                         writer.WriteKeyAndValue("direction", Convert::ToString(inputSource.direction));
 
                     if (inputSource.touchCount != 0)
-                        writer.WriteKeyAndValue("touch-count", Convert::ToString(inputSource.touchCount));                    
-                    
+                        writer.WriteKeyAndValue("touch-count", Convert::ToString(inputSource.touchCount));
+
                     break;
                 }
                 case InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS:
                 {
                     WriteDeviceIndex(writer, inputSource);
-                    
+
                     if (inputSource.semantic != InputComponentSemantic::NONE)
                         WriteSemantic(writer, inputSource.semantic);
                     else if (inputSource.code != InputSource::NO_COMPONENT_CODE)
                         writer.WriteKeyAndValue("code", Convert::ToString(inputSource.code));
                     else if (inputSource.index != (size_t)-1)
                         writer.WriteKeyAndValue("index", Convert::ToString(inputSource.index));
-                    
+
                     if (inputSource.direction != 0)
                         writer.WriteKeyAndValue("direction", Convert::ToString(inputSource.direction));
-                    
+
                     if (inputSource.touchCount != 0)
                         writer.WriteKeyAndValue("touch-count", Convert::ToString(inputSource.touchCount));
-                    
+
                     break;
                 }
 
@@ -775,7 +775,7 @@ namespace Finjin { namespace Engine {
                 {
                     break;
                 }
-                
+
                 case InputDeviceComponent::HEADSET_LOCATOR:
                 {
                     WriteDeviceIndex(writer, inputSource);
@@ -789,7 +789,7 @@ namespace Finjin { namespace Engine {
 
                     break;
                 }
-                
+
                 default: break;
             }
         }

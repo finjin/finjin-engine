@@ -14,22 +14,22 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/AllocatedVector.hpp"
 #include "finjin/common/ByteBuffer.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/Asset.hpp"
 #include "finjin/engine/AssetReference.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class FINJIN_ASSET_CLASS(StringTable) : public AllocatedClass
+    FINJIN_ASSET_CLASS class StringTable : public AllocatedClass
     {
     public:
         enum { MAX_INSTANCES = 2 };
@@ -83,9 +83,9 @@ namespace Finjin { namespace Engine {
         struct Instance
         {
             ByteBuffer buffer;
-            AllocatedVector<Pair> items;
+            DynamicVector<Pair> items;
         };
-        
+
         StaticVector<Instance, MAX_INSTANCES> instances;
     };
 

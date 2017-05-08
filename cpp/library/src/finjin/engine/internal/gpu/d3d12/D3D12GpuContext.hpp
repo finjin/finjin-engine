@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
@@ -23,15 +23,15 @@
 #include "D3D12GpuContextSettings.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class D3D12System;
     class D3D12GpuContextImpl;
     class D3D12FrameStage;
-        
+
     class D3D12GpuContext : public AllocatedClass
     {
     public:
@@ -40,25 +40,20 @@ namespace Finjin { namespace Engine {
 
         using Settings = D3D12GpuContextSettings;
         using JobPipelineStage = D3D12FrameStage;
-        
+
         void Create(const Settings& settings, Error& error);
         void Destroy();
 
-        const OperationStatus& GetInitializationStatus() const;
-        
         void GetSelectorComponents(AssetPathSelector& result);
 
         const Settings& GetSettings() const;
 
-        size_t GetExternalAssetFileExtensions(StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS>& extensions, AssetClass assetClass, Error& error);        
+        size_t GetExternalAssetFileExtensions(StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS>& extensions, AssetClass assetClass, Error& error);
         AssetCreationCapability GetAssetCreationCapabilities(AssetClass assetClass) const;
 
         bool ToggleFullScreenExclusive(Error& error);
         bool StartResizeTargets(bool minimized, Error& error);
         void FinishResizeTargets(Error& error);
-        
-        void CreateScreenSizeDependentResources(Error& error);
-        void DestroyScreenSizeDependentResources();
 
         void CreateMeshFromMainThread(FinjinMesh& mesh, Error& error);
         void CreateTextureFromMainThread(FinjinTexture& texture, Error& error);
@@ -67,14 +62,16 @@ namespace Finjin { namespace Engine {
 
         JobPipelineStage& GetFrameStage(size_t index);
 
-        JobPipelineStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime, size_t* frameSequenceIndex = nullptr);
+        JobPipelineStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
         void StartBackFrameBufferRender(JobPipelineStage& frameStage);
         void Execute(JobPipelineStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
         void FinishFrameStage(JobPipelineStage& frameStage);
-        void FinishBackFrameBufferRender(JobPipelineStage& frameStage, bool continueRendering, size_t presentSyncIntervalOverride, Error& error);
+        void FinishBackFrameBufferRender(JobPipelineStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error);
+
+        void FlushGpu();
 
     private:
         std::unique_ptr<D3D12GpuContextImpl> impl;
     };
-    
+
 } }

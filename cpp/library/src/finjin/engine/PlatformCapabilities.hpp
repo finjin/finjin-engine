@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/LayoutDirection.hpp"
 #include "finjin/common/MemoryArchitecture.hpp"
@@ -24,7 +24,7 @@
 #include "finjin/engine/DisplayInfo.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -62,7 +62,7 @@ namespace Finjin { namespace Engine {
 
     public:
         size_t maxWindows; //The maximum number of application windows. On regular desktops (Win32, MacOS, Linux) this is unlimited, on mobile this is 1
-        
+
         ApplicationNameFormat directoryApplicationNameFormat; //Camel case by default. The most suitable application name to use when creating directories
 
         bool hasDelayedWindowSizeChangeNotification; //false by default. Indicates whether window size change notifications are delayed (either due to the platform itself or the implementation)
@@ -79,7 +79,7 @@ namespace Finjin { namespace Engine {
         bool isSoundCapable; //true by default. Indicates whether sound can be used
         LayoutDirection layoutDirection;
         MemoryArchitecture memoryArchitecture;
-                
+
         Utf8String lang;
         Utf8String country;
         Utf8String operatingSystemInternalName;
@@ -88,7 +88,7 @@ namespace Finjin { namespace Engine {
         Utf8String applicationPlatformInternalName; //Used in cases where the operating system may have multiple platforms. For example "uwp" or "win32" on Windows
         Utf8String deviceManufacturer;
         Utf8String deviceModel;
-    
+
     private:
         static PlatformCapabilities* instance;
 

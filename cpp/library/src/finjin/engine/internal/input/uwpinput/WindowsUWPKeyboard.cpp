@@ -19,9 +19,9 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 WindowsUWPKeyboard::WindowsUWPKeyboard()
-{    
+{
 }
 
 void WindowsUWPKeyboard::Reset()
@@ -67,7 +67,7 @@ bool WindowsUWPKeyboard::Create(size_t index)
             }
 
             keyName = virtualKey.ToString()->Data();
-        }        
+        }
         catch (...)
         {
             keyName.clear();
@@ -78,6 +78,7 @@ bool WindowsUWPKeyboard::Create(size_t index)
             .SetCode(i)
             .SetDisplayName(keyName)
             .SetSemantic(inputSemantic)
+            .SetProcessing(InputButtonProcessing::EVENT_DRIVEN)
             .Enable(!keyName.empty());
     }
 

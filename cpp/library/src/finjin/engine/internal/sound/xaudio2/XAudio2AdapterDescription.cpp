@@ -15,13 +15,12 @@
 #include "FinjinPrecompiled.hpp"
 #include "XAudio2AdapterDescription.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 void XAudio2AdapterDescriptions::SortBestToWorst()
-{    
+{
     //Do nothing. Assume the descriptions are already in the best order
 }
 
@@ -30,8 +29,8 @@ const XAudio2AdapterDescription* XAudio2AdapterDescriptions::GetByAdapterID(cons
     for (const auto& item : *this)
     {
         if (item.adapterID == adapterID)
-            return &item;        
+            return &item;
     }
-    
+
     return nullptr;
 }

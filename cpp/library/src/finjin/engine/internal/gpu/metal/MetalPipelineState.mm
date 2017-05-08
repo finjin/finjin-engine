@@ -1,0 +1,276 @@
+//Copyright (c) 2017 Finjin
+//
+//This file is part of Finjin Engine (finjin-engine).
+//
+//Finjin Engine is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+//This Source Code Form is subject to the terms of the Mozilla Public
+//License, v. 2.0. If a copy of the MPL was not distributed with this
+//file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+//Includes----------------------------------------------------------------------
+#include "FinjinPrecompiled.hpp"
+
+#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_METAL
+
+#include "MetalPipelineState.hpp"
+#include "MetalUtilities.hpp"
+
+using namespace Finjin::Engine;
+
+
+//Implementation----------------------------------------------------------------
+MetalPipelineStateDescriptor::MetalPipelineStateDescriptor(Allocator* allocator) :
+    typeName(allocator),
+    inputFormatType(allocator)
+{
+    for (auto& functionName : this->shaderFunctionNames)
+        functionName.Create(allocator);
+}
+
+void MetalPipelineStateDescriptor::Create
+    (
+    AssetReference& shaderFileRef,
+    DynamicVector<MetalPipelineStateDescriptor>& pipelineStates,
+    Allocator* allocator,
+    const ByteBuffer& readBuffer,
+    SimpleUri& tempUri,
+    Error& error
+    )
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    ConfigDocumentReader reader;
+    reader.Start(readBuffer);
+
+    Create(shaderFileRef, pipelineStates, allocator, reader, tempUri, error);
+    if (error)
+        FINJIN_SET_ERROR_NO_MESSAGE(error);
+}
+
+void MetalPipelineStateDescriptor::Create
+    (
+    AssetReference& shaderFileRef,
+    DynamicVector<MetalPipelineStateDescriptor>& pipelineStates,
+    Allocator* allocator,
+    ConfigDocumentReader& reader,
+    SimpleUri& tempUri,
+    Error& error
+    )
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    static Utf8String configSectionName("pipeline-states");
+
+    if (reader.Current() == nullptr)
+    {
+        FINJIN_SET_ERROR(error, "The specified reader ended unexpectedly.");
+        return;
+    }
+
+    auto startLine = *reader.Current();
+
+    auto searchDone = false;
+    Utf8StringView sectionName;
+    for (auto line = reader.Current(); line != nullptr && !searchDone; line = reader.Next())
+    {
+        switch (line->GetType())
+        {
+            case ConfigDocumentLine::Type::SECTION:
+            {
+                line->GetSectionName(sectionName);
+
+                if (sectionName != configSectionName)
+                    searchDone = true;
+
+                break;
+            }
+            case ConfigDocumentLine::Type::SCOPE_START:
+            {
+                searchDone = true;
+                break;
+            }
+            default: break;
+        }
+    }
+
+    if (sectionName == configSectionName)
+    {
+        sectionName.clear();
+
+        size_t pipelineStateCount = 0;
+
+        for (auto line = reader.Current(); line != nullptr; line = reader.Next())
+        {
+            switch (line->GetType())
+            {
+                case ConfigDocumentLine::Type::KEY_AND_VALUE:
+                {
+                    Utf8StringView key, value;
+                    line->GetKeyAndValue(key, value);
+
+                    if (key == "shader-file-ref")
+                    {
+                        shaderFileRef.ForUriString(value, tempUri, error);
+                        if (error)
+                        {
+                            FINJIN_SET_ERROR(error, "Failed to parse shader file reference string.");
+                            return;
+                        }
+                    }
+                    else if (key == "count")
+                    {
+                        auto pipelineStateCount = Convert::ToInteger(value.ToString(), (size_t)0);
+                        if (pipelineStateCount > 0)
+                        {
+                            if (!pipelineStates.Create(pipelineStateCount, allocator, allocator))
+                            {
+                                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate '%1%' pipeline states.", pipelineStateCount));
+                                return;
+                            }
+
+                            pipelineStateCount = 0;
+                        }
+                    }
+
+                    break;
+                }
+                case ConfigDocumentLine::Type::SECTION:
+                {
+                    auto& pipelineState = pipelineStates[pipelineStateCount++];
+
+                    CreateFromScope(pipelineState, allocator, reader, tempUri, pipelineStates.data(), pipelineStateCount - 1, error);
+                    if (error)
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to read buffer pipeline state.");
+                        return;
+                    }
+
+                    break;
+                }
+                default: break;
+            }
+        }
+    }
+
+    reader.Restart(startLine);
+}
+
+void MetalPipelineStateDescriptor::CreateFromScope
+    (
+    MetalPipelineStateDescriptor& pipelineState,
+    Allocator* allocator,
+    ConfigDocumentReader& reader,
+    SimpleUri& tempUri,
+    MetalPipelineStateDescriptor* otherPipelineStates,
+    size_t otherPipelineStateCount,
+    Error& error
+    )
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    int depth = 0;
+    auto descriptionDone = false;
+
+    for (auto line = reader.Next(); line != nullptr && !descriptionDone; )
+    {
+        switch (line->GetType())
+        {
+            case ConfigDocumentLine::Type::KEY_AND_VALUE:
+            {
+                Utf8StringView key, value;
+                line->GetKeyAndValue(key, value);
+
+                if (key == "type")
+                {
+                    if (pipelineState.typeName.assign(value.begin(), value.size()).HasError())
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to assign pipeline state type.");
+                        return;
+                    }
+                }
+                else if (key == "input-format")
+                {
+                    if (pipelineState.inputFormatType.assign(value.begin(), value.size()).HasError())
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to assign input format type.");
+                        return;
+                    }
+                }
+                else if (key == "vertex-function")
+                {
+                    if (pipelineState.shaderFunctionNames[MetalShaderType::VERTEX].assign(value).HasError())
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to assign vertex shader reference.");
+                        return;
+                    }
+                }
+                if (key.StartsWith("fragment-function"))
+                {
+                    if (pipelineState.shaderFunctionNames[MetalShaderType::FRAGMENT].assign(value).HasError())
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to assign fragment shader reference.");
+                        return;
+                    }
+                }
+                else if (key == "primitive-topology")
+                {
+                #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
+                    if (value == "tr" || value == "triangle")
+                        pipelineState.graphicsState.primitiveTopology = MTLPrimitiveTopologyClassTriangle;
+                    else if (value == "li" || value == "line")
+                        pipelineState.graphicsState.primitiveTopology = MTLPrimitiveTopologyClassLine;
+                    else if (value == "po" || value == "point")
+                        pipelineState.graphicsState.primitiveTopology = MTLPrimitiveTopologyClassPoint;
+                    else
+                    {
+                        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid primitive topology '%1%'.", value));
+                        return;
+                    }
+                #endif
+                }
+                else if (key == "feature-flags")
+                {
+                    pipelineState.graphicsState.shaderFeatures.ParseAndAddFlags(value, error);
+                    if (error)
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to parse feature flags.");
+                        return;
+                    }
+                }
+                else if (key == "lights")
+                {
+                    pipelineState.graphicsState.shaderFeatures.ParseAndAddLightTypes(value, error);
+                    if (error)
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to parse light types.");
+                        return;
+                    }
+                }
+
+                break;
+            }
+            case ConfigDocumentLine::Type::SCOPE_START:
+            {
+                depth++;
+                break;
+            }
+            case ConfigDocumentLine::Type::SCOPE_END:
+            {
+                depth--;
+                if (depth == 0)
+                    descriptionDone = true;
+                break;
+            }
+            default: break;
+        }
+
+        if (!descriptionDone)
+            line = reader.Next();
+    }
+}
+
+#endif

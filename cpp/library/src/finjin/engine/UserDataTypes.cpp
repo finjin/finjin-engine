@@ -19,21 +19,23 @@
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/AssetClassFileReader.hpp"
 
+using namespace Finjin::Engine;
+
+
+//Macros------------------------------------------------------------------------
 #define SORT_ENUMS_AND_PROPERTIES 0 //Enabling this is helpful for debugging in some scenarios but isn't really necessary in general
 
 #define FINJIN_USER_DATA_TYPE_ITEM_INVALID_ORDER std::numeric_limits<int>::max()
 
-using namespace Finjin::Engine;
 
-
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static bool IsValidNameChar(char c)
 {
-    return isalpha(c) || isdigit(c) || c == '_' || c == '-';
+    return c != '\n' && c != '\t';// isalpha(c) || isdigit(c) || c == '_' || c == '-';
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //UserDataEnum::Item
 UserDataEnum::Item::Item(Allocator* allocator) : name(allocator), value(allocator)
@@ -60,7 +62,12 @@ bool UserDataEnum::Item::operator == (const Item& item) const
 }
 
 //UserDataClass::Item
-UserDataClass::Item::Item(Allocator* allocator) : groupName(allocator), name(allocator), displayName(allocator), typeName(allocator), defaultValue(allocator)
+UserDataClass::Item::Item(Allocator* allocator) :
+    groupName(allocator),
+    name(allocator),
+    displayName(allocator),
+    typeName(allocator),
+    defaultValue(allocator)
 {
     this->order = FINJIN_USER_DATA_TYPE_ITEM_INVALID_ORDER;
     this->controlType = UserDataControlType::NONE;
@@ -93,10 +100,10 @@ bool UserDataClass::Item::operator == (const Item& item) const
 }
 
 //UserDataTypes
-UserDataTypes::UserDataTypes(Allocator* allocator, bool useListForStorage) : 
-    Super(allocator), 
+UserDataTypes::UserDataTypes(Allocator* allocator, bool useListForStorage) :
+    Super(allocator),
     name(allocator),
-    enums(useListForStorage), 
+    enums(useListForStorage),
     classes(useListForStorage)
 {
 }

@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Distance.hpp"
 #include "finjin/common/Math.hpp"
@@ -26,7 +26,7 @@
 #include "finjin/engine/PointerType.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -105,28 +105,28 @@ namespace Finjin { namespace Engine {
     enum class InputDeviceComponent
     {
         NONE = 0,
-        
+
         KEYBOARD_KEY,
-        
+
         MOUSE_BUTTON,
         MOUSE_RELATIVE_AXIS,
         MOUSE_ABSOLUTE_AXIS,
-        
+
         GAME_CONTROLLER_BUTTON,
         GAME_CONTROLLER_AXIS,
         GAME_CONTROLLER_POV,
         GAME_CONTROLLER_LOCATOR,
-        
+
         TOUCH_COUNT,
         TOUCH_RELATIVE_AXIS,
         TOUCH_ABSOLUTE_AXIS,
-        
+
         MULTITOUCH_RELATIVE_RADIUS,
         MULTITOUCH_RELATIVE_AXIS,
-        
+
         ACCELEROMETER_RELATIVE_AXIS,
         ACCELEROMETER_ABSOLUTE_AXIS,
-        
+
         HEADSET_LOCATOR
     };
 
@@ -190,7 +190,7 @@ namespace Finjin { namespace Engine {
         TOGGLE_UP_DOWN = TOGGLE_UP | TOGGLE_DOWN,
         TOGGLE_LEFT_RIGHT = TOGGLE_LEFT | TOGGLE_RIGHT,
         TOGGLE_ALL = TOGGLE_UP | TOGGLE_DOWN | TOGGLE_LEFT | TOGGLE_RIGHT, //D-pad on Xbox controller
-        
+
         STEER_UP = 1 << 15, //Left stick up on Xbox controller
         MOVE_UP = 1 << 15, //Left stick up on Xbox controller
         STEER_DOWN = 1 << 16, //Left stick down on Xbox controller
@@ -230,7 +230,7 @@ namespace Finjin { namespace Engine {
         LOCATOR = 1 << 28 //Default sensor for detecting device orientation and position
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputComponentSemantic)
-        
+
     struct InputComponentSemanticUtilities
     {
         static Utf8String ToString(InputComponentSemantic semantic);
@@ -265,11 +265,12 @@ namespace Finjin { namespace Engine {
         ROUND_UPDATE_TO_ONE = 1 << 5
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputAxisProcessing)
-    
+
     enum class InputButtonProcessing : uint32_t
     {
         NONE = 0,
-        REST_ON_CLEAR_CHANGES = 1 << 0
+        REST_ON_CLEAR_CHANGES = 1 << 0,
+        EVENT_DRIVEN = 1 << 1
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputButtonProcessing)
 
@@ -279,7 +280,7 @@ namespace Finjin { namespace Engine {
         InputAxis();
 
         void Reset(bool isConstructing = false);
-        
+
         void Update(float value, bool isFirstUpdate = false);
 
         bool Changed() const;
@@ -303,7 +304,7 @@ namespace Finjin { namespace Engine {
         InputAxis& SetMaxValue(float value);
 
         InputAxis& SetMinMax(float minValue, float maxValue);
-        
+
         float GetDeadZone() const;
         InputAxis& SetDeadZone(float value);
 
@@ -349,14 +350,14 @@ namespace Finjin { namespace Engine {
         Setting<float> value;
         bool changed;
     };
-    
+
     class InputButton
     {
     public:
         InputButton();
 
         void Reset(bool isConstructing = false);
-        
+
         void Update(bool pressedDown, bool isFirstUpdate = false);
 
         bool Changed() const;
@@ -382,7 +383,7 @@ namespace Finjin { namespace Engine {
 
         InputButtonProcessing GetProcessing() const;
         InputButton& SetProcessing(InputButtonProcessing value);
-        
+
         bool IsEnabled() const;
         InputButton& Enable(bool value);
 
@@ -405,7 +406,7 @@ namespace Finjin { namespace Engine {
         InputPov();
 
         void Reset(bool isConstructing = false);
-        
+
         void Update(long pov, bool isFirstUpdate = false);
 
         bool Changed() const;
@@ -479,9 +480,9 @@ namespace Finjin { namespace Engine {
         InputComponentSemantic semantic;
 
         bool isEnabled;
-        
+
     public:
-        MathMatrix33 orientationMatrix;
+        MathMatrix3 orientationMatrix;
         Distance<MathVector3> position;
         Distance<MathVector3> velocity;
     };
@@ -501,7 +502,7 @@ namespace Finjin { namespace Engine {
             Pointer();
 
             void Reset(bool isConstructing = false);
-            
+
             void Update(bool down, float x, float y);
 
             const InputButton& GetContact() const;
@@ -513,7 +514,7 @@ namespace Finjin { namespace Engine {
 
             size_t GetAxisCount() const;
             InputAxis* GetAxis(size_t index);
-            
+
             bool Changed() const;
             void ClearChanged();
 
@@ -527,13 +528,13 @@ namespace Finjin { namespace Engine {
             PointerType pointerType;
 
             bool isEnabled;
-            
+
             InputButton contact;
-            std::array<InputAxis, 2> axes;            
+            std::array<InputAxis, 2> axes;
         };
 
         Pointer* ConnectPointer(PointerType pointerType, int pointerID);
-        
+
         Pointer* GetPointer(PointerType pointerType, int pointerID);
 
         size_t GetPointerCount() const;
@@ -545,7 +546,7 @@ namespace Finjin { namespace Engine {
 
         size_t GetMultitouchAxisCount() const;
         InputAxis* GetMultitouchAxis(size_t index);
-        
+
         bool TouchCountChanged() const;
         bool PointersChanged() const;
         bool Changed() const;
@@ -565,12 +566,12 @@ namespace Finjin { namespace Engine {
     private:
         size_t index;
         Utf8String displayName;
-        
+
         bool isConnected;
-        
+
         Setting<size_t> previousTouchCount;
         size_t touchCount;
-        
+
         std::array<Pointer, InputPointerConstants::MAX_INPUT_POINTERS> allPointers;
         StaticVector<Pointer*, InputPointerConstants::MAX_INPUT_POINTERS> pointers;
 
@@ -586,7 +587,7 @@ namespace Finjin { namespace Engine {
             InputButton contact;
 
             InputAxis centerAxes[2];
-            
+
             InputAxis radius;
 
             size_t previousDraggingPointerCount;
@@ -671,20 +672,20 @@ namespace Finjin { namespace Engine {
             this->connectionChanged = false;
 
             for (auto& component : this->buttons)
-                component.ClearChanged();            
+                component.ClearChanged();
 
             for (auto& component : this->axes)
                 component.ClearChanged();
-            
+
             for (auto& component : this->povs)
-                component.ClearChanged();            
+                component.ClearChanged();
         }
 
         bool isConnected; //Connection state
         bool connectionChanged; //Indicates whether the connection state changed
 
         StaticVector<Button, maxButtonCount> buttons;
-        StaticVector<Axis, maxAxisCount> axes;        
+        StaticVector<Axis, maxAxisCount> axes;
         StaticVector<Pov, maxPovCount> povs;
     };
 
@@ -721,7 +722,7 @@ namespace Finjin { namespace Engine {
         float decayRate; //Decay per unit of time
         SimpleTimeDelta duration; //Length of time for the effect
     };
-    
+
     class InputGenericGameController
     {
     public:
@@ -782,10 +783,10 @@ namespace Finjin { namespace Engine {
         virtual InputLocator* GetLocator(size_t index) = 0;
     };
 
-} } 
+} }
 
 
-//Functions--------------------------------------------------------------------
+//Functions---------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     template <typename Device>
@@ -820,7 +821,7 @@ namespace Finjin { namespace Engine {
         }
 
         auto count = device->GetAxisCount();
-        for (size_t i = 0; i < count; i++)    
+        for (size_t i = 0; i < count; i++)
         {
             auto component = device->GetAxis(i);
             if (component->GetCode() == code)

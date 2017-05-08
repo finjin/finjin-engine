@@ -14,18 +14,18 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/common/Setting.hpp"
 #include "D3D12Includes.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     struct D3D12RenderTarget
     {
         D3D12RenderTarget();
@@ -36,8 +36,8 @@ namespace Finjin { namespace Engine {
 
         bool HasDepthStencil() const;
 
-        StaticVector<Microsoft::WRL::ComPtr<ID3D12Resource>, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> renderTargetOutputResources;        
-        
+        StaticVector<Microsoft::WRL::ComPtr<ID3D12Resource>, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> renderTargetOutputResources;
+
         Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource;
 
         size_t renderTargetResourceHeapIndex;
@@ -48,5 +48,5 @@ namespace Finjin { namespace Engine {
 
         Setting<MathVector4> clearColor;
     };
-    
+
 } }

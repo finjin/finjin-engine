@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Angle.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/engine/CameraState.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -33,7 +33,7 @@ namespace Finjin { namespace Engine {
 
         const MathVector3& GetPosition() const;
         void SetPosition(float x, float y, float z);
-        
+
         const MathVector3& GetRight() const;
         const MathVector3& GetUp() const;
         const MathVector3& GetLook() const;
@@ -44,15 +44,15 @@ namespace Finjin { namespace Engine {
 
         float GetNearZ() const;
         void SetNearZ(float value);
-        
+
         float GetFarZ() const;
         void SetFarZ(float value);
-        
+
         float GetAspect() const;
         void SetAspect(float value);
-        
+
         Angle GetFovX() const;
-        
+
         Angle GetFovY() const;
         void SetFovY(Angle angle);
 
@@ -65,8 +65,8 @@ namespace Finjin { namespace Engine {
 
         void LookAt(const MathVector3& pos, const MathVector3& target, const MathVector3& up);
 
-        const MathMatrix44& GetViewMatrix() const;
-        const MathMatrix44& GetProjectionMatrix() const;
+        const MathMatrix4& GetViewMatrix() const;
+        const MathMatrix4& GetProjectionMatrix() const;
 
         void Strafe(float d);
         void Pan(float dx, float dy);
@@ -95,8 +95,8 @@ namespace Finjin { namespace Engine {
 
         bool isViewDirty;
 
-        MathMatrix44 viewMatrix;
-        MathMatrix44 projectionMatrix;
+        MathMatrix4 viewMatrix;
+        MathMatrix4 projectionMatrix;
     };
 
 } }

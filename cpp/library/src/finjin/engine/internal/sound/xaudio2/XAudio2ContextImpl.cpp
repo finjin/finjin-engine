@@ -20,7 +20,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //XAudio2ContextImpl::SoundSourceLookup
 bool XAudio2ContextImpl::SoundSourceLookup::Virtualize(XAudio2SoundSource* source)
@@ -33,7 +33,7 @@ bool XAudio2ContextImpl::SoundSourceLookup::Virtualize(XAudio2SoundSource* sourc
 
         //Remove from used list
         this->sourceVoices.Unuse(sourceVoice);
-        
+
         return true;
     }
 
@@ -209,15 +209,14 @@ XAudio2SoundBuffer* XAudio2ContextImpl::CreateBuffer(const ByteBuffer& bytes, Er
             return nullptr;
         }
     }
-    else if (wrappedReadHeaderResult == WrappedFileReader::ReadHeaderResult::INVALID_MAGIC_VALUE)
+    else if (wrappedReadHeaderResult == WrappedFileReader::ReadHeaderResult::INVALID_SIGNATURE_VALUE)
     {
         //Not a wrapped file
-        reader.ResetOffset();
     }
 
-    //Try to read the bytes as a WAV file    
+    //Try to read the bytes as a WAV file
     WAVReader wavReader;
-    auto wavData = wavReader.DecompressFileImage(reader, item->GetDecompressedByteBuffer(), error);
+    auto wavData = wavReader.Read(reader, item->GetDecompressedByteBuffer(), error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to decode sound buffer file bytes.");

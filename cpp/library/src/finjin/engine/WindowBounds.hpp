@@ -14,33 +14,36 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/EnumBitwise.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
+
+    using namespace Finjin::Common;
+
+    enum class WindowBoundsFlags
+    {
+        NONE = 0,
+        BORDER = 1 << 0,
+        MAXIMIZED = 1 << 1,
+        LOCKED = 1 << 2
+    };
+    FINJIN_ENUM_BITWISE_OPERATIONS(WindowBoundsFlags)
 
     struct WindowBounds
     {
-        OSWindowCoordinate x;
-        OSWindowCoordinate y;
-        OSWindowDimension width;
-        OSWindowDimension height;
-        OSWindowDimension clientWidth;
-        OSWindowDimension clientHeight;
-        enum
-        {
-            BORDER = 1 << 0,
-            MAXIMIZED = 1 << 1,
-            LOCKED = 1 << 2
-        };
-        int flags;
+        OSWindowCoordinate x, y;
+        OSWindowDimension width, height;
+        OSWindowDimension clientWidth, clientHeight;
+        WindowBoundsFlags flags;
 
         WindowBounds();
         WindowBounds(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height, OSWindowDimension clientWidth = 0, OSWindowDimension clientHeight = 0);
 
-        void Set(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height, int flags);
+        void Set(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height, WindowBoundsFlags flags);
 
         bool IsEmpty() const;
 
@@ -50,6 +53,8 @@ namespace Finjin { namespace Engine {
 
         OSWindowDimension GetClientWidth() const;
         OSWindowDimension GetClientHeight() const;
+
+        void LimitClientSize(OSWindowDimension maxWidth, OSWindowDimension maxHeight);
 
         void AdjustSize(OSWindowDimension newWidth, OSWindowDimension newHeight);
 

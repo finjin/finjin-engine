@@ -14,12 +14,12 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "D3D12Includes.hpp"
 #include "D3D12RefreshRate.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     class D3D12DisplayMode
@@ -27,9 +27,8 @@ namespace Finjin { namespace Engine {
     public:
         D3D12DisplayMode();
         D3D12DisplayMode(size_t w, size_t h, DXGI_FORMAT f, D3D12RefreshRate r);
-        D3D12DisplayMode(float w, float h, DXGI_FORMAT f, D3D12RefreshRate r);
         D3D12DisplayMode(const DXGI_MODE_DESC& dxgiDesc);
-    
+
         bool IsEquivalent(const D3D12DisplayMode& other) const;
 
     public:

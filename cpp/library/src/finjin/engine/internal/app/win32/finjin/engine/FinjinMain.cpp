@@ -17,11 +17,10 @@
 #include "finjin/engine/Application.hpp"
 #include <shellapi.h>
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Library references-----------------------------------------------------------
+//Library references------------------------------------------------------------
 #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
     #pragma comment(lib, "d3d12")
     #pragma comment(lib, "dxgi")
@@ -37,7 +36,7 @@ using namespace Finjin::Engine;
 #endif
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static void GetCommandLineArgs(CommandLineArgsProcessor& argsProcessor, LPSTR lpCmdLine)
 {
     if (lpCmdLine != nullptr && lpCmdLine[0] != 0)
@@ -59,7 +58,7 @@ static void GetCommandLineArgs(CommandLineArgsProcessor& argsProcessor, LPSTR lp
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 int FinjinMain(ApplicationDelegate* del, HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     auto app = AllocatedClass::NewUnique<Application>(del->GetAllocator(), FINJIN_CALLER_ARGUMENTS, del, hInstance);

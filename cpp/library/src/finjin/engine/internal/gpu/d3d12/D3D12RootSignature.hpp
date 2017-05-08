@@ -14,19 +14,19 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
-#include "finjin/common/AllocatedVector.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
+#include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Hash.hpp"
 #include "D3D12Includes.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
+
     using namespace Finjin::Common;
-    
+
     class D3D12RootSignatureDescriptor
     {
     public:
@@ -52,9 +52,9 @@ namespace Finjin { namespace Engine {
                 this->type = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
                 this->shaderRegister = 0;
                 this->registerSpace = 0;
-                this->descriptorCount = 0;                
+                this->descriptorCount = 0;
             }
-            
+
             size_t GetHash() const
             {
                 size_t values[] = { (size_t)this->type, this->id.GetHash(), this->shaderRegister, this->registerSpace, this->descriptorCount };
@@ -82,7 +82,7 @@ namespace Finjin { namespace Engine {
             Utf8String id;
             size_t shaderRegister;
             size_t registerSpace;
-            size_t descriptorCount;            
+            size_t descriptorCount;
         };
 
         template <typename T>
@@ -128,7 +128,7 @@ namespace Finjin { namespace Engine {
                     if (values.push_back(item.GetHash()).HasErrorOrValue(false))
                         break;
                 }
-                
+
                 assert(values.size() == c.size());
                 assert(!values.full());
                 values.push_back(c.size());
@@ -141,20 +141,20 @@ namespace Finjin { namespace Engine {
             size_t shaderRegister;
             size_t registerSpace;
             D3D12_SHADER_VISIBILITY visibility;
-            AllocatedVector<DescriptorTableRangeElement> descriptorTable;
+            DynamicVector<DescriptorTableRangeElement> descriptorTable;
         };
 
         static void Create
             (
-            AllocatedVector<D3D12RootSignatureDescriptor>& rootSignatures,
+            DynamicVector<D3D12RootSignatureDescriptor>& rootSignatures,
             Allocator* allocator,
             const ByteBuffer& readBuffer,
             Error& error
             );
-        
+
         static void Create
             (
-            AllocatedVector<D3D12RootSignatureDescriptor>& rootSignatures,
+            DynamicVector<D3D12RootSignatureDescriptor>& rootSignatures,
             Allocator* allocator,
             ConfigDocumentReader& reader,
             Error& error
@@ -170,7 +170,7 @@ namespace Finjin { namespace Engine {
 
     public:
         Utf8String typeName;
-        AllocatedVector<RootSignatureElement> elements;
-    };    
+        DynamicVector<RootSignatureElement> elements;
+    };
 
 } }

@@ -21,9 +21,9 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 OpenVRSystemSettings::OpenVRSystemSettings()
-{    
+{
 }
 
 #endif

@@ -28,7 +28,7 @@ using namespace Windows::UI::Core;
 using namespace Windows::UI::ViewManagement;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct PointerEventArgsUtility
 {
     PointerEventArgsUtility(float density, PointerEventArgs^ args)
@@ -73,7 +73,7 @@ private:
 
     void OnKeyDown(CoreWindow^ sender, KeyEventArgs^ args);
     void OnKeyUp(CoreWindow^ sender, KeyEventArgs^ args);
-    
+
     Windows::Foundation::EventRegistrationToken OnWindowSizeChangedToken;
     Windows::Foundation::EventRegistrationToken OnWindowClosedToken;
     Windows::Foundation::EventRegistrationToken OnActivatedToken;
@@ -86,11 +86,11 @@ private:
 
     Windows::Foundation::EventRegistrationToken OnKeyDownToken;
     Windows::Foundation::EventRegistrationToken OnKeyUpToken;
-    
+
     uintptr_t impl; //Pointer to OSWindow::Impl that owns this OSWindowHandlers
 
     bool sizeChanged; //Used for throttling the rate at which size change events are sent to OSWindow listener
-    Finjin::Common::DateTime sizeChangeTime;    
+    Finjin::Common::DateTime sizeChangeTime;
 };
 
 struct OSWindow::Impl : public AllocatedClass
@@ -107,24 +107,24 @@ struct OSWindow::Impl : public AllocatedClass
 
     void NotifyListenersClosing();
 
-    ApplicationView^ GetApplicationViewForWindow() const;    
+    ApplicationView^ GetApplicationViewForWindow() const;
 
     bool CanResizeWindows() const;
 
     OSWindowHandlers^ handlers; //Provides support for things that require managed code
     OSWindow* osWindow; //Pointer to the OSWindow that owns this Impl
     Utf8String subtitle;
-    Utf8String internalName;    
+    Utf8String internalName;
     bool isMainWindow;
     bool hasFocus;
     IUnknown* windowHandle;
-    void* clientData;    
+    void* clientData;
     WindowSize windowSize;
     StaticVector<OSWindowEventListener*, EngineConstants::MAX_WINDOW_LISTENERS> listeners;
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static const DisplayInfo* GetBestDisplay(OSWindowRect windowRect)
 {
     static DisplayInfos displays;
@@ -132,7 +132,7 @@ static const DisplayInfo* GetBestDisplay(OSWindowRect windowRect)
     assert(!displays.empty());
     if (displays.empty())
         return nullptr;
-    
+
     //NOTE: This isn't really the correct way to determine which display "owns" a particular window
     auto windowCenter = windowRect.GetCenter();
     for (auto& display : displays)
@@ -140,7 +140,7 @@ static const DisplayInfo* GetBestDisplay(OSWindowRect windowRect)
         if (display.frame.Contains(windowCenter))
             return &display;
     }
-    
+
     //Return left-most display
     displays.SortLeftToRight();
     return &displays[0];
@@ -160,14 +160,14 @@ static int GetVirtualKey(KeyEventArgs^ args)
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //OSWindowHandlers
 OSWindowHandlers::OSWindowHandlers(uintptr_t impl)
 {
     this->impl = impl;
 
-    this->sizeChanged = false;    
+    this->sizeChanged = false;
 }
 
 void OSWindowHandlers::Tick()
@@ -202,7 +202,7 @@ void OSWindowHandlers::AddHandlers(CoreWindow^ window)
     this->OnPointerReleasedToken = (window->PointerReleased += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &OSWindowHandlers::OnPointerReleased));
     this->OnPointerWheelChangedToken = (window->PointerWheelChanged += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &OSWindowHandlers::OnPointerWheelChanged));
     this->OnPointerCaptureLostToken = (window->PointerCaptureLost += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &OSWindowHandlers::OnPointerCaptureLost));
-    
+
     this->OnKeyDownToken = (window->KeyDown += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &OSWindowHandlers::OnKeyDown));
     this->OnKeyUpToken = (window->KeyUp += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &OSWindowHandlers::OnKeyUp));
 }
@@ -242,17 +242,17 @@ void OSWindowHandlers::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ a
 
     auto impl = reinterpret_cast<OSWindow::Impl*>(this->impl);
     impl->NotifyListenersClosing();
-    
+
     args->Handled = true;
 }
 
 void OSWindowHandlers::OnActivated(CoreWindow^ sender, WindowActivatedEventArgs^ args)
-{    
+{
     auto impl = reinterpret_cast<OSWindow::Impl*>(this->impl);
-    
+
     impl->hasFocus = args->WindowActivationState != CoreWindowActivationState::Deactivated;
     //No need to call impl->listeners->WindowGainedFocus or impl->listeners->WindowLostFocus since the main loop handles focus changes
-    
+
     args->Handled = true;
 }
 
@@ -262,7 +262,7 @@ void OSWindowHandlers::OnPointerPressed(CoreWindow^ sender, PointerEventArgs^ ar
     if (!impl->listeners.empty())
     {
         auto display = GetBestDisplay(impl->GetRect());
-        
+
         PointerEventArgsUtility pointerDownArgs(display->density, args);
 
         for (auto listener : impl->listeners)
@@ -273,12 +273,12 @@ void OSWindowHandlers::OnPointerPressed(CoreWindow^ sender, PointerEventArgs^ ar
 }
 
 void OSWindowHandlers::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
-{    
+{
     auto impl = reinterpret_cast<OSWindow::Impl*>(this->impl);
     if (!impl->listeners.empty())
     {
         auto display = GetBestDisplay(impl->GetRect());
-        
+
         PointerEventArgsUtility pointerMovedArgs(display->density, args);
 
         for (auto listener : impl->listeners)
@@ -294,7 +294,7 @@ void OSWindowHandlers::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ a
     if (!impl->listeners.empty())
     {
         auto display = GetBestDisplay(impl->GetRect());
-        
+
         PointerEventArgsUtility pointerUpArgs(display->density, args);
 
         for (auto listener : impl->listeners)
@@ -305,7 +305,7 @@ void OSWindowHandlers::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ a
 }
 
 void OSWindowHandlers::OnPointerWheelChanged(CoreWindow^ sender, PointerEventArgs^ args)
-{   
+{
     auto impl = reinterpret_cast<OSWindow::Impl*>(this->impl);
     if (!impl->listeners.empty())
     {
@@ -329,13 +329,13 @@ void OSWindowHandlers::OnPointerWheelChanged(CoreWindow^ sender, PointerEventArg
 }
 
 void OSWindowHandlers::OnPointerCaptureLost(CoreWindow^ sender, PointerEventArgs^ args)
-{    
+{
     /*auto impl = reinterpret_cast<OSWindow::Impl*>(this->impl);
     if (!impl->listeners.empty())
     {
         auto pointerType = args->CurrentPoint->PointerDevice->PointerDeviceType == PointerDeviceType::Mouse ? PointerType::MOUSE : PointerType::TOUCH_SCREEN;
         auto pointerID = args->CurrentPoint->PointerId;
-        
+
         for (auto listener : impl->listeners)
             listener->WindowOnPointerCaptureLost(impl->osWindow, pointerType, pointerID);
     }*/
@@ -374,7 +374,7 @@ OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData)
     this->windowHandle = nullptr;
     this->isMainWindow = true;
     this->hasFocus = false;
-    this->clientData = clientData;    
+    this->clientData = clientData;
 }
 
 void OSWindow::Impl::Create(const Utf8String& internalName, const Utf8String& titleOrSubtitle, const Utf8String& displayName, OSWindowRect rect, const WindowSize& windowSize, CoreWindow^ window, bool isMainWindow)
@@ -386,7 +386,7 @@ void OSWindow::Impl::Create(const Utf8String& internalName, const Utf8String& ti
     this->windowSize.SetWindow(this->osWindow);
 
     window->IsInputEnabled = true;
-    
+
     this->windowHandle = reinterpret_cast<IUnknown*>(window);
     this->isMainWindow = isMainWindow;
 
@@ -403,7 +403,7 @@ void OSWindow::Impl::Destroy()
             this->handlers->RemoveHandlers(window);
             window->Close();
         }
-        
+
         this->windowHandle = nullptr;
     }
 }
@@ -460,10 +460,10 @@ bool OSWindow::Impl::CanResizeWindows() const
 }
 
 //OSWindow
-OSWindow::OSWindow(Allocator* allocator, void* clientData) : 
-    AllocatedClass(allocator), 
+OSWindow::OSWindow(Allocator* allocator, void* clientData) :
+    AllocatedClass(allocator),
     impl(AllocatedClass::New<Impl>(allocator, FINJIN_CALLER_ARGUMENTS, this, clientData))
-{    
+{
 }
 
 OSWindow::~OSWindow()
@@ -478,9 +478,9 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
     auto applicationView = ApplicationView::GetForCurrentView();
     auto window = CoreWindow::GetForCurrentThread();
     auto isMainWindow = CoreApplication::GetCurrentView()->CoreWindow == window && CoreApplication::GetCurrentView()->IsMain;
-    
+
     impl->Create(internalName, titleOrSubtitle, displayName, rect, windowSize, window, isMainWindow);
-        
+
     //applicationView->SetDesiredBoundsMode(ApplicationViewBoundsMode::UseCoreWindow);
 
     if (impl->CanResizeWindows())
@@ -529,12 +529,12 @@ void OSWindow::ApplyWindowSize()
         LimitBounds(bounds);
 
         auto applicationView = impl->GetApplicationViewForWindow();
-        
+
         if (impl->windowSize.IsWindowed())
         {
             FINJIN_DEBUG_LOG_INFO("  Exiting full screen mode");
 
-            applicationView->ExitFullScreenMode();            
+            applicationView->ExitFullScreenMode();
             SetClientSize(bounds.GetClientWidth(), bounds.GetClientHeight());
         }
         else
@@ -543,9 +543,9 @@ void OSWindow::ApplyWindowSize()
 
             Maximize();
         }
-        
+
         impl->windowSize.SetApplyingToWindow(false);
-    }    
+    }
 }
 
 WindowSize& OSWindow::GetWindowSize()
@@ -564,10 +564,10 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
     {
         switch (impl->windowSize.GetState())
         {
-            case WindowSize::WINDOWED_NORMAL:
+            case WindowSizeState::WINDOWED_NORMAL:
             {
                 auto displayRect = GetDisplayVisibleRect();
-            
+
                 auto newWidth = std::min(bounds.width, displayRect.GetWidth());
                 auto newHeight = std::min(bounds.height, displayRect.GetHeight());
                 bounds.AdjustSize(newWidth, newHeight);
@@ -580,10 +580,10 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
 
                 break;
             }
-            case WindowSize::WINDOWED_MAXIMIZED:
+            case WindowSizeState::WINDOWED_MAXIMIZED:
             {
                 auto displayRect = GetDisplayVisibleRect();
-            
+
                 auto newWidth = displayRect.GetWidth();
                 auto newHeight = displayRect.GetHeight();
                 bounds.AdjustSize(newWidth, newHeight);
@@ -596,11 +596,11 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
 
                 break;
             }
-            case WindowSize::BORDERLESS_FULLSCREEN:
-            case WindowSize::EXCLUSIVE_FULLSCREEN:
+            case WindowSizeState::BORDERLESS_FULLSCREEN:
+            case WindowSizeState::EXCLUSIVE_FULLSCREEN:
             {
                 auto displayRect = GetDisplayRect();
-            
+
                 if (!displayRect.Contains(bounds.x, bounds.y))
                 {
                     bounds.x = displayRect.GetX();
@@ -608,7 +608,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
                 }
 
                 bounds.AdjustSize(displayRect.GetWidth(), displayRect.GetHeight());
-            
+
                 break;
             }
             default: break;
@@ -634,7 +634,7 @@ bool OSWindow::IsMaximized() const
 }
 
 void OSWindow::Maximize(bool maximize)
-{    
+{
     if (impl->CanResizeWindows())
     {
         auto applicationView = impl->GetApplicationViewForWindow();
@@ -659,11 +659,11 @@ bool OSWindow::IsSizeLocked() const
 }
 
 void OSWindow::LockSize(OSWindowSize size)
-{    
+{
 }
 
 void OSWindow::UnlockSize(OSWindowSize minSize)
-{    
+{
 }
 
 bool OSWindow::HasFocus() const
@@ -672,7 +672,7 @@ bool OSWindow::HasFocus() const
 }
 
 void OSWindow::Raise()
-{    
+{
     auto window = reinterpret_cast<CoreWindow^>(impl->windowHandle);
     window->Activate();
 }
@@ -684,12 +684,12 @@ int OSWindow::GetDisplayID() const
 
 OSWindowRect OSWindow::GetDisplayRect() const
 {
-    return GetBestDisplay(GetRect())->frame;    
+    return GetBestDisplay(GetRect())->frame;
 }
 
 OSWindowRect OSWindow::GetDisplayVisibleRect() const
 {
-    return GetBestDisplay(GetRect())->clientFrame;    
+    return GetBestDisplay(GetRect())->clientFrame;
 }
 
 OSWindowRect OSWindow::GetRect() const
@@ -713,7 +713,7 @@ void OSWindow::SetClientSize(OSWindowDimension width, OSWindowDimension height)
 }
 
 bool OSWindow::Move(OSWindowCoordinate x, OSWindowCoordinate y)
-{    
+{
     return false;
 }
 

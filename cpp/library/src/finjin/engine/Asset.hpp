@@ -14,19 +14,19 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/AssetClass.hpp"
 
 
-//Macros-----------------------------------------------------------------------
-#define FINJIN_ASSET_CLASS(cls) cls //Macro used to mark classes. Does nothing except make it easy to search through code
+//Macros------------------------------------------------------------------------
+#define FINJIN_ASSET_CLASS //Macro used to mark classes. Does nothing except make it easy to search through code
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     //Generic pointer to corresponding "hardware" asset, if there is one
     typedef void VoidHardwareAsset;
-    
+
 } }

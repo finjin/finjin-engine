@@ -16,50 +16,49 @@
 #include "WAVReader.hpp"
 #include "finjin/common/ByteOrder.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local functions--------------------------------------------------------------
-typedef WAVSoundData Codec(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& decompressedBuffer, Error& error);
+//Local functions---------------------------------------------------------------
+typedef WAVSoundData Codec(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& soundOutputBuffer, Error& error);
 
-static WAVSoundData _soundCodecLinear(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData _soundCodecLinear(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
-    if (decompressedBuffer.resize(length) < length)
+
+    if (soundOutputBuffer.resize(length) < length)
         return WAVSoundData();
 
-    auto dest = decompressedBuffer.data();
+    auto dest = soundOutputBuffer.data();
     FINJIN_COPY_MEMORY(dest, data, length);
     return WAVSoundData(dest, length, numChannels, bitsPerSample / 8, sampleFrequency);
 }
 
-static WAVSoundData _soundCodecPCM8Signed(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData _soundCodecPCM8Signed(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     auto src = static_cast<const uint8_t*>(data);
 
-    if (decompressedBuffer.resize(length) < length)
+    if (soundOutputBuffer.resize(length) < length)
         return WAVSoundData();
 
-    auto dest = decompressedBuffer.data();
+    auto dest = soundOutputBuffer.data();
     for (size_t i = 0; i < length; i++)
         dest[i] = src[i] + (int8_t)128;
     return WAVSoundData(dest, length, numChannels, bitsPerSample / 8, sampleFrequency);
 }
 
-static WAVSoundData _soundCodecPCM16(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData _soundCodecPCM16(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     auto src = static_cast<const int16_t*>(data);
 
-    if (decompressedBuffer.resize(length) < length)
+    if (soundOutputBuffer.resize(length) < length)
         return WAVSoundData();
 
-    auto dest = reinterpret_cast<int16_t*>(decompressedBuffer.data());
+    auto dest = reinterpret_cast<int16_t*>(soundOutputBuffer.data());
     for (size_t i = 0; i < length / 2; i++)
         dest[i] = ((src[i] << 8) & 0xFF00) | ((src[i] >> 8) & 0x00FF); //Byte swap
     return WAVSoundData(dest, length, numChannels, bitsPerSample / 8, sampleFrequency);
@@ -70,7 +69,7 @@ static int16_t mulaw2linear(uint8_t mulawbyte)
     //From: http://www.multimedia.cx/simpleaudio.html#tth_sEc6.1
 
     static const int16_t exp_lut[8] = {0, 132, 396, 924, 1980, 4092, 8316, 16764};
-    
+
     mulawbyte = ~mulawbyte;
     int16_t sign = (mulawbyte & 0x80); //Bit 7
     int16_t exponent = (mulawbyte >> 4) & 0x07; //Bits 4-6
@@ -81,26 +80,26 @@ static int16_t mulaw2linear(uint8_t mulawbyte)
     return sample;
 }
 
-static WAVSoundData _soundCodecULaw(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData _soundCodecULaw(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     auto desiredByteCount = length * 2;
-    if (decompressedBuffer.resize(desiredByteCount) < desiredByteCount)
+    if (soundOutputBuffer.resize(desiredByteCount) < desiredByteCount)
         return WAVSoundData();
 
     auto src = static_cast<const uint8_t*>(data);
-    auto dest = reinterpret_cast<int16_t*>(decompressedBuffer.data());
+    auto dest = reinterpret_cast<int16_t*>(soundOutputBuffer.data());
     for (size_t i = 0; i < length; i++)
         dest[i] = mulaw2linear(src[i]);
     return WAVSoundData(dest, desiredByteCount, numChannels, bitsPerSample / 8, sampleFrequency);
 }
 
 //http://www.multimedia.cx/simpleaudio.html#tth_sEc6.1
-#define SIGN_BIT (0x80)         //Sign bit for a A-law byte.
-#define QUANT_MASK (0xf)        //Quantization field mask.
-#define SEG_SHIFT (4)           //Left shift for segment number.
-#define SEG_MASK (0x70)         //Segment field mask.
+#define SIGN_BIT 0x80 //Sign bit for a A-law byte.
+#define QUANT_MASK 0xf //Quantization field mask.
+#define SEG_SHIFT 4 //Left shift for segment number.
+#define SEG_MASK 0x70 //Segment field mask.
 static int16_t alaw2linear(uint8_t a_val)
 {
     int16_t t, seg;
@@ -116,22 +115,22 @@ static int16_t alaw2linear(uint8_t a_val)
     return (a_val & SIGN_BIT) ? t : -t;
 }
 
-static WAVSoundData _soundCodecALaw(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData _soundCodecALaw(const void* data, size_t length, int numChannels, int bitsPerSample, int sampleFrequency, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     auto desiredByteCount = length * 2;
-    if (decompressedBuffer.resize(desiredByteCount) < desiredByteCount)
+    if (soundOutputBuffer.resize(desiredByteCount) < desiredByteCount)
         return WAVSoundData();
 
     auto src = static_cast<const uint8_t*>(data);
-    auto dest = reinterpret_cast<int16_t*>(decompressedBuffer.data());
+    auto dest = reinterpret_cast<int16_t*>(soundOutputBuffer.data());
     for (size_t i = 0; i < length; i++)
         dest[i] = alaw2linear(src[i]);
     return WAVSoundData(dest, desiredByteCount, numChannels, bitsPerSample / 8, sampleFrequency);
 }
 
-static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -139,7 +138,7 @@ static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompress
 
     auto foundHeader = false;
     UInt32LittleEndian chunkLength;
-    Int32BigEndian magic;
+    Int32BigEndian signature;
     UInt16LittleEndian audioFormat = 0;
     UInt16LittleEndian numChannels = 0;
     UInt32LittleEndian sampleFrequency = 0;
@@ -148,10 +147,10 @@ static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompress
     UInt16LittleEndian bitsPerSample = 0;
     Codec* codec = _soundCodecLinear;
 
-    if (!reader.ReadLittleEndian32(chunkLength) || !reader.ReadBigEndian32(magic))
+    if (!reader.ReadLittleEndian32(chunkLength) || !reader.ReadBigEndian32(signature))
         return result;
 
-    if (magic != FINJIN_FOURCC_BIG_ENDIAN('W', 'A', 'V', 'E')) //0x57415645
+    if (signature != FINJIN_FOURCC_BIG_ENDIAN('W', 'A', 'V', 'E')) //0x57415645
     {
         //"WAVE"
         FINJIN_SET_ERROR(error, "Unsupported sound file subtype.");
@@ -160,10 +159,10 @@ static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompress
 
     while (true)
     {
-        if (!reader.ReadBigEndian32(magic) || !reader.ReadLittleEndian32(chunkLength))
+        if (!reader.ReadBigEndian32(signature) || !reader.ReadLittleEndian32(chunkLength))
             return result;
 
-        if (magic == FINJIN_FOURCC_BIG_ENDIAN('f', 'm', 't', ' ')) //0x666d7420
+        if (signature == FINJIN_FOURCC_BIG_ENDIAN('f', 'm', 't', ' ')) //0x666d7420
         {
             //"fmt "
             foundHeader = true;
@@ -202,7 +201,7 @@ static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompress
                 case 7:
                 {
                     //uLaw
-                    bitsPerSample *= 2; //TODO: ??? 
+                    bitsPerSample *= 2; //TODO: ???
                     codec = _soundCodecULaw;
                     break;
                 }
@@ -213,7 +212,7 @@ static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompress
                 }
             }
         }
-        else if (magic == FINJIN_FOURCC_BIG_ENDIAN('d', 'a', 't', 'a')) //0x64617461
+        else if (signature == FINJIN_FOURCC_BIG_ENDIAN('d', 'a', 't', 'a')) //0x64617461
         {
             //"data"
             if (!foundHeader)
@@ -221,18 +220,18 @@ static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompress
                 FINJIN_SET_ERROR(error, "Reached data chunk without encountering header.");
                 return result;
             }
-            
+
             auto ptr = reader.GetOffsetBytes(chunkLength);
             if (ptr == nullptr)
             {
                 FINJIN_SET_ERROR(error, "Not enough data to decode.");
                 return result;
             }
-            
-            result = codec(ptr, chunkLength, numChannels, bitsPerSample, sampleFrequency, decompressedBuffer, error);
+
+            result = codec(ptr, chunkLength, numChannels, bitsPerSample, sampleFrequency, soundOutputBuffer, error);
             if (error)
                 FINJIN_SET_ERROR(error, "Failed to decode sound data.");
-            
+
             return result;
         }
         else
@@ -254,14 +253,14 @@ static WAVSoundData LoadWavFile(ByteBufferReader& reader, ByteBuffer& decompress
     return result;
 }
 
-static WAVSoundData LoadAUFile(ByteBufferReader& reader, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData LoadAUFile(ByteBufferReader& reader, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
     WAVSoundData result;
 
     const int AU_HEADER_SIZE = 24;
-    
+
     //see: http://en.wikipedia.org/wiki/Au_file_format, G.72x are missing
     enum AUEncoding
     {
@@ -274,7 +273,7 @@ static WAVSoundData LoadAUFile(ByteBufferReader& reader, ByteBuffer& decompresse
         AU_FLOAT_64 = 7, //64-bit IEEE floating point
         AU_ALAW_8 = 27 //8-bit ISDN a-law
     };
-    
+
     Int32BigEndian dataOffset; //Byte offset to data part, minimum 24
     Int32BigEndian len; //Number of bytes in the data part, -1 = not known
     Int32BigEndian encoding; //Encoding of the data part, see AUEncoding
@@ -346,32 +345,32 @@ static WAVSoundData LoadAUFile(ByteBufferReader& reader, ByteBuffer& decompresse
         FINJIN_SET_ERROR(error, "Not enough data to decode.");
         return result;
     }
-    
-    result = codec(ptr, length, numChannels, bitsPerSample, sampleFrequency, decompressedBuffer, error);
+
+    result = codec(ptr, length, numChannels, bitsPerSample, sampleFrequency, soundOutputBuffer, error);
     if (error)
         FINJIN_SET_ERROR(error, "Failed to decode sound data.");
-    
+
     return result;
 }
 
-static WAVSoundData ReadWav(ByteBufferReader& reader, ByteBuffer& decompressedBuffer, Error& error)
+static WAVSoundData ReadWav(ByteBufferReader& reader, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    decompressedBuffer.clear();
-    
+    soundOutputBuffer.clear();
+
     WAVSoundData wavSoundData;
 
     //Read the four character code
-    Int32BigEndian magic;
-    if (reader.ReadBigEndian32(magic))
+    Int32BigEndian containerSignature;
+    if (reader.ReadBigEndian32(containerSignature))
     {
-        switch (magic)
+        switch (containerSignature)
         {
             case FINJIN_FOURCC_BIG_ENDIAN('R', 'I', 'F', 'F'): //0x52494646
             {
                 //Microsoft 'wav' format
-                wavSoundData = LoadWavFile(reader, decompressedBuffer, error);
+                wavSoundData = LoadWavFile(reader, soundOutputBuffer, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, "An error was encountered with the RIFF format WAV data.");
@@ -382,7 +381,7 @@ static WAVSoundData ReadWav(ByteBufferReader& reader, ByteBuffer& decompressedBu
             case FINJIN_FOURCC_BIG_ENDIAN('.', 's', 'n', 'd'): //0x2E736E64
             {
                 //Sun & Next's 'au' format
-                wavSoundData = LoadAUFile(reader, decompressedBuffer, error);
+                wavSoundData = LoadAUFile(reader, soundOutputBuffer, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, "An error was encountered with the SND/AU format WAV data.");
@@ -394,12 +393,12 @@ static WAVSoundData ReadWav(ByteBufferReader& reader, ByteBuffer& decompressedBu
     }
 
     if (wavSoundData.data == nullptr)
-        FINJIN_SET_ERROR(error, "Loaded WAV sound but there was no data.");
+        FINJIN_SET_ERROR(error, "No WAV data.");
 
     return wavSoundData;
 }
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 
 //WAVSoundData
 WAVSoundData::WAVSoundData()
@@ -431,13 +430,13 @@ WAVReader::WAVReader()
 {
 }
 
-WAVSoundData WAVReader::DecompressFileImage(ByteBufferReader& reader, ByteBuffer& decompressedBuffer, Error& error)
+WAVSoundData WAVReader::Read(ByteBufferReader& reader, ByteBuffer& soundOutputBuffer, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto wavSoundData = ReadWav(reader, decompressedBuffer, error);
+    auto wavSoundData = ReadWav(reader, soundOutputBuffer, error);
     if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
-    
+
     return wavSoundData;
 }

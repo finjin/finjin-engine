@@ -14,26 +14,25 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "finjin/engine/Application.hpp"
-#include "finjin/engine/ApplicationDelegate.hpp"
-#include "finjin/engine/OSWindow.hpp"
-#include "finjin/engine/PlatformCapabilities.hpp"
-#include "finjin/engine/DisplayInfo.hpp"
 #include "finjin/common/AndroidJniUtilities.hpp"
 #include "finjin/common/AndroidUtilities.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/NvAndroidNativeAppGlue.h"
+#include "finjin/engine/ApplicationDelegate.hpp"
+#include "finjin/engine/DisplayInfo.hpp"
+#include "finjin/engine/OSWindow.hpp"
+#include "finjin/engine/PlatformCapabilities.hpp"
 #include <sys/system_properties.h>
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 class AndroidApplicationAssetsVirtualFileSystemRoot : public VirtualFileSystemRoot
 {
 public:
-    AndroidApplicationAssetsVirtualFileSystemRoot(Allocator* allocator) : 
-        VirtualFileSystemRoot(allocator), 
+    AndroidApplicationAssetsVirtualFileSystemRoot(Allocator* allocator) :
+        VirtualFileSystemRoot(allocator),
         workingFileSystemEntry(this, allocator)
     {
         this->androidApp = nullptr;
@@ -131,7 +130,7 @@ public:
         static Utf8String volumeID("/");
         return volumeID;
     }
-    
+
     const Path& GetFileSystemPath() const override
     {
         return Path::Empty();
@@ -172,7 +171,7 @@ public:
             buffer.clear();
 
         AAsset_close(asset);
-        
+
         return FileOperationResult::SUCCESS;
     }
 
@@ -181,7 +180,7 @@ public:
         auto asset = AAssetManager_open(this->androidApp->activity->assetManager, relativeFilePath.c_str(), AASSET_MODE_STREAMING);
         if (asset == nullptr)
             return FileOperationResult::NOT_FOUND;
-        
+
         auto byteCount = AAsset_getRemainingLength64(asset);
         if (byteCount > 0)
         {
@@ -283,9 +282,9 @@ public:
         }
     }
 
-    const Utf8String& GetDescription() const 
-    { 
-        return this->description; 
+    const Utf8String& GetDescription() const
+    {
+        return this->description;
     }
 
 private:
@@ -295,7 +294,7 @@ private:
 };
 
 
-//Local functions--------------------------------------------------------------
+//Local functions---------------------------------------------------------------
 static bool IsAppFocused(android_app* androidApp)
 {
     return nv_app_status_active(androidApp) && nv_app_status_focused(androidApp);
@@ -319,9 +318,9 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
     static int windowInitCount = 0;
     static OSWindowSize oldWindowSize(0, 0);
 
-    switch (cmd) 
+    switch (cmd)
     {
-        case APP_CMD_INPUT_CHANGED:             
+        case APP_CMD_INPUT_CHANGED:
         {
             break;
         }
@@ -349,8 +348,8 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
                 windowedApp->GetViewportsController()[0]->GetOSWindow()->SetWindowHandle(androidApp->window);
 
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_INIT_WINDOW: 2");
-            
-            //Perform window-related initialization            
+
+            //Perform window-related initialization
             windowedApp->HandleApplicationViewportsCreated(error);
             if (error)
             {
@@ -365,13 +364,13 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
                 oldWindowSize = windowedApp->GetViewportsController()[0]->GetOSWindow()->GetClientSize();
 
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_INIT_WINDOW: 4");
-            
+
             //Call windows controller initialized callback for the first time
             if (windowInitCount == 0)
                 windowedApp->GetDelegate()->OnInitializedApplicationViewportsController(&windowedApp->GetViewportsController());
 
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_INIT_WINDOW: 5");
-            
+
             //Start job system
             windowedApp->GetJobSystem().Start(error);
             if (error)
@@ -400,7 +399,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
 
             break;
         }
-        case APP_CMD_WINDOW_RESIZED: 
+        case APP_CMD_WINDOW_RESIZED:
         {
             EnumerateAndCacheDisplays(androidApp);
 
@@ -409,12 +408,12 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
                 auto newWindowSize = windowedApp->GetViewportsController()[0]->GetOSWindow()->GetClientSize();
                 if (newWindowSize != oldWindowSize)
                 {
-                    //NOTE: This will not occur during a screen rotation since it happens after APP_CMD_INIT_WINDOW, 
+                    //NOTE: This will not occur during a screen rotation since it happens after APP_CMD_INIT_WINDOW,
                     //when the window is created and oldWindowSize is updated
-                    //So, if we got here, the window really was resized. This could occur in versions of Android 
+                    //So, if we got here, the window really was resized. This could occur in versions of Android
                     //that allow the multiple apps on screen
                     oldWindowSize = newWindowSize;
-                    windowedApp->GetViewportsController()[0]->NotifyWindowResized();                    
+                    windowedApp->GetViewportsController()[0]->NotifyWindowResized();
                 }
             }
             break;
@@ -428,31 +427,31 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
         {
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_CONTENT_RECT_CHANGED");
             EnumerateAndCacheDisplays(androidApp);
-            break; 
+            break;
         }
-        case APP_CMD_PAUSE: 
+        case APP_CMD_PAUSE:
         {
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_PAUSE");
             windowedApp->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::PAUSE), error);
-            break; 
+            break;
         }
-        case APP_CMD_RESUME: 
+        case APP_CMD_RESUME:
         {
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_RESUME");
             windowedApp->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::RESUME), error);
-            break; 
+            break;
         }
-        case APP_CMD_CONFIG_CHANGED: 
+        case APP_CMD_CONFIG_CHANGED:
         {
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_CONFIG_CHANGED");
             EnumerateAndCacheDisplays(androidApp);
-            break; 
+            break;
         }
-        case APP_CMD_LOW_MEMORY: 
+        case APP_CMD_LOW_MEMORY:
         {
             windowedApp->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::LOW_MEMORY_WARNING), error);
-            break; 
-        }        
+            break;
+        }
     }
 }
 
@@ -473,7 +472,7 @@ static Utf8String GetAndroidInternalVersion()
 }
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 void Application::InitializeGlobals(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
@@ -497,7 +496,7 @@ void Application::InitializeGlobals(Error& error)
     }
 
     //One application window
-    this->maxWindows = 1; 
+    this->maxWindows = 1;
 
     //Application name format
     this->directoryApplicationNameFormat = ApplicationNameFormat::DOTTED_WITH_ORGANIZATION_PREFIX;
@@ -512,14 +511,14 @@ void Application::InitializeGlobals(Error& error)
     //Layout direction
     if (AndroidUtilities::HasRightToLeftLayout(androidApp))
         this->layoutDirection = LayoutDirection::RIGHT_TO_LEFT;
-    
+
     //Get language/country
     char lang[100] = {};
     char country[100] = {};
     AConfiguration_getLanguage(androidApp->config, lang);
-    AConfiguration_getCountry(androidApp->config, country);    
+    AConfiguration_getCountry(androidApp->config, country);
     SetLanguageAndCountry(lang, country);
-        
+
     //Device model/manufacturer
     AndroidJniUtilities jniUtils(androidApp);
     jniUtils.GetStringField(this->deviceManufacturer, "manufacturer");
@@ -547,7 +546,7 @@ void Application::CreateSystems(Error& error)
 
     assert(this->applicationHandle != nullptr);
     auto androidApp = reinterpret_cast<android_app*>(this->applicationHandle);
-        
+
     //Input--------------------
     this->inputSystemSettings.useSystemBackButton = this->applicationDelegate->GetApplicationSettings().useSystemBackButton;
     if (this->applicationDelegate->GetApplicationSettings().useAccelerometer.value)
@@ -591,7 +590,7 @@ bool Application::MainLoop(Error& error)
     assert(applicationDelegate->GetApplicationViewportDescriptionCount() == 1);
 
     //Prepare callbacks-------------------------------------------------------
-    auto androidApp = reinterpret_cast<android_app*>(this->applicationHandle);    
+    auto androidApp = reinterpret_cast<android_app*>(this->applicationHandle);
     androidApp->userData = this;
     androidApp->onAppCmd = OnAndroidApplicationCommand;
     androidApp->onInputEvent = OnAndroidApplicationInputCommand;
@@ -614,7 +613,7 @@ bool Application::MainLoop(Error& error)
             {
                 this->appViewportsController[0]->GetInputContext()->ProcessQueue(ident);
             }
-            
+
             //Exit main loop if app is no longer running (APP_CMD_DESTROY was received)
             if (!nv_app_status_running(androidApp))
                 break;
@@ -629,7 +628,7 @@ bool Application::MainLoop(Error& error)
                 HandleApplicationViewportLostFocus(this->appViewportsController[0].get());
             else if (!hadFocus && hasFocus)
                 HandleApplicationViewportGainedFocus(this->appViewportsController[0].get());
-            
+
             if (hasFocus)
             {
                 Tick(error);
@@ -646,7 +645,7 @@ bool Application::MainLoop(Error& error)
             ANativeActivity_finish(androidApp->activity);
         }
     }
-    
+
     return true;
 }
 

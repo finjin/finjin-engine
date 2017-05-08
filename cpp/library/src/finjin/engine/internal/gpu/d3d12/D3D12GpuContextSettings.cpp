@@ -19,16 +19,18 @@
 #include "D3D12GpuContextSettings.hpp"
 #include "D3D12Includes.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------
-D3D12GpuContextSettings::D3D12GpuContextSettings(Allocator* allocator) : GpuContextCommonSettings(allocator)
+//Implementation----------------------------------------------------------------
+D3D12GpuContextSettings::D3D12GpuContextSettings(Allocator* allocator) :
+    GpuContextCommonSettings(allocator),
+    colorFormat(DXGI_FORMAT_UNKNOWN),
+    depthStencilFormat(DXGI_FORMAT_UNKNOWN)
 {
     this->useSoftwareGpu = false;
-    this->colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-    this->depthStencilFormat = DXGI_FORMAT_D32_FLOAT;    
+
+    this->stencilRequired = false;
 }
 
 #endif

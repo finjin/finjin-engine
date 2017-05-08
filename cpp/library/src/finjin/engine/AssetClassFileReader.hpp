@@ -14,18 +14,18 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/AssetClass.hpp"
 #include "finjin/engine/AssetFileReader.hpp"
 #include "finjin/engine/AssetReference.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     /**
      * Provides access to AssetFileReader (and its underlying queue) for a specific asset class.
      */
@@ -33,9 +33,9 @@ namespace Finjin { namespace Engine {
     {
     public:
         AssetClassFileReader();
-        
+
         void Create(AssetFileReader& reader, const AssetPathSelector& initialSelector, AssetClass assetClass, Allocator* allocator, Error& error);
-        
+
         AssetPathSelector& GetSelector();
 
         FileOperationResult ReadAsset(ByteBuffer& buffer, const AssetReference& assetRef)
@@ -105,7 +105,7 @@ namespace Finjin { namespace Engine {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse the '%1%' settings file.", settingsAssetRef.ToUriString()));
                     return FileOperationResult::FAILURE;
                 }
-                
+
                 return FileOperationResult::SUCCESS;
             }
             else if (result != FileOperationResult::NOT_FOUND)
@@ -113,7 +113,7 @@ namespace Finjin { namespace Engine {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read the '%1%' settings file.", settingsAssetRef.ToUriString()));
                 return FileOperationResult::FAILURE;
             }
-            
+
             return FileOperationResult::NOT_FOUND;
         }
 
@@ -138,5 +138,5 @@ namespace Finjin { namespace Engine {
         AssetPathSelector selector;
         StaticVector<AssetPath, EngineConstants::MAX_ASSET_CLASS_DIRECTORIES> directories;
     };
-   
+
 } }

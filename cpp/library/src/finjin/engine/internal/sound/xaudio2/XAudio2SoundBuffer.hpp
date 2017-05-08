@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/engine/SoundFormat.hpp"
-#include "finjin/common/Chrono.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
+#include "finjin/common/Chrono.hpp"
+#include "finjin/engine/SoundFormat.hpp"
 #include "finjin/common/Utf8String.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -38,7 +38,7 @@ namespace Finjin { namespace Engine {
 
         const Utf8String& GetDebugName() const;
         void SetDebugName(const Utf8String& value);
-                
+
         const SoundFormat& GetSoundFormat() const;
 
         SimpleTimeCounter GetTimeLength() const;
@@ -46,8 +46,8 @@ namespace Finjin { namespace Engine {
         //XAudio-related methods----------------
         int GetCreateTimeStamp() const;
 
-        void LoadFromMemory(const void* data, size_t length, const SoundFormat& soundFormat);        
-        
+        void LoadFromMemory(const void* data, size_t length, const SoundFormat& soundFormat);
+
         int GetRequestedBytesPerChannel() const;
         void SetRequestedBytesPerChannel(int requestedBytesPerChannel);
 

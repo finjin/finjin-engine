@@ -14,14 +14,14 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
-#include "D3D12SystemSettings.hpp"
 #include "D3D12GpuContext.hpp"
 #include "D3D12GpuDescription.hpp"
+#include "D3D12SystemSettings.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -38,17 +38,17 @@ namespace Finjin { namespace Engine {
 
         void Create(const Settings& settings, Error& error);
         void Destroy();
-        
+
         const D3D12HardwareGpuDescriptions& GetHardwareGpuDescriptions() const;
         const D3D12SoftwareGpuDescriptions& GetSoftwareGpuDescriptions() const;
 
         D3D12GpuContext* CreateContext(const D3D12GpuContext::Settings& settings, Error& error);
         void DestroyContext(D3D12GpuContext* context);
 
+        D3D12SystemImpl* GetImpl();
+
         static const Utf8String& GetSystemInternalName();
 
-        D3D12SystemImpl* GetImpl();
-        
     private:
         std::unique_ptr<D3D12SystemImpl> impl;
     };

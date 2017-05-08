@@ -21,15 +21,14 @@
 #include <xcb/xinerama.h>
 #include <xcb/randr.h>
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 //DisplayInfo
 DisplayInfo::DisplayInfo() : frame(0, 0, 0, 0), clientFrame(0, 0, 0, 0)
 {
-    this->index = 0;    
+    this->index = 0;
     this->isPrimary = false;
     this->root = 0;
 }
@@ -42,71 +41,66 @@ DisplayInfos::DisplayInfos()
 
 void DisplayInfos::Enumerate()
 {
-    FINJIN_DECLARE_ERROR(error);
-    
     Utf8String defaultDisplayName;
-    XcbConnection::GetDefaultDisplayName(defaultDisplayName, error);
-    if (error)
-    {
+    if (!XcbConnection::GetDefaultDisplayName(defaultDisplayName))
         return;
-    }
-              
-    size_t okCount = 0;    
+
+    size_t okCount = 0;
     resize(EngineConstants::MAX_DISPLAYS);
-    
+
     Utf8String name;
     for (size_t displayIndex = 0; displayIndex < EngineConstants::MAX_DISPLAYS && okCount < size(); displayIndex++)
     {
         name = ":";
         name += Convert::ToString(displayIndex);
-    
-        FINJIN_DECLARE_ERROR(error);
-        auto connection = XcbConnection::GetOrCreate(name, error);
-        if (!error)
+
+        std::shared_ptr<XcbConnection> connection;
+        XcbConnection::GetOrCreate(connection, name);
+        if (connection != nullptr)
         {
-            auto defaultScreen = connection->GetDefaultScreen();      
-            
+            auto defaultScreen = connection->GetDefaultScreen();
+
             bool isRandrPrimaryScreen = false;
             if (connection->hasRandrExtension)
             {
                 auto primaryCookie = xcb_randr_get_output_primary(connection->c, defaultScreen->root);
                 auto resourcesCookie = xcb_randr_get_screen_resources(connection->c, defaultScreen->root);
                 auto primaryReply = xcb_randr_get_output_primary_reply(connection->c, primaryCookie, nullptr);
-                if (primaryReply != nullptr) 
+                if (primaryReply != nullptr)
                 {
                     auto resourcesReply = xcb_randr_get_screen_resources_reply(connection->c, resourcesCookie, nullptr);
-                    if (resourcesReply != nullptr) 
+                    if (resourcesReply != nullptr)
                     {
                         auto timestamp = resourcesReply->config_timestamp;
-                    
+
                         //Check outputs--------------
                         auto outputCount = xcb_randr_get_screen_resources_outputs_length(resourcesReply);
                         auto outputs = xcb_randr_get_screen_resources_outputs(resourcesReply);
-                        for (int i = 0; i < outputCount; i++) 
+                        for (int i = 0; i < outputCount; i++)
                         {
                             auto outputReply = xcb_randr_get_output_info_reply(connection->c, xcb_randr_get_output_info_unchecked(connection->c, outputs[i], timestamp), nullptr);
                             if (outputReply != nullptr)
                             {
                                 //Utf8String outputName((const char*)xcb_randr_get_output_info_name(outputReply), xcb_randr_get_output_info_name_length(outputReply));
-                                if (outputReply->crtc != XCB_NONE) 
+                                if (outputReply->crtc != XCB_NONE)
                                 {
-                                    //It's connected                                    
+                                    //It's connected
                                     if (outputs[i] == primaryReply->output)
                                     {
                                         isRandrPrimaryScreen = true;
                                         break;
                                     }
                                 }
-                                
+
                                 free(outputReply);
                             }
                         }
                         free(resourcesReply);
                     }
                     free(primaryReply);
-                }                
+                }
             }
-                    
+
             //Get screen frame
             OSWindowRect screenFrame;
             auto geomReply = xcb_get_geometry_reply(connection->c, xcb_get_geometry(connection->c, defaultScreen->root), nullptr);
@@ -117,7 +111,7 @@ void DisplayInfos::Enumerate()
                 screenFrame.width = static_cast<OSWindowDimension>(geomReply->width);
                 screenFrame.height = static_cast<OSWindowDimension>(geomReply->height);
 
-                free(geomReply);      
+                free(geomReply);
             }
             else
             {
@@ -134,7 +128,7 @@ void DisplayInfos::Enumerate()
             if (workAreaReply != nullptr)
             {
                 if (workAreaReply->value_len >= 4)
-                {            
+                {
                     auto values = static_cast<const uint32_t*>(xcb_get_property_value(workAreaReply));
                     workAreaFrame.x = values[0];
                     workAreaFrame.y = values[1];
@@ -149,7 +143,7 @@ void DisplayInfos::Enumerate()
             auto xineramaActiveReply = xcb_xinerama_is_active_reply(connection->c, xineramaActiveCookie, nullptr);
             if (xineramaActiveReply != nullptr)
             {
-                this->isXineramaActive = xineramaActiveReply->state == 1;                
+                this->isXineramaActive = xineramaActiveReply->state == 1;
                 free(xineramaActiveReply);
             }
 
@@ -199,7 +193,7 @@ void DisplayInfos::Enumerate()
                 }
             }
             else
-            {            
+            {
                 auto& displayInfo = (*this)[okCount];
 
                 displayInfo.index = okCount;
@@ -209,7 +203,7 @@ void DisplayInfos::Enumerate()
                 else
                     displayInfo.isPrimary = name == defaultDisplayName;
 
-                displayInfo.frame = screenFrame;    
+                displayInfo.frame = screenFrame;
 
                 if (!workAreaFrame.IsEmpty())
                     displayInfo.clientFrame = workAreaFrame;
@@ -217,14 +211,14 @@ void DisplayInfos::Enumerate()
                     displayInfo.clientFrame = displayInfo.frame;
 
                 displayInfo.name = name;
-                
+
                 displayInfo.root = defaultScreen->root;
 
                 okCount++;
             }
         }
     }
-    
+
     resize(okCount);
 }
 

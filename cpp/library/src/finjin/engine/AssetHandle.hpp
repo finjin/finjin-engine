@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Allocator.hpp"
 #include "finjin/common/IntrusiveList.hpp"
 #include "finjin/engine/AssetReference.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -33,7 +33,7 @@ namespace Finjin { namespace Engine {
             delete item;
         }
     };
-    
+
     template <>
     struct AssetDeleter<void>
     {
@@ -42,7 +42,7 @@ namespace Finjin { namespace Engine {
             //Do nothing
         }
     };
-    
+
     template <typename T>
     struct AssetHandle
     {

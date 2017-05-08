@@ -20,17 +20,16 @@
 #include "OpenVRDeviceImpl.hpp"
 #include "OpenVRSystem.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 OpenVRDevice::OpenVRDevice() : impl(new OpenVRDeviceImpl)
-{    
+{
 }
 
 OpenVRDevice::~OpenVRDevice()
-{    
+{
 }
 
 const Utf8String& OpenVRDevice::GetSystemInternalName() const
@@ -60,7 +59,7 @@ void OpenVRDevice::SetDisplayName(const Utf8String& value)
 
 InputDeviceSemantic OpenVRDevice::GetSemantic() const
 {
-    return impl->semantic;    
+    return impl->semantic;
 }
 
 void OpenVRDevice::SetSemantic(InputDeviceSemantic value)

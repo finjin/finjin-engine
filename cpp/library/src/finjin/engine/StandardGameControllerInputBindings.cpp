@@ -19,13 +19,15 @@
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
-const Utf8String StandardGameControllerInputBindings::DEFAULT_BINDINGS_FILE_NAME = "standard-game-controller.cfg";
-
-
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 StandardGameControllerInputBindings::StandardGameControllerInputBindings()
-{   
+{
+}
+
+const Utf8String& StandardGameControllerInputBindings::GetDefaultBindingsFileName()
+{
+    static const Utf8String name("standard-game-controller.cfg");
+    return name;
 }
 
 void StandardGameControllerInputBindings::ProcessInputAction
@@ -39,7 +41,7 @@ void StandardGameControllerInputBindings::ProcessInputAction
     )
 {
     //FINJIN_DEBUG_LOG_INFO("Action id: %1%, amount %2%", inputActionID, amount);
-    
+
     switch (inputActionID)
     {
         case ACCEPT:
@@ -206,7 +208,7 @@ const StandardGameControllerInputBindings::InputActionInfo* StandardGameControll
         InputActionInfo("change", CHANGE),
 
         InputActionInfo("settings", SETTINGS),
-        
+
         InputActionInfo("system-settings", SYSTEM_SETTINGS),
 
         InputActionInfo("system-home", SYSTEM_HOME),

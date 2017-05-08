@@ -20,11 +20,34 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 ShaderFeatures::ShaderFeatures()
 {
     this->inputFormatHash = 0;
     this->flags = ShaderFeatureFlag::NONE;
+}
+
+void ShaderFeatures::ParseAndAddFlags(const Utf8StringView& features, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    auto splitResult = Split(features, ' ', [this](Utf8StringView& feature)
+    {
+        if (!ParseAndAddFlag(feature))
+            return ValueOrError<bool>::CreateError();
+
+        return ValueOrError<bool>(true);
+    });
+    if (splitResult.HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to parse feature flags.");
+        return;
+    }
+    else if (!splitResult.value)
+    {
+        FINJIN_SET_ERROR(error, "Failed to parse and add all feature flags.");
+        return;
+    }
 }
 
 bool ShaderFeatures::ParseAndAddFlag(const Utf8StringView& feature)
@@ -49,9 +72,9 @@ bool ShaderFeatures::ParseAndAddFlag(const Utf8StringView& feature)
         Utf8String::Hash("map-op"), ShaderFeatureFlag::MAP_OPACITY,
         Utf8String::Hash("map-opacity"), ShaderFeatureFlag::MAP_OPACITY,
         Utf8String::Hash("map-en"), ShaderFeatureFlag::MAP_ENVIRONMENT,
-        Utf8String::Hash("map-environment"), ShaderFeatureFlag::MAP_ENVIRONMENT,    
+        Utf8String::Hash("map-environment"), ShaderFeatureFlag::MAP_ENVIRONMENT,
         Utf8String::Hash("map-sh"), ShaderFeatureFlag::MAP_SHININESS,
-        Utf8String::Hash("map-shininess"), ShaderFeatureFlag::MAP_SHININESS,    
+        Utf8String::Hash("map-shininess"), ShaderFeatureFlag::MAP_SHININESS,
 
         Utf8String::Hash("mesh-sa"), ShaderFeatureFlag::MESH_SKELETON_ANIMATION,
         Utf8String::Hash("mesh-skeleton-animation"), ShaderFeatureFlag::MESH_SKELETON_ANIMATION,
@@ -80,6 +103,31 @@ bool ShaderFeatures::ParseAndAddFlag(const Utf8StringView& feature)
     }
     else
         return false;
+}
+
+void ShaderFeatures::ParseAndAddLightTypes(const Utf8StringView& lightTypes, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    auto splitResult = Split(lightTypes, ' ', [this](Utf8StringView& lightType)
+    {
+        if (this->lights.full())
+            return ValueOrError<bool>(false);
+
+        ParseAndAddLightType(lightType);
+
+        return ValueOrError<bool>(true);
+    });
+    if (splitResult.HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to parse light types.");
+        return;
+    }
+    else if (!splitResult.value)
+    {
+        FINJIN_SET_ERROR(error, "Failed to parse and add all light types.");
+        return;
+    }
 }
 
 bool ShaderFeatures::ParseAndAddLightType(const Utf8StringView& lightType)

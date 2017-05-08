@@ -14,19 +14,19 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/InputSystemCommonSettings.hpp"
 #include "Win32InputContext.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     class Win32InputSystem
-    {    
+    {
     public:
         Win32InputSystem();
         ~Win32InputSystem();
@@ -40,7 +40,7 @@ namespace Finjin { namespace Engine {
 
         Win32InputContext* CreateContext(const Win32InputContext::Settings& settings, Error& error);
         void DestroyContext(Win32InputContext* context);
-        
+
         static const Utf8String& GetSystemInternalName();
 
     private:

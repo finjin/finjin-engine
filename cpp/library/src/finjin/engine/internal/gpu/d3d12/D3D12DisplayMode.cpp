@@ -21,7 +21,7 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 D3D12DisplayMode::D3D12DisplayMode()
 {
     this->width = this->height = 0;
@@ -32,14 +32,6 @@ D3D12DisplayMode::D3D12DisplayMode(size_t w, size_t h, DXGI_FORMAT f, D3D12Refre
 {
     this->width = w;
     this->height = h;
-    this->format = f;
-    this->refresh = r;
-}
-
-D3D12DisplayMode::D3D12DisplayMode(float w, float h, DXGI_FORMAT f, D3D12RefreshRate r)
-{
-    this->width = static_cast<size_t>(w);
-    this->height = static_cast<size_t>(h);
     this->format = f;
     this->refresh = r;
 }

@@ -15,17 +15,18 @@
 #include "FinjinPrecompiled.hpp"
 #include "AssetReference.hpp"
 
-using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
-//Static initialization--------------------------------------------------------
-const AssetReference AssetReference::EMPTY;
-
-
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 AssetReference::AssetReference(Allocator* allocator) : filePath(allocator), objectName(allocator)
 {
+}
+
+const AssetReference& AssetReference::Empty()
+{
+    static const AssetReference value;
+    return value;
 }
 
 bool AssetReference::Create(Allocator* allocator)
@@ -56,7 +57,7 @@ bool AssetReference::IsValid() const
 ValueOrError<void> AssetReference::ToSimpleUri(SimpleUri& result) const
 {
     result.clear();
-    
+
     if (!this->filePath.empty())
     {
         if (result.SetScheme("file").HasError())
@@ -89,7 +90,7 @@ ValueOrError<void> AssetReference::ToSimpleUri(SimpleUri& result) const
         if (result.SetHost(this->objectName).HasError())
             return ValueOrError<void>::CreateError();
     }
-    
+
     return ValueOrError<void>();
 }
 

@@ -22,7 +22,7 @@
 using namespace Finjin::Engine;
 
 
-//Local classes----------------------------------------------------------------
+//Local types-------------------------------------------------------------------
 struct OpenVRSystem::Impl
 {
 public:
@@ -37,7 +37,7 @@ public:
 };
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 const Utf8String& OpenVRSystem::GetSystemInternalName()
 {
     static const Utf8String value("openvr");
@@ -45,11 +45,11 @@ const Utf8String& OpenVRSystem::GetSystemInternalName()
 }
 
 OpenVRSystem::OpenVRSystem() : impl(new Impl)
-{    
+{
 }
 
 OpenVRSystem::~OpenVRSystem()
-{    
+{
 }
 
 void OpenVRSystem::Create(const Settings& settings, Error& error)
@@ -61,6 +61,9 @@ void OpenVRSystem::Create(const Settings& settings, Error& error)
 
 void OpenVRSystem::Destroy()
 {
+    if (impl == nullptr)
+        return;
+
     assert(impl->contexts.empty()); //There shouldn't be any contexts at this point
     for (auto context : impl->contexts)
     {
@@ -68,12 +71,14 @@ void OpenVRSystem::Destroy()
         delete context;
     }
     impl->contexts.clear();
+
+    impl.reset();
 }
 
 OpenVRContext* OpenVRSystem::CreateContext(const OpenVRContext::Settings& settings, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     if (impl->contexts.full())
     {
         FINJIN_SET_ERROR(error, "The maximum number of VR device contexts have already been created.");
@@ -108,7 +113,7 @@ void OpenVRSystem::DestroyContext(OpenVRContext* context)
             impl->contexts.erase(it);
 
         context->Destroy();
-    }    
+    }
 }
 
 #endif

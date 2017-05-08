@@ -15,12 +15,14 @@
 #include "FinjinPrecompiled.hpp"
 #include "finjin/engine/PlatformCapabilities.hpp"
 
-#define UWP_DIPS_PER_INCH 96.0f
-
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Macros------------------------------------------------------------------------
+#define UWP_DIPS_PER_INCH 96.0f
+
+
+//Implementation----------------------------------------------------------------
 bool PlatformCapabilities::GetDisplays(DisplayInfos& displays)
 {
     //Cached displays are always used

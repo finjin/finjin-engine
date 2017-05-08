@@ -14,13 +14,13 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
-#include "finjin/common/Error.hpp"
+//Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/Error.hpp"
 #include "DInputDeviceComponents.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
@@ -29,7 +29,7 @@ namespace Finjin { namespace Engine {
     class DInputDeviceConfiguration;
 
     class DInputMouse
-    {    
+    {
     public:
         DInputMouse();
         ~DInputMouse();
@@ -68,7 +68,7 @@ namespace Finjin { namespace Engine {
         Impl* GetImpl();
 
     public:
-        std::unique_ptr<Impl> impl;        
+        std::unique_ptr<Impl> impl;
     };
 
 } }

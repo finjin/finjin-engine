@@ -14,7 +14,8 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------
+//Includes----------------------------------------------------------------------
+#include "finjin/common/EnumArray.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Hash.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
@@ -23,33 +24,33 @@
 #include "D3D12Texture.hpp"
 
 
-//Classes----------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    
-    using namespace Finjin::Common;
-    
-    struct D3D12StaticMeshRendererRootSignatureIndexes
-    {
-        D3D12StaticMeshRendererRootSignatureIndexes()
-        {
-            this->objectBufferIndex = 0;
-            this->passBufferIndex = 0;
-            this->materialBufferIndex = 0;
-            this->lightBufferIndex = 0;
-            this->texturesIndex = 0;
-        }
 
-        //Index of elements in constant or structured buffer
-        size_t objectBufferIndex;
-        size_t passBufferIndex;
-        size_t materialBufferIndex;
-        size_t lightBufferIndex;
-        size_t texturesIndex;
+    using namespace Finjin::Common;
+
+    enum class D3D12StaticMeshRendererKnownConstantBuffer
+    {
+        PASS,
+        OBJECT,
+        MATERIAL,
+        LIGHT,
+
+        COUNT
+    };
+
+    enum class D3D12StaticMeshRendererKnownRootSignatureBindings
+    {
+        OBJECT,
+        PASS,
+        MATERIAL,
+        LIGHT,
+        TEXTURE
     };
 
     struct D3D12StaticMeshRendererRenderTargetRenderState
     {
-        AllocatedVector<D3D12RenderableEntity> opaqueEntities;
+        DynamicVector<D3D12RenderableEntity> opaqueEntities;
 
         struct PipelineStateSlot
         {
@@ -57,23 +58,20 @@ namespace Finjin { namespace Engine {
             {
                 HeapRef()
                 {
-                    this->rootSignatureIndexes = nullptr;
                 }
 
                 void ClearState()
                 {
                     this->descriptorHeaps.clear();
                     this->opaqueEntities.clear();
-                    this->rootSignatureIndexes = nullptr;
                 }
 
                 StaticVector<ID3D12DescriptorHeap*, 4> descriptorHeaps;
-                const D3D12StaticMeshRendererRootSignatureIndexes* rootSignatureIndexes;
 
-                AllocatedVector<D3D12RenderableEntity*> opaqueEntities;
+                DynamicVector<D3D12RenderableEntity*> opaqueEntities;
             };
 
-            HeapRef* Record(ID3D12DescriptorHeap** heaps, size_t argCount, const D3D12StaticMeshRendererRootSignatureIndexes& indexes)
+            HeapRef* Record(ID3D12DescriptorHeap** heaps, size_t argCount)
             {
                 for (auto& heapRef : this->heapRefs)
                 {
@@ -87,7 +85,6 @@ namespace Finjin { namespace Engine {
                 this->heapRefs.push_back();
                 auto heapRef = &this->heapRefs.back();
                 heapRef->descriptorHeaps.assign(heaps, argCount);
-                heapRef->rootSignatureIndexes = &indexes;
 
                 return heapRef;
             }
@@ -103,7 +100,7 @@ namespace Finjin { namespace Engine {
             }
 
             ID3D12PipelineState* pipelineState;
-            AllocatedVector<HeapRef> heapRefs;
+            DynamicVector<HeapRef> heapRefs;
         };
 
         struct RootSignatureSlot
@@ -116,9 +113,9 @@ namespace Finjin { namespace Engine {
             }
 
             ID3D12RootSignature* rootSignature;
-            AllocatedUnorderedMap<size_t, PipelineStateSlot*, MapPairConstructNone<size_t, PipelineStateSlot*>, PassthroughHash> pipelineStateSlots;
+            DynamicUnorderedMap<size_t, PipelineStateSlot*, MapPairConstructNone<size_t, PipelineStateSlot*>, PassthroughHash> pipelineStateSlots;
         };
-        
+
         RootSignatureSlot* RecordRootSignature(ID3D12RootSignature* rootSignature)
         {
             std::hash<ID3D12RootSignature*> rootSignatureHash;
@@ -180,8 +177,8 @@ namespace Finjin { namespace Engine {
             this->pipelineStateSlots.clear();
         }
 
-        AllocatedUnorderedMap<size_t, RootSignatureSlot, MapPairConstructNone<size_t, RootSignatureSlot>, PassthroughHash> rootSignatureSlots;
-        AllocatedUnorderedMap<size_t, PipelineStateSlot, MapPairConstructNone<size_t, PipelineStateSlot>, PassthroughHash> pipelineStateSlots;
+        DynamicUnorderedMap<size_t, RootSignatureSlot, MapPairConstructNone<size_t, RootSignatureSlot>, PassthroughHash> rootSignatureSlots;
+        DynamicUnorderedMap<size_t, PipelineStateSlot, MapPairConstructNone<size_t, PipelineStateSlot>, PassthroughHash> pipelineStateSlots;
     };
 
     struct D3D12StaticMeshRendererFrameState
@@ -189,18 +186,12 @@ namespace Finjin { namespace Engine {
         //An instance of this struct goes into D3D12FrameBuffer
         size_t index;
 
-        D3D12GpuRenderingConstantBuffer passConstantBuffer;
-        D3D12GpuRenderingConstantBuffer objectConstantBuffer;
-        D3D12GpuRenderingStructuredBufferResource objectStructuredBuffer;
-        D3D12GpuRenderingConstantBuffer materialConstantBuffer;
-        D3D12GpuRenderingStructuredBufferResource materialStructuredBuffer;
-        D3D12GpuRenderingConstantBuffer lightConstantBuffer;
-        D3D12GpuRenderingStructuredBufferResource lightStructuredBuffer;
+        EnumArray<D3D12StaticMeshRendererKnownConstantBuffer, D3D12StaticMeshRendererKnownConstantBuffer::COUNT, D3D12GpuRenderingConstantBuffer> constantBuffers;
 
-        AllocatedUnorderedSet<FinjinMaterial*> opaqueMaterials;
-        AllocatedUnorderedMap<FinjinSceneObjectLight*, LightState*> lights;
+        DynamicUnorderedSet<FinjinMaterial*> opaqueMaterials;
+        DynamicUnorderedMap<FinjinSceneObjectLight*, LightState*> lights;
 
         std::array<D3D12StaticMeshRendererRenderTargetRenderState, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES> renderTargetRenderStates;
     };
-     
+
 } }

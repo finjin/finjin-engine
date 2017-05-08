@@ -22,11 +22,11 @@
 using namespace Finjin::Engine;
 
 
-//Implementation---------------------------------------------------------------
+//Implementation----------------------------------------------------------------
 OSWindow::OSWindow(Allocator* allocator, void* clientData) : AllocatedClass(allocator)
-{    
+{
     this->windowHandle = nullptr;
-    this->clientData = clientData;    
+    this->clientData = clientData;
 }
 
 OSWindow::~OSWindow()
@@ -174,12 +174,12 @@ OSWindowRect OSWindow::GetDisplayVisibleRect() const
     {
         FINJIN_DEBUG_LOG_INFO("Got displays: %1% x %2%", displays[0].clientFrame.width, displays[0].clientFrame.height);
         return displays[0].clientFrame;
-    }        
+    }
     else
     {
         FINJIN_DEBUG_LOG_INFO("Failed to get displays");
         return OSWindowRect(0, 0, 0, 0);
-    }        
+    }
 }
 
 OSWindowRect OSWindow::GetRect() const

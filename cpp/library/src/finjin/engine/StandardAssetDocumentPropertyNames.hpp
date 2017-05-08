@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #if defined(FINJIN_EXPORTER)
     #include "finjin/common/WxChunkName.hpp"
     typedef Finjin::Common::WxChunkPropertyName FinjinChunkPropertyName;
@@ -23,8 +23,8 @@
     typedef Finjin::Common::ChunkPropertyName FinjinChunkPropertyName;
 #endif
 
-    
-//Classes----------------------------------------------------------------------
+
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     struct StandardAssetDocumentPropertyNames
@@ -59,7 +59,7 @@ namespace Finjin { namespace Engine {
         static const FinjinChunkPropertyName COUNT;
         static const FinjinChunkPropertyName CUBE_CENTER;
         static const FinjinChunkPropertyName CUBE_SIZE;
-        static const FinjinChunkPropertyName CULL_MODE;        
+        static const FinjinChunkPropertyName CULL_MODE;
         static const FinjinChunkPropertyName DIFFUSE_COLOR;
         static const FinjinChunkPropertyName DISTANCE;
         static const FinjinChunkPropertyName DRAW_FIRST;
@@ -165,7 +165,7 @@ namespace Finjin { namespace Engine {
         static const FinjinChunkPropertyName UNIT_TYPE;
         static const FinjinChunkPropertyName USAGE;
         static const FinjinChunkPropertyName USER_DATA;
-        static const FinjinChunkPropertyName USER_DATA_CLASS_NAME;        
+        static const FinjinChunkPropertyName USER_DATA_CLASS_NAME;
         static const FinjinChunkPropertyName USER_DATA_STRING_PROPERTY_COUNT;
         static const FinjinChunkPropertyName VALUES;
         static const FinjinChunkPropertyName VERTEX;
@@ -173,7 +173,7 @@ namespace Finjin { namespace Engine {
         static const FinjinChunkPropertyName VISIBILITY;
         static const FinjinChunkPropertyName VISIBLE;
         static const FinjinChunkPropertyName WEIGHT;
-        static const FinjinChunkPropertyName WIDTH;        
+        static const FinjinChunkPropertyName WIDTH;
     };
 
 } }

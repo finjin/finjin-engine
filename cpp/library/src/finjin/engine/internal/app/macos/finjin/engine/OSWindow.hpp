@@ -14,7 +14,7 @@
 #pragma once
 
 
-//Includes---------------------------------------------------------------------
+//Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
@@ -23,13 +23,13 @@
 #include "finjin/engine/WindowSize.hpp"
 
 
-//Classes----------------------------------------------------------------------
+//Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
     struct OSWindowImpl;
-    
+
     class OSWindow : public AllocatedClass
     {
     public:
@@ -38,7 +38,7 @@ namespace Finjin { namespace Engine {
 
         void Create
             (
-            const Utf8String& internalName, 
+            const Utf8String& internalName,
             const Utf8String& titleOrSubtitle,
             const Utf8String& displayName,
             OSWindowRect windowRect,
@@ -46,7 +46,7 @@ namespace Finjin { namespace Engine {
             Error& error
             );
         void Destroy();
-        
+
         const Utf8String& GetInternalName() const;
 
         /** Displays a message box that has the window as its parent. */
@@ -54,12 +54,12 @@ namespace Finjin { namespace Engine {
 
         /** Displays an error message that has the desktop as its parent. */
         static void ShowErrorMessage(const Utf8String& message, const Utf8String& title);
-        
+
         void ApplyWindowSize();
-        
+
         WindowSize& GetWindowSize();
         const WindowSize& GetWindowSize() const;
-        
+
         bool IsMinimized() const;
 
         bool IsVisible() const;
@@ -67,7 +67,7 @@ namespace Finjin { namespace Engine {
         bool HasFocus() const;
 
         void Raise();
-        
+
         float GetDisplayDensity() const;
 
         int GetDisplayID() const;
@@ -76,14 +76,14 @@ namespace Finjin { namespace Engine {
         OSWindowRect GetDisplayVisibleRect() const; //Gets the rectangle of the screen containing the window
 
         OSWindowRect GetRect() const;
-        
+
         OSWindowSize GetClientSize() const;
-        
+
         bool Move(OSWindowCoordinate x, OSWindowCoordinate y, bool animate = false);
-        
+
         bool HasWindowHandle() const;
         void ClearSystemWindowHandle();
-        
+
         size_t GetWindowEventListenerCount() const;
         OSWindowEventListener* GetWindowEventListener(size_t index);
         void AddWindowEventListener(OSWindowEventListener* listener);
@@ -94,25 +94,25 @@ namespace Finjin { namespace Engine {
         void SetClientData(void* data);
 
         bool CenterCursor();
-        
+
         void LimitBounds(WindowBounds& bounds) const;
 
         void Tick() {}
-        
+
         //macOS-specific methods--------------------------
         OSWindowCoordinate GetBackingScale() const;
         OSWindowSize GetBackingSize() const;
 
         void Center();
-        
+
         void Maximize();
-        
+
         bool Move(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension clientWidth, OSWindowDimension clientHeight, bool animate = false);
-        
+
         void GetMetalLayerSize(OSWindowCoordinate& width, OSWindowCoordinate& height);
-        
+
         OSWindowImpl* GetImpl();
-        
+
     private:
         bool IsMaximized() const;
 
@@ -122,7 +122,7 @@ namespace Finjin { namespace Engine {
 
         void SetBorderedStyle();
         void SetBorderlessStyle();
-        
+
         std::unique_ptr<OSWindowImpl> impl;
     };
 } }
