@@ -124,7 +124,7 @@ void VulkanPipelineDescription::Create
                     }
                     else if (key == "count")
                     {
-                        auto pipelineCount = Convert::ToInteger(value.ToString(), (size_t)0);
+                        auto pipelineCount = Convert::ToInteger(value, (size_t)0);
                         if (pipelineCount > 0)
                         {
                             if (!pipelines.Create(pipelineCount, allocator, allocator))

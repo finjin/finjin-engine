@@ -45,11 +45,11 @@ void AssetCountsSettings::ParseSettings(const ByteBufferReader& configFileBuffer
                 auto assetClass = AssetClassUtilities::Parse(key);
                 if (assetClass == AssetClass::COUNT)
                 {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid asset class '%1%'.", key.ToString()));
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid asset class '%1%'.", key));
                     return;
                 }
 
-                this->assetCounts[assetClass] = Convert::ToInteger(value.ToString(), this->assetCounts[assetClass]);
+                this->assetCounts[assetClass] = Convert::ToInteger(value, this->assetCounts[assetClass]);
 
                 break;
             }

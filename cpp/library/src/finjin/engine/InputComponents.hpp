@@ -49,6 +49,7 @@ namespace Finjin { namespace Engine {
     {
         static Utf8String ToString(PovDirection povDirection);
         static PovDirection Parse(const Utf8String& povDirection);
+        static PovDirection Parse(const Utf8StringView& povDirection);
     };
 
     /** Device classes. These can be bitwise OR'ed together */
@@ -141,6 +142,7 @@ namespace Finjin { namespace Engine {
 
         static Utf8String ToString(InputDeviceComponent deviceComponent);
         static InputDeviceComponent Parse(const Utf8String& deviceComponent);
+        static InputDeviceComponent Parse(const Utf8StringView& deviceComponent);
 
         /** Gets the device class stored in the device type flags */
         static InputDeviceClass GetDeviceClass(InputDeviceComponent deviceComponent);
@@ -235,6 +237,7 @@ namespace Finjin { namespace Engine {
     {
         static Utf8String ToString(InputComponentSemantic semantic);
         static InputComponentSemantic Parse(const Utf8String& semantic);
+        static InputComponentSemantic Parse(const Utf8StringView& semantic);
 
         static int GetMoveLookToggleDirection(InputComponentSemantic semantic);
     };
@@ -252,6 +255,7 @@ namespace Finjin { namespace Engine {
     {
         static Utf8String ToString(InputDeviceSemantic semantic);
         static InputDeviceSemantic Parse(const Utf8String& semantic);
+        static InputDeviceSemantic Parse(const Utf8StringView& semantic);
     };
 
     enum class InputAxisProcessing : uint32_t
@@ -316,7 +320,12 @@ namespace Finjin { namespace Engine {
         InputAxis& SetCode(int code);
 
         const Utf8String& GetDisplayName() const;
-        InputAxis& SetDisplayName(const Utf8String& name);
+        template <typename T>
+        InputAxis& SetDisplayName(const T& name)
+        {
+            this->displayName = name;
+            return *this;
+        }
 
         InputComponentSemantic GetSemantic() const;
         InputAxis& SetSemantic(InputComponentSemantic value);
@@ -376,7 +385,12 @@ namespace Finjin { namespace Engine {
         InputButton& SetCode(int code);
 
         const Utf8String& GetDisplayName() const;
-        InputButton& SetDisplayName(const Utf8String& name);
+        template <typename T>
+        InputButton& SetDisplayName(const T& name)
+        {
+            this->displayName = name;
+            return *this;
+        }
 
         InputComponentSemantic GetSemantic() const;
         InputButton& SetSemantic(InputComponentSemantic value);
@@ -426,7 +440,12 @@ namespace Finjin { namespace Engine {
         InputPov& SetCode(int code);
 
         const Utf8String& GetDisplayName() const;
-        InputPov& SetDisplayName(const Utf8String& name);
+        template <typename T>
+        InputPov& SetDisplayName(const T& name)
+        {
+            this->displayName = name;
+            return *this;
+        }
 
         InputComponentSemantic GetSemantic() const;
         InputPov& SetSemantic(InputComponentSemantic value);
@@ -465,7 +484,12 @@ namespace Finjin { namespace Engine {
         InputLocator& SetCode(int code);
 
         const Utf8String& GetDisplayName() const;
-        InputLocator& SetDisplayName(const Utf8String& name);
+        template <typename T>
+        InputLocator& SetDisplayName(const T& name)
+        {
+            this->displayName = name;
+            return *this;
+        }
 
         InputComponentSemantic GetSemantic() const;
         InputLocator& SetSemantic(InputComponentSemantic value);
@@ -556,7 +580,12 @@ namespace Finjin { namespace Engine {
         InputTouchScreen& SetIndex(size_t index);
 
         const Utf8String& GetDisplayName() const;
-        InputTouchScreen& SetDisplayName(const Utf8String& name);
+        template <typename T>
+        InputTouchScreen& SetDisplayName(const T& name)
+        {
+            this->displayName = name;
+            return *this;
+        }
 
         bool IsConnected() const;
         InputTouchScreen& Connect(bool value);
@@ -623,7 +652,12 @@ namespace Finjin { namespace Engine {
         InputAccelerometer& SetIndex(size_t index);
 
         const Utf8String& GetDisplayName() const;
-        InputAccelerometer& SetDisplayName(const Utf8String& name);
+        template <typename T>
+        InputAccelerometer& SetDisplayName(const T& name)
+        {
+            this->displayName = name;
+            return *this;
+        }
 
         bool IsEnabled() const;
         InputAccelerometer& Enable(bool value);

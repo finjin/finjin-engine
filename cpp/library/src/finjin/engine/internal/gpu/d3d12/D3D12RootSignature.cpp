@@ -587,11 +587,11 @@ void D3D12RootSignatureDescriptor::CreateFromScope
                     else if (depth == 2)
                     {
                         if (key == "id")
-                            element.id = value.ToString();
+                            element.id = value;
                         else if (key == "register")
-                            element.shaderRegister = Convert::ToInteger(value.ToString(), element.shaderRegister);
+                            element.shaderRegister = Convert::ToInteger(value, element.shaderRegister);
                         else if (key == "space")
-                            element.registerSpace = Convert::ToInteger(value.ToString(), element.registerSpace);
+                            element.registerSpace = Convert::ToInteger(value, element.registerSpace);
                         else if (key == "visibility")
                         {
                             if (value == "all")
@@ -613,17 +613,17 @@ void D3D12RootSignatureDescriptor::CreateFromScope
                         auto& descriptorTableElement = element.descriptorTable[descriptorTableElementCount - 1];
 
                         if (key == "id")
-                            descriptorTableElement.id = value.ToString();
+                            descriptorTableElement.id = value;
                         else if (key == "register")
-                            descriptorTableElement.shaderRegister = Convert::ToInteger(value.ToString(), descriptorTableElement.shaderRegister);
+                            descriptorTableElement.shaderRegister = Convert::ToInteger(value, descriptorTableElement.shaderRegister);
                         else if (key == "space")
-                            descriptorTableElement.registerSpace = Convert::ToInteger(value.ToString(), descriptorTableElement.registerSpace);
+                            descriptorTableElement.registerSpace = Convert::ToInteger(value, descriptorTableElement.registerSpace);
                         else if (key == "descriptor-count")
                         {
                             if (value == "-1")
                                 descriptorTableElement.descriptorCount = (size_t)-1;
                             else
-                                descriptorTableElement.descriptorCount = Convert::ToInteger(value.ToString(), descriptorTableElement.descriptorCount);
+                                descriptorTableElement.descriptorCount = Convert::ToInteger(value, descriptorTableElement.descriptorCount);
                         }
                     }
 

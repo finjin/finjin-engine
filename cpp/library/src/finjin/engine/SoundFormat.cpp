@@ -21,6 +21,62 @@
 using namespace Finjin::Engine;
 
 
+//Local functions---------------------------------------------------------------
+template <typename StringType>
+SoundFormat FromTypeName(const StringType& name)
+{
+    SoundFormat format;
+
+    if (name.StartsWith("low-"))
+        format.samplesPerSecond = 11025;
+    else if (name.StartsWith("medium-"))
+        format.samplesPerSecond = 22050;
+    else if (name.StartsWith("high-"))
+        format.samplesPerSecond = 44100;
+    else
+    {
+        auto foundAt = name.find('-');
+        if (foundAt != Utf8String::npos)
+        {
+            Utf8String samplesPerSecondString;
+            name.substr(samplesPerSecondString, 0, foundAt);
+            format.samplesPerSecond = Convert::ToInteger(samplesPerSecondString, format.samplesPerSecond);
+        }
+    }
+
+    if (name.find("mono-") != Utf8String::npos)
+        format.channelCount = 1;
+    else if (name.find("stereo-") != Utf8String::npos)
+        format.channelCount = 2;
+    else if (name.find("21-") != Utf8String::npos)
+        format.channelCount = 3;
+    else if (name.find("quad-") != Utf8String::npos)
+        format.channelCount = 4;
+    else if (name.find("41-") != Utf8String::npos)
+        format.channelCount = 5;
+    else if (name.find("51-") != Utf8String::npos)
+        format.channelCount = 6;
+    else if (name.find("71-") != Utf8String::npos)
+        format.channelCount = 8;
+
+    if (name.EndsWith("-8"))
+        format.bytesPerChannel = 1;
+    else if (name.EndsWith("-16"))
+        format.bytesPerChannel = 2;
+    else if (name.EndsWith("-24"))
+        format.bytesPerChannel = 3;
+    else if (name.EndsWith("-32"))
+        format.bytesPerChannel = 4;
+    else if (name.EndsWith("-32f"))
+    {
+        format.bytesPerChannel = 4;
+        format.sampleType = SoundFormat::SampleType::FLOATING_POINT;
+    }
+
+    return format;
+}
+
+
 //Implementation----------------------------------------------------------------
 
 //SoundFormat
@@ -173,80 +229,10 @@ Utf8String SoundFormat::ToTypeName() const
 
 SoundFormat SoundFormat::FromTypeName(const Utf8String& name)
 {
-    SoundFormat format;
-
-    if (name.StartsWith("low-"))
-        format.samplesPerSecond = 11025;
-    else if (name.StartsWith("medium-"))
-        format.samplesPerSecond = 22050;
-    else if (name.StartsWith("high-"))
-        format.samplesPerSecond = 44100;
-    else
-    {
-        auto foundAt = name.find('-');
-        if (foundAt != Utf8String::npos)
-        {
-            Utf8String samplesPerSecondString;
-            name.substr(samplesPerSecondString, 0, foundAt);
-            format.samplesPerSecond = Convert::ToInteger(samplesPerSecondString, format.samplesPerSecond);
-        }
-    }
-
-    if (name.find("mono-") != Utf8String::npos)
-        format.channelCount = 1;
-    else if (name.find("stereo-") != Utf8String::npos)
-        format.channelCount = 2;
-    else if (name.find("21-") != Utf8String::npos)
-        format.channelCount = 3;
-    else if (name.find("quad-") != Utf8String::npos)
-        format.channelCount = 4;
-    else if (name.find("41-") != Utf8String::npos)
-        format.channelCount = 5;
-    else if (name.find("51-") != Utf8String::npos)
-        format.channelCount = 6;
-    else if (name.find("71-") != Utf8String::npos)
-        format.channelCount = 8;
-
-    if (name.EndsWith("-8"))
-        format.bytesPerChannel = 1;
-    else if (name.EndsWith("-16"))
-        format.bytesPerChannel = 2;
-    else if (name.EndsWith("-24"))
-        format.bytesPerChannel = 3;
-    else if (name.EndsWith("-32"))
-        format.bytesPerChannel = 4;
-    else if (name.EndsWith("-32f"))
-    {
-        format.bytesPerChannel = 4;
-        format.sampleType = SampleType::FLOATING_POINT;
-    }
-
-    return format;
+    return ::FromTypeName(name);
 }
 
-const SoundFormat* SoundFormat::FindByTypeName(const SoundFormat* formats, size_t count, const Utf8String& typeName)
+SoundFormat SoundFormat::FromTypeName(const Utf8StringView& name)
 {
-    for (size_t i = 0; i < count; i++)
-    {
-        if (formats[i].typeName == typeName)
-            return &formats[i];
-    }
-
-    return nullptr;
-}
-
-const SoundFormat* SoundFormat::FindByFormat(const SoundFormat* formats, size_t count, const SoundFormat& other)
-{
-    for (size_t i = 0; i < count; i++)
-    {
-        if (formats[i].channelCount == other.channelCount &&
-            formats[i].bytesPerChannel == other.bytesPerChannel &&
-            formats[i].samplesPerSecond == other.samplesPerSecond &&
-            formats[i].sampleType == other.sampleType)
-        {
-            return &formats[i];
-        }
-    }
-
-    return nullptr;
+    return ::FromTypeName(name);
 }

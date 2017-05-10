@@ -124,7 +124,7 @@ void D3D12PipelineStateDescriptor::Create
                     }
                     else if (key == "count")
                     {
-                        auto pipelineStateCount = Convert::ToInteger(value.ToString(), (size_t)0);
+                        auto pipelineStateCount = Convert::ToInteger(value, (size_t)0);
                         if (pipelineStateCount > 0)
                         {
                             if (!pipelineStates.Create(pipelineStateCount, allocator, allocator))

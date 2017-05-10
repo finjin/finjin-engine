@@ -210,9 +210,9 @@ void VulkanDescriptorSetLayoutDescription::CreateFromScope
                         auto& binding = descriptorSetLayoutDescriptor.vkbindings[bindingCount - 1];
 
                         if (key == "id")
-                            element.id = value.ToString();
+                            element.id = value;
                         else if (key == "binding")
-                            binding.binding = Convert::ToInteger(value.ToString(), binding.binding);
+                            binding.binding = Convert::ToInteger(value, binding.binding);
                         else if (key == "type")
                         {
                             if (value == "sampler")
@@ -239,7 +239,7 @@ void VulkanDescriptorSetLayoutDescription::CreateFromScope
                                 binding.descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
                         }
                         else if (key == "descriptor-count")
-                            binding.descriptorCount = Convert::ToInteger(value.ToString(), binding.descriptorCount);
+                            binding.descriptorCount = Convert::ToInteger(value, binding.descriptorCount);
                         else if (key == "stages")
                         {
                             binding.stageFlags = VulkanUtilities::ParseShaderStages(value, error);

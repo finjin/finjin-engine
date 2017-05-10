@@ -782,7 +782,7 @@ static void CreatePNGTextureSubresources
             format = DXGI_FORMAT_R16G16B16A16_UNORM;
         else
         {
-            FINJIN_SET_ERROR(error, Utf8StringFormatter::Format("Unsupported RGBA bytes per component '%1%'.", reader.GetBytesPerChannel()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unsupported RGBA bytes per component '%1%'.", reader.GetBytesPerChannel()));
             return;
         }
     }
@@ -794,7 +794,7 @@ static void CreatePNGTextureSubresources
             format = DXGI_FORMAT_R16_UNORM;
         else
         {
-            FINJIN_SET_ERROR(error, Utf8StringFormatter::Format("Unsupported gray bytes per component '%1%'.", reader.GetBytesPerChannel()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unsupported gray bytes per component '%1%'.", reader.GetBytesPerChannel()));
             return;
         }
     }
@@ -806,7 +806,7 @@ static void CreatePNGTextureSubresources
             format = DXGI_FORMAT_R16G16_UNORM;
         else
         {
-            FINJIN_SET_ERROR(error, Utf8StringFormatter::Format("Unsupported gray/alpha bytes per component '%1%'.", reader.GetBytesPerChannel()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unsupported gray/alpha bytes per component '%1%'.", reader.GetBytesPerChannel()));
             return;
         }
     }

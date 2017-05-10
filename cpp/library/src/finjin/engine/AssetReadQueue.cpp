@@ -63,7 +63,7 @@ void AssetReadQueue::Settings::ParseSettings(const ByteBufferReader& configFileB
                 {
                     if (key == "queue-size")
                     {
-                        this->queueSize = Convert::ToInteger(value.ToString(), this->queueSize);
+                        this->queueSize = Convert::ToInteger(value, this->queueSize);
                         if (this->queueSize < 2)
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid value '%1%' for setting 'queue-size'.", value));
@@ -72,7 +72,7 @@ void AssetReadQueue::Settings::ParseSettings(const ByteBufferReader& configFileB
                     }
                     else if (key == "buffer-size")
                     {
-                        MemorySize::Parse(this->bufferSize, value.ToString(), error);
+                        MemorySize::Parse(this->bufferSize, value, error);
                         if (error)
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid value '%1%' for setting 'buffer-size'.", value));
@@ -81,7 +81,7 @@ void AssetReadQueue::Settings::ParseSettings(const ByteBufferReader& configFileB
                     }
                     else if (key == "streaming-buffer-line-size")
                     {
-                        MemorySize::Parse(this->streamingMaxBytesPerLine, value.ToString(), error);
+                        MemorySize::Parse(this->streamingMaxBytesPerLine, value, error);
                         if (error)
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid value '%1%' for setting 'streaming-buffer-line-size'.", value));
@@ -90,7 +90,7 @@ void AssetReadQueue::Settings::ParseSettings(const ByteBufferReader& configFileB
                     }
                     else if (key == "streaming-buffer-estimated-line-count")
                     {
-                        this->streamingEstimatedLineCount = Convert::ToInteger(value.ToString(), this->streamingEstimatedLineCount);
+                        this->streamingEstimatedLineCount = Convert::ToInteger(value, this->streamingEstimatedLineCount);
                         if (this->streamingEstimatedLineCount < 1)
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid value '%1%' for setting 'streaming-buffer-estimated-line-count'.", value));
@@ -103,7 +103,7 @@ void AssetReadQueue::Settings::ParseSettings(const ByteBufferReader& configFileB
                         auto splitResult = Split(value, ' ', [this, &parseFailed, &error](Utf8StringView& stringFormat)
                         {
                             StreamingFileFormat format;
-                            StreamingFileFormatUtilities::ParseFromExtension(format, stringFormat.ToString(), error);
+                            StreamingFileFormatUtilities::ParseFromExtension(format, stringFormat, error);
                             if (error)
                             {
                                 parseFailed = true;

@@ -67,21 +67,50 @@ namespace Finjin { namespace Engine {
         int64_t GetSampleFrameOffset(SimpleTimeCounter timeOffset) const;
 
         Utf8String ToTypeName() const;
+        
         static SoundFormat FromTypeName(const Utf8String& name);
+        static SoundFormat FromTypeName(const Utf8StringView& name);
+
+        template <typename Collection, typename StringType>
+        static const SoundFormat* FindByTypeName(const Collection& formats, const StringType& typeName) 
+        { 
+            return FindByTypeName(formats.data(), formats.size(), typeName); 
+        }
+
+        template <typename StringType>
+        static const SoundFormat* FindByTypeName(const SoundFormat* formats, size_t count, const StringType& typeName)
+        {
+            for (size_t i = 0; i < count; i++)
+            {
+                if (formats[i].typeName == typeName)
+                    return &formats[i];
+            }
+
+            return nullptr;
+        }
 
         template <typename Collection>
-        static const SoundFormat* FindByTypeName(const Collection& formats, const Utf8String& typeName)
-        {
-            return FindByTypeName(formats.data(), formats.size(), typeName);
+        static const SoundFormat* FindByFormat(const Collection& formats, const SoundFormat& format) 
+        { 
+            return FindByFormat(formats.data(), formats.size(), format); 
         }
-        static const SoundFormat* FindByTypeName(const SoundFormat* formats, size_t count, const Utf8String& typeName);
 
-        template <typename Collection>
-        static const SoundFormat* FindByFormat(const Collection& formats, const SoundFormat& format)
+        static const SoundFormat* FindByFormat(const SoundFormat* formats, size_t count, const SoundFormat& format)
         {
-            return FindByFormat(formats.data(), formats.size(), format);
+            for (size_t i = 0; i < count; i++)
+            {
+                if (formats[i].channelCount == format.channelCount &&
+                    formats[i].bytesPerChannel == format.bytesPerChannel &&
+                    formats[i].samplesPerSecond == format.samplesPerSecond &&
+                    formats[i].sampleType == format.sampleType)
+                {
+                    return &formats[i];
+                }
+            }
+
+            return nullptr;
         }
-        static const SoundFormat* FindByFormat(const SoundFormat* formats, size_t count, const SoundFormat& format);
+
     };
 
 } }

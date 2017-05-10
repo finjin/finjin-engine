@@ -242,6 +242,7 @@ IFrameworkView^ ApplicationFrameworkViewSource::CreateView()
     }
 }
 
+
 //Main
 int FinjinMain(ApplicationDelegate* applicationDelegate, Platform::Array<Platform::String^>^ args)
 {

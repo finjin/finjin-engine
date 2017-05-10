@@ -203,14 +203,14 @@ namespace Finjin { namespace Engine {
                                 auto& otherComponent = names[otherNameIndex].components[componentIndex];
                                 if (component != otherComponent)
                                 {
-                                    //FINJIN_DEBUG_LOG_INFO("%1% != %2%", component.value, otherComponent.value.ToString());
+                                    //FINJIN_DEBUG_LOG_INFO("%1% != %2%", component.value, otherComponent.value);
 
                                     invalidNames.SetBit(otherNameIndex);
                                     validNameCount--;
                                 }
                                 else
                                 {
-                                    //FINJIN_DEBUG_LOG_INFO("%1% == %2%", component.value, otherComponent.value.ToString());
+                                    //FINJIN_DEBUG_LOG_INFO("%1% == %2%", component.value, otherComponent.value);
                                 }
                             }
                         }

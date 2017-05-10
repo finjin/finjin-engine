@@ -35,5 +35,5 @@ void InputContextCommonSettings::HandleTopLevelSetting(const Utf8StringView& key
     FINJIN_ERROR_METHOD_START(error);
 
     if (key == "max-commands-per-update")
-        this->maxCommandsPerUpdate = Convert::ToNumber(value.ToString(), this->maxCommandsPerUpdate);
+        this->maxCommandsPerUpdate = Convert::ToInteger(value, this->maxCommandsPerUpdate);
 }

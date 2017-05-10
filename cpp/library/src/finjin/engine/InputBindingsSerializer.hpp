@@ -257,9 +257,9 @@ namespace Finjin { namespace Engine {
         {
             if (!mouseValues.index.empty())
             {
-                auto index = Convert::ToInteger(mouseValues.index.ToString(), (size_t)0);
+                auto index = Convert::ToInteger(mouseValues.index, (size_t)0);
                 if (index < MouseConstants::MAX_AXIS_COUNT)
-                    this->inputBindings.mouseAxisSensitivity[index] = Convert::ToNumber(mouseValues.sensitivity.ToString(), this->inputBindings.mouseAxisSensitivity[index]);
+                    this->inputBindings.mouseAxisSensitivity[index] = Convert::ToNumber(mouseValues.sensitivity, this->inputBindings.mouseAxisSensitivity[index]);
             }
 
             mouseValues.Reset();
@@ -269,11 +269,11 @@ namespace Finjin { namespace Engine {
         {
             if (!gameControllerValues.index.empty())
             {
-                auto index = Convert::ToInteger(gameControllerValues.index.ToString(), (size_t)0);
+                auto index = Convert::ToInteger(gameControllerValues.index, (size_t)0);
                 if (index < GameControllerConstants::MAX_AXIS_COUNT)
                 {
-                    this->inputBindings.gameControllerAxisSensitivity[index] = Convert::ToNumber(gameControllerValues.sensitivity.ToString(), this->inputBindings.gameControllerAxisSensitivity[index]);
-                    this->inputBindings.gameControllerAxisDeadZone[index] = Convert::ToNumber(gameControllerValues.deadZone.ToString(), this->inputBindings.gameControllerAxisDeadZone[index]);
+                    this->inputBindings.gameControllerAxisSensitivity[index] = Convert::ToNumber(gameControllerValues.sensitivity, this->inputBindings.gameControllerAxisSensitivity[index]);
+                    this->inputBindings.gameControllerAxisDeadZone[index] = Convert::ToNumber(gameControllerValues.deadZone, this->inputBindings.gameControllerAxisDeadZone[index]);
                 }
             }
 
@@ -323,7 +323,7 @@ namespace Finjin { namespace Engine {
 
             if (!bindingValues.deviceIndex.empty())
             {
-                inputSource.deviceIndex = Convert::ToInteger(bindingValues.deviceIndex.ToString(), inputSource.deviceIndex);
+                inputSource.deviceIndex = Convert::ToInteger(bindingValues.deviceIndex, inputSource.deviceIndex);
                 return DeviceIndexReadResult::USED_DEVICE_INDEX;
             }
 
@@ -333,114 +333,114 @@ namespace Finjin { namespace Engine {
 
         void ReadInputSource(BindingValues& bindingValues, InputSource& inputSource)
         {
-            inputSource.deviceComponent = InputDeviceComponentUtilities::Parse(bindingValues.sourceName.ToString());
+            inputSource.deviceComponent = InputDeviceComponentUtilities::Parse(bindingValues.sourceName);
 
             switch (inputSource.deviceComponent)
             {
                 case InputDeviceComponent::NONE:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
                     break;
                 }
 
                 case InputDeviceComponent::KEYBOARD_KEY:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
                     break;
                 }
 
                 case InputDeviceComponent::MOUSE_BUTTON:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
                     break;
                 }
                 case InputDeviceComponent::MOUSE_RELATIVE_AXIS:
                 case InputDeviceComponent::MOUSE_ABSOLUTE_AXIS:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
-                    inputSource.direction = Convert::ToInteger(bindingValues.direction.ToString(), inputSource.direction);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
+                    inputSource.direction = Convert::ToInteger(bindingValues.direction, inputSource.direction);
                     break;
                 }
 
                 case InputDeviceComponent::GAME_CONTROLLER_BUTTON:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
                     break;
                 }
                 case InputDeviceComponent::GAME_CONTROLLER_AXIS:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
-                    inputSource.direction = Convert::ToInteger(bindingValues.direction.ToString(), inputSource.direction);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
+                    inputSource.direction = Convert::ToInteger(bindingValues.direction, inputSource.direction);
                     break;
                 }
                 case InputDeviceComponent::GAME_CONTROLLER_POV:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
-                    inputSource.povDirection = PovDirectionUtilities::Parse(bindingValues.direction.ToString());
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
+                    inputSource.povDirection = PovDirectionUtilities::Parse(bindingValues.direction);
                     break;
                 }
                 case InputDeviceComponent::GAME_CONTROLLER_LOCATOR:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
                     break;
                 }
 
                 case InputDeviceComponent::TOUCH_COUNT:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.touchCount = Convert::ToInteger(bindingValues.touchCount.ToString(), inputSource.touchCount);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.touchCount = Convert::ToInteger(bindingValues.touchCount, inputSource.touchCount);
                     break;
                 }
                 case InputDeviceComponent::TOUCH_RELATIVE_AXIS:
                 case InputDeviceComponent::TOUCH_ABSOLUTE_AXIS:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
-                    inputSource.direction = Convert::ToInteger(bindingValues.direction.ToString(), inputSource.direction);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
+                    inputSource.direction = Convert::ToInteger(bindingValues.direction, inputSource.direction);
                     break;
                 }
 
                 case InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.direction = Convert::ToInteger(bindingValues.direction.ToString(), inputSource.direction);
-                    inputSource.touchCount = Convert::ToInteger(bindingValues.touchCount.ToString(), inputSource.touchCount);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.direction = Convert::ToInteger(bindingValues.direction, inputSource.direction);
+                    inputSource.touchCount = Convert::ToInteger(bindingValues.touchCount, inputSource.touchCount);
                     break;
                 }
                 case InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS:
                 {
                     ReadDeviceIndex(bindingValues, inputSource);
-                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic.ToString());
-                    inputSource.code = Convert::ToInteger(bindingValues.code.ToString(), inputSource.code);
-                    inputSource.index = Convert::ToInteger(bindingValues.index.ToString(), inputSource.index);
-                    inputSource.direction = Convert::ToInteger(bindingValues.direction.ToString(), inputSource.direction);
-                    inputSource.touchCount = Convert::ToInteger(bindingValues.touchCount.ToString(), inputSource.touchCount);
+                    inputSource.semantic = InputComponentSemanticUtilities::Parse(bindingValues.semantic);
+                    inputSource.code = Convert::ToInteger(bindingValues.code, inputSource.code);
+                    inputSource.index = Convert::ToInteger(bindingValues.index, inputSource.index);
+                    inputSource.direction = Convert::ToInteger(bindingValues.direction, inputSource.direction);
+                    inputSource.touchCount = Convert::ToInteger(bindingValues.touchCount, inputSource.touchCount);
                     break;
                 }
 
@@ -467,20 +467,20 @@ namespace Finjin { namespace Engine {
         static InputTriggerCriteria ReadTriggerCriteria(BindingValues& bindingValues)
         {
             InputTriggerCriteria triggerCriteria(InputTriggerFlag::NONE);
-            if (!bindingValues.pressed.empty() && Convert::ToBool(bindingValues.pressed.ToString()))
+            if (!bindingValues.pressed.empty() && Convert::ToBool(bindingValues.pressed))
                 triggerCriteria.flags |= InputTriggerFlag::PRESSED;
-            if (!bindingValues.holding.empty() && Convert::ToBool(bindingValues.holding.ToString()))
+            if (!bindingValues.holding.empty() && Convert::ToBool(bindingValues.holding))
                 triggerCriteria.flags |= InputTriggerFlag::HOLDING;
-            if (!bindingValues.released.empty() && Convert::ToBool(bindingValues.released.ToString()))
+            if (!bindingValues.released.empty() && Convert::ToBool(bindingValues.released))
                 triggerCriteria.flags |= InputTriggerFlag::RELEASED;
-            if (!bindingValues.povWeak.empty() && Convert::ToBool(bindingValues.povWeak.ToString()))
+            if (!bindingValues.povWeak.empty() && Convert::ToBool(bindingValues.povWeak))
                 triggerCriteria.flags |= InputTriggerFlag::POV_WEAK;
-            if (!bindingValues.povStrong.empty() && Convert::ToBool(bindingValues.povStrong.ToString()))
+            if (!bindingValues.povStrong.empty() && Convert::ToBool(bindingValues.povStrong))
                 triggerCriteria.flags |= InputTriggerFlag::POV_STRONG;
-            if (!bindingValues.touchAllowedWithMultitouch.empty() && Convert::ToBool(bindingValues.touchAllowedWithMultitouch.ToString()))
+            if (!bindingValues.touchAllowedWithMultitouch.empty() && Convert::ToBool(bindingValues.touchAllowedWithMultitouch))
                 triggerCriteria.flags |= InputTriggerFlag::TOUCH_ALLOWED_WITH_MULTITOUCH;
             if (!bindingValues.count.empty())
-                triggerCriteria.count = Convert::ToInteger(bindingValues.count.ToString(), triggerCriteria.count);
+                triggerCriteria.count = Convert::ToInteger(bindingValues.count, triggerCriteria.count);
             return triggerCriteria;
         }
 

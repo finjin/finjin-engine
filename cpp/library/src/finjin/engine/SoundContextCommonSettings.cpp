@@ -182,23 +182,23 @@ void SoundContextCommonSettings::ParseSettings(const ByteBufferReader& configFil
 
                     if (key == "type")
                     {
-                        soundFormat = SoundFormat::FromTypeName(value.ToString());
+                        soundFormat = SoundFormat::FromTypeName(value);
                         if (!soundFormat.IsValid())
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse sound format '%1%'.", value));
                             return;
                         }
 
-                        soundFormat.typeName = value.ToString();
+                        soundFormat.typeName = value;
                     }
                     else if (key == "name")
-                        soundFormat.typeName = value.ToString();
+                        soundFormat.typeName = value;
                     else if (key == "channels")
-                        soundFormat.channelCount = Convert::ToInteger(value.ToString(), soundFormat.channelCount);
+                        soundFormat.channelCount = Convert::ToInteger(value, soundFormat.channelCount);
                     else if (key == "bytes-per-channel")
-                        soundFormat.bytesPerChannel = Convert::ToInteger(value.ToString(), soundFormat.bytesPerChannel);
+                        soundFormat.bytesPerChannel = Convert::ToInteger(value, soundFormat.bytesPerChannel);
                     else if (key == "sample-rate")
-                        soundFormat.samplesPerSecond = Convert::ToInteger(value.ToString(), soundFormat.samplesPerSecond);
+                        soundFormat.samplesPerSecond = Convert::ToInteger(value, soundFormat.samplesPerSecond);
                     else if (key == "sample-type")
                     {
                         if (value == "int")
@@ -236,7 +236,7 @@ void SoundContextCommonSettings::ParseSettings(const ByteBufferReader& configFil
 
                     if (key == "type")
                     {
-                        auto foundFormat = SoundFormat::FindByTypeName(this->soundFormats, value.ToString());
+                        auto foundFormat = SoundFormat::FindByTypeName(this->soundFormats, value);
                         if (foundFormat != nullptr)
                         {
                             //Existing format was found
@@ -247,14 +247,14 @@ void SoundContextCommonSettings::ParseSettings(const ByteBufferReader& configFil
                             //Existing format was not found
 
                             //See if the format can be parsed
-                            auto soundFormat = SoundFormat::FromTypeName(value.ToString());
+                            auto soundFormat = SoundFormat::FromTypeName(value);
                             if (!soundFormat.IsValid())
                             {
                                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse sound format '%1%' or find an existing format with that name.", value));
                                 return;
                             }
 
-                            soundFormat.typeName = value.ToString();
+                            soundFormat.typeName = value;
 
                             //Figure out the format index
                             auto foundByFormat = SoundFormat::FindByFormat(this->soundFormats, soundFormat);
@@ -279,7 +279,7 @@ void SoundContextCommonSettings::ParseSettings(const ByteBufferReader& configFil
                         }
                     }
                     else if (key == "count")
-                        pool.count = Convert::ToInteger(value.ToString(), pool.count);
+                        pool.count = Convert::ToInteger(value, pool.count);
 
                     if (pool.IsValid())
                         soundPoolCount++;
@@ -302,9 +302,9 @@ void SoundContextCommonSettings::HandleTopLevelSetting(const Utf8StringView& key
     FINJIN_ERROR_METHOD_START(error);
 
     if (key == "processor-id")
-        this->processorID = Convert::ToInteger(value.ToString(), this->processorID);
+        this->processorID = Convert::ToInteger(value, this->processorID);
     else if (key == "temp-read-buffer-size")
-        this->tempReadBufferSize = Convert::ToInteger(value.ToString(), this->tempReadBufferSize);
+        this->tempReadBufferSize = Convert::ToInteger(value, this->tempReadBufferSize);
     else if (key == "max-commands-per-update")
-        this->maxCommandsPerUpdate = Convert::ToNumber(value.ToString(), this->maxCommandsPerUpdate);
+        this->maxCommandsPerUpdate = Convert::ToInteger(value, this->maxCommandsPerUpdate);
 }

@@ -119,7 +119,7 @@ void MemorySettings::ParseSettings(const ByteBufferReader& configFileBuffer, con
                 else
                 {
                     uint64_t memorySize;
-                    MemorySize::Parse(memorySize, section.ToString(), error);
+                    MemorySize::Parse(memorySize, section, error);
                     if (error)
                     {
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse memory size '%1%'.", section));
@@ -151,10 +151,10 @@ void MemorySettings::ParseSettings(const ByteBufferReader& configFileBuffer, con
                         //Note: Alignment is intentionally not part of the file format
 
                         if (key == "name")
-                            namedMemoryArena.name = value.ToString();
+                            namedMemoryArena.name = value;
                         else if (key == "size")
                         {
-                            MemorySize::Parse(namedMemoryArena.byteCount, value.ToString(), error);
+                            MemorySize::Parse(namedMemoryArena.byteCount, value, error);
                             if (error)
                             {
                                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Invalid value '%1%' for setting 'size'.", value));
@@ -172,7 +172,7 @@ void MemorySettings::ParseSettings(const ByteBufferReader& configFileBuffer, con
                     {
                         if (configSize->items.push_back(MemoryConfigurationItem(key, value)).HasErrorOrValue(false))
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add item '%1%' for memory size '%2%'.", key.ToString(), memorySizeSetting.value));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add item '%1%' for memory size '%2%'.", key, memorySizeSetting.value));
                             return;
                         }
                     }

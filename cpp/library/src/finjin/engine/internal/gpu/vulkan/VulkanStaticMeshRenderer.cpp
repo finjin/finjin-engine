@@ -126,7 +126,7 @@ void VulkanStaticMeshRenderer::Settings::ParseSettings(const ByteBufferReader& c
                             line->GetKeyAndValue(key, value);
 
                             if (key == "max-renderables")
-                                this->maxRenderables = Convert::ToInteger(value.ToString(), this->maxRenderables);
+                                this->maxRenderables = Convert::ToInteger(value, this->maxRenderables);
                         }
                         break;
                     }

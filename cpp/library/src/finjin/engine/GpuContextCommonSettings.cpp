@@ -135,21 +135,21 @@ void GpuContextCommonSettings::HandleTopLevelSetting(const Utf8StringView& key, 
         });
     }
     if (key == "temp-read-buffer-size")
-        this->tempReadBufferSize = Convert::ToInteger(value.ToString(), this->tempReadBufferSize);
+        this->tempReadBufferSize = Convert::ToInteger(value, this->tempReadBufferSize);
     else if (key == "max-commands-per-update")
-        this->maxCommandsPerUpdate = Convert::ToNumber(value.ToString(), this->maxCommandsPerUpdate);
+        this->maxCommandsPerUpdate = Convert::ToInteger(value, this->maxCommandsPerUpdate);
     else if (key == "max-materials")
-        this->maxMaterials = Convert::ToInteger(value.ToString(), this->maxMaterials);
+        this->maxMaterials = Convert::ToInteger(value, this->maxMaterials);
     else if (key == "max-2d-textures")
-        this->max2DTextures = Convert::ToInteger(value.ToString(), this->max2DTextures);
+        this->max2DTextures = Convert::ToInteger(value, this->max2DTextures);
     else if (key == "max-cube-textures")
-        this->maxCubeTextures = Convert::ToInteger(value.ToString(), this->maxCubeTextures);
+        this->maxCubeTextures = Convert::ToInteger(value, this->maxCubeTextures);
     else if (key == "max-3d-textures")
-        this->max3DTextures = Convert::ToInteger(value.ToString(), this->max3DTextures);
+        this->max3DTextures = Convert::ToInteger(value, this->max3DTextures);
     else if (key == "max-shaders")
-        this->maxShaders = Convert::ToInteger(value.ToString(), this->maxShaders);
+        this->maxShaders = Convert::ToInteger(value, this->maxShaders);
     else if (key == "max-meshes")
-        this->maxMeshes = Convert::ToInteger(value.ToString(), this->maxMeshes);
+        this->maxMeshes = Convert::ToInteger(value, this->maxMeshes);
     else if (key == "max-lights")
-        this->maxLights = Convert::ToInteger(value.ToString(), this->maxLights);
+        this->maxLights = Convert::ToInteger(value, this->maxLights);
 }

@@ -502,7 +502,7 @@ Utf8String AssetPath::ToString() const
         {
             if (!result.empty())
                 result += "-";
-            result += component.value.ToString();
+            result += component.value;
         }
     }
 

@@ -324,7 +324,7 @@ VkShaderStageFlagBits VulkanUtilities::ParseShaderStages(const Utf8StringView& v
     });
     if (splitResult.HasError())
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse shader stages from '%1%'. Invalid value encountered.", value.ToString()));
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse shader stages from '%1%'. Invalid value encountered.", value));
         return (VkShaderStageFlagBits)0;
     }
 
@@ -342,15 +342,15 @@ void VulkanUtilities::ParsePushConstantRangeOffsetAndSize(VkPushConstantRange& r
             return ValueOrError<bool>::CreateError();
 
         if (valueIndex == 0)
-            result.offset = Convert::ToInteger(item.ToString(), result.offset);
+            result.offset = Convert::ToInteger(item, result.offset);
         else
-            result.size = Convert::ToInteger(item.ToString(), result.size);
+            result.size = Convert::ToInteger(item, result.size);
         valueIndex++;
 
         return ValueOrError<bool>(true);
     });
     if (splitResult.HasError())
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to push constant range from '%1%'. More than two elements encountered.", value.ToString()));
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to push constant range from '%1%'. More than two elements encountered.", value));
 }
 
 VkImageViewType VulkanUtilities::GetBestImageViewType(VkImageType imageType, bool isArray)

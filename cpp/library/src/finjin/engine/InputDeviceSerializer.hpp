@@ -139,9 +139,9 @@ namespace Finjin { namespace Engine {
                 if (!handled)
                 {
                     if (!configValues.displayName.empty())
-                        this->inputDevice.SetDisplayName(configValues.displayName.ToString());
+                        this->inputDevice.SetDisplayName(configValues.displayName);
                     if (!configValues.semantic.empty())
-                        this->inputDevice.SetSemantic(InputDeviceSemanticUtilities::Parse(configValues.semantic.ToString()));
+                        this->inputDevice.SetSemantic(InputDeviceSemanticUtilities::Parse(configValues.semantic));
 
                     handled = true;
                 }
@@ -151,7 +151,7 @@ namespace Finjin { namespace Engine {
                 //Try to configure a component by code
                 if (!handled && !configValues.code.empty())
                 {
-                    auto code = Convert::ToInteger(configValues.code.ToString(), (int)0);
+                    auto code = Convert::ToInteger(configValues.code, (int)0);
 
                     if (sectionName == "key" || sectionName == "button")
                     {
@@ -194,7 +194,7 @@ namespace Finjin { namespace Engine {
                 //Try to configure a component by index
                 if (!handled && !configValues.index.empty())
                 {
-                    auto index = Convert::ToInteger(configValues.index.ToString(), (size_t)0);
+                    auto index = Convert::ToInteger(configValues.index, (size_t)0);
 
                     if (sectionName == "key" || sectionName == "button")
                     {
@@ -239,53 +239,53 @@ namespace Finjin { namespace Engine {
         void CommitButtonValues(ButtonType* button, ConfigValues& configValues)
         {
             if (!configValues.displayName.empty())
-                button->SetDisplayName(configValues.displayName.ToString());
+                button->SetDisplayName(configValues.displayName);
             if (!configValues.semantic.empty())
-                button->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic.ToString()));
+                button->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic));
             if (!configValues.enabled.empty())
-                button->Enable(Convert::ToBool(configValues.enabled.ToString()));
+                button->Enable(Convert::ToBool(configValues.enabled));
         }
 
         template <typename AxisType>
         void CommitAxisValues(AxisType* axis, ConfigValues& configValues)
         {
             if (!configValues.displayName.empty())
-                axis->SetDisplayName(configValues.displayName.ToString());
+                axis->SetDisplayName(configValues.displayName);
             if (!configValues.restValue.empty())
-                axis->SetRestValue(Convert::ToNumber(configValues.restValue.ToString(), 0.0f));
+                axis->SetRestValue(Convert::ToNumber(configValues.restValue, 0.0f));
             if (!configValues.semantic.empty())
-                axis->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic.ToString()));
+                axis->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic));
             if (!configValues.magnitude.empty())
             {
-                auto magnitude = Convert::ToNumber(configValues.magnitude.ToString(), 0.0f);
+                auto magnitude = Convert::ToNumber(configValues.magnitude, 0.0f);
                 axis->SetMinMax(-magnitude, magnitude);
             }
             if (!configValues.direction.empty())
-                axis->SetDirection(Convert::ToNumber(configValues.direction.ToString(), 1.0f));
+                axis->SetDirection(Convert::ToNumber(configValues.direction, 1.0f));
             if (!configValues.enabled.empty())
-                axis->Enable(Convert::ToBool(configValues.enabled.ToString()));
+                axis->Enable(Convert::ToBool(configValues.enabled));
         }
 
         template <typename PovType>
         void CommitPovValues(PovType* pov, ConfigValues& configValues)
         {
             if (!configValues.displayName.empty())
-                pov->SetDisplayName(configValues.displayName.ToString());
+                pov->SetDisplayName(configValues.displayName);
             if (!configValues.semantic.empty())
-                pov->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic.ToString()));
+                pov->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic));
             if (!configValues.enabled.empty())
-                pov->Enable(Convert::ToBool(configValues.enabled.ToString()));
+                pov->Enable(Convert::ToBool(configValues.enabled));
         }
 
         template <typename LocatorType>
         void CommitLocatorValues(LocatorType* locator, ConfigValues& configValues)
         {
             if (!configValues.displayName.empty())
-                locator->SetDisplayName(configValues.displayName.ToString());
+                locator->SetDisplayName(configValues.displayName);
             if (!configValues.semantic.empty())
-                locator->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic.ToString()));
+                locator->SetSemantic(InputComponentSemanticUtilities::Parse(configValues.semantic));
             if (!configValues.enabled.empty())
-                locator->Enable(Convert::ToBool(configValues.enabled.ToString()));
+                locator->Enable(Convert::ToBool(configValues.enabled));
         }
 
     private:

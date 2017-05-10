@@ -63,7 +63,7 @@ namespace Finjin { namespace Engine {
             for (size_t i = 0; i < (size_t)AssetClass::COUNT; i++)
             {
                 if (value == ToString(i, false) || value == ToString(i, true))
-                    return (AssetClass)i;
+                    return static_cast<AssetClass>(i);
             }
 
             return AssetClass::COUNT;

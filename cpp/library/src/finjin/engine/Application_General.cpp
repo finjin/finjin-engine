@@ -1598,7 +1598,7 @@ void Application::ReadBootFile(Error& error)
                         this->applicationDelegate->ReadBootFileItem(section, key, value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Application delegate failed to read boot file item '%1%'='%2%' in section '%3%'.", key.ToString(), value.ToString(), section.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Application delegate failed to read boot file item '%1%'='%2%' in section '%3%'.", key, value, section));
                             return;
                         }
                     }
@@ -1676,7 +1676,7 @@ void Application::ReadBootFile(Error& error)
                         this->applicationDelegate->ReadBootFileItem(section, key, value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Application delegate failed to read boot file item '%1%'='%2%' in section '%3%'.", key.ToString(), value.ToString(), section.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Application delegate failed to read boot file item '%1%'='%2%' in section '%3%'.", key, value, section));
                             return;
                         }
                     }
@@ -1688,7 +1688,7 @@ void Application::ReadBootFile(Error& error)
                         this->gpuContextSettings.contextSettingsFileNames.AddLocalFile(value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' GPU context settings file.", value.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' GPU context settings file.", value));
                             return;
                         }
                     }
@@ -1697,7 +1697,7 @@ void Application::ReadBootFile(Error& error)
                         this->gpuContextSettings.staticMeshRendererSettingsFileNames.AddLocalFile(value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' GPU context static mesh renderer settings file.", value.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' GPU context static mesh renderer settings file.", value));
                             return;
                         }
                     }
@@ -1718,7 +1718,7 @@ void Application::ReadBootFile(Error& error)
                         this->inputContextSettings.settingsFileNames.AddLocalFile(value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' input context asset file.", value.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' input context asset file.", value));
                             return;
                         }
                     }
@@ -1739,7 +1739,7 @@ void Application::ReadBootFile(Error& error)
                         this->soundContextSettings.settingsFileNames.AddLocalFile(value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' sound context settings file.", value.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' sound context settings file.", value));
                             return;
                         }
                     }
@@ -1761,7 +1761,7 @@ void Application::ReadBootFile(Error& error)
                         this->vrContextSettings.settingsFileNames.AddLocalFile(value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' VR context settings file.", value.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' VR context settings file.", value));
                             return;
                         }
                     }
@@ -1783,7 +1783,7 @@ void Application::ReadBootFile(Error& error)
                         this->defaultStringsAssetFileNames.AddLocalFile(value, error);
                         if (error)
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' default strings file.", value.ToString()));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add '%1%' default strings file.", value));
                             return;
                         }
                     }
@@ -1793,7 +1793,7 @@ void Application::ReadBootFile(Error& error)
                     this->applicationDelegate->ReadBootFileItem(section, key, value, error);
                     if (error)
                     {
-                        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Application delegate failed to read boot file item '%1%'='%2%' in section '%3%'.", key.ToString(), value.ToString(), section.ToString()));
+                        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Application delegate failed to read boot file item '%1%'='%2%' in section '%3%'.", key, value, section));
                         return;
                     }
                 }

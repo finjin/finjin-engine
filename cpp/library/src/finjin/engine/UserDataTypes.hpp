@@ -627,7 +627,7 @@ namespace Finjin { namespace Engine {
                 Split(this->value, ' ', [&values, &count](Utf8StringView& value)
                 {
                     if (count < 4)
-                        values(count++) = Convert::ToNumber(value.ToString(), 0.0f);
+                        values(count++) = Convert::ToNumber(value, 0.0f);
 
                     return ValueOrError<bool>(true);
                 });
@@ -715,7 +715,7 @@ namespace Finjin { namespace Engine {
                 Split(s, ' ', [this, &count](Utf8StringView& value)
                 {
                     if (count < 4)
-                        this->value(count++) = Convert::ToNumber(value.ToString(), 0.0f);
+                        this->value(count++) = Convert::ToNumber(value, 0.0f);
 
                     return ValueOrError<bool>(true);
                 });

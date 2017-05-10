@@ -303,6 +303,17 @@ InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8String& devi
     return InputDeviceComponent::NONE;
 }
 
+InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8StringView& deviceComponent)
+{
+    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceComponentLookup); i++)
+    {
+        if (deviceComponent == inputDeviceComponentLookup[i].text)
+            return inputDeviceComponentLookup[i].value;
+    }
+
+    return InputDeviceComponent::NONE;
+}
+
 InputDeviceClass InputDeviceComponentUtilities::GetDeviceClass(InputDeviceComponent deviceComponent)
 {
     switch (deviceComponent)
@@ -426,6 +437,17 @@ InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8String& semant
     return InputDeviceSemantic::NONE;
 }
 
+InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8StringView& semantic)
+{
+    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceSemanticLookup); i++)
+    {
+        if (semantic == inputDeviceSemanticLookup[i].text)
+            return inputDeviceSemanticLookup[i].value;
+    }
+
+    return InputDeviceSemantic::NONE;
+}
+
 //InputComponentSemanticUtilities
 Utf8String InputComponentSemanticUtilities::ToString(InputComponentSemantic semantic)
 {
@@ -439,6 +461,17 @@ Utf8String InputComponentSemanticUtilities::ToString(InputComponentSemantic sema
 }
 
 InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8String& semantic)
+{
+    for (size_t i = 0; i < FINJIN_COUNT_OF(inputComponentSemanticLookup); i++)
+    {
+        if (semantic == inputComponentSemanticLookup[i].text)
+            return inputComponentSemanticLookup[i].value;
+    }
+
+    return InputComponentSemantic::NONE;
+}
+
+InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8StringView& semantic)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(inputComponentSemanticLookup); i++)
     {
@@ -484,6 +517,17 @@ Utf8String PovDirectionUtilities::ToString(PovDirection povDirection)
 }
 
 PovDirection PovDirectionUtilities::Parse(const Utf8String& povDirection)
+{
+    for (size_t i = 0; i < FINJIN_COUNT_OF(povDirectionLookup); i++)
+    {
+        if (povDirection == povDirectionLookup[i].text)
+            return povDirectionLookup[i].value;
+    }
+
+    return PovDirection::CENTERED;
+}
+
+PovDirection PovDirectionUtilities::Parse(const Utf8StringView& povDirection)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(povDirectionLookup); i++)
     {
@@ -796,12 +840,6 @@ const Utf8String& InputAxis::GetDisplayName() const
     return this->displayName;
 }
 
-InputAxis& InputAxis::SetDisplayName(const Utf8String& name)
-{
-    this->displayName = name;
-    return *this;
-}
-
 InputComponentSemantic InputAxis::GetSemantic() const
 {
     return this->semantic;
@@ -979,12 +1017,6 @@ InputButton& InputButton::SetIndex(size_t index)
 const Utf8String& InputButton::GetDisplayName() const
 {
     return this->displayName;
-}
-
-InputButton& InputButton::SetDisplayName(const Utf8String& name)
-{
-    this->displayName = name;
-    return *this;
 }
 
 InputComponentSemantic InputButton::GetSemantic() const
@@ -1167,12 +1199,6 @@ const Utf8String& InputPov::GetDisplayName() const
     return this->displayName;
 }
 
-InputPov& InputPov::SetDisplayName(const Utf8String& name)
-{
-    this->displayName = name;
-    return *this;
-}
-
 InputComponentSemantic InputPov::GetSemantic() const
 {
     return this->semantic;
@@ -1262,12 +1288,6 @@ InputLocator& InputLocator::SetCode(int code)
 const Utf8String& InputLocator::GetDisplayName() const
 {
     return this->displayName;
-}
-
-InputLocator& InputLocator::SetDisplayName(const Utf8String& name)
-{
-    this->displayName = name;
-    return *this;
 }
 
 InputComponentSemantic InputLocator::GetSemantic() const
@@ -1580,12 +1600,6 @@ const Utf8String& InputTouchScreen::GetDisplayName() const
     return this->displayName;
 }
 
-InputTouchScreen& InputTouchScreen::SetDisplayName(const Utf8String& name)
-{
-    this->displayName = name;
-    return *this;
-}
-
 bool InputTouchScreen::IsConnected() const
 {
     return this->isConnected;
@@ -1737,12 +1751,6 @@ InputAccelerometer& InputAccelerometer::SetIndex(size_t index)
 const Utf8String& InputAccelerometer::GetDisplayName() const
 {
     return this->displayName;
-}
-
-InputAccelerometer& InputAccelerometer::SetDisplayName(const Utf8String& name)
-{
-    this->displayName = name;
-    return *this;
 }
 
 bool InputAccelerometer::IsEnabled() const

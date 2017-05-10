@@ -112,19 +112,19 @@ void MetalGpuContextImpl::InternalSettings::ParseSettings(const ByteBufferReader
                         line->GetKeyAndValue(key, value);
 
                         if (key == "max-materials")
-                            this->contextImpl->settings.maxMaterials = Convert::ToInteger(value.ToString(), this->contextImpl->settings.maxMaterials);
+                            this->contextImpl->settings.maxMaterials = Convert::ToInteger(value, this->contextImpl->settings.maxMaterials);
                         else if (key == "max-2d-textures")
-                            this->contextImpl->settings.max2DTextures = Convert::ToInteger(value.ToString(), this->contextImpl->settings.max2DTextures);
+                            this->contextImpl->settings.max2DTextures = Convert::ToInteger(value, this->contextImpl->settings.max2DTextures);
                         else if (key == "max-cube-textures")
-                            this->contextImpl->settings.maxCubeTextures = Convert::ToInteger(value.ToString(), this->contextImpl->settings.maxCubeTextures);
+                            this->contextImpl->settings.maxCubeTextures = Convert::ToInteger(value, this->contextImpl->settings.maxCubeTextures);
                         else if (key == "max-3d-textures")
-                            this->contextImpl->settings.max3DTextures = Convert::ToInteger(value.ToString(), this->contextImpl->settings.max3DTextures);
+                            this->contextImpl->settings.max3DTextures = Convert::ToInteger(value, this->contextImpl->settings.max3DTextures);
                         else if (key == "max-shaders")
-                            this->contextImpl->settings.maxShaders = Convert::ToInteger(value.ToString(), this->contextImpl->settings.maxShaders);
+                            this->contextImpl->settings.maxShaders = Convert::ToInteger(value, this->contextImpl->settings.maxShaders);
                         else if (key == "max-meshes")
-                            this->contextImpl->settings.maxMeshes = Convert::ToInteger(value.ToString(), this->contextImpl->settings.maxMeshes);
+                            this->contextImpl->settings.maxMeshes = Convert::ToInteger(value, this->contextImpl->settings.maxMeshes);
                         else if (key == "max-lights")
-                            this->contextImpl->settings.maxLights = Convert::ToInteger(value.ToString(), this->contextImpl->settings.maxLights);
+                            this->contextImpl->settings.maxLights = Convert::ToInteger(value, this->contextImpl->settings.maxLights);
                     }
                     break;
                 }

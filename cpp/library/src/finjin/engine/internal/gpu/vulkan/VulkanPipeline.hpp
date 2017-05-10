@@ -118,9 +118,9 @@ namespace Finjin { namespace Engine {
                         return ValueOrError<bool>::CreateError();
 
                     if (valueIndex == 0)
-                        this->offset = Convert::ToInteger(item.ToString(), this->offset);
+                        this->offset = Convert::ToInteger(item, this->offset);
                     else
-                        this->size = Convert::ToInteger(item.ToString(), this->size);
+                        this->size = Convert::ToInteger(item, this->size);
                     valueIndex++;
 
                     return ValueOrError<bool>(true);

@@ -59,7 +59,7 @@ void MetalTexture::CreateFromPNG
             format = MTLPixelFormatRGBA16Unorm;
         else
         {
-            FINJIN_SET_ERROR(error, Utf8StringFormatter::Format("Unsupported RGBA bytes per component '%1%'.", reader.GetBytesPerChannel()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unsupported RGBA bytes per component '%1%'.", reader.GetBytesPerChannel()));
             return;
         }
     }
@@ -80,7 +80,7 @@ void MetalTexture::CreateFromPNG
             format = MTLPixelFormatR16Unorm;
         else
         {
-            FINJIN_SET_ERROR(error, Utf8StringFormatter::Format("Unsupported gray bytes per component '%1%'.", reader.GetBytesPerChannel()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unsupported gray bytes per component '%1%'.", reader.GetBytesPerChannel()));
             return;
         }
     }
@@ -101,7 +101,7 @@ void MetalTexture::CreateFromPNG
             format = MTLPixelFormatRG16Unorm;
         else
         {
-            FINJIN_SET_ERROR(error, Utf8StringFormatter::Format("Unsupported gray/alpha bytes per component '%1%'.", reader.GetBytesPerChannel()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unsupported gray/alpha bytes per component '%1%'.", reader.GetBytesPerChannel()));
             return;
         }
     }

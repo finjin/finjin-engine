@@ -96,7 +96,8 @@ namespace Finjin { namespace Engine {
             return name;
         }
 
-        static uint32_t ParseIfdef(const Utf8String& value)
+        template <typename StringType>
+        static uint32_t ParseIfdef(const StringType& value)
         {
             return 0;
         }
@@ -170,7 +171,7 @@ namespace Finjin { namespace Engine {
             if (foundAt != lookup.end())
                 result = foundAt->second;
             else
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse GPU constants/structured buffer ID '%1%'.", value.ToString()));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse GPU constants/structured buffer ID '%1%'.", value));
         }
     };
 
@@ -218,7 +219,8 @@ namespace Finjin { namespace Engine {
             return name;
         }
 
-        static uint32_t ParseIfdef(const Utf8String& value)
+        template <typename StringType>
+        static uint32_t ParseIfdef(const StringType& value)
         {
             return 0;
         }
@@ -305,7 +307,7 @@ namespace Finjin { namespace Engine {
             if (foundAt != lookup.end())
                 result = foundAt->second;
             else
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse vertex element ID '%1%'.", value.ToString()));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse vertex element ID '%1%'.", value));
         }
     };
     using GpuInputFormatStruct = NumericStruct<GpuInputFormatStructMetadata>;
