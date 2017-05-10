@@ -17,12 +17,12 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Error.hpp"
+#include "finjin/engine/DisplayInfo.hpp"
 #include "finjin/engine/OSWindowDefs.hpp"
 #include "finjin/engine/OSWindowEventListener.hpp"
-#include "finjin/engine/DisplayInfo.hpp"
 #include "finjin/engine/WindowSize.hpp"
-#import <AppKit/NSWindow.h>
 #import "FinjinNSWindowController.h"
+#import <AppKit/NSWindow.h>
 
 
 //Types-------------------------------------------------------------------------

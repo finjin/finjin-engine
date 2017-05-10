@@ -28,7 +28,7 @@ using namespace Finjin::Engine;
 
 //Local types-------------------------------------------------------------------
 
-//OSWindowNSWindowDelegate-----------------
+//OSWindowUIViewDelegate-----------------
 @interface OSWindowUIViewDelegate : NSObject<FinjinUIViewDelegate>
 @end
 
