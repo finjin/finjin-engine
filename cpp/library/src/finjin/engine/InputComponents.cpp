@@ -269,7 +269,7 @@ bool InputDeviceComponentUtilities::IsHeadset(InputDeviceComponent type)
 }
 
 //InputDeviceClassUtilities
-Utf8String InputDeviceClassUtilities::ToStringLower(InputDeviceClass deviceClass)
+Utf8String InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceClassLowerLookup); i++)
     {

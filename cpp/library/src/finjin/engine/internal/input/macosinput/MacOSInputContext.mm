@@ -398,7 +398,7 @@ InputTouchScreen* MacOSInputContext::GetTouchScreen(size_t index)
 
 FileOperationResult MacOSInputContext::ReadInputBinding(InputDeviceClass deviceClass, size_t deviceIndex, const AssetReference& configAssetRef, ByteBuffer& fileBuffer)
 {
-    impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_DEVICE_TYPE, InputDeviceClassUtilities::ToStringLower(deviceClass));
+    impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_DEVICE_TYPE, InputDeviceClassUtilities::ToString(deviceClass));
 
     if (deviceClass == InputDeviceClass::GAME_CONTROLLER)
         impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, GCInputSystem::GetSystemInternalName());

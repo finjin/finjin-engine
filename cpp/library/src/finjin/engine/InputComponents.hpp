@@ -85,7 +85,7 @@ namespace Finjin { namespace Engine {
             }
         }
 
-        static Utf8String ToStringLower(InputDeviceClass deviceClass);
+        static Utf8String ToString(InputDeviceClass deviceClass);
     };
 
     /** Device components classes. These can be bitwise OR'ed together */
