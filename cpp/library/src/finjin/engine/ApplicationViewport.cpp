@@ -14,13 +14,13 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "ApplicationViewport.hpp"
-#include "ApplicationViewportsController.hpp"
-#include "PlatformCapabilities.hpp"
 #include "finjin/common/ByteBuffer.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/JobSystem.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/OSWindow.hpp"
+#include "ApplicationViewportsController.hpp"
+#include "PlatformCapabilities.hpp"
 
 using namespace Finjin::Engine;
 
