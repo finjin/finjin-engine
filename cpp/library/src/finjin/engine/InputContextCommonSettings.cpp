@@ -13,7 +13,7 @@
 
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
-#include "finjin/engine/InputContextCommonSettings.hpp"
+#include "InputContextCommonSettings.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/Convert.hpp"
 
