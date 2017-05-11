@@ -38,15 +38,15 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    for (size_t index = 0; index < argsProcessor.GetCount(); index++)
+    for (size_t argIndex = 0; argIndex < argsProcessor.GetCount(); argIndex++)
     {
-        auto& arg = argsProcessor[index];
+        auto& arg = argsProcessor[argIndex];
 
-        if (arg == "-additional-read-application-assets-directory" && index < argsProcessor.GetCount() - 1)
+        if (arg == "-additional-read-application-assets-directory" && argIndex < argsProcessor.GetCount() - 1)
         {
-            this->additionalReadApplicationAssetsDirectory = argsProcessor[index + 1];
+            this->additionalReadApplicationAssetsDirectory = argsProcessor[argIndex + 1];
 
-            index++;
+            argIndex++;
         }
         else if (arg == "-full-screen")
         {
@@ -59,61 +59,61 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
         }
         else if (arg == "-vsync")
             this->vsync = true;
-        else if (arg =="-window-width" && index < argsProcessor.GetCount() - 1)
+        else if (arg =="-window-width" && argIndex < argsProcessor.GetCount() - 1)
         {
             uint32_t width;
-            Convert::ToInteger(width, argsProcessor[index + 1], error);
+            Convert::ToInteger(width, argsProcessor[argIndex + 1], error);
             if (error)
             {
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'window-width' value '%1%'.", argsProcessor[index + 1]));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'window-width' value '%1%'.", argsProcessor[argIndex + 1]));
                 return;
             }
 
             this->windowWidth = static_cast<OSWindowDimension>(width);
 
-            index++;
+            argIndex++;
         }
-        else if (arg == "-window-height" && index < argsProcessor.GetCount() - 1)
+        else if (arg == "-window-height" && argIndex < argsProcessor.GetCount() - 1)
         {
             uint32_t height;
-            Convert::ToInteger(height, argsProcessor[index + 1], error);
+            Convert::ToInteger(height, argsProcessor[argIndex + 1], error);
             if (error)
             {
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'window-height' value '%1%'.", argsProcessor[index + 1]));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'window-height' value '%1%'.", argsProcessor[argIndex + 1]));
                 return;
             }
 
             this->windowHeight = static_cast<OSWindowDimension>(height);
 
-            index++;
+            argIndex++;
         }
-        else if (arg == "-full-screen-width" && index < argsProcessor.GetCount() - 1)
+        else if (arg == "-full-screen-width" && argIndex < argsProcessor.GetCount() - 1)
         {
             uint32_t width;
-            Convert::ToInteger(width, argsProcessor[index + 1], error);
+            Convert::ToInteger(width, argsProcessor[argIndex + 1], error);
             if (error)
             {
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'full-screen-width' value '%1%'.", argsProcessor[index + 1]));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'full-screen-width' value '%1%'.", argsProcessor[argIndex + 1]));
                 return;
             }
 
             this->fullScreenWidth = static_cast<OSWindowDimension>(width);
 
-            index++;
+            argIndex++;
         }
-        else if (arg == "-full-screen-height" && index < argsProcessor.GetCount() - 1)
+        else if (arg == "-full-screen-height" && argIndex < argsProcessor.GetCount() - 1)
         {
             uint32_t height;
-            Convert::ToInteger(height, argsProcessor[index + 1], error);
+            Convert::ToInteger(height, argsProcessor[argIndex + 1], error);
             if (error)
             {
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'full-screen-height' value '%1%'.", argsProcessor[index + 1]));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse 'full-screen-height' value '%1%'.", argsProcessor[argIndex + 1]));
                 return;
             }
 
             this->fullScreenHeight = static_cast<OSWindowDimension>(height);
 
-            index++;
+            argIndex++;
         }
     }
 }

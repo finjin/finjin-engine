@@ -66,11 +66,11 @@ void MetalSystem::Create(const Settings& settings, Error& error)
 #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
     //Get the other devices
     auto allDevices = MTLCopyAllDevices();
-    for (NSUInteger i = 0; i < allDevices.count; i++)
+    for (NSUInteger deviceIndex = 0; deviceIndex < allDevices.count; deviceIndex++)
     {
-        if (allDevices[i] != impl->devices[0])
+        if (allDevices[deviceIndex] != impl->devices[0])
         {
-            if (impl->devices.push_back(allDevices[i]).HasErrorOrValue(false))
+            if (impl->devices.push_back(allDevices[deviceIndex]).HasErrorOrValue(false))
                 break;
         }
     }

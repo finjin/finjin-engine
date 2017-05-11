@@ -70,20 +70,7 @@ namespace Finjin { namespace Engine {
     {
         enum { COUNT = 7 }; //Number of non-combined enums in InputDeviceClass
 
-        static size_t ToIndex(InputDeviceClass deviceClass)
-        {
-            switch (deviceClass)
-            {
-                case InputDeviceClass::NONE: return 0;
-                case InputDeviceClass::KEYBOARD: return 1;
-                case InputDeviceClass::MOUSE: return 2;
-                case InputDeviceClass::GAME_CONTROLLER: return 3;
-                case InputDeviceClass::TOUCH_SCREEN: return 4;
-                case InputDeviceClass::ACCELEROMETER: return 5;
-                case InputDeviceClass::HEADSET: return 6;
-                default: return 0;
-            }
-        }
+        static size_t ToIndex(InputDeviceClass deviceClass);
 
         static Utf8String ToString(InputDeviceClass deviceClass);
     };

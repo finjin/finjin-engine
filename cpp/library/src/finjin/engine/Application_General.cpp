@@ -942,21 +942,21 @@ void Application::Initialize(Error& error)
     auto viewportDescriptionCount = this->applicationDelegate->GetApplicationViewportDescriptionCount();
     this->applicationDelegate->SetActualApplicationViewportDescriptionCount(viewportDescriptionCount);
     this->workingWindowInternalName.Create(&this->applicationAllocator);
-    for (size_t windowIndex = 0; windowIndex < viewportDescriptionCount; windowIndex++)
+    for (size_t viewportIndex = 0; viewportIndex < viewportDescriptionCount; viewportIndex++)
     {
-        const auto& windowDescription = this->applicationDelegate->GetApplicationViewportDescription(windowIndex);
+        const auto& viewportDescription = this->applicationDelegate->GetApplicationViewportDescription(viewportIndex);
 
         //Create ApplicationViewport----------------------------
-        std::unique_ptr<ApplicationViewport> appViewport(this->applicationDelegate->CreateApplicationViewport(&this->applicationAllocator, windowIndex));
+        std::unique_ptr<ApplicationViewport> appViewport(this->applicationDelegate->CreateApplicationViewport(&this->applicationAllocator, viewportIndex));
         if (appViewport == nullptr)
         {
             FINJIN_SET_ERROR(error, "Failed to allocate application viewport.");
             return;
         }
         if (appViewport->IsMain() && !mainApplicationViewportIndex.IsSet())
-            mainApplicationViewportIndex = windowIndex;
+            mainApplicationViewportIndex = viewportIndex;
 
-        std::unique_ptr<ApplicationViewportDelegate> appWindowDelegate(this->applicationDelegate->CreateApplicationViewportDelegate(&this->applicationAllocator, windowIndex));
+        std::unique_ptr<ApplicationViewportDelegate> appWindowDelegate(this->applicationDelegate->CreateApplicationViewportDelegate(&this->applicationAllocator, viewportIndex));
         if (appWindowDelegate == nullptr)
         {
             FINJIN_SET_ERROR(error, "Failed to allocate application viewport delegate.");
@@ -966,9 +966,9 @@ void Application::Initialize(Error& error)
         //Create OSWindow----------------------------
 
         //Internal name
-        if (!windowDescription.internalName.empty())
+        if (!viewportDescription.internalName.empty())
         {
-            if (this->workingWindowInternalName.assign(windowDescription.internalName).HasError())
+            if (this->workingWindowInternalName.assign(viewportDescription.internalName).HasError())
             {
                 FINJIN_SET_ERROR(error, "Failed to assign window description's internal name to working window internal name.");
                 return;
@@ -986,7 +986,7 @@ void Application::Initialize(Error& error)
                 FINJIN_SET_ERROR(error, "Failed to append dash to working window internal name.");
                 return;
             }
-            if (this->workingWindowInternalName.append(Convert::ToString(windowIndex)).HasError())
+            if (this->workingWindowInternalName.append(Convert::ToString(viewportIndex)).HasError())
             {
                 FINJIN_SET_ERROR(error, "Failed to append window index to working window internal name.");
                 return;
@@ -996,13 +996,13 @@ void Application::Initialize(Error& error)
         //Title
         const Utf8String* windowTitleOrSubtitle;
         if (this->titleBarUsesSubtitle)
-            windowTitleOrSubtitle = &windowDescription.subtitle;
+            windowTitleOrSubtitle = &viewportDescription.subtitle;
         else
-            windowTitleOrSubtitle = !windowDescription.title.empty() ? &windowDescription.title : &this->applicationDelegate->GetName(ApplicationNameFormat::DISPLAY);
+            windowTitleOrSubtitle = !viewportDescription.title.empty() ? &viewportDescription.title : &this->applicationDelegate->GetName(ApplicationNameFormat::DISPLAY);
 
         //Size
         WindowSize windowSize;
-        GetConfiguredApplicationViewportSize(windowSize, windowDescription.windowFrame);
+        GetConfiguredApplicationViewportSize(windowSize, viewportDescription.windowFrame);
 
         //Create
         auto osWindow = AllocatedClass::NewUnique<OSWindow>(&this->applicationAllocator, FINJIN_CALLER_ARGUMENTS, appViewport.get()); //Pass appViewport as 'client data' for faster lookup in OSWindowToApplicationViewport()
@@ -1011,7 +1011,7 @@ void Application::Initialize(Error& error)
             FINJIN_SET_ERROR(error, "Failed to allocated OS window.");
             return;
         }
-        osWindow->Create(this->workingWindowInternalName, *windowTitleOrSubtitle, windowDescription.displayName, windowDescription.windowFrame, windowSize, error);
+        osWindow->Create(this->workingWindowInternalName, *windowTitleOrSubtitle, viewportDescription.displayName, viewportDescription.windowFrame, windowSize, error);
         if (error)
         {
             osWindow->Destroy();
@@ -1209,12 +1209,12 @@ void Application::HandleApplicationViewportsCreated(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    for (size_t windowIndex = 0; windowIndex < this->applicationDelegate->GetApplicationViewportDescriptionCount(); windowIndex++)
+    for (size_t viewportIndex = 0; viewportIndex < this->applicationDelegate->GetApplicationViewportDescriptionCount(); viewportIndex++)
     {
-        auto& appViewport = this->appViewportsController[windowIndex];
-        const auto& windowDescription = this->applicationDelegate->GetApplicationViewportDescription(windowIndex);
+        auto& appViewport = this->appViewportsController[viewportIndex];
+        const auto& viewportDescription = this->applicationDelegate->GetApplicationViewportDescription(viewportIndex);
 
-        HandleApplicationViewportCreated(appViewport.get(), windowDescription, error);
+        HandleApplicationViewportCreated(appViewport.get(), viewportDescription, error);
         if (error)
         {
             FINJIN_SET_ERROR(error, "Failed to finish creating application window.");
@@ -1230,7 +1230,7 @@ void Application::HandleApplicationViewportsCreated(Error& error)
     }
 }
 
-void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewport, const ApplicationViewportDescription& windowDescription, Error& error)
+void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewport, const ApplicationViewportDescription& viewportDescription, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -1264,8 +1264,8 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
     //GPU
     {
         this->gpuContextSettings.osWindow = appViewport->GetOSWindow();
-        this->gpuContextSettings.gpuID = windowDescription.gpuID;
-        this->gpuContextSettings.frameBufferCount.requested = Limited(windowDescription.requestedFrameBufferCount, (size_t)EngineConstants::MIN_FRAME_BUFFERS, (size_t)EngineConstants::MAX_FRAME_BUFFERS);
+        this->gpuContextSettings.gpuID = viewportDescription.gpuID;
+        this->gpuContextSettings.frameBufferCount.requested = Limited(viewportDescription.requestedFrameBufferCount, (size_t)EngineConstants::MIN_FRAME_BUFFERS, (size_t)EngineConstants::MAX_FRAME_BUFFERS);
         std::unique_ptr<GpuContext> gpuContext(this->gpuSystem.CreateContext(this->gpuContextSettings, error));
         this->gpuContextSettings.osWindow = nullptr;
         if (error)
@@ -1371,7 +1371,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         auto jobProcessingPipelineSize = appViewport->GetGpuContext()->GetSettings().jobProcessingPipelineSize;
         appViewport->ConfigureJobPipeline
             (
-            Limited(windowDescription.jobProcessingPipelineSize, 1, jobProcessingPipelineSize),
+            Limited(viewportDescription.jobProcessingPipelineSize, 1, jobProcessingPipelineSize),
             jobProcessingPipelineSize
             );
         for (size_t stageIndex = 0; stageIndex < appViewport->GetJobPipelineSize(); stageIndex++)

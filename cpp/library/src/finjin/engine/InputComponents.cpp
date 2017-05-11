@@ -269,6 +269,21 @@ bool InputDeviceComponentUtilities::IsHeadset(InputDeviceComponent type)
 }
 
 //InputDeviceClassUtilities
+size_t InputDeviceClassUtilities::ToIndex(InputDeviceClass deviceClass)
+{
+    switch (deviceClass)
+    {
+        case InputDeviceClass::NONE: return 0;
+        case InputDeviceClass::KEYBOARD: return 1;
+        case InputDeviceClass::MOUSE: return 2;
+        case InputDeviceClass::GAME_CONTROLLER: return 3;
+        case InputDeviceClass::TOUCH_SCREEN: return 4;
+        case InputDeviceClass::ACCELEROMETER: return 5;
+        case InputDeviceClass::HEADSET: return 6;
+        default: return 0;
+    }
+}
+
 Utf8String InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceClassLowerLookup); i++)

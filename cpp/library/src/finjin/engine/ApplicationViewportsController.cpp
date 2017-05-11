@@ -126,8 +126,8 @@ ApplicationViewportsClosing ApplicationViewportsController::GetAllViewports()
 {
     ApplicationViewportsClosing all;
 
-    for (size_t i = 0; i < this->appViewports.size(); i++)
-        all.push_back(std::move(this->appViewports[i]));
+    for (size_t viewportIndex = 0; viewportIndex < this->appViewports.size(); viewportIndex++)
+        all.push_back(std::move(this->appViewports[viewportIndex]));
     this->appViewports.clear();
 
     return all;
@@ -139,9 +139,9 @@ ApplicationViewportsClosing ApplicationViewportsController::GetViewportsClosing(
 
     //See if any window has requested the application exit
     bool exitApplication = false;
-    for (size_t i = 0; i < this->appViewports.size(); i++)
+    for (size_t viewportIndex = 0; viewportIndex < this->appViewports.size(); viewportIndex++)
     {
-        if (this->appViewports[i]->ExitApplicationRequested())
+        if (this->appViewports[viewportIndex]->ExitApplicationRequested())
         {
             exitApplication = true;
             break;
@@ -149,15 +149,15 @@ ApplicationViewportsClosing ApplicationViewportsController::GetViewportsClosing(
     }
 
     //If any window requested the application exit, get all windows. Otherwise just get the windows that want to close
-    for (size_t i = 0; i < this->appViewports.size();)
+    for (size_t viewportIndex = 0; viewportIndex < this->appViewports.size();)
     {
-        if (exitApplication || this->appViewports[i]->CloseRequested())
+        if (exitApplication || this->appViewports[viewportIndex]->CloseRequested())
         {
-            closing.push_back(std::move(this->appViewports[i]));
-            this->appViewports.erase(&this->appViewports[i]);
+            closing.push_back(std::move(this->appViewports[viewportIndex]));
+            this->appViewports.erase(&this->appViewports[viewportIndex]);
         }
         else
-            i++;
+            viewportIndex++;
     }
 
     return closing;

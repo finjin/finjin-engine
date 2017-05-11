@@ -99,17 +99,17 @@ void ApplicationDelegate::OnSoundDevicesEnumerated(const SoundAdapterDescription
 
 void ApplicationDelegate::OnGpusEnumerated(const HardwareGpuDescriptions& hardwareGpus, const SoftwareGpuDescriptions& softwareGpus)
 {
-    auto count = GetApplicationViewportDescriptionCount();
-    for (size_t i = 0; i < count; i++)
+    auto viewportCount = GetApplicationViewportDescriptionCount();
+    for (size_t viewportIndex = 0; viewportIndex < viewportCount; viewportIndex++)
     {
-        auto& windowDescription = GetApplicationViewportDescription(i);
-        if (windowDescription.desiredGpuID.empty() ||
-            !GetGpuDescription(windowDescription.desiredGpuDescription, hardwareGpus, windowDescription.desiredGpuID))
+        auto& viewportDescription = GetApplicationViewportDescription(viewportIndex);
+        if (viewportDescription.desiredGpuID.empty() ||
+            !GetGpuDescription(viewportDescription.desiredGpuDescription, hardwareGpus, viewportDescription.desiredGpuID))
         {
             //No desired display adapter or the lookup of the desired display adapter failed
 
-            windowDescription.desiredGpuDescription = hardwareGpus[0]; //First is best
-            windowDescription.desiredGpuID = windowDescription.desiredGpuDescription.GetGpuID();
+            viewportDescription.desiredGpuDescription = hardwareGpus[0]; //First is best
+            viewportDescription.desiredGpuID = viewportDescription.desiredGpuDescription.GetGpuID();
 
             /*for (const auto& adapter : hardwareGpus)
             {
@@ -128,7 +128,7 @@ void ApplicationDelegate::OnGpusEnumerated(const HardwareGpuDescriptions& hardwa
             }*/
         }
 
-        windowDescription.gpuID = windowDescription.desiredGpuID;
+        viewportDescription.gpuID = viewportDescription.desiredGpuID;
     }
 }
 

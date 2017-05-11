@@ -117,8 +117,8 @@ void ApplicationViewport::ConfigureJobPipeline(size_t renderBuffering, size_t pi
     impl->jobProcessingPipelineSize = renderBuffering;
 
     impl->stages.resize(pipelineSize);
-    for (size_t i = 0; i < impl->stages.size(); i++)
-        impl->stages[i].jobPipelineStage.index = i;
+    for (size_t stageIndex = 0; stageIndex < impl->stages.size(); stageIndex++)
+        impl->stages[stageIndex].jobPipelineStage.index = stageIndex;
 }
 
 size_t ApplicationViewport::GetJobPipelineSize() const
