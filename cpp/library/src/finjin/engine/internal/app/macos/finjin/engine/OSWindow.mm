@@ -26,8 +26,8 @@ using namespace Finjin::Engine;
 
 
 //Macros------------------------------------------------------------------------
-#define BORDER_STYLE (NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask)
-#define BORDERLESS_STYLE NSBorderlessWindowMask
+#define BORDER_STYLE (NSWindowStyleMaskTitled | NSWindowStyleMaskResizable | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable)
+#define BORDERLESS_STYLE NSWindowStyleMaskBorderless
 
 
 //Local functions---------------------------------------------------------------

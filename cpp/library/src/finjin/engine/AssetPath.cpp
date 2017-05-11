@@ -597,6 +597,11 @@ void AssetPathSelector::SetCpuArchitecture()
     Set(AssetPathComponent::CPU_ARCHITECTURE, GetCpuArchitectureInternalString());
 }
 
+void AssetPathSelector::SetCpuByteOrder()
+{
+    Set(AssetPathComponent::CPU_BYTE_ORDER, GetByteOrder());
+}
+
 void AssetPathSelector::SetPreformatted(AssetPathComponent type, const Utf8String& value)
 {
     if (type == AssetPathComponent::NONE)

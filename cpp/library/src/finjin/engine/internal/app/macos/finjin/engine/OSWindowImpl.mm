@@ -67,8 +67,8 @@ bool OSWindowImpl::IsMaximized() const
     //There's no such thing as a maximized window in macOS.
     //isZoomed is the closest approximation, but that also returns true:
     //  -In full screen mode.
-    //  -For windows with NSBorderlessWindowMask style.
-    if ((this->windowController.window.styleMask & NSTitledWindowMask) == NSTitledWindowMask)
+    //  -For windows with NSWindowStyleMaskBorderless style.
+    if ((this->windowController.window.styleMask & NSWindowStyleMaskTitled) == NSWindowStyleMaskTitled)
     {
         return
             this->windowController.window.isZoomed ||

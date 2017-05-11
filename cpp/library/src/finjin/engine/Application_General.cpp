@@ -29,9 +29,9 @@ using namespace Finjin::Engine;
 
 //Macros------------------------------------------------------------------------
 #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12 && !FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
-    #define TOGGLE_FULLSCREEN_ON_LOST_FOCUS 1 //Sometimes helpful to set this to 0 during multi-screen development on Windows
+    #define TOGGLE_FULLSCREEN_EXCLUSIVE_ON_LOST_FOCUS 1 //Sometimes helpful to set this to 0 during multi-screen development on Windows
 #else
-    #define TOGGLE_FULLSCREEN_ON_LOST_FOCUS 0
+    #define TOGGLE_FULLSCREEN_EXCLUSIVE_ON_LOST_FOCUS 0
 #endif
 
 #define ALLOW_USER_HOME_DIRECTORY_EXPANSION 1
@@ -401,8 +401,8 @@ void Application::Initialize(Error& error)
     //Preliminary initialization-------------------------------------------------------------
 
     this->estimatedBytesFreeAtInitialization = GetAllocator()->GetBytesFree();
-    //auto bytesFree = MemorySize::Format(this->estimatedBytesFreeAtInitialization);
-    //auto bytesUsed = MemorySize::Format(GetAllocator()->GetBytesUsed());
+    //auto bytesFree = MemorySize::ToString(this->estimatedBytesFreeAtInitialization);
+    //auto bytesUsed = MemorySize::ToString(GetAllocator()->GetBytesUsed());
 
     this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator());
 
@@ -445,7 +445,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after global initialization: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after global initialization: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Read and process boot files
     if (this->applicationDelegate->GetBootFileNameCount() > 0)
@@ -487,7 +487,7 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after reading boot file: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after reading boot file: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Set up file systems----------------------------------------------------------------------------
 
@@ -585,7 +585,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after updating file database: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after updating file database: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Set up asset readers------------------------------------------------------------------
 
@@ -627,7 +627,7 @@ void Application::Initialize(Error& error)
     this->assetFileSelector.Set(AssetPathComponent::COUNTRY, this->country);
     this->assetFileSelector.Set(AssetPathComponent::LAYOUT_DIRECTION, this->layoutDirection);
     this->assetFileSelector.SetCpuArchitecture();
-    this->assetFileSelector.Set(AssetPathComponent::CPU_BYTE_ORDER, GetByteOrder());
+    this->assetFileSelector.SetCpuByteOrder();
     this->assetFileSelector.Set(AssetPathComponent::OPERATING_SYSTEM, this->operatingSystemInternalName);
     this->assetFileSelector.Set(AssetPathComponent::OPERATING_SYSTEM_VERSION, this->operatingSystemInternalVersion);
     this->assetFileSelector.Set(AssetPathComponent::APPLICATION_PLATFORM, this->applicationPlatformInternalName);
@@ -649,7 +649,7 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after asset class file readers: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after asset class file readers: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Memory settings/allocator--------------------------------------------
 
@@ -687,7 +687,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after initializing application allocator: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after initializing application allocator: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Read various settings-------------------------------------------------------------------------
 
@@ -856,7 +856,7 @@ void Application::Initialize(Error& error)
     }
 #endif
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after reading settings: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after reading settings: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Initialize various systems------------------------------------------------------------
 
@@ -904,7 +904,7 @@ void Application::Initialize(Error& error)
         //this->logicalCpus.Output(std::cout); //For testing
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after asset read queue: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after asset read queue: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Job system
     {
@@ -917,7 +917,7 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creating job system: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after creating job system: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Input, sound, GPU, VR
     this->inputSystemSettings.allocator = &this->applicationAllocator;
@@ -934,7 +934,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creating systems: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after creating systems: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Initialize windows------------------------------------------------------------------------
     Setting<size_t> mainApplicationViewportIndex(0);
@@ -1026,7 +1026,7 @@ void Application::Initialize(Error& error)
         this->appViewportsController.push_back(std::move(appViewport));
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creating windows: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after creating windows: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     //Set first window to be the main window if no windows were designated as being the main window
     if (!mainApplicationViewportIndex.IsSet() && !this->appViewportsController.empty())
@@ -1053,7 +1053,7 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creation: %1%", MemorySize::Format(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after creation: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
 
     this->applicationDelegate->OnStart();
 }
@@ -1177,7 +1177,7 @@ void Application::HandleApplicationViewportLostFocus(ApplicationViewport* appVie
     if (appViewport->GetSoundContext() != nullptr)
         appViewport->GetSoundContext()->HandleApplicationViewportLostFocus();
 
-#if TOGGLE_FULLSCREEN_ON_LOST_FOCUS
+#if TOGGLE_FULLSCREEN_EXCLUSIVE_ON_LOST_FOCUS
     if (appViewport->GetOSWindow()->GetWindowSize().IsFullScreenExclusive() && !this->appViewportsController.AnyHasFocus())
     {
         //The window is full screen and none of the application windows have focus

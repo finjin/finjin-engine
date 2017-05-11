@@ -115,6 +115,7 @@ namespace Finjin { namespace Engine {
         void Set(AssetPathComponent type, LayoutDirection value);
         void SetAssetClassDirectoryName(AssetClass assetClass);
         void SetCpuArchitecture();
+        void SetCpuByteOrder();
 
         template <typename... Args>
         void Set(const AssetPathSelector& other, Args... args)
