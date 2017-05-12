@@ -47,7 +47,7 @@ namespace Finjin { namespace Engine {
 
     struct PovDirectionUtilities
     {
-        enum { COUNT = 9 }; //Number of enums
+        enum { COUNT = 9 }; //Number of values
 
         static const char* ToString(PovDirection povDirection);
         static PovDirection Parse(const Utf8String& povDirection);
@@ -70,7 +70,7 @@ namespace Finjin { namespace Engine {
 
     struct InputDeviceClassUtilities
     {
-        enum { COUNT = 8 }; //Number of enums
+        enum { COUNT = 8 }; //Number of values
 
         static size_t ToIndex(InputDeviceClass deviceClass);
 
@@ -226,7 +226,7 @@ namespace Finjin { namespace Engine {
 
     struct InputComponentSemanticUtilities
     {
-        enum { COUNT = 57 }; //Number of enums InputComponentSemantic
+        enum { COUNT = 57 }; //Number of values InputComponentSemantic
 
         static const char* ToString(InputComponentSemantic semantic);
         static InputComponentSemantic Parse(const Utf8String& semantic);
@@ -246,7 +246,7 @@ namespace Finjin { namespace Engine {
 
     struct InputDeviceSemanticUtilities
     {
-        enum { COUNT = 3 }; //Number of non-combined enums in InputDeviceSemantic
+        enum { COUNT = 3 }; //Number of values in InputDeviceSemantic
 
         static const char* ToString(InputDeviceSemantic semantic);
         static InputDeviceSemantic Parse(const Utf8String& semantic);
