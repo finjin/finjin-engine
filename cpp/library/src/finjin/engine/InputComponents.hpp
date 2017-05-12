@@ -47,6 +47,8 @@ namespace Finjin { namespace Engine {
 
     struct PovDirectionUtilities
     {
+        enum { COUNT = 9 }; //Number of enums
+
         static const char* ToString(PovDirection povDirection);
         static PovDirection Parse(const Utf8String& povDirection);
         static PovDirection Parse(const Utf8StringView& povDirection);
@@ -68,7 +70,7 @@ namespace Finjin { namespace Engine {
 
     struct InputDeviceClassUtilities
     {
-        enum { COUNT = 7 }; //Number of non-combined enums in InputDeviceClass
+        enum { COUNT = 8 }; //Number of enums
 
         static size_t ToIndex(InputDeviceClass deviceClass);
 
@@ -115,7 +117,9 @@ namespace Finjin { namespace Engine {
         ACCELEROMETER_RELATIVE_AXIS,
         ACCELEROMETER_ABSOLUTE_AXIS,
 
-        HEADSET_LOCATOR
+        HEADSET_LOCATOR,
+
+        COUNT
     };
 
     struct InputDeviceComponentUtilities
@@ -222,6 +226,8 @@ namespace Finjin { namespace Engine {
 
     struct InputComponentSemanticUtilities
     {
+        enum { COUNT = 57 }; //Number of enums InputComponentSemantic
+
         static const char* ToString(InputComponentSemantic semantic);
         static InputComponentSemantic Parse(const Utf8String& semantic);
         static InputComponentSemantic Parse(const Utf8StringView& semantic);
@@ -240,6 +246,8 @@ namespace Finjin { namespace Engine {
 
     struct InputDeviceSemanticUtilities
     {
+        enum { COUNT = 3 }; //Number of non-combined enums in InputDeviceSemantic
+
         static const char* ToString(InputDeviceSemantic semantic);
         static InputDeviceSemantic Parse(const Utf8String& semantic);
         static InputDeviceSemantic Parse(const Utf8StringView& semantic);

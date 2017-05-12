@@ -67,8 +67,8 @@ namespace Finjin { namespace Engine {
         InputSource WithCode(int code) const;
         InputSource WithSemantic(InputComponentSemantic semantic) const;
 
-        Utf8String GetDeviceComponentString() const;
-        Utf8String GetSemanticString() const;
+        const char* GetDeviceComponentString() const;
+        const char* GetSemanticString() const;
 
         bool HasDeviceComponentCode() const;
 

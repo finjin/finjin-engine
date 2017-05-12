@@ -231,12 +231,12 @@ InputSource InputSource::WithSemantic(InputComponentSemantic semantic) const
     return source;
 }
 
-Utf8String InputSource::GetDeviceComponentString() const
+const char* InputSource::GetDeviceComponentString() const
 {
     return InputDeviceComponentUtilities::ToString(this->deviceComponent);
 }
 
-Utf8String InputSource::GetSemanticString() const
+const char* InputSource::GetSemanticString() const
 {
     return InputComponentSemanticUtilities::ToString(this->semantic);
 }

@@ -16,158 +16,152 @@
 #include "InputComponents.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/Math.hpp"
+#include "finjin/common/StaticUnorderedMap.hpp"
 #include "InputSource.hpp"
 
 using namespace Finjin::Engine;
 
 
-//Local types-------------------------------------------------------------------
-template <typename T>
-struct ItemLookup
-{
-    T value;
-    const char* text;
-};
-
-
 //Local variables---------------------------------------------------------------
-static const ItemLookup<InputDeviceClass> inputDeviceClassLowerLookup[] =
-{
-    { InputDeviceClass::KEYBOARD, "keyboard" },
-    { InputDeviceClass::MOUSE, "mouse" },
-    { InputDeviceClass::GAME_CONTROLLER, "game-controller" },
-    { InputDeviceClass::TOUCH_SCREEN, "touch-screen" },
-    { InputDeviceClass::ACCELEROMETER, "accelerometer" },
-    { InputDeviceClass::HEADSET, "headset" }
-};
+static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceClass, InputDeviceClassUtilities::COUNT) inputDeviceClassLowerLookup
+    (
+    "none", InputDeviceClass::NONE,
+    "keyboard", InputDeviceClass::KEYBOARD,
+    "mouse", InputDeviceClass::MOUSE,
+    "game-controller", InputDeviceClass::GAME_CONTROLLER,
+    "touch-screen", InputDeviceClass::TOUCH_SCREEN,
+    "accelerometer", InputDeviceClass::ACCELEROMETER,
+    "headset", InputDeviceClass::HEADSET,
+    "all", InputDeviceClass::ALL
+    );
 
-static const ItemLookup<InputDeviceComponent> inputDeviceComponentLookup[] =
-{
-    { InputDeviceComponent::KEYBOARD_KEY, "keyboard-key" },
+static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceComponent, InputDeviceComponent::COUNT) inputDeviceComponentLookup
+    (
+    "keyboard-key", InputDeviceComponent::KEYBOARD_KEY,
 
-    { InputDeviceComponent::MOUSE_BUTTON, "mouse-button" },
-    { InputDeviceComponent::MOUSE_RELATIVE_AXIS, "mouse-relative-axis" },
-    { InputDeviceComponent::MOUSE_ABSOLUTE_AXIS, "mouse-absolute-axis" },
+    "mouse-button", InputDeviceComponent::MOUSE_BUTTON,
+    "mouse-relative-axis", InputDeviceComponent::MOUSE_RELATIVE_AXIS,
+    "mouse-absolute-axis", InputDeviceComponent::MOUSE_ABSOLUTE_AXIS,
 
-    { InputDeviceComponent::GAME_CONTROLLER_BUTTON, "game-controller-button" },
-    { InputDeviceComponent::GAME_CONTROLLER_AXIS, "game-controller-axis" },
-    { InputDeviceComponent::GAME_CONTROLLER_POV, "game-controller-pov" },
-    { InputDeviceComponent::GAME_CONTROLLER_LOCATOR, "game-controller-locator" },
+    "game-controller-button", InputDeviceComponent::GAME_CONTROLLER_BUTTON,
+    "game-controller-axis", InputDeviceComponent::GAME_CONTROLLER_AXIS,
+    "game-controller-pov", InputDeviceComponent::GAME_CONTROLLER_POV,
+    "game-controller-locator", InputDeviceComponent::GAME_CONTROLLER_LOCATOR,
 
-    { InputDeviceComponent::TOUCH_COUNT, "touch-count" },
-    { InputDeviceComponent::TOUCH_RELATIVE_AXIS, "touch-relative-axis" },
-    { InputDeviceComponent::TOUCH_ABSOLUTE_AXIS, "touch-absolute-axis" },
+    "touch-count", InputDeviceComponent::TOUCH_COUNT,
+    "touch-relative-axis", InputDeviceComponent::TOUCH_RELATIVE_AXIS,
+    "touch-absolute-axis", InputDeviceComponent::TOUCH_ABSOLUTE_AXIS,
 
-    { InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS, "multitouch-relative-radius" },
-    { InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS, "multitouch-relative-axis" },
+    "multitouch-relative-radius", InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS,
+    "multitouch-relative-axis", InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS,
 
-    { InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS, "accelerometer-relative-axis" },
-    { InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS, "accelerometer-absolute-axis" },
+    "accelerometer-relative-axis", InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS,
+    "accelerometer-absolute-axis", InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS,
 
-    { InputDeviceComponent::HEADSET_LOCATOR, "headset-locator" }
-};
+    "headset-locator", InputDeviceComponent::HEADSET_LOCATOR
+    );
 
-static const ItemLookup<InputDeviceSemantic> inputDeviceSemanticLookup[] =
-{
-    { InputDeviceSemantic::NONE, "none" },
+static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceSemantic, InputDeviceSemanticUtilities::COUNT) inputDeviceSemanticLookup
+    (
+    "none", InputDeviceSemantic::NONE,
 
-    { InputDeviceSemantic::LEFT_HAND, "left-hand" },
-    { InputDeviceSemantic::RIGHT_HAND, "right-hand" },
-};
+    "left-hand", InputDeviceSemantic::LEFT_HAND,
+    "right-hand", InputDeviceSemantic::RIGHT_HAND
+    );
 
-static const ItemLookup<InputComponentSemantic> inputComponentSemanticLookup[] =
-{
-    { InputComponentSemantic::NONE, "none" },
+static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputComponentSemantic, InputComponentSemanticUtilities::COUNT) inputComponentSemanticLookup
+    (
+    "none", InputComponentSemantic::NONE,
 
-    { InputComponentSemantic::ACCEPT, "accept" },
+    "accept", InputComponentSemantic::ACCEPT,
 
-    { InputComponentSemantic::CANCEL, "cancel" },
+    "cancel", InputComponentSemantic::CANCEL,
 
-    { InputComponentSemantic::DEFAULT, "default" },
-    { InputComponentSemantic::HANDBRAKE, "handbrake" },
-    { InputComponentSemantic::RELOAD, "reload" },
+    "default", InputComponentSemantic::DEFAULT,
+    "handbrake", InputComponentSemantic::HANDBRAKE,
+    "reload", InputComponentSemantic::RELOAD,
 
-    { InputComponentSemantic::CHANGE, "change" },
-    { InputComponentSemantic::CHANGE_VIEW, "change-view" },
-    { InputComponentSemantic::CHANGE_WEAPON, "change-weapon" },
+    "change", InputComponentSemantic::CHANGE,
+    "change-view", InputComponentSemantic::CHANGE_VIEW,
+    "change-weapon", InputComponentSemantic::CHANGE_WEAPON,
 
-    { InputComponentSemantic::SETTINGS, "settings" },
+    "settings", InputComponentSemantic::SETTINGS,
 
-    { InputComponentSemantic::SYSTEM_SETTINGS, "system-settings" },
+    "system-settings", InputComponentSemantic::SYSTEM_SETTINGS,
 
-    { InputComponentSemantic::SYSTEM_HOME, "system-home" },
+    "system-home", InputComponentSemantic::SYSTEM_HOME,
 
-    { InputComponentSemantic::SHIFT_LEFT, "shift-left" },
-    { InputComponentSemantic::GRENADE_LEFT, "grenade-left" },
+    "shift-left", InputComponentSemantic::SHIFT_LEFT,
+    "grenade-left", InputComponentSemantic::GRENADE_LEFT,
 
-    { InputComponentSemantic::SHIFT_RIGHT, "shift-right" },
-    { InputComponentSemantic::GRENADE_RIGHT, "grenade-right" },
+    "shift-right", InputComponentSemantic::SHIFT_RIGHT,
+    "grenade-right", InputComponentSemantic::GRENADE_RIGHT,
 
-    { InputComponentSemantic::BRAKE, "brake" },
-    { InputComponentSemantic::AIM, "aim" },
+    "brake", InputComponentSemantic::BRAKE,
+    "aim", InputComponentSemantic::AIM,
 
-    { InputComponentSemantic::GAS, "gas" },
-    { InputComponentSemantic::FIRE, "fire" },
+    "gas", InputComponentSemantic::GAS,
+    "fire", InputComponentSemantic::FIRE,
 
-    { InputComponentSemantic::TOGGLE_UP, "toggle-up" },
-    { InputComponentSemantic::TOGGLE_DOWN, "toggle-down" },
-    { InputComponentSemantic::TOGGLE_LEFT, "toggle-left" },
-    { InputComponentSemantic::TOGGLE_RIGHT, "toggle-right" },
-    { InputComponentSemantic::TOGGLE_UP_DOWN, "toggle-up-down" },
-    { InputComponentSemantic::TOGGLE_LEFT_RIGHT, "toggle-left-right" },
-    { InputComponentSemantic::TOGGLE_ALL, "toggle-all" },
+    "toggle-up", InputComponentSemantic::TOGGLE_UP,
+    "toggle-down", InputComponentSemantic::TOGGLE_DOWN,
+    "toggle-left", InputComponentSemantic::TOGGLE_LEFT,
+    "toggle-right", InputComponentSemantic::TOGGLE_RIGHT,
+    "toggle-up-down", InputComponentSemantic::TOGGLE_UP_DOWN,
+    "toggle-left-right", InputComponentSemantic::TOGGLE_LEFT_RIGHT,
+    "toggle-all", InputComponentSemantic::TOGGLE_ALL,
 
-    { InputComponentSemantic::STEER_UP, "steer-up" },
-    { InputComponentSemantic::MOVE_UP, "move-up" },
-    { InputComponentSemantic::STEER_DOWN, "steer-down" },
-    { InputComponentSemantic::MOVE_DOWN, "move-down" },
-    { InputComponentSemantic::STEER_UP_DOWN, "steer-up-down" },
-    { InputComponentSemantic::MOVE_UP_DOWN, "move-up-down" },
-    { InputComponentSemantic::STEER_LEFT, "steer-left" },
-    { InputComponentSemantic::MOVE_LEFT, "move-left" },
-    { InputComponentSemantic::STEER_RIGHT, "steer-right" },
-    { InputComponentSemantic::MOVE_RIGHT, "move-right" },
-    { InputComponentSemantic::STEER_LEFT_RIGHT, "steer-left-right" },
-    { InputComponentSemantic::MOVE_LEFT_RIGHT, "move-left-right" },
-    { InputComponentSemantic::STEER_ALL, "steer-all" },
-    { InputComponentSemantic::MOVE_ALL, "move-all" },
+    "steer-up", InputComponentSemantic::STEER_UP,
+    "move-up", InputComponentSemantic::MOVE_UP,
+    "steer-down", InputComponentSemantic::STEER_DOWN,
+    "move-down", InputComponentSemantic::MOVE_DOWN,
+    "steer-up-down", InputComponentSemantic::STEER_UP_DOWN,
+    "move-up-down", InputComponentSemantic::MOVE_UP_DOWN,
+    "steer-left", InputComponentSemantic::STEER_LEFT,
+    "move-left", InputComponentSemantic::MOVE_LEFT,
+    "steer-right", InputComponentSemantic::STEER_RIGHT,
+    "move-right", InputComponentSemantic::MOVE_RIGHT,
+    "steer-left-right", InputComponentSemantic::STEER_LEFT_RIGHT,
+    "move-left-right", InputComponentSemantic::MOVE_LEFT_RIGHT,
+    "steer-all", InputComponentSemantic::STEER_ALL,
+    "move-all", InputComponentSemantic::MOVE_ALL,
 
-    { InputComponentSemantic::STEER_TOGGLE, "steer-toggle" },
-    { InputComponentSemantic::MOVE_TOGGLE, "move-toggle" },
+    "steer-toggle", InputComponentSemantic::STEER_TOGGLE,
+    "move-toggle", InputComponentSemantic::MOVE_TOGGLE,
 
-    { InputComponentSemantic::LOOK_UP, "look-up" },
-    { InputComponentSemantic::LOOK_DOWN, "look-down" },
-    { InputComponentSemantic::LOOK_UP_DOWN, "look-up-down" },
-    { InputComponentSemantic::LOOK_LEFT, "look-left" },
-    { InputComponentSemantic::LOOK_RIGHT, "look-right" },
-    { InputComponentSemantic::LOOK_LEFT_RIGHT, "look-left-right" },
-    { InputComponentSemantic::LOOK_ALL, "look-all" },
+    "look-up", InputComponentSemantic::LOOK_UP,
+    "look-down", InputComponentSemantic::LOOK_DOWN,
+    "look-up-down", InputComponentSemantic::LOOK_UP_DOWN,
+    "look-left", InputComponentSemantic::LOOK_LEFT,
+    "look-right", InputComponentSemantic::LOOK_RIGHT,
+    "look-left-right", InputComponentSemantic::LOOK_LEFT_RIGHT,
+    "look-all", InputComponentSemantic::LOOK_ALL,
 
-    { InputComponentSemantic::LOOK_TOGGLE, "look-toggle" },
+    "look-toggle", InputComponentSemantic::LOOK_TOGGLE,
 
-    { InputComponentSemantic::TOUCH_PAD_BUTTON, "touch-pad-button" },
+    "touch-pad-button", InputComponentSemantic::TOUCH_PAD_BUTTON,
 
-    { InputComponentSemantic::BRAKE_CLICK, "brake-click" },
-    { InputComponentSemantic::AIM_CLICK, "aim-click" },
+    "brake-click", InputComponentSemantic::BRAKE_CLICK,
+    "aim-click", InputComponentSemantic::AIM_CLICK,
 
-    { InputComponentSemantic::GAS_CLICK, "gas-click" },
-    { InputComponentSemantic::FIRE_CLICK, "fire-click" },
+    "gas-click", InputComponentSemantic::GAS_CLICK,
+    "fire-click", InputComponentSemantic::FIRE_CLICK,
 
-    { InputComponentSemantic::LOCATOR, "locator" }
-};
+    "locator", InputComponentSemantic::LOCATOR
+    );
 
-static const ItemLookup<PovDirection> povDirectionLookup[] =
-{
-    { PovDirection::CENTERED, "centered" },
-    { PovDirection::UP, "up" },
-    { PovDirection::UP_RIGHT, "up-right" },
-    { PovDirection::RIGHT, "right" },
-    { PovDirection::DOWN_RIGHT, "down-right" },
-    { PovDirection::DOWN, "down" },
-    { PovDirection::DOWN_LEFT, "down-left" },
-    { PovDirection::LEFT, "left" },
-    { PovDirection::UP_LEFT, "up-left" }
-};
+static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(PovDirection, PovDirectionUtilities::COUNT) povDirectionLookup
+    (
+    "centered", PovDirection::CENTERED,
+    "up", PovDirection::UP,
+    "up-right", PovDirection::UP_RIGHT,
+    "right", PovDirection::RIGHT,
+    "down-right", PovDirection::DOWN_RIGHT,
+    "down", PovDirection::DOWN,
+    "down-left", PovDirection::DOWN_LEFT,
+    "left", PovDirection::LEFT,
+    "up-left", PovDirection::UP_LEFT
+    );
 
 
 //Local functions---------------------------------------------------------------
@@ -286,10 +280,10 @@ size_t InputDeviceClassUtilities::ToIndex(InputDeviceClass deviceClass)
 
 const char* InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceClassLowerLookup); i++)
+    for (auto& item : inputDeviceClassLowerLookup)
     {
-        if (inputDeviceClassLowerLookup[i].value == deviceClass)
-            return inputDeviceClassLowerLookup[i].text;
+        if (item.second == deviceClass)
+            return item.first;
     }
 
     return "<unknown>";
@@ -298,10 +292,10 @@ const char* InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
 //InputDeviceComponentUtilities
 const char* InputDeviceComponentUtilities::ToString(InputDeviceComponent deviceComponent)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceComponentLookup); i++)
+    for (auto& item : inputDeviceComponentLookup)
     {
-        if (inputDeviceComponentLookup[i].value == deviceComponent)
-            return inputDeviceComponentLookup[i].text;
+        if (item.second == deviceComponent)
+            return item.first;
     }
 
     return "<unknown>";
@@ -309,22 +303,18 @@ const char* InputDeviceComponentUtilities::ToString(InputDeviceComponent deviceC
 
 InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8String& deviceComponent)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceComponentLookup); i++)
-    {
-        if (deviceComponent == inputDeviceComponentLookup[i].text)
-            return inputDeviceComponentLookup[i].value;
-    }
-
+    auto foundAt = inputDeviceComponentLookup.find(deviceComponent);
+    if (foundAt != inputDeviceComponentLookup.end())
+        return foundAt->second;
+    
     return InputDeviceComponent::NONE;
 }
 
 InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8StringView& deviceComponent)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceComponentLookup); i++)
-    {
-        if (deviceComponent == inputDeviceComponentLookup[i].text)
-            return inputDeviceComponentLookup[i].value;
-    }
+    auto foundAt = inputDeviceComponentLookup.find(deviceComponent);
+    if (foundAt != inputDeviceComponentLookup.end())
+        return foundAt->second;
 
     return InputDeviceComponent::NONE;
 }
@@ -432,10 +422,10 @@ InputDeviceComponentClass InputDeviceComponentUtilities::GetDeviceComponentClass
 //InputDeviceSemanticUtilities
 const char* InputDeviceSemanticUtilities::ToString(InputDeviceSemantic semantic)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceSemanticLookup); i++)
+    for (auto& item : inputDeviceSemanticLookup)
     {
-        if (inputDeviceSemanticLookup[i].value == semantic)
-            return inputDeviceSemanticLookup[i].text;
+        if (item.second == semantic)
+            return item.first;
     }
 
     return "<unknown>";
@@ -443,22 +433,18 @@ const char* InputDeviceSemanticUtilities::ToString(InputDeviceSemantic semantic)
 
 InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8String& semantic)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceSemanticLookup); i++)
-    {
-        if (semantic == inputDeviceSemanticLookup[i].text)
-            return inputDeviceSemanticLookup[i].value;
-    }
+    auto foundAt = inputDeviceSemanticLookup.find(semantic);
+    if (foundAt != inputDeviceSemanticLookup.end())
+        return foundAt->second;
 
     return InputDeviceSemantic::NONE;
 }
 
 InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8StringView& semantic)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceSemanticLookup); i++)
-    {
-        if (semantic == inputDeviceSemanticLookup[i].text)
-            return inputDeviceSemanticLookup[i].value;
-    }
+    auto foundAt = inputDeviceSemanticLookup.find(semantic);
+    if (foundAt != inputDeviceSemanticLookup.end())
+        return foundAt->second;
 
     return InputDeviceSemantic::NONE;
 }
@@ -466,10 +452,10 @@ InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8StringView& se
 //InputComponentSemanticUtilities
 const char* InputComponentSemanticUtilities::ToString(InputComponentSemantic semantic)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputComponentSemanticLookup); i++)
+    for (auto& item : inputComponentSemanticLookup)
     {
-        if (inputComponentSemanticLookup[i].value == semantic)
-            return inputComponentSemanticLookup[i].text;
+        if (item.second == semantic)
+            return item.first;
     }
 
     return "<unknown>";
@@ -477,22 +463,18 @@ const char* InputComponentSemanticUtilities::ToString(InputComponentSemantic sem
 
 InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8String& semantic)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputComponentSemanticLookup); i++)
-    {
-        if (semantic == inputComponentSemanticLookup[i].text)
-            return inputComponentSemanticLookup[i].value;
-    }
+    auto foundAt = inputComponentSemanticLookup.find(semantic);
+    if (foundAt != inputComponentSemanticLookup.end())
+        return foundAt->second;
 
     return InputComponentSemantic::NONE;
 }
 
 InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8StringView& semantic)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(inputComponentSemanticLookup); i++)
-    {
-        if (semantic == inputComponentSemanticLookup[i].text)
-            return inputComponentSemanticLookup[i].value;
-    }
+    auto foundAt = inputComponentSemanticLookup.find(semantic);
+    if (foundAt != inputComponentSemanticLookup.end())
+        return foundAt->second;
 
     return InputComponentSemantic::NONE;
 }
@@ -522,10 +504,10 @@ int InputComponentSemanticUtilities::GetMoveLookToggleDirection(InputComponentSe
 //PovDirectionUtilities
 const char* PovDirectionUtilities::ToString(PovDirection povDirection)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(povDirectionLookup); i++)
+    for (auto& item : povDirectionLookup)
     {
-        if (povDirectionLookup[i].value == povDirection)
-            return povDirectionLookup[i].text;
+        if (item.second == povDirection)
+            return item.first;
     }
 
     return "<unknown>";
@@ -533,22 +515,18 @@ const char* PovDirectionUtilities::ToString(PovDirection povDirection)
 
 PovDirection PovDirectionUtilities::Parse(const Utf8String& povDirection)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(povDirectionLookup); i++)
-    {
-        if (povDirection == povDirectionLookup[i].text)
-            return povDirectionLookup[i].value;
-    }
+    auto foundAt = povDirectionLookup.find(povDirection);
+    if (foundAt != povDirectionLookup.end())
+        return foundAt->second;
 
     return PovDirection::CENTERED;
 }
 
 PovDirection PovDirectionUtilities::Parse(const Utf8StringView& povDirection)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(povDirectionLookup); i++)
-    {
-        if (povDirection == povDirectionLookup[i].text)
-            return povDirectionLookup[i].value;
-    }
+    auto foundAt = povDirectionLookup.find(povDirection);
+    if (foundAt != povDirectionLookup.end())
+        return foundAt->second;
 
     return PovDirection::CENTERED;
 }

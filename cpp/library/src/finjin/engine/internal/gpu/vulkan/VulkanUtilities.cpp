@@ -297,24 +297,22 @@ VkShaderStageFlagBits VulkanUtilities::ParseShaderStages(const Utf8StringView& v
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    const size_t count = 8;
-    static StaticUnorderedMap<size_t, VkShaderStageFlagBits, count, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT(count), MapPairConstructNone<size_t, VkShaderStageFlagBits>, PassthroughHash> lookup
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(VkShaderStageFlagBits, 8) lookup
         (
-        Utf8String::Hash("vertex"), VK_SHADER_STAGE_VERTEX_BIT,
-        Utf8String::Hash("tessellation-control"), VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
-        Utf8String::Hash("tessellation-evaluation"), VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
-        Utf8String::Hash("geometry"), VK_SHADER_STAGE_GEOMETRY_BIT,
-        Utf8String::Hash("fragment"), VK_SHADER_STAGE_FRAGMENT_BIT,
-        Utf8String::Hash("compute"), VK_SHADER_STAGE_COMPUTE_BIT,
-        Utf8String::Hash("all-graphics"), VK_SHADER_STAGE_ALL_GRAPHICS,
-        Utf8String::Hash("all"), VK_SHADER_STAGE_ALL
+        "vertex", VK_SHADER_STAGE_VERTEX_BIT,
+        "tessellation-control", VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+        "tessellation-evaluation", VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+        "geometry", VK_SHADER_STAGE_GEOMETRY_BIT,
+        "fragment", VK_SHADER_STAGE_FRAGMENT_BIT,
+        "compute", VK_SHADER_STAGE_COMPUTE_BIT,
+        "all-graphics", VK_SHADER_STAGE_ALL_GRAPHICS,
+        "all", VK_SHADER_STAGE_ALL
         );
 
-    Utf8StringHash hash;
     VkShaderStageFlagBits stageFlags = (VkShaderStageFlagBits)0;
-    auto splitResult = Split(value, ' ', [&hash, &stageFlags](Utf8StringView& value)
+    auto splitResult = Split(value, ' ', [&stageFlags](Utf8StringView& value)
     {
-        auto foundAt = lookup.find(hash(value));
+        auto foundAt = lookup.find(value);
         if (foundAt != lookup.end())
             stageFlags = static_cast<VkShaderStageFlagBits>(stageFlags | foundAt->second);
         else

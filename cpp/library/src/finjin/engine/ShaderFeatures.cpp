@@ -52,50 +52,48 @@ void ShaderFeatures::ParseAndAddFlags(const Utf8StringView& features, Error& err
 
 bool ShaderFeatures::ParseAndAddFlag(const Utf8StringView& feature)
 {
-    const size_t count = 40;
-    static StaticUnorderedMap<size_t, ShaderFeatureFlag, count, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT(count), MapPairConstructNone<size_t, ShaderFeatureFlag>, PassthroughHash> lookup
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ShaderFeatureFlag, 40) lookup
         (
-        Utf8String::Hash("map-di"), ShaderFeatureFlag::MAP_DIFFUSE,
-        Utf8String::Hash("map-diffuse"), ShaderFeatureFlag::MAP_DIFFUSE,
-        Utf8String::Hash("map-sp"), ShaderFeatureFlag::MAP_SPECULAR,
-        Utf8String::Hash("map-specular"), ShaderFeatureFlag::MAP_SPECULAR,
-        Utf8String::Hash("map-rl"), ShaderFeatureFlag::MAP_REFLECTION,
-        Utf8String::Hash("map-reflection"), ShaderFeatureFlag::MAP_REFLECTION,
-        Utf8String::Hash("map-rr"), ShaderFeatureFlag::MAP_REFRACTION,
-        Utf8String::Hash("map-refraction"), ShaderFeatureFlag::MAP_REFRACTION,
-        Utf8String::Hash("map-bu"), ShaderFeatureFlag::MAP_BUMP,
-        Utf8String::Hash("map-bump"), ShaderFeatureFlag::MAP_BUMP,
-        Utf8String::Hash("map-he"), ShaderFeatureFlag::MAP_HEIGHT,
-        Utf8String::Hash("map-height"), ShaderFeatureFlag::MAP_HEIGHT,
-        Utf8String::Hash("map-si"), ShaderFeatureFlag::MAP_SELF_ILLUMINATION,
-        Utf8String::Hash("map-self-illumination"), ShaderFeatureFlag::MAP_SELF_ILLUMINATION,
-        Utf8String::Hash("map-op"), ShaderFeatureFlag::MAP_OPACITY,
-        Utf8String::Hash("map-opacity"), ShaderFeatureFlag::MAP_OPACITY,
-        Utf8String::Hash("map-en"), ShaderFeatureFlag::MAP_ENVIRONMENT,
-        Utf8String::Hash("map-environment"), ShaderFeatureFlag::MAP_ENVIRONMENT,
-        Utf8String::Hash("map-sh"), ShaderFeatureFlag::MAP_SHININESS,
-        Utf8String::Hash("map-shininess"), ShaderFeatureFlag::MAP_SHININESS,
+        "map-di", ShaderFeatureFlag::MAP_DIFFUSE,
+        "map-diffuse", ShaderFeatureFlag::MAP_DIFFUSE,
+        "map-sp", ShaderFeatureFlag::MAP_SPECULAR,
+        "map-specular", ShaderFeatureFlag::MAP_SPECULAR,
+        "map-rl", ShaderFeatureFlag::MAP_REFLECTION,
+        "map-reflection", ShaderFeatureFlag::MAP_REFLECTION,
+        "map-rr", ShaderFeatureFlag::MAP_REFRACTION,
+        "map-refraction", ShaderFeatureFlag::MAP_REFRACTION,
+        "map-bu", ShaderFeatureFlag::MAP_BUMP,
+        "map-bump", ShaderFeatureFlag::MAP_BUMP,
+        "map-he", ShaderFeatureFlag::MAP_HEIGHT,
+        "map-height", ShaderFeatureFlag::MAP_HEIGHT,
+        "map-si", ShaderFeatureFlag::MAP_SELF_ILLUMINATION,
+        "map-self-illumination", ShaderFeatureFlag::MAP_SELF_ILLUMINATION,
+        "map-op", ShaderFeatureFlag::MAP_OPACITY,
+        "map-opacity", ShaderFeatureFlag::MAP_OPACITY,
+        "map-en", ShaderFeatureFlag::MAP_ENVIRONMENT,
+        "map-environment", ShaderFeatureFlag::MAP_ENVIRONMENT,
+        "map-sh", ShaderFeatureFlag::MAP_SHININESS,
+        "map-shininess", ShaderFeatureFlag::MAP_SHININESS,
 
-        Utf8String::Hash("mesh-sa"), ShaderFeatureFlag::MESH_SKELETON_ANIMATION,
-        Utf8String::Hash("mesh-skeleton-animation"), ShaderFeatureFlag::MESH_SKELETON_ANIMATION,
-        Utf8String::Hash("mesh-pa"), ShaderFeatureFlag::MESH_POSE_ANIMATION,
-        Utf8String::Hash("mesh-pose-animation"), ShaderFeatureFlag::MESH_POSE_ANIMATION,
-        Utf8String::Hash("mesh-ma"), ShaderFeatureFlag::MESH_MORPH_ANIMATION,
-        Utf8String::Hash("mesh-morph-animation"), ShaderFeatureFlag::MESH_MORPH_ANIMATION,
+        "mesh-sa", ShaderFeatureFlag::MESH_SKELETON_ANIMATION,
+        "mesh-skeleton-animation", ShaderFeatureFlag::MESH_SKELETON_ANIMATION,
+        "mesh-pa", ShaderFeatureFlag::MESH_POSE_ANIMATION,
+        "mesh-pose-animation", ShaderFeatureFlag::MESH_POSE_ANIMATION,
+        "mesh-ma", ShaderFeatureFlag::MESH_MORPH_ANIMATION,
+        "mesh-morph-animation", ShaderFeatureFlag::MESH_MORPH_ANIMATION,
 
-        Utf8String::Hash("environment-ldf"), ShaderFeatureFlag::ENVIRONMENT_LINEAR_DISTANCE_FOG,
-        Utf8String::Hash("environment-linear-distance-fog"), ShaderFeatureFlag::ENVIRONMENT_LINEAR_DISTANCE_FOG,
-        Utf8String::Hash("environment-edf"), ShaderFeatureFlag::ENVIRONMENT_EXP_DISTANCE_FOG,
-        Utf8String::Hash("environment-exp-distance-fog"), ShaderFeatureFlag::ENVIRONMENT_EXP_DISTANCE_FOG,
+        "environment-ldf", ShaderFeatureFlag::ENVIRONMENT_LINEAR_DISTANCE_FOG,
+        "environment-linear-distance-fog", ShaderFeatureFlag::ENVIRONMENT_LINEAR_DISTANCE_FOG,
+        "environment-edf", ShaderFeatureFlag::ENVIRONMENT_EXP_DISTANCE_FOG,
+        "environment-exp-distance-fog", ShaderFeatureFlag::ENVIRONMENT_EXP_DISTANCE_FOG,
 
-        Utf8String::Hash("rendering-w"), ShaderFeatureFlag::RENDERING_FILL_WIREFRAME,
-        Utf8String::Hash("rendering-wireframe"), ShaderFeatureFlag::RENDERING_FILL_WIREFRAME,
-        Utf8String::Hash("rendering-vb"), ShaderFeatureFlag::RENDERING_VELOCITY_BLUR,
-        Utf8String::Hash("rendering-velocity-blur"), ShaderFeatureFlag::RENDERING_VELOCITY_BLUR
+        "rendering-w", ShaderFeatureFlag::RENDERING_FILL_WIREFRAME,
+        "rendering-wireframe", ShaderFeatureFlag::RENDERING_FILL_WIREFRAME,
+        "rendering-vb", ShaderFeatureFlag::RENDERING_VELOCITY_BLUR,
+        "rendering-velocity-blur", ShaderFeatureFlag::RENDERING_VELOCITY_BLUR
         );
 
-    Utf8StringHash hash;
-    auto foundAt = lookup.find(hash(feature));
+    auto foundAt = lookup.find(feature);
     if (foundAt != lookup.end())
     {
         this->flags |= foundAt->second;
@@ -132,21 +130,19 @@ void ShaderFeatures::ParseAndAddLightTypes(const Utf8StringView& lightTypes, Err
 
 bool ShaderFeatures::ParseAndAddLightType(const Utf8StringView& lightType)
 {
-    const size_t count = 6;
-    static StaticUnorderedMap<size_t, LightType, count, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT(count), MapPairConstructNone<size_t, LightType>, PassthroughHash> lookup
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(LightType, 6) lookup
         (
-        Utf8String::Hash("d"), LightType::DIRECTIONAL,
-        Utf8String::Hash("directional"), LightType::DIRECTIONAL,
+        "d", LightType::DIRECTIONAL,
+        "directional", LightType::DIRECTIONAL,
 
-        Utf8String::Hash("p"), LightType::POINT,
-        Utf8String::Hash("point"), LightType::POINT,
+        "p", LightType::POINT,
+        "point", LightType::POINT,
 
-        Utf8String::Hash("s"), LightType::SPOT,
-        Utf8String::Hash("spot"), LightType::SPOT
+        "s", LightType::SPOT,
+        "spot", LightType::SPOT
         );
 
-    Utf8StringHash hash;
-    auto foundAt = lookup.find(hash(lightType));
+    auto foundAt = lookup.find(lightType);
     if (foundAt != lookup.end())
         return this->lights.push_back(foundAt->second).HasValue(true);
     else
