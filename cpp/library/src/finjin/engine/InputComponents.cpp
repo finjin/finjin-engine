@@ -284,7 +284,7 @@ size_t InputDeviceClassUtilities::ToIndex(InputDeviceClass deviceClass)
     }
 }
 
-Utf8String InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
+const char* InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceClassLowerLookup); i++)
     {
@@ -292,11 +292,11 @@ Utf8String InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
             return inputDeviceClassLowerLookup[i].text;
     }
 
-    return Utf8String::Empty();
+    return "<unknown>";
 }
 
 //InputDeviceComponentUtilities
-Utf8String InputDeviceComponentUtilities::ToString(InputDeviceComponent deviceComponent)
+const char* InputDeviceComponentUtilities::ToString(InputDeviceComponent deviceComponent)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceComponentLookup); i++)
     {
@@ -304,7 +304,7 @@ Utf8String InputDeviceComponentUtilities::ToString(InputDeviceComponent deviceCo
             return inputDeviceComponentLookup[i].text;
     }
 
-    return Utf8String::Empty();
+    return "<unknown>";
 }
 
 InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8String& deviceComponent)
@@ -430,7 +430,7 @@ InputDeviceComponentClass InputDeviceComponentUtilities::GetDeviceComponentClass
 }
 
 //InputDeviceSemanticUtilities
-Utf8String InputDeviceSemanticUtilities::ToString(InputDeviceSemantic semantic)
+const char* InputDeviceSemanticUtilities::ToString(InputDeviceSemantic semantic)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(inputDeviceSemanticLookup); i++)
     {
@@ -438,7 +438,7 @@ Utf8String InputDeviceSemanticUtilities::ToString(InputDeviceSemantic semantic)
             return inputDeviceSemanticLookup[i].text;
     }
 
-    return Utf8String::Empty();
+    return "<unknown>";
 }
 
 InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8String& semantic)
@@ -464,7 +464,7 @@ InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8StringView& se
 }
 
 //InputComponentSemanticUtilities
-Utf8String InputComponentSemanticUtilities::ToString(InputComponentSemantic semantic)
+const char* InputComponentSemanticUtilities::ToString(InputComponentSemantic semantic)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(inputComponentSemanticLookup); i++)
     {
@@ -472,7 +472,7 @@ Utf8String InputComponentSemanticUtilities::ToString(InputComponentSemantic sema
             return inputComponentSemanticLookup[i].text;
     }
 
-    return Utf8String::Empty();
+    return "<unknown>";
 }
 
 InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8String& semantic)
@@ -520,7 +520,7 @@ int InputComponentSemanticUtilities::GetMoveLookToggleDirection(InputComponentSe
 }
 
 //PovDirectionUtilities
-Utf8String PovDirectionUtilities::ToString(PovDirection povDirection)
+const char* PovDirectionUtilities::ToString(PovDirection povDirection)
 {
     for (size_t i = 0; i < FINJIN_COUNT_OF(povDirectionLookup); i++)
     {
@@ -528,7 +528,7 @@ Utf8String PovDirectionUtilities::ToString(PovDirection povDirection)
             return povDirectionLookup[i].text;
     }
 
-    return Utf8String::Empty();
+    return "<unknown>";
 }
 
 PovDirection PovDirectionUtilities::Parse(const Utf8String& povDirection)

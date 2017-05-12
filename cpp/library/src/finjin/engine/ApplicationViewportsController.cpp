@@ -186,7 +186,7 @@ ApplicationViewportsFocusState ApplicationViewportsController::StartFocusUpdate(
 
     for (auto& appViewport : *this)
     {
-        bool hadFocus = appViewport->GetOSWindow()->HasFocus();
+        auto hadFocus = appViewport->GetOSWindow()->HasFocus();
 
         state.hadFocus.push_back(hadFocus);
 

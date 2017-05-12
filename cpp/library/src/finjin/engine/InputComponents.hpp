@@ -47,7 +47,7 @@ namespace Finjin { namespace Engine {
 
     struct PovDirectionUtilities
     {
-        static Utf8String ToString(PovDirection povDirection);
+        static const char* ToString(PovDirection povDirection);
         static PovDirection Parse(const Utf8String& povDirection);
         static PovDirection Parse(const Utf8StringView& povDirection);
     };
@@ -72,7 +72,7 @@ namespace Finjin { namespace Engine {
 
         static size_t ToIndex(InputDeviceClass deviceClass);
 
-        static Utf8String ToString(InputDeviceClass deviceClass);
+        static const char* ToString(InputDeviceClass deviceClass);
     };
 
     /** Device components classes. These can be bitwise OR'ed together */
@@ -127,7 +127,7 @@ namespace Finjin { namespace Engine {
         static bool IsAccelerometer(InputDeviceComponent type);
         static bool IsHeadset(InputDeviceComponent type);
 
-        static Utf8String ToString(InputDeviceComponent deviceComponent);
+        static const char* ToString(InputDeviceComponent deviceComponent);
         static InputDeviceComponent Parse(const Utf8String& deviceComponent);
         static InputDeviceComponent Parse(const Utf8StringView& deviceComponent);
 
@@ -222,7 +222,7 @@ namespace Finjin { namespace Engine {
 
     struct InputComponentSemanticUtilities
     {
-        static Utf8String ToString(InputComponentSemantic semantic);
+        static const char* ToString(InputComponentSemantic semantic);
         static InputComponentSemantic Parse(const Utf8String& semantic);
         static InputComponentSemantic Parse(const Utf8StringView& semantic);
 
@@ -240,7 +240,7 @@ namespace Finjin { namespace Engine {
 
     struct InputDeviceSemanticUtilities
     {
-        static Utf8String ToString(InputDeviceSemantic semantic);
+        static const char* ToString(InputDeviceSemantic semantic);
         static InputDeviceSemantic Parse(const Utf8String& semantic);
         static InputDeviceSemantic Parse(const Utf8StringView& semantic);
     };

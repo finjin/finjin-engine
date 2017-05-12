@@ -19,48 +19,34 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-Utf8String AssetClassUtilities::ToString(size_t index, bool directoryName)
+const char* AssetClassUtilities::ToString(size_t index, bool directoryName)
 {
-    Utf8String result;
-    ToString(result, (AssetClass)index, directoryName);
-    return result;
+    return ToString(static_cast<AssetClass>(index), directoryName);
 }
 
-Utf8String AssetClassUtilities::ToString(AssetClass value, bool directoryName)
-{
-    Utf8String result;
-    ToString(result, value, directoryName);
-    return result;
-}
-
-void AssetClassUtilities::ToString(Utf8String& result, size_t index, bool directoryName)
-{
-    ToString(result, (AssetClass)index, directoryName);
-}
-
-void AssetClassUtilities::ToString(Utf8String& result, AssetClass value, bool directoryName)
+const char* AssetClassUtilities::ToString(AssetClass value, bool directoryName)
 {
     switch (value)
     {
-        case AssetClass::FONT: result = directoryName ? "fonts" : "font"; break;
-        case AssetClass::INPUT_BINDINGS: result = directoryName ? "inputbindings" : "inputbindings"; break; //Yes, both forms are the same
-        case AssetClass::INPUT_DEVICE: result = directoryName ? "inputdevices" : "inputdevice"; break;
-        case AssetClass::MATERIAL: result = directoryName ? "materials" : "material"; break;
-        case AssetClass::MESH: result = directoryName ? "meshes" : "mesh"; break;
-        case AssetClass::MORPH_ANIMATION: result = directoryName ? "morphanims" : "morphanim"; break;
-        case AssetClass::NODE_ANIMATION: result = directoryName ? "nodeanims" : "nodeanim"; break;
-        case AssetClass::POSE_ANIMATION: result = directoryName ? "poseanims" : "poseanim"; break;
-        case AssetClass::PREFAB: result = directoryName ? "prefabs" : "prefab"; break;
-        case AssetClass::SCENE: result = directoryName ? "scenes" : "scene"; break;
-        case AssetClass::SETTINGS: result = directoryName ? "settings" : "settings"; break; //Yes, both forms are the same
-        case AssetClass::SHADER: result = directoryName ? "shaders" : "shader"; break;
-        case AssetClass::SKELETON: result = directoryName ? "skeletons" : "skeleton"; break;
-        case AssetClass::SKELETON_ANIMATION: result = directoryName ? "skeletonanims" : "skeletonanim"; break;
-        case AssetClass::SOUND: result = directoryName ? "sounds" : "sound"; break;
-        case AssetClass::STRING_TABLE: result = directoryName ? "stringtables" : "stringtable"; break;
-        case AssetClass::TEXTURE: result = directoryName ? "textures" : "texture"; break;
-        case AssetClass::USER_DATA_TYPES: result = directoryName ? "userdatatypes" : "userdatatypes"; break; //Yes, both forms are the same
-        default: result.clear(); break;
+        case AssetClass::FONT: return directoryName ? "fonts" : "font";
+        case AssetClass::INPUT_BINDINGS: return directoryName ? "inputbindings" : "inputbindings"; //Yes, both forms are the same
+        case AssetClass::INPUT_DEVICE: return directoryName ? "inputdevices" : "inputdevice";
+        case AssetClass::MATERIAL: return directoryName ? "materials" : "material";
+        case AssetClass::MESH: return directoryName ? "meshes" : "mesh";
+        case AssetClass::MORPH_ANIMATION: return directoryName ? "morphanims" : "morphanim";
+        case AssetClass::NODE_ANIMATION: return directoryName ? "nodeanims" : "nodeanim";
+        case AssetClass::POSE_ANIMATION: return directoryName ? "poseanims" : "poseanim";
+        case AssetClass::PREFAB: return directoryName ? "prefabs" : "prefab";
+        case AssetClass::SCENE: return directoryName ? "scenes" : "scene";
+        case AssetClass::SETTINGS: return directoryName ? "settings" : "settings"; //Yes, both forms are the same
+        case AssetClass::SHADER: return directoryName ? "shaders" : "shader";
+        case AssetClass::SKELETON: return directoryName ? "skeletons" : "skeleton";
+        case AssetClass::SKELETON_ANIMATION: return directoryName ? "skeletonanims" : "skeletonanim";
+        case AssetClass::SOUND: return directoryName ? "sounds" : "sound";
+        case AssetClass::STRING_TABLE: return directoryName ? "stringtables" : "stringtable";
+        case AssetClass::TEXTURE: return directoryName ? "textures" : "texture";
+        case AssetClass::USER_DATA_TYPES: return directoryName ? "userdatatypes" : "userdatatypes"; //Yes, both forms are the same
+        default: return "<unknown>";
     }
 }
 
@@ -69,7 +55,7 @@ AssetClass AssetClassUtilities::ParseFromExtension(const Utf8String& extension)
     for (size_t i = 0; i < (size_t)AssetClass::COUNT; i++)
     {
         if (extension.EndsWith(ToString(i)))
-            return (AssetClass)i;
+            return static_cast<AssetClass>(i);
     }
 
     return AssetClass::COUNT;
@@ -105,7 +91,7 @@ Utf8String AssetClassUtilities::ToDirectoryName(AssetClass value)
 
 void AssetClassUtilities::ToDirectoryName(Utf8String& result, AssetClass value)
 {
-    ToString(result, value, true);
+    result = ToString(value, true);
 }
 
 void AssetClassUtilities::FixObjectName(Path& fileName)

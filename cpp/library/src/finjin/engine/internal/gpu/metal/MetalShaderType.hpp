@@ -37,7 +37,7 @@ namespace Finjin { namespace Engine {
 
     struct MetalShaderTypeUtilities
     {
-        static Utf8String ToString(MetalShaderType value)
+        static const char* ToString(MetalShaderType value)
         {
             switch (value)
             {

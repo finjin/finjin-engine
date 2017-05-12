@@ -51,11 +51,8 @@ namespace Finjin { namespace Engine {
 
     struct AssetClassUtilities
     {
-        static Utf8String ToString(size_t index, bool directoryName = false);
-        static Utf8String ToString(AssetClass value, bool directoryName = false);
-
-        static void ToString(Utf8String& result, size_t index, bool directoryName = false);
-        static void ToString(Utf8String& result, AssetClass value, bool directoryName = false);
+        static const char* ToString(size_t index, bool directoryName = false);
+        static const char* ToString(AssetClass value, bool directoryName = false);
 
         template <typename T>
         static AssetClass Parse(const T& value)

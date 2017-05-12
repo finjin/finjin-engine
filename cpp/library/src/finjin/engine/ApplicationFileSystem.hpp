@@ -39,21 +39,17 @@ namespace Finjin { namespace Engine {
 
     struct ApplicationFileSystemUtilities
     {
-        static Utf8String ToString(ApplicationFileSystem value)
+        static const char* ToString(ApplicationFileSystem value)
         {
-            Utf8String result;
-
             switch (value)
             {
-                case ApplicationFileSystem::READ_APPLICATION_ASSETS: result = "application-assets"; break;
-                case ApplicationFileSystem::READ_USER_DATA: result = "user-data"; break;
-                case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA: result = "user-application-cache-data"; break;
-                case ApplicationFileSystem::READ_WRITE_APPLICATION_DATA: result = "application-data"; break;
-                case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA: result = "user-application-data"; break;
-                default: result = "<unknown application file system>"; break;
+                case ApplicationFileSystem::READ_APPLICATION_ASSETS: return "application-assets";
+                case ApplicationFileSystem::READ_USER_DATA: return "user-data";
+                case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA: return "user-application-cache-data";
+                case ApplicationFileSystem::READ_WRITE_APPLICATION_DATA: return "application-data";
+                case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA: return "user-application-data";
+                default: return "<unknown>";
             }
-
-            return result;
         }
 
         template <typename T>
