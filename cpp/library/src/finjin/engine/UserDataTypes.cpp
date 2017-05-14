@@ -31,7 +31,7 @@ using namespace Finjin::Engine;
 //Local functions---------------------------------------------------------------
 static bool IsValidNameChar(char c)
 {
-    return c != '\n' && c != '\t';// isalpha(c) || isdigit(c) || c == '_' || c == '-';
+    return c != '=' && c != '\r' && c != '\n' && c != '\t';// isalpha(c) || isdigit(c) || c == '_' || c == '-';
 }
 
 

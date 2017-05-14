@@ -73,6 +73,84 @@
     <Filter Include="Source Files\internal\gpu\vulkan\utilities">
       <UniqueIdentifier>{36659e06-62ec-4101-920b-86ac7c1b4093}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\3rd-party">
+      <UniqueIdentifier>{9d9739df-deb8-4133-a64b-2fc61b9819f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3">
+      <UniqueIdentifier>{1fcc212d-b926-4304-b001-435ddd85bfa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\Bullet3Collision">
+      <UniqueIdentifier>{13adec88-78d3-4de1-8aba-8d288da7545c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\Bullet3Common">
+      <UniqueIdentifier>{8d277e3b-32cc-4575-a15a-bcaaf952424e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\Bullet3Dynamics">
+      <UniqueIdentifier>{4e1578f9-08a9-4265-8c6d-f795c32ab26e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\Bullet3Geometry">
+      <UniqueIdentifier>{e62dde4a-c232-4ad1-ae7c-6625139c2bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletCollision">
+      <UniqueIdentifier>{38ae70bd-eb28-456b-98df-2a09e3cc95de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletDynamics">
+      <UniqueIdentifier>{c950e21e-134e-4495-bf96-cd0c40643f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletInverseDynamics">
+      <UniqueIdentifier>{ac7bf59a-4ec9-4ff0-be24-d2b5be3934db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletSoftBody">
+      <UniqueIdentifier>{9c1c92c2-de5d-4d7c-a46a-2be17d789ad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\LinearMath">
+      <UniqueIdentifier>{b4441ddc-677e-4322-9e70-9a27530ae06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision">
+      <UniqueIdentifier>{58aa1e82-0ee7-438c-a713-97ee63fd047d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision">
+      <UniqueIdentifier>{b17503bd-67ba-4356-8c56-0c70f801e375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver">
+      <UniqueIdentifier>{0912e4b3-56c5-43bf-ae99-307e6870e3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision">
+      <UniqueIdentifier>{4301cacb-b3bf-49e4-8908-db9165083ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch">
+      <UniqueIdentifier>{de7a433a-4426-45fe-bc1c-d4841d029e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes">
+      <UniqueIdentifier>{ac7895a5-9b11-4d25-96f3-1f42b7a23e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletCollision\Gimpact">
+      <UniqueIdentifier>{4027775d-569b-4b72-80b9-e2e44bb6c2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision">
+      <UniqueIdentifier>{4e405821-c9e5-4974-87e0-8457577a875a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletDynamics\Character">
+      <UniqueIdentifier>{11109e0a-01b2-4fef-851d-93fcf431117b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver">
+      <UniqueIdentifier>{93f3ed66-cd1c-49e4-a311-ccd47e5bc803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletDynamics\Dynamics">
+      <UniqueIdentifier>{a7371524-87e6-48d0-9e12-3b04fe07b9a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletDynamics\Featherstone">
+      <UniqueIdentifier>{e35506e5-b6c7-4dd3-ab6d-6c188a0b305a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers">
+      <UniqueIdentifier>{7e812a8b-1729-4b69-9e4a-e432e62bc25c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletDynamics\Vehicle">
+      <UniqueIdentifier>{de976417-918e-42b4-ab2d-76c5ac46ad8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\bullet3\BulletInverseDynamics\details">
+      <UniqueIdentifier>{dd4c8cbb-b9a9-4eea-9bd2-5689a69415c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\WAVReader.cpp">
@@ -380,6 +458,510 @@
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTexture.cpp">
       <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3DynamicBvh.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3DynamicBvhBroadphase.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3OverlappingPairCache.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3CpuNarrowPhase.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3ConvexUtility.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Vector3.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3AlignedAllocator.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Logging.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\b3CpuRigidBodyPipeline.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3PgsJacobiSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3Point2PointConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3TypedConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3FixedConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3Generic6DofConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Geometry\b3GeometryUtil.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Geometry\b3ConvexHullComputer.cpp">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btOverlappingPairCache.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btQuantizedBvh.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btSimpleBroadphase.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btAxisSweep3.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btBroadphaseProxy.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btDbvt.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btDbvtBroadphase.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btDispatcher.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btHashedSimplePairCache.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btInternalEdgeUtility.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btManifoldResult.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSimulationIslandManager.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSphereBoxCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSphereSphereCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSphereTriangleCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btUnionFind.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\SphereTriangleDetector.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btActivatingCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btBox2dBox2dCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btBoxBoxCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btBoxBoxDetector.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionDispatcher.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionObject.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionWorld.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionWorldImporter.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCompoundCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCompoundCompoundCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvex2dConvex2dAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvexConcaveCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvexConvexAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvexPlaneCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btDefaultCollisionConfiguration.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btEmptyCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btGhostObject.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleIndexVertexArray.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleIndexVertexMaterialArray.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleMesh.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleMeshShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btUniformScalingShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btBox2dShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btBoxShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btBvhTriangleMeshShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCapsuleShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCollisionShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCompoundShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConcaveShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConeShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvex2dShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexHullShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexInternalShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexPointCloudShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexPolyhedron.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexTriangleMeshShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCylinderShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btEmptyShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btHeightfieldTerrainShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btMinkowskiSumShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btMultimaterialTriangleMeshShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btMultiSphereShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btOptimizedBvh.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btPolyhedralConvexShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btScaledBvhTriangleMeshShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btShapeHull.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btSphereShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btStaticPlaneShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btStridingMeshInterface.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTetrahedronShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleBuffer.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleCallback.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_contact.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_memory.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_tri_collision.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btContactProcessing.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGenericPoolAllocator.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactBvh.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactQuantizedBvh.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactShape.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btTriangleShapeEx.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_box_set.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btPersistentManifold.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btPolyhedralContactClipping.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btRaycastCallback.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btSubSimplexConvexCast.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btVoronoiSimplexSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btContinuousConvexCollision.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btConvexCast.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkConvexCast.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkEpa2.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkEpaPenetrationDepthSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkPairDetector.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btMinkowskiPenetrationDepthSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Character\btKinematicCharacterController.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btNNCGConstraintSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSliderConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btTypedConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btUniversalConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btConeTwistConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btContactConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btFixedConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGearConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpring2Constraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btHinge2Constraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btHingeConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btRigidBody.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btSimpleDynamicsWorld.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btSimulationIslandManagerMt.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorldMt.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyConstraintSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyDynamicsWorld.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyFixedConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyJointLimitConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyJointMotor.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyPoint2Point.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodySliderConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBody.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyConstraint.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btMLCPSolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btDantzigLCP.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btLemkeAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Vehicle\btWheelInfo.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Vehicle\btRaycastVehicle.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Vehicle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\IDMath.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\MultiBodyTree.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\details\MultiBodyTreeImpl.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics\details</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\details\MultiBodyTreeInitCache.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics\details</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyRigidBodyCollisionConfiguration.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftMultiBodyDynamicsWorld.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftRigidCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftRigidDynamicsWorld.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftSoftCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btDefaultSoftBodySolver.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBody.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyConcaveCollisionAlgorithm.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyHelpers.cpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btThreads.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btVector3.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btAlignedAllocator.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btConvexHull.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btConvexHullComputer.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btGeometryUtil.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btPolarDecomposition.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btQuickprof.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btSerializer.cpp">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -817,6 +1399,852 @@
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanTexture.hpp">
       <Filter>Source Files\internal\gpu\vulkan\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3DynamicBvh.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3DynamicBvhBroadphase.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3OverlappingPair.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3OverlappingPairCache.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\BroadPhaseCollision\b3BroadphaseCallback.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\BroadPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3ConvexUtility.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3CpuNarrowPhase.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3RaycastInfo.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3RigidBodyCL.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3Config.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Collision\NarrowPhaseCollision\b3Contact4.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Collision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Logging.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Matrix3x3.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3MinMax.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3PoolAllocator.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3QuadWord.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Quaternion.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Random.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Scalar.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3StackAlloc.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Transform.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3TransformUtil.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3Vector3.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3AlignedAllocator.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3AlignedObjectArray.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3CommandLineArgs.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3FileUtils.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Common\b3HashMap.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\b3CpuRigidBodyPipeline.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3Generic6DofConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3JacobianEntry.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3PgsJacobiSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3Point2PointConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3SolverBody.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3SolverConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3TypedConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3ContactSolverInfo.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Dynamics\ConstraintSolver\b3FixedConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Dynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Geometry\b3ConvexHullComputer.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Geometry\b3GeometryUtil.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Geometry\b3GrahamScan2dConvexHull.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\Bullet3Geometry\b3AabbUtil.h">
+      <Filter>Source Files\3rd-party\bullet3\Bullet3Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btDispatcher.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btOverlappingPairCache.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btOverlappingPairCallback.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btQuantizedBvh.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btSimpleBroadphase.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btAxisSweep3.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btBroadphaseInterface.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btBroadphaseProxy.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btDbvt.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\BroadphaseCollision\btDbvtBroadphase.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\BroadphaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btHashedSimplePairCache.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btInternalEdgeUtility.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btManifoldResult.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSimulationIslandManager.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSphereBoxCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSphereSphereCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btSphereTriangleCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btUnionFind.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\SphereTriangleDetector.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btActivatingCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btBox2dBox2dCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btBoxBoxCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btBoxBoxDetector.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionConfiguration.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionCreateFunc.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionDispatcher.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionObject.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionObjectWrapper.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionWorld.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCollisionWorldImporter.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCompoundCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btCompoundCompoundCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvex2dConvex2dAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvexConcaveCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvexConvexAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btConvexPlaneCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btDefaultCollisionConfiguration.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btEmptyCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionDispatch\btGhostObject.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionDispatch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleIndexVertexArray.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleIndexVertexMaterialArray.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleInfoMap.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleMesh.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleMeshShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btUniformScalingShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btBox2dShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btBoxShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btBvhTriangleMeshShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCapsuleShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCollisionMargin.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCollisionShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCompoundShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConcaveShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConeShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvex2dShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexHullShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexInternalShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexPointCloudShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexPolyhedron.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btConvexTriangleMeshShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btCylinderShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btEmptyShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btMaterial.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btMinkowskiSumShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btMultimaterialTriangleMeshShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btMultiSphereShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btOptimizedBvh.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btPolyhedralConvexShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btScaledBvhTriangleMeshShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btShapeHull.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btSphereShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btStaticPlaneShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btStridingMeshInterface.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTetrahedronShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleBuffer.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\CollisionShapes\btTriangleCallback.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_clip_polygon.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_contact.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_geom_types.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_geometry.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_hash_table.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_linear_math.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_math.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_memory.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_radixsort.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_tri_collision.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btBoxCollision.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btClipPolygon.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btCompoundFromGimpact.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btContactProcessing.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGenericPoolAllocator.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGeometryOperations.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactBvh.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactMassUtil.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactQuantizedBvh.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btGImpactShape.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btQuantization.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\btTriangleShapeEx.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_array.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_basic_geometry_operations.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_bitset.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_box_collision.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\Gimpact\gim_box_set.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\Gimpact</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btPersistentManifold.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btPointCollector.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btPolyhedralContactClipping.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btRaycastCallback.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btSimplexSolverInterface.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btSubSimplexConvexCast.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btVoronoiSimplexSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btComputeGjkEpaPenetration.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btContinuousConvexCollision.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btConvexCast.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btConvexPenetrationDepthSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btDiscreteCollisionDetectorInterface.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkCollisionDescription.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkConvexCast.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkEpa2.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkEpa3.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkEpaPenetrationDepthSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btGjkPairDetector.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btManifoldPoint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btMinkowskiPenetrationDepthSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletCollision\NarrowPhaseCollision\btMprPenetration.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletCollision\NarrowPhaseCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Character\btKinematicCharacterController.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Character\btCharacterControllerInterface.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btHingeConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btJacobianEntry.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btNNCGConstraintSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btPoint2PointConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSequentialImpulseConstraintSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSliderConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSolve2LinearConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSolverBody.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btSolverConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btTypedConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btUniversalConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btConeTwistConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btConstraintSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btContactConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btContactSolverInfo.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btFixedConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGearConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGeneric6DofConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpring2Constraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\ConstraintSolver\btHinge2Constraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\ConstraintSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorldMt.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btDynamicsWorld.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btRigidBody.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btSimpleDynamicsWorld.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btSimulationIslandManagerMt.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btActionInterface.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyConstraintSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyDynamicsWorld.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyFixedConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyJointFeedback.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyJointLimitConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyJointMotor.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyLink.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyLinkCollider.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyPoint2Point.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodySliderConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodySolverConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBody.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Featherstone\btMultiBodyConstraint.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Featherstone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btLemkeSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btMLCPSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btMLCPSolverInterface.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btPATHSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btSolveProjectedGaussSeidel.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btDantzigLCP.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btDantzigSolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\MLCPSolvers\btLemkeAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\MLCPSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Vehicle\btRaycastVehicle.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Vehicle\btVehicleRaycaster.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletDynamics\Vehicle\btWheelInfo.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletDynamics\Vehicle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\IDErrorMessages.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\IDMath.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\MultiBodyTree.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\IDConfig.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\IDConfigBuiltin.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\IDConfigEigen.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\details\IDMatVec.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\details\MultiBodyTreeImpl.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\details\MultiBodyTreeInitCache.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\details\IDEigenInterface.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletInverseDynamics\details\IDLinearMathInterface.hpp">
+      <Filter>Source Files\3rd-party\bullet3\BulletInverseDynamics\details</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyHelpers.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyInternals.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyRigidBodyCollisionConfiguration.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodySolvers.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodySolverVertexBuffer.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftMultiBodyDynamicsWorld.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftRigidCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftRigidDynamicsWorld.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftSoftCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSparseSDF.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btDefaultSoftBodySolver.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBody.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyConcaveCollisionAlgorithm.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\BulletSoftBody\btSoftBodyData.h">
+      <Filter>Source Files\3rd-party\bullet3\BulletSoftBody</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btSerializer.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btSpatialAlgebra.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btStackAlloc.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btThreads.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btTransform.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btTransformUtil.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btVector3.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btAabbUtil2.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btAlignedAllocator.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btAlignedObjectArray.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btConvexHull.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btConvexHullComputer.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btCpuFeatureUtility.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btDefaultMotionState.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btGeometryUtil.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btGrahamScan2dConvexHull.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btHashMap.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btIDebugDraw.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btList.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btMatrix3x3.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btMatrixX.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btMinMax.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btMotionState.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btPolarDecomposition.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btPoolAllocator.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btQuadWord.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btQuaternion.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btQuickprof.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btRandom.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\LinearMath\btScalar.h">
+      <Filter>Source Files\3rd-party\bullet3\LinearMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\btBulletDynamicsCommon.h">
+      <Filter>Source Files\3rd-party\bullet3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\finjin-3rd-party\cpp\bullet3\src\btBulletCollisionCommon.h">
+      <Filter>Source Files\3rd-party\bullet3</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

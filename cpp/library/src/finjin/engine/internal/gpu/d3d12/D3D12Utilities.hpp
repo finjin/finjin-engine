@@ -37,7 +37,7 @@
 
 //The error message should not include a trailing period. Example: "This is an error message"
 #define FINJIN_D3D12_SET_ERROR_BLOB(error, message, blob) \
-    {\
+    { \
         if (blob) \
             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("%1%: '%2%'", message, Finjin::Common::WindowsUtilities::BlobToString(blob))); \
         else \

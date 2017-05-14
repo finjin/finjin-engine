@@ -491,7 +491,7 @@ void AssetReadQueue::AddRequest(AssetReadHandle& assetReadHandle, const AssetRea
     //Fill in result
     assetReadHandle.assetReadQueue = this;
     assetReadHandle.assetRef = assetReadRequest.assetRef;
-    assetReadHandle.operationIndex = this->internalAssetReadRequestQueue.GetIndex(internalAssetReadRequest);
+    assetReadHandle.operationIndex = this->internalAssetReadRequestQueue.GetEntryIndex(internalAssetReadRequest);
     assetReadHandle.sequenceID = this->sequenceID;
 
     internalAssetReadRequest.Start(assetReadRequest, assetReadHandle);
