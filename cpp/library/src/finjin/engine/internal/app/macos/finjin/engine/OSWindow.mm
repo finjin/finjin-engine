@@ -188,9 +188,9 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     NSString* inputCharacters = theEvent.charactersIgnoringModifiers;
     auto scanCode = theEvent.keyCode;
     auto virtualKey = inputCharacters.length > 0 ? [inputCharacters characterAtIndex:0] : 0;
-    auto controlDown = (theEvent.modifierFlags & NSControlKeyMask) != 0;
-    auto shiftDown = (theEvent.modifierFlags & NSShiftKeyMask) != 0;
-    auto altDown = (theEvent.modifierFlags & NSAlternateKeyMask) != 0;
+    auto controlDown = (theEvent.modifierFlags & NSEventModifierFlagControl) != 0;
+    auto shiftDown = (theEvent.modifierFlags & NSEventModifierFlagShift) != 0;
+    auto altDown = (theEvent.modifierFlags & NSEventModifierFlagOption) != 0;
 
     for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
     {
