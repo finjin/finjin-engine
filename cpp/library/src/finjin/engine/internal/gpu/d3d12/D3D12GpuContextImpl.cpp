@@ -2215,7 +2215,7 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
 void D3D12GpuContextImpl::DestroyScreenSizeDependentResources(bool resizing)
 {
     for (auto& frameBuffer : this->frameBuffers)
-        frameBuffer.renderTarget.DestroySceenSizeDependentResources();
+        frameBuffer.renderTarget.DestroyScreenSizeDependentResources();
 }
 
 void D3D12GpuContextImpl::UpdateCachedFrameBufferSize()

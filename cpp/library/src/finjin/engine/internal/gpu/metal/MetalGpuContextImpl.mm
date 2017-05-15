@@ -973,7 +973,7 @@ void MetalGpuContextImpl::CreateScreenSizeDependentResources(Error& error)
 
 void MetalGpuContextImpl::DestroyScreenSizeDependentResources(bool resizing)
 {
-    this->depthStencilRenderTarget.DestroySceenSizeDependentResources();
+    this->depthStencilRenderTarget.DestroyScreenSizeDependentResources();
 }
 
 void MetalGpuContextImpl::WindowResized(OSWindow* osWindow)

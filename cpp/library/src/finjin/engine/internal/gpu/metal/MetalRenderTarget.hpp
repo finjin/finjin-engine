@@ -35,7 +35,7 @@ namespace Finjin { namespace Engine {
 
         bool HasDepthStencil() const;
 
-        void DestroySceenSizeDependentResources();
+        void DestroyScreenSizeDependentResources();
 
     public:
         StaticVector<id<CAMetalDrawable>, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> renderTargetOutputResources;

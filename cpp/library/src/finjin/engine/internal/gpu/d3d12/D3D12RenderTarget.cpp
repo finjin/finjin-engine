@@ -73,7 +73,7 @@ void D3D12RenderTarget::CreateDepthStencil(ID3D12Device* device, UINT width, UIN
     }
 }
 
-void D3D12RenderTarget::DestroySceenSizeDependentResources()
+void D3D12RenderTarget::DestroyScreenSizeDependentResources()
 {
     for (auto& renderTargetResource : this->renderTargetOutputResources)
         renderTargetResource.Reset();

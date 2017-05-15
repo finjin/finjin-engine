@@ -32,7 +32,7 @@ namespace Finjin { namespace Engine {
 
         void CreateDepthStencil(ID3D12Device* device, UINT width, UINT height, DXGI_FORMAT depthStencilFormat, float maxDepth, UINT multisampleCount, UINT multisampleQuality, Error& error);
 
-        void DestroySceenSizeDependentResources();
+        void DestroyScreenSizeDependentResources();
 
         bool HasDepthStencil() const;
 

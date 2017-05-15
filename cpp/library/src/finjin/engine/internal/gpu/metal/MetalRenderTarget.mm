@@ -61,7 +61,7 @@ bool MetalRenderTarget::HasDepthStencil() const
     return this->depthStencilTexture != nullptr;
 }
 
-void MetalRenderTarget::DestroySceenSizeDependentResources()
+void MetalRenderTarget::DestroyScreenSizeDependentResources()
 {
     for (auto& renderTargetResource : this->renderTargetOutputResources)
         renderTargetResource = nullptr;
