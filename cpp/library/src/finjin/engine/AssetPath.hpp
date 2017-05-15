@@ -24,6 +24,14 @@
 #include "finjin/engine/AssetClass.hpp"
 
 
+//Macros------------------------------------------------------------------------
+#define FINJIN_GPU_CONTEXT_ASSET_PATH_COMPONENTS \
+    AssetPathComponent::GPU_FEATURE_LEVEL, \
+    AssetPathComponent::GPU_SHADER_MODEL, \
+    AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT, \
+    AssetPathComponent::GPU_MODEL
+
+
 //Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 

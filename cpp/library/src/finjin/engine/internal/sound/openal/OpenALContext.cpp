@@ -359,11 +359,12 @@ size_t OpenALContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, En
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    size_t count = 0;
+
     switch (assetClass)
     {
         case AssetClass::SOUND:
         {
-            size_t count = 0;
             for (auto ext : { "wav" })
             {
                 if (extensions.push_back(ext).HasErrorOrValue(false))
@@ -373,12 +374,12 @@ size_t OpenALContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, En
                 }
                 count++;
             }
-            return count;
+            break;
         }
         default: break;
     }
 
-    return 0;
+    return count;
 }
 
 void OpenALContext::HandleApplicationViewportLostFocus()

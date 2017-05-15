@@ -58,14 +58,7 @@ void D3D12GpuContext::Destroy()
 
 void D3D12GpuContext::GetSelectorComponents(AssetPathSelector& result)
 {
-    result.Set
-        (
-        impl->settings.initialAssetFileSelector,
-        AssetPathComponent::GPU_FEATURE_LEVEL,
-        AssetPathComponent::GPU_SHADER_MODEL,
-        AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT,
-        AssetPathComponent::GPU_MODEL
-        );
+    result.Set(impl->settings.initialAssetFileSelector, FINJIN_GPU_CONTEXT_ASSET_PATH_COMPONENTS);
 }
 
 const D3D12GpuContext::Settings& D3D12GpuContext::GetSettings() const
@@ -77,11 +70,12 @@ size_t D3D12GpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    size_t count = 0;
+    
     switch (assetClass)
     {
         case AssetClass::SHADER:
         {
-            size_t count = 0;
             for (auto ext : { "cso" })
             {
                 if (extensions.push_back(ext).HasErrorOrValue(false))
@@ -91,11 +85,10 @@ size_t D3D12GpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
                 }
                 count++;
             }
-            return count;
+            break;
         }
         case AssetClass::TEXTURE:
         {
-            size_t count = 0;
             for (auto ext : { "dds", "png" })
             {
                 if (extensions.push_back(ext).HasErrorOrValue(false))
@@ -105,11 +98,11 @@ size_t D3D12GpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
                 }
                 count++;
             }
-            return count;
+            break;
         }
     }
 
-    return 0;
+    return count;
 }
 
 AssetCreationCapability D3D12GpuContext::GetAssetCreationCapabilities(AssetClass assetClass) const

@@ -654,11 +654,12 @@ size_t OpenSLESContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    size_t count = 0;
+
     switch (assetClass)
     {
         case AssetClass::SOUND:
         {
-            size_t count = 0;
             for (auto ext : { "wav" })
             {
                 if (extensions.push_back(ext).HasErrorOrValue(false))
@@ -668,12 +669,12 @@ size_t OpenSLESContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
                 }
                 count++;
             }
-            return count;
+            break;
         }
         default: break;
     }
 
-    return 0;
+    return count;
 }
 
 void OpenSLESContext::HandleApplicationViewportLostFocus()

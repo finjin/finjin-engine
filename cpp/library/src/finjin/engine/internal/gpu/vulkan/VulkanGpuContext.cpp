@@ -57,14 +57,7 @@ void VulkanGpuContext::Destroy()
 
 void VulkanGpuContext::GetSelectorComponents(AssetPathSelector& result)
 {
-    result.Set
-        (
-        impl->settings.initialAssetFileSelector,
-        AssetPathComponent::GPU_FEATURE_LEVEL,
-        AssetPathComponent::GPU_SHADER_MODEL,
-        AssetPathComponent::GPU_PREFERRED_TEXTURE_FORMAT,
-        AssetPathComponent::GPU_MODEL
-        );
+    result.Set(impl->settings.initialAssetFileSelector, FINJIN_GPU_CONTEXT_ASSET_PATH_COMPONENTS);
 }
 
 const VulkanGpuContext::Settings& VulkanGpuContext::GetSettings() const
@@ -76,11 +69,12 @@ size_t VulkanGpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String,
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    size_t count = 0;
+    
     switch (assetClass)
     {
         case AssetClass::SHADER:
         {
-            size_t count = 0;
             for (auto ext : { "spv" })
             {
                 if (extensions.push_back(ext).HasErrorOrValue(false))
@@ -90,11 +84,10 @@ size_t VulkanGpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String,
                 }
                 count++;
             }
-            return count;
+            break;
         }
         case AssetClass::TEXTURE:
         {
-            size_t count = 0;
             for (auto ext : { "ktx", "astc", "png" })
             {
                 if (extensions.push_back(ext).HasErrorOrValue(false))
@@ -104,11 +97,11 @@ size_t VulkanGpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String,
                 }
                 count++;
             }
-            return count;
+            break;
         }
     }
 
-    return 0;
+    return count;
 }
 
 AssetCreationCapability VulkanGpuContext::GetAssetCreationCapabilities(AssetClass assetClass) const

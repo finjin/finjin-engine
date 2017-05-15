@@ -60,11 +60,12 @@ size_t AVAudioEngineSoundContext::GetExternalAssetFileExtensions(StaticVector<Ut
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    size_t count = 0;
+
     switch (assetClass)
     {
         case AssetClass::SOUND:
         {
-            size_t count = 0;
             for (auto ext : { "wav" })
             {
                 if (extensions.push_back(ext).HasErrorOrValue(false))
@@ -74,12 +75,12 @@ size_t AVAudioEngineSoundContext::GetExternalAssetFileExtensions(StaticVector<Ut
                 }
                 count++;
             }
-            return count;
+            break;
         }
         default: break;
     }
 
-    return 0;
+    return count;
 }
 
 void AVAudioEngineSoundContext::Destroy()
