@@ -262,12 +262,9 @@ namespace Finjin { namespace Engine {
 
             COUNT
         };
-
-        template <typename T>
-        static void ParseElementID(ElementID& result, const T& value, Error& error)
+        
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ElementID, (size_t)ElementID::COUNT + 2)& GetLookup()
         {
-            FINJIN_ERROR_METHOD_START(error);
-
             static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ElementID, (size_t)ElementID::COUNT + 2) lookup //"color" and "tex-coord" are extra/redundant
                 (
                 "binormal", ElementID::BINORMAL,
@@ -299,11 +296,18 @@ namespace Finjin { namespace Engine {
                 "tex-coord-6", ElementID::TEX_COORD_6,
                 "tex-coord-7", ElementID::TEX_COORD_7
                 );
+            
+            return lookup;
+        }
 
-            auto foundAt = lookup.find(value);
-            if (foundAt != lookup.end())
-                result = foundAt->second;
-            else
+        template <typename T>
+        static void ParseElementID(ElementID& result, const T& value, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
+            auto& lookup = GetLookup();
+            result = lookup.GetOrDefault(value, ElementID::COUNT);
+            if (result == ElementID::COUNT)
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse vertex element ID '%1%'.", value));
         }
     };
