@@ -15,6 +15,7 @@
 #include "FinjinPrecompiled.hpp"
 #include "InputCoordinate.hpp"
 
+using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
@@ -67,7 +68,7 @@ bool InputCoordinate::IsPositive() const
 
 InputCoordinate InputCoordinate::Abs() const
 {
-    return InputCoordinate(std::abs(value), this->type, this->screenDensity, this->uiScale);
+    return InputCoordinate(GetAbs(value), this->type, this->screenDensity, this->uiScale);
 }
 
 float InputCoordinate::ToType(Type type) const

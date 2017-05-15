@@ -1301,7 +1301,7 @@ namespace Finjin { namespace Engine {
             auto absoluteValue = axis->GetAbsoluteValue() * axis->GetDirection();
 
             auto deadZone = this->gameControllerAxisDeadZone[binding.inputSource.axisIndex];
-            if (std::abs(absoluteValue) <= deadZone)
+            if (GetAbs(absoluteValue) <= deadZone)
                 absoluteValue = 0;
 
             if (!TestValueAgainstDirection(absoluteValue, binding.inputSource.directionFloat))

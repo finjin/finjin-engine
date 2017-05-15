@@ -316,7 +316,7 @@ namespace Finjin { namespace Engine {
                     for (size_t axisIndex = 0; axisIndex < axisCount; axisIndex++)
                     {
                         auto component = pointer->GetAxis(axisIndex);
-                        if (component->Changed() && std::abs(component->GetRelativeValue()) > filter.touchScreenAxisDeadZone)
+                        if (component->Changed() && GetAbs(component->GetRelativeValue()) > filter.touchScreenAxisDeadZone)
                         {
                             //Note that the touch screen device index is used in WithDeviceIndex(), not the pointer index
                             auto value = filter.UnifyDirection(component->GetRelativeValue(), component->GetDirection());
@@ -329,7 +329,7 @@ namespace Finjin { namespace Engine {
             //Radius
             if (AnySet(filter.componentClasses & InputDeviceComponentClass::RADIUS))
             {
-                if (touchScreen->GetMultitouchRadius().Changed() && std::abs(touchScreen->GetMultitouchRadius().GetRelativeValue()) > filter.touchScreenMultitouchRadiusDeadZone)
+                if (touchScreen->GetMultitouchRadius().Changed() && GetAbs(touchScreen->GetMultitouchRadius().GetRelativeValue()) > filter.touchScreenMultitouchRadiusDeadZone)
                     Super::push_back(ChangedInputSource(InputSource::FromMultitouchRelativeRadius(touchScreen->GetTouchCount(), touchScreen->GetMultitouchRadius().GetRelativeValue() < 0 ? -1 : 1).WithDeviceIndex(deviceIndex), touchScreen->GetDisplayName(), touchScreen->GetMultitouchRadius().GetAbsoluteValue()));
             }
         }
