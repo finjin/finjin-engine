@@ -53,7 +53,7 @@ namespace Finjin { namespace Engine {
                 case D3D12ShaderType::HULL: return "hull";
                 case D3D12ShaderType::GEOMETRY: return "geometry";
                 case D3D12ShaderType::COMPUTE: return "compute";
-                default: return "<unknown>";
+                default: return FINJIN_ENUM_UNKNOWN_STRING;
             }
         }
     };

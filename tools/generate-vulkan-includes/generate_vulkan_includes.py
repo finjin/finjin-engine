@@ -346,7 +346,7 @@ def generate_source(header, extensions, vk_formats, vk_results):
     lines.append('    {')
     for vk_format in vk_formats:
         lines.append('        case {0}: return "{1}";'.format(vk_format[0], vk_format[1]))
-    lines.append('        default: return "<unknown>";')
+    lines.append('        default: return FINJIN_ENUM_UNKNOWN_STRING;')
     lines.append('    }')
     lines.append('}')
 
@@ -358,7 +358,7 @@ def generate_source(header, extensions, vk_formats, vk_results):
     lines.append('    {')
     for vk_result in vk_results:
         lines.append('        case {0}: return "{1}";'.format(vk_result[0], vk_result[1]))
-    lines.append('        default: return "<unknown>";')
+    lines.append('        default: return FINJIN_ENUM_UNKNOWN_STRING;')
     lines.append('    }')
     lines.append('}')
 

@@ -48,7 +48,7 @@ namespace Finjin { namespace Engine {
                 case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA: return "user-application-cache-data";
                 case ApplicationFileSystem::READ_WRITE_APPLICATION_DATA: return "application-data";
                 case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA: return "user-application-data";
-                default: return "<unknown>";
+                default: return FINJIN_ENUM_UNKNOWN_STRING;
             }
         }
 

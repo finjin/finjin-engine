@@ -47,7 +47,7 @@ namespace Finjin { namespace Engine {
                 case VulkanShaderType::GEOMETRY: return "geometry";
                 case VulkanShaderType::FRAGMENT: return "fragment";
                 case VulkanShaderType::COMPUTE: return "compute";
-                default: return "<unknown>";
+                default: return FINJIN_ENUM_UNKNOWN_STRING;
             }
         }
     };

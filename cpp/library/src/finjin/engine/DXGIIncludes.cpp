@@ -145,6 +145,6 @@ const char* DXGIFormat::ToString(DXGI_FORMAT format)
         case 131: return "DXGI_FORMAT_V208";
         case 132: return "DXGI_FORMAT_V408";
         case 0xfffffff: return "DXGI_FORMAT_FORCE_UINT";
-        default: return "<unknown>";
+        default: return FINJIN_ENUM_UNKNOWN_STRING;
     }
 }

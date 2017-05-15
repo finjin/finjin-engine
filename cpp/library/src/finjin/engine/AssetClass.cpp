@@ -46,7 +46,7 @@ const char* AssetClassUtilities::ToString(AssetClass value, bool directoryName)
         case AssetClass::STRING_TABLE: return directoryName ? "stringtables" : "stringtable";
         case AssetClass::TEXTURE: return directoryName ? "textures" : "texture";
         case AssetClass::USER_DATA_TYPES: return directoryName ? "userdatatypes" : "userdatatypes"; //Yes, both forms are the same
-        default: return "<unknown>";
+        default: return FINJIN_ENUM_UNKNOWN_STRING;
     }
 }
 

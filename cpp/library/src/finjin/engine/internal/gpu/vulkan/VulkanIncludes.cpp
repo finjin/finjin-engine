@@ -559,7 +559,7 @@ const char* VulkanFormat::ToString(VkFormat format)
         case 1000054005: return "VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG";
         case 1000054006: return "VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG";
         case 1000054007: return "VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG";
-        default: return "<unknown>";
+        default: return FINJIN_ENUM_UNKNOWN_STRING;
     }
 }
 
@@ -594,7 +594,7 @@ const char* VulkanResult::ToString(VkResult result)
         case -1000012000: return "VK_ERROR_INVALID_SHADER_NV";
         case -1000069000: return "VK_ERROR_OUT_OF_POOL_MEMORY_KHR";
         case -1000072003: return "VK_ERROR_INVALID_EXTERNAL_HANDLE_KHX";
-        default: return "<unknown>";
+        default: return FINJIN_ENUM_UNKNOWN_STRING;
     }
 }
 

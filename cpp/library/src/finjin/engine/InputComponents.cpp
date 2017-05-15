@@ -286,7 +286,7 @@ const char* InputDeviceClassUtilities::ToString(InputDeviceClass deviceClass)
             return item.first;
     }
 
-    return "<unknown>";
+    return FINJIN_ENUM_UNKNOWN_STRING;
 }
 
 //InputDeviceComponentUtilities
@@ -298,7 +298,7 @@ const char* InputDeviceComponentUtilities::ToString(InputDeviceComponent deviceC
             return item.first;
     }
 
-    return "<unknown>";
+    return FINJIN_ENUM_UNKNOWN_STRING;
 }
 
 InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8String& deviceComponent)
@@ -420,7 +420,7 @@ const char* InputDeviceSemanticUtilities::ToString(InputDeviceSemantic semantic)
             return item.first;
     }
 
-    return "<unknown>";
+    return FINJIN_ENUM_UNKNOWN_STRING;
 }
 
 InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8String& semantic)
@@ -442,7 +442,7 @@ const char* InputComponentSemanticUtilities::ToString(InputComponentSemantic sem
             return item.first;
     }
 
-    return "<unknown>";
+    return FINJIN_ENUM_UNKNOWN_STRING;
 }
 
 InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8String& semantic)
@@ -486,7 +486,7 @@ const char* PovDirectionUtilities::ToString(PovDirection povDirection)
             return item.first;
     }
 
-    return "<unknown>";
+    return FINJIN_ENUM_UNKNOWN_STRING;
 }
 
 PovDirection PovDirectionUtilities::Parse(const Utf8String& povDirection)

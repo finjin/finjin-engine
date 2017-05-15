@@ -34,6 +34,8 @@ When the content of the table on the Apple web site changes:
   3)Open StandardFeatureSets.cpp in a texture editor and copy/paste the appropriate content to the top portion of MetalGpuDescription.mm, overwriting the existing code.
 
 Due to the fragility of this process, changes to the original content may require changes to this code.
+
+This script depends on the Beautiful Soup library for parsing HTML: https://www.crummy.com/software/BeautifulSoup/
 """
 
 

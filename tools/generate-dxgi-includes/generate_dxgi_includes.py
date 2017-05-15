@@ -101,7 +101,7 @@ def generate_source(header, dxgi_formats):
     lines.append('    {')
     for dxgi_format in dxgi_formats:
         lines.append('        case {0}: return "{1}";'.format(dxgi_format[0], dxgi_format[1]))
-    lines.append('        default: return "<unknown>";')
+    lines.append('        default: return FINJIN_ENUM_UNKNOWN_STRING;')
     lines.append('    }')
     lines.append('}')
 

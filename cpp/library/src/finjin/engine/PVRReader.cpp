@@ -112,7 +112,7 @@ const char* PVRReader::Header::GetPixelFormatString() const
         case PixelFormat::ASTC_6x5x5: return "ASTC_6x5x5";
         case PixelFormat::ASTC_6x6x5: return "ASTC_6x6x5";
         case PixelFormat::ASTC_6x6x6: return "ASTC_6x6x6";
-        default: return "<unknown>";
+        default: return FINJIN_ENUM_UNKNOWN_STRING;
     }
 }
 
