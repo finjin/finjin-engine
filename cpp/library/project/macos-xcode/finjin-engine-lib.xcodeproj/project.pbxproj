@@ -255,7 +255,6 @@
 		65A30DFB1EC7ADFC0068F9BC /* btVector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A30DD41EC7ADFC0068F9BC /* btVector3.cpp */; };
 		65C860051D90F3DD00348F9E /* MemorySettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C860011D90F3DD00348F9E /* MemorySettings.cpp */; };
 		65CCE9081E6214F30028F91B /* AssetClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65CCE9071E6214F30028F91B /* AssetClass.cpp */; };
-		65D24D441EBBCEA90035D5C4 /* FinjinMain.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 65D24D431EBBCEA90035D5C4 /* FinjinMain.hpp */; };
 		65F7C1911EB432880084EC43 /* ASTCReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C1881EB432880084EC43 /* ASTCReader.cpp */; };
 		65F7C1931EB432880084EC43 /* DDSReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C18A1EB432880084EC43 /* DDSReader.cpp */; };
 		65F7C1951EB432880084EC43 /* DXGIIncludes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F7C18C1EB432880084EC43 /* DXGIIncludes.cpp */; };
@@ -2111,7 +2110,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65D24D441EBBCEA90035D5C4 /* FinjinMain.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2483,7 +2481,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -2523,7 +2521,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
@@ -2534,10 +2532,14 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					USE_SIMD,
+				);
 				HEADER_SEARCH_PATHS = (
-					"~/finjin-3rd-party/cpp/boost",
-					"~/finjin-3rd-party/cpp/eigen",
-					"~/finjin-3rd-party/cpp/bullet3/src",
+					"/Users/derek/finjin-3rd-party/cpp/boost",
+					"/Users/derek/finjin-3rd-party/cpp/eigen",
+					"/Users/derek/finjin-3rd-party/cpp/bullet3/src",
 					"../../../../../finjin-common/cpp/library/include",
 					../../src,
 					../../src/finjin/engine/internal/app/macos,
@@ -2552,10 +2554,11 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = USE_SIMD;
 				HEADER_SEARCH_PATHS = (
-					"~/finjin-3rd-party/cpp/boost",
-					"~/finjin-3rd-party/cpp/eigen",
-					"~/finjin-3rd-party/cpp/bullet3/src",
+					"/Users/derek/finjin-3rd-party/cpp/boost",
+					"/Users/derek/finjin-3rd-party/cpp/eigen",
+					"/Users/derek/finjin-3rd-party/cpp/bullet3/src",
 					"../../../../../finjin-common/cpp/library/include",
 					../../src,
 					../../src/finjin/engine/internal/app/macos,

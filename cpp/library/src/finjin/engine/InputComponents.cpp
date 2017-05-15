@@ -303,20 +303,12 @@ const char* InputDeviceComponentUtilities::ToString(InputDeviceComponent deviceC
 
 InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8String& deviceComponent)
 {
-    auto foundAt = inputDeviceComponentLookup.find(deviceComponent);
-    if (foundAt != inputDeviceComponentLookup.end())
-        return foundAt->second;
-    
-    return InputDeviceComponent::NONE;
+    return inputDeviceComponentLookup.GetOrDefault(deviceComponent, InputDeviceComponent::NONE);
 }
 
 InputDeviceComponent InputDeviceComponentUtilities::Parse(const Utf8StringView& deviceComponent)
 {
-    auto foundAt = inputDeviceComponentLookup.find(deviceComponent);
-    if (foundAt != inputDeviceComponentLookup.end())
-        return foundAt->second;
-
-    return InputDeviceComponent::NONE;
+    return inputDeviceComponentLookup.GetOrDefault(deviceComponent, InputDeviceComponent::NONE);
 }
 
 InputDeviceClass InputDeviceComponentUtilities::GetDeviceClass(InputDeviceComponent deviceComponent)
@@ -433,20 +425,12 @@ const char* InputDeviceSemanticUtilities::ToString(InputDeviceSemantic semantic)
 
 InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8String& semantic)
 {
-    auto foundAt = inputDeviceSemanticLookup.find(semantic);
-    if (foundAt != inputDeviceSemanticLookup.end())
-        return foundAt->second;
-
-    return InputDeviceSemantic::NONE;
+    return inputDeviceSemanticLookup.GetOrDefault(semantic, InputDeviceSemantic::NONE);
 }
 
 InputDeviceSemantic InputDeviceSemanticUtilities::Parse(const Utf8StringView& semantic)
 {
-    auto foundAt = inputDeviceSemanticLookup.find(semantic);
-    if (foundAt != inputDeviceSemanticLookup.end())
-        return foundAt->second;
-
-    return InputDeviceSemantic::NONE;
+    return inputDeviceSemanticLookup.GetOrDefault(semantic, InputDeviceSemantic::NONE);
 }
 
 //InputComponentSemanticUtilities
@@ -463,20 +447,12 @@ const char* InputComponentSemanticUtilities::ToString(InputComponentSemantic sem
 
 InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8String& semantic)
 {
-    auto foundAt = inputComponentSemanticLookup.find(semantic);
-    if (foundAt != inputComponentSemanticLookup.end())
-        return foundAt->second;
-
-    return InputComponentSemantic::NONE;
+    return inputComponentSemanticLookup.GetOrDefault(semantic, InputComponentSemantic::NONE);
 }
 
 InputComponentSemantic InputComponentSemanticUtilities::Parse(const Utf8StringView& semantic)
 {
-    auto foundAt = inputComponentSemanticLookup.find(semantic);
-    if (foundAt != inputComponentSemanticLookup.end())
-        return foundAt->second;
-
-    return InputComponentSemantic::NONE;
+    return inputComponentSemanticLookup.GetOrDefault(semantic, InputComponentSemantic::NONE);
 }
 
 int InputComponentSemanticUtilities::GetMoveLookToggleDirection(InputComponentSemantic semantic)
@@ -515,20 +491,12 @@ const char* PovDirectionUtilities::ToString(PovDirection povDirection)
 
 PovDirection PovDirectionUtilities::Parse(const Utf8String& povDirection)
 {
-    auto foundAt = povDirectionLookup.find(povDirection);
-    if (foundAt != povDirectionLookup.end())
-        return foundAt->second;
-
-    return PovDirection::CENTERED;
+    return povDirectionLookup.GetOrDefault(povDirection, PovDirection::CENTERED);
 }
 
 PovDirection PovDirectionUtilities::Parse(const Utf8StringView& povDirection)
 {
-    auto foundAt = povDirectionLookup.find(povDirection);
-    if (foundAt != povDirectionLookup.end())
-        return foundAt->second;
-
-    return PovDirection::CENTERED;
+    return povDirectionLookup.GetOrDefault(povDirection, PovDirection::CENTERED);
 }
 
 //InputAxis

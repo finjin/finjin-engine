@@ -2485,9 +2485,9 @@
 					BOOST_SYSTEM_NO_DEPRECATED,
 				);
 				HEADER_SEARCH_PATHS = (
-					"~/finjin-3rd-party/cpp/boost",
-					"~/finjin-3rd-party/cpp/eigen",
-					"~/finjin-3rd-party/cpp/bullet3/src",
+					"/Users/derek/finjin-3rd-party/cpp/boost",
+					"/Users/derek/finjin-3rd-party/cpp/eigen",
+					"/Users/derek/finjin-3rd-party/cpp/bullet3/src",
 					"../../../../../finjin-common/cpp/library/include",
 					../../src,
 					../../src/finjin/engine/internal/app/ios,
@@ -2506,9 +2506,9 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_PREPROCESSOR_DEFINITIONS = BOOST_SYSTEM_NO_DEPRECATED;
 				HEADER_SEARCH_PATHS = (
-					"~/finjin-3rd-party/cpp/boost",
-					"~/finjin-3rd-party/cpp/eigen",
-					"~/finjin-3rd-party/cpp/bullet3/src",
+					"/Users/derek/finjin-3rd-party/cpp/boost",
+					"/Users/derek/finjin-3rd-party/cpp/eigen",
+					"/Users/derek/finjin-3rd-party/cpp/bullet3/src",
 					"../../../../../finjin-common/cpp/library/include",
 					../../src,
 					../../src/finjin/engine/internal/app/ios,
