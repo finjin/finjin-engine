@@ -102,11 +102,8 @@ namespace Finjin { namespace Engine {
             return 0;
         }
 
-        template <typename T>
-        static void ParseElementID(ElementID& result, const T& value, Error& error)
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ElementID, ElementID::COUNT)& GetLookup()
         {
-            FINJIN_ERROR_METHOD_START(error);
-
             static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ElementID, ElementID::COUNT) lookup
                 (
                 "environment-matrix", ElementID::ENVIRONMENT_MATRIX,
@@ -165,11 +162,18 @@ namespace Finjin { namespace Engine {
                 "map-environment-amount", ElementID::MAP_ENVIRONMENT_AMOUNT,
                 "map-shininess-amount", ElementID::MAP_SHININESS_AMOUNT
                 );
-
-            auto foundAt = lookup.find(value);
-            if (foundAt != lookup.end())
-                result = foundAt->second;
-            else
+            
+            return lookup;
+        }
+        
+        template <typename T>
+        static void ParseElementID(ElementID& result, const T& value, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+            
+            auto& lookup = GetLookup();
+            result = lookup.GetOrDefault(value, ElementID::COUNT);
+            if (result == ElementID::COUNT)
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse GPU constants/structured buffer ID '%1%'.", value));
         }
     };
