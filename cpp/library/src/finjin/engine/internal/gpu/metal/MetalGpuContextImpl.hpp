@@ -142,7 +142,7 @@ namespace Finjin { namespace Engine {
             ShaderFeatureFlag gpuMaterialMapFlag; //Single flag identifying map's shader usage
         };
 
-        StaticUnorderedMap<Utf8String, MaterialMapTypeToGpuElements, (size_t)MetalMaterial::MapIndex::COUNT, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT(MetalMaterial::MapIndex::COUNT)> materialMapTypeToGpuElements;
+        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(MaterialMapTypeToGpuElements, MetalMaterial::MapIndex::COUNT) materialMapTypeToGpuElements;
 
         std::atomic<size_t> currentFrameBufferIndex;
 

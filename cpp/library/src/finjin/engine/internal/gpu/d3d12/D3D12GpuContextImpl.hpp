@@ -171,7 +171,7 @@ namespace Finjin { namespace Engine {
             ShaderFeatureFlag gpuMaterialMapFlag; //Single flag identifying map's shader usage
         };
 
-        StaticUnorderedMap<Utf8String, MaterialMapTypeToGpuElements, (size_t)D3D12Material::MapIndex::COUNT, FINJIN_OVERSIZE_FULL_STATIC_MAP_BUCKET_COUNT(D3D12Material::MapIndex::COUNT)> materialMapTypeToGpuElements;
+        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(MaterialMapTypeToGpuElements, D3D12Material::MapIndex::COUNT) materialMapTypeToGpuElements;
 
         DynamicVector<D3D12_SUBRESOURCE_DATA> preallocatedSubresourceData;
         ByteBuffer preallocatedFootprintSubresourceData;
