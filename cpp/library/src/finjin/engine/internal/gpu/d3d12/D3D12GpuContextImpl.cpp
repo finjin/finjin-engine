@@ -259,17 +259,17 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
 
     this->settings.frameBufferCount.actual = this->settings.frameBufferCount.requested;
     this->frameBuffers.resize(this->settings.frameBufferCount.actual);
-    for (size_t i = 0; i < this->frameBuffers.size(); i++)
+    for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
     {
-        auto& frameBuffer = this->frameBuffers[i];
+        auto& frameBuffer = this->frameBuffers[frameBufferIndex];
         frameBuffer.renderTarget.renderTargetOutputResources.push_back(nullptr); //Swap chain render targets only have a single output
-        frameBuffer.SetIndex(i);
+        frameBuffer.SetIndex(frameBufferIndex);
     }
 
     this->settings.jobProcessingPipelineSize = GpuContextCommonSettings::CalculateJobPipelineSize(this->settings.frameBufferCount.actual);
     this->frameStages.resize(this->settings.jobProcessingPipelineSize);
-    for (size_t i = 0; i < this->frameStages.size(); i++)
-        this->frameStages[i].index = i;
+    for (size_t frameStageIndex = 0; frameStageIndex < this->frameStages.size(); frameStageIndex++)
+        this->frameStages[frameStageIndex].index = frameStageIndex;
 
     if (this->settings.colorFormat.actual == DXGI_FORMAT_UNKNOWN)
     {
@@ -416,8 +416,8 @@ void D3D12GpuContextImpl::CreateDeviceSupportObjects(Error& error)
         FINJIN_SET_ERROR(error, "Failed to allocate light lookup.");
         return;
     }
-    for (size_t i = 0; i < this->lights.items.size(); i++)
-        this->lights.items[i].gpuBufferIndex = i;
+    for (size_t lightIndex = 0; lightIndex < this->lights.items.size(); lightIndex++)
+        this->lights.items[lightIndex].gpuBufferIndex = lightIndex;
 
     CreateGraphicsCommandQueue(error);
     if (error)

@@ -32,8 +32,7 @@ class AndroidApplicationAssetsVirtualFileSystemRoot : public VirtualFileSystemRo
 {
 public:
     AndroidApplicationAssetsVirtualFileSystemRoot(Allocator* allocator) :
-        VirtualFileSystemRoot(allocator),
-        workingFileSystemEntry(this, allocator)
+        VirtualFileSystemRoot(allocator)
     {
         this->androidApp = nullptr;
         this->rootAssetDir = nullptr;
@@ -73,7 +72,7 @@ public:
         }
     }
 
-    EnumerationResult Enumerate(FileSystemEntries& items, Error& error) override
+    EnumerationResult Enumerate(FileSystemEntries& items, FileSystemEntryType types, Error& error) override
     {
         FINJIN_ERROR_METHOD_START(error);
 
@@ -84,41 +83,44 @@ public:
         {
             for (int i = 0; i < apkAssetPathCount; i++)
             {
-                if (!jniUtils.GetStringArrayFieldElement(this->workingFileSystemEntry.relativePath, "apkAssetPaths", i))
-                {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path for item at index %1%.", i));
-                    return EnumerationResult::INCOMPLETE;
-                }
-
                 int apkAssetPathType;
                 if (!jniUtils.GetIntArrayFieldElement(apkAssetPathType, "apkAssetPathTypes", i))
                 {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path type for item at index %1%.", i));
                     return EnumerationResult::INCOMPLETE;
                 }
-
-                int64_t apkAssetPathSize;
-                if (!jniUtils.GetLongArrayFieldElement(apkAssetPathSize, "apkAssetPathSizes", i))
+                
+                assert(apkAssetPathType == 0 || apkAssetPathType == 1); //Values are defined in FinjinNativeActivity.java
+                auto type = apkAssetPathType == 0 ? FileSystemEntryType::FILE : FileSystemEntryType::DIRECTORY;
+                if (AnySet(type & types))
                 {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path size for item at index %1%.", i));
-                    return EnumerationResult::INCOMPLETE;
-                }
-
-                this->workingFileSystemEntry.decompressedSize = static_cast<size_t>(apkAssetPathSize);
-
-                //Values are defined in FinjinViewer.java
-                switch (apkAssetPathType)
-                {
-                    case 0: this->workingFileSystemEntry.type = FileSystemEntry::Type::FILE; break;
-                    case 1: this->workingFileSystemEntry.type = FileSystemEntry::Type::DIRECTORY; break;
-                    default:
+                    auto fileSystemEntry = items.Add();
+                    if (fileSystemEntry == nullptr)
                     {
-                        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path type for item at index %1%. It was an invalid value: %2%.", i, apkAssetPathType));
+                        FINJIN_SET_ERROR(error, "Failed to get free free database entry for Android APK path.");
                         return EnumerationResult::INCOMPLETE;
                     }
-                }
+                    
+                    if (!jniUtils.GetStringArrayFieldElement(fileSystemEntry->relativePath, "apkAssetPaths", i))
+                    {
+                        items.CancelAdd(fileSystemEntry);
 
-                items.Add(this->workingFileSystemEntry);
+                        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path for item at index %1%.", i));
+                        return EnumerationResult::INCOMPLETE;
+                    }
+                    
+                    int64_t apkAssetPathSize;
+                    if (!jniUtils.GetLongArrayFieldElement(apkAssetPathSize, "apkAssetPathSizes", i))
+                    {
+                        items.CancelAdd(fileSystemEntry);
+
+                        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path size for item at index %1%.", i));
+                        return EnumerationResult::INCOMPLETE;
+                    }
+                    
+                    fileSystemEntry->decompressedSize = static_cast<size_t>(apkAssetPathSize);
+                    fileSystemEntry->type = type;
+                }
             }
         }
 
@@ -290,7 +292,6 @@ public:
 private:
     android_app* androidApp;
     AAssetDir* rootAssetDir;
-    FileSystemEntry workingFileSystemEntry;
 };
 
 

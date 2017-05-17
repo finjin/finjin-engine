@@ -36,6 +36,8 @@ using namespace Finjin::Engine;
 
 #define ALLOW_USER_HOME_DIRECTORY_EXPANSION 1
 
+#define FILE_SYSTEM_DATABASE_ENTRY_TYPES FileSystemEntryType::DIRECTORY
+
 
 //Local types-------------------------------------------------------------------
 class WindowedViewportUpdateContext : public ApplicationViewportUpdateContext
@@ -406,21 +408,25 @@ void Application::Initialize(Error& error)
 
     this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator());
 
-    for (size_t applicationFileSystemIndex = 0; applicationFileSystemIndex < (size_t)ApplicationFileSystem::COUNT; applicationFileSystemIndex++)
     {
-        auto& fileSystem = this->fileSystems[applicationFileSystemIndex];
-        auto applicationFileSystem = static_cast<ApplicationFileSystem>(applicationFileSystemIndex);
-
         VirtualFileSystem::Settings fileSystemSettings;
-        fileSystemSettings.maxEntries = this->applicationDelegate->GetMaxFileSystemEntries(applicationFileSystem);
-        if (fileSystemSettings.maxEntries > 0)
+        fileSystemSettings.allocator = GetAllocator();
+        fileSystemSettings.searchEntryTypes = FILE_SYSTEM_DATABASE_ENTRY_TYPES;
+        
+        for (size_t applicationFileSystemIndex = 0; applicationFileSystemIndex < (size_t)ApplicationFileSystem::COUNT; applicationFileSystemIndex++)
         {
-            fileSystemSettings.allocator = GetAllocator();
-            fileSystem.Create(fileSystemSettings, error);
-            if (error)
+            auto& fileSystem = this->fileSystems[applicationFileSystemIndex];
+            auto applicationFileSystem = static_cast<ApplicationFileSystem>(applicationFileSystemIndex);
+            
+            fileSystemSettings.maxEntries = this->applicationDelegate->GetMaxFileSystemEntries(applicationFileSystem, fileSystemSettings.searchEntryTypes);
+            if (fileSystemSettings.maxEntries > 0)
             {
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize virtual file system '%1%'.", ApplicationFileSystemUtilities::ToString(applicationFileSystem)));
-                return;
+                fileSystem.Create(fileSystemSettings, error);
+                if (error)
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize virtual file system '%1%'.", ApplicationFileSystemUtilities::ToString(applicationFileSystem)));
+                    return;
+                }
             }
         }
     }

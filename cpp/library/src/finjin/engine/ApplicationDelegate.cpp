@@ -30,12 +30,12 @@ ApplicationDelegate::~ApplicationDelegate()
 {
 }
 
-size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSystem) const
+size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSystem, FileSystemEntryType entryTypes) const
 {
     //Sensible defaults
     switch (fileSystem)
     {
-        case ApplicationFileSystem::READ_APPLICATION_ASSETS: return 1000;
+        case ApplicationFileSystem::READ_APPLICATION_ASSETS: return 100;
         case ApplicationFileSystem::READ_USER_DATA: return 100;
         case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA: return 100;
         case ApplicationFileSystem::READ_WRITE_APPLICATION_DATA: return 50;

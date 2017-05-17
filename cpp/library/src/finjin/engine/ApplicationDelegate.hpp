@@ -65,7 +65,7 @@ namespace Finjin { namespace Engine {
         ApplicationDelegate(Allocator* allocator);
         ~ApplicationDelegate();
 
-        virtual size_t GetMaxFileSystemEntries(ApplicationFileSystem fileSystem) const;
+        virtual size_t GetMaxFileSystemEntries(ApplicationFileSystem fileSystem, FileSystemEntryType entryTypes) const;
 
         virtual const Utf8String& GetName(ApplicationNameFormat format) const = 0;
 

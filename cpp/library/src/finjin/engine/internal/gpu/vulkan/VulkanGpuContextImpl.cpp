@@ -708,8 +708,8 @@ void VulkanGpuContextImpl::CreateDeviceSupportObjects(Error& error)
         FINJIN_SET_ERROR(error, "Failed to allocate light lookup.");
         return;
     }
-    for (size_t i = 0; i < this->lights.items.size(); i++)
-        this->lights.items[i].gpuBufferIndex = i;
+    for (size_t lightIndex = 0; lightIndex < this->lights.items.size(); lightIndex++)
+        this->lights.items[lightIndex].gpuBufferIndex = lightIndex;
 
     //Create texture samplers
     {

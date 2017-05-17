@@ -403,23 +403,37 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
 
     this->settings.frameBufferCount.actual = this->settings.frameBufferCount.requested;
     this->frameBuffers.resize(this->settings.frameBufferCount.actual);
-    for (size_t i = 0; i < this->frameBuffers.size(); i++)
+    for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
     {
-        auto& frameBuffer = this->frameBuffers[i];
-        frameBuffer.SetIndex(i);
+        auto& frameBuffer = this->frameBuffers[frameBufferIndex];
+        frameBuffer.SetIndex(frameBufferIndex);
 
         frameBuffer.commandQueue = [this->device newCommandQueue];
     }
 
     this->settings.jobProcessingPipelineSize = GpuContextCommonSettings::CalculateJobPipelineSize(this->settings.frameBufferCount.actual);
     this->frameStages.resize(this->settings.jobProcessingPipelineSize);
-    for (size_t i = 0; i < this->frameStages.size(); i++)
+    for (size_t frameStageIndex = 0; frameStageIndex < this->frameStages.size(); frameStageIndex++)
     {
-        auto& frameStage = this->frameStages[i];
-        frameStage.index = i;
+        auto& frameStage = this->frameStages[frameStageIndex];
+        frameStage.index = frameStageIndex;
     }
 
     //Create other resources
+    /*{
+        auto drawableSize = CGSizeMake(this->renderingPixelBounds.GetClientWidth(), this->renderingPixelBounds.GetClientHeight());
+        
+        auto offscreenRenderTextureDesc = [[MTLTextureDescriptor alloc] init];
+        offscreenRenderTextureDesc.textureType = MTLTextureType2D;
+        offscreenRenderTextureDesc.width = drawableSize.width; //this->setting.renderDimensions.width
+        offscreenRenderTextureDesc.height = drawableSize.height; //this->setting.renderDimensions.height
+        offscreenRenderTextureDesc.pixelFormat = static_cast<MTLPixelFormat>(this->settings.colorFormat.actual);
+        offscreenRenderTextureDesc.mipmapLevelCount = 1;
+        offscreenRenderTextureDesc.resourceOptions = MTLResourceStorageModePrivate;
+        offscreenRenderTextureDesc.usage = MTLTextureUsageRenderTarget;
+        
+        //auto offscreenRenderTexture = [this->device newTextureWithDescriptor:offscreenRenderTextureDesc];
+    }*/
 }
 
 void MetalGpuContextImpl::CreateDeviceSupportObjects(Error& error)
@@ -523,8 +537,8 @@ void MetalGpuContextImpl::CreateDeviceSupportObjects(Error& error)
         FINJIN_SET_ERROR(error, "Failed to allocate light lookup.");
         return;
     }
-    for (size_t i = 0; i < this->lights.items.size(); i++)
-        this->lights.items[i].gpuBufferIndex = i;
+    for (size_t lightIndex = 0; lightIndex < this->lights.items.size(); lightIndex++)
+        this->lights.items[lightIndex].gpuBufferIndex = lightIndex;
 
     //Create texture samplers
     {
