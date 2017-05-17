@@ -32,18 +32,29 @@ ApplicationDelegate::~ApplicationDelegate()
 
 size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSystem, FileSystemEntryType entryTypes) const
 {
-    //Sensible defaults
-    switch (fileSystem)
+    //Note that the FileSystemEntryType::FILE type will likely never be present since the
+    //engine currently only NEEDS to keep track of directories in order to function correctly.
+    
+    size_t count = 0;
+    
+    if (fileSystem == ApplicationFileSystem::READ_APPLICATION_ASSETS)
     {
-        case ApplicationFileSystem::READ_APPLICATION_ASSETS: return 100;
-        case ApplicationFileSystem::READ_USER_DATA: return 100;
-        case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA: return 100;
-        case ApplicationFileSystem::READ_WRITE_APPLICATION_DATA: return 50;
-        case ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA: return 50;
-        default: break;
+        //More than sufficient for a real application
+        if (AnySet(entryTypes & FileSystemEntryType::DIRECTORY))
+            count += 100;
+        if (AnySet(entryTypes & FileSystemEntryType::FILE))
+            count += 1000;
     }
-
-    return 0;
+    else
+    {
+        //Probably not necessary for a real application
+        if (AnySet(entryTypes & FileSystemEntryType::DIRECTORY))
+            count += 10;
+        if (AnySet(entryTypes & FileSystemEntryType::FILE))
+            count += 100;
+    }
+    
+    return count;
 }
 
 ReadCommandLineResult ApplicationDelegate::ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error)
@@ -111,21 +122,23 @@ void ApplicationDelegate::OnGpusEnumerated(const HardwareGpuDescriptions& hardwa
             viewportDescription.desiredGpuDescription = hardwareGpus[0]; //First is best
             viewportDescription.desiredGpuID = viewportDescription.desiredGpuDescription.GetGpuID();
 
-            /*for (const auto& adapter : hardwareGpus)
+        #if 0 && FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
+            for (const auto& hardwareGpu : hardwareGpus)
             {
-            int outputIndex = 0;
-            for (const auto& output : adapter.outputs)
-            {
-            std::cout << "Output " << outputIndex++ << "--------------------------------" << std::endl;
+                int outputIndex = 0;
+                for (const auto& output : hardwareGpu.outputs)
+                {
+                    std::cout << "Output " << outputIndex++ << "--------------------------------" << std::endl;
 
-            size_t modeIndex = 0;
-            for (const auto& displayMode : output.displayModes)
-            {
-            std::cout << "Mode " << (modeIndex + 1) << ": " << displayMode.Width << " x " << displayMode.Height << " x " << (float)displayMode.RefreshRate.Numerator / displayMode.RefreshRate.Denominator << "hz" << std::endl;
-            modeIndex++;
+                    size_t modeIndex = 0;
+                    for (const auto& displayMode : output.displayModes)
+                    {
+                        std::cout << "Mode " << (modeIndex + 1) << ": " << displayMode.Width << " x " << displayMode.Height << " x " << (float)displayMode.RefreshRate.Numerator / displayMode.RefreshRate.Denominator << "hz" << std::endl;
+                        modeIndex++;
+                    }
+                }
             }
-            }
-            }*/
+        #endif
         }
 
         viewportDescription.gpuID = viewportDescription.desiredGpuID;
