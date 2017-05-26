@@ -15,10 +15,10 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/engine/internal/gpu/d3d12/D3D12GpuID.hpp"
+#include "finjin/common/Luid.hpp"
 
 
 //Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
-    using GpuID = D3D12GpuID;
+    using GpuID = Finjin::Common::Luid;
 } }

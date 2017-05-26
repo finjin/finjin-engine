@@ -605,7 +605,7 @@ namespace Finjin { namespace Engine {
             virtual bool GetBool() const = 0;
             virtual MathVector4 GetRGBA() const = 0;
 
-            void ResetValue() { SetValue(this->userDataProperty != nullptr ? this->userDataProperty->defaultValue : Utf8String::Empty()); }
+            void ResetValue() { SetValue(this->userDataProperty != nullptr ? this->userDataProperty->defaultValue : Utf8String::GetEmpty()); }
             virtual void SetValue(const Utf8String& s) {}
 
             UserDataClass::Item* userDataProperty;

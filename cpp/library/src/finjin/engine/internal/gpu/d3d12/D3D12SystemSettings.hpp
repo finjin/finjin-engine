@@ -27,9 +27,8 @@ namespace Finjin { namespace Engine {
 
     struct D3D12SystemSettings : GpuSystemCommonSettings
     {
-        D3D12SystemSettings();
+        D3D12SystemSettings(Allocator* initialAllocator);
 
-        Utf8String applicationName;
         enum class SoftwareGpuRequirement
         {
             DISALLOW,

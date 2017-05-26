@@ -129,7 +129,7 @@ namespace Finjin { namespace Engine {
         const_iterator end() const { return this->commands.end(); }
         iterator end() { return this->commands.end(); }
 
-        bool CreateStaticBuffer(void* staticSound, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool CreateStaticBuffer(void* staticSound, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<SoundCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -144,7 +144,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool CreateSource(void* soundBuffer, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool CreateSource(void* soundBuffer, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<SoundCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -159,7 +159,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool Play(void* soundSource, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool Play(void* soundSource, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<SoundCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -174,7 +174,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool Stop(void* soundSource, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool Stop(void* soundSource, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<SoundCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -189,7 +189,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool Pause(void* soundSource, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool Pause(void* soundSource, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<SoundCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -226,7 +226,7 @@ namespace Finjin { namespace Engine {
 
     struct SoundContextCommonSettings
     {
-        SoundContextCommonSettings(Allocator* allocator);
+        SoundContextCommonSettings(Allocator* initialAllocator);
 
         void SetDefaultSoundSourcePools();
 

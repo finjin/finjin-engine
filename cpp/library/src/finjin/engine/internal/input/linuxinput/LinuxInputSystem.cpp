@@ -22,13 +22,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct LinuxInputSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     LinuxInputSystem::Settings settings;
 
-    StaticVector<LinuxInputContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<LinuxInputContext*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

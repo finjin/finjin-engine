@@ -17,6 +17,7 @@
 #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_VULKAN
 
 #include "VulkanQueueFamilyIndexes.hpp"
+#include "VulkanUtilities.hpp"
 
 using namespace Finjin::Engine;
 
@@ -105,6 +106,22 @@ size_t VulkanQueueFamilyIndexes::GetValidCount() const
     count += IsSparseBindingValid() ? 1 : 0;
     count += IsPresentValid() ? 1 : 0;
     return count;
+}
+
+StaticVector<VkDeviceQueueCreateInfo, VulkanQueueFamilyIndexes::MAX_VALID_COUNT> VulkanQueueFamilyIndexes::GetCreateInfo(const float* queuePriorities, size_t queuePriorityCount)
+{
+    StaticVector<VkDeviceQueueCreateInfo, MAX_VALID_COUNT> queueInfos;
+
+    if (IsGraphicsValid())
+        queueInfos.push_back(VulkanDeviceQueueCreateInfo(this->graphics, static_cast<uint32_t>(queuePriorityCount), queuePriorities));
+    if (IsComputeValid())
+        queueInfos.push_back(VulkanDeviceQueueCreateInfo(this->compute, static_cast<uint32_t>(queuePriorityCount), queuePriorities));
+    if (IsTransferValid())
+        queueInfos.push_back(VulkanDeviceQueueCreateInfo(this->transfer, static_cast<uint32_t>(queuePriorityCount), queuePriorities));
+    if (IsSparseBindingValid())
+        queueInfos.push_back(VulkanDeviceQueueCreateInfo(this->sparseBinding, static_cast<uint32_t>(queuePriorityCount), queuePriorities));
+
+    return queueInfos;
 }
 
 #endif

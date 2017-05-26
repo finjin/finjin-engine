@@ -340,6 +340,11 @@ int OSWindow::GetDisplayID() const
     }
 }
 
+float OSWindow::GetDisplayDensity() const
+{
+    return 1.0f;
+}
+
 void OSWindow::GetDisplayInfo(DisplayInfo& displayInfo) const
 {
     DisplayInfos displays;
@@ -1011,10 +1016,10 @@ bool OSWindow::HandleEvent(const xcb_generic_event_t* ev)
                     {
                         if (s.StartsWith("file://"))
                         {
-                            fileNames.push_back(Path::Empty());
+                            fileNames.push_back(Path::GetEmpty());
                             auto& path = fileNames.back();
                             path.assign(s.begin(), s.size());
-                            path.ReplaceFirst("file://", Utf8String::Empty());
+                            path.ReplaceFirst("file://", Utf8String::GetEmpty());
                         }
 
                         return ValueOrError<bool>();

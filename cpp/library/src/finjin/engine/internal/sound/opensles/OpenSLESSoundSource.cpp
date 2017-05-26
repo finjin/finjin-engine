@@ -28,6 +28,7 @@ using namespace Finjin::Engine;
 enum class SoundSourceChange
 {
     NONE = 0,
+
     VOICE = 1 << 0,
     CONE = 1 << 1,
     AMBIENT = 1 << 2,
@@ -37,6 +38,7 @@ enum class SoundSourceChange
     VOLUME = 1 << 6,
     POSITION = 1 << 7,
     ORIENTATION = 1 << 8,
+
     ALL = VOICE | CONE | AMBIENT | STATE | BUFFER | PLAYBACK_RATE | VOLUME | POSITION | ORIENTATION
 };
 FINJIN_ENUM_BITWISE_OPERATIONS(SoundSourceChange)

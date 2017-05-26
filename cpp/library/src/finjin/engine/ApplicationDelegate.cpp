@@ -30,30 +30,30 @@ ApplicationDelegate::~ApplicationDelegate()
 {
 }
 
-size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSystem, FileSystemEntryType entryTypes) const
+size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSystem, FileSystemEntryType findTypes) const
 {
     //Note that the FileSystemEntryType::FILE type will likely never be present since the
     //engine currently only NEEDS to keep track of directories in order to function correctly.
-    
+
     size_t count = 0;
-    
+
     if (fileSystem == ApplicationFileSystem::READ_APPLICATION_ASSETS)
     {
         //More than sufficient for a real application
-        if (AnySet(entryTypes & FileSystemEntryType::DIRECTORY))
+        if (AnySet(findTypes & FileSystemEntryType::DIRECTORY))
             count += 100;
-        if (AnySet(entryTypes & FileSystemEntryType::FILE))
+        if (AnySet(findTypes & FileSystemEntryType::FILE))
             count += 1000;
     }
     else
     {
         //Probably not necessary for a real application
-        if (AnySet(entryTypes & FileSystemEntryType::DIRECTORY))
+        if (AnySet(findTypes & FileSystemEntryType::DIRECTORY))
             count += 10;
-        if (AnySet(entryTypes & FileSystemEntryType::FILE))
+        if (AnySet(findTypes & FileSystemEntryType::FILE))
             count += 100;
     }
-    
+
     return count;
 }
 
@@ -97,7 +97,7 @@ size_t ApplicationDelegate::GetSettingsFileNameCount() const
 const AssetReference& ApplicationDelegate::GetSettingsFileName(size_t index, bool& required) const
 {
     required = false;
-    return AssetReference::Empty();
+    return AssetReference::GetEmpty();
 }
 
 void ApplicationDelegate::ReadSettings(size_t index, const ByteBuffer& settingsBuffer, Error& error)

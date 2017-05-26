@@ -36,12 +36,14 @@ namespace Finjin { namespace Engine {
     enum class SoundSourceChange
     {
         NONE = 0,
+
         VOICE = 1 << 0,
         AMBIENT = 1 << 2,
         BUFFER = 1 << 4,
         PLAYBACK_RATE = 1 << 7,
         VOLUME = 1 << 8,
         POSITION = 1 << 9,
+
         ALL = 0xffff
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(SoundSourceChange)

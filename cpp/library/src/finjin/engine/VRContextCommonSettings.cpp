@@ -19,7 +19,9 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-VRContextCommonSettings::VRContextCommonSettings(Allocator* allocator) : settingsFileNames(allocator)
+VRContextCommonSettings::VRContextCommonSettings(Allocator* initialAllocator) :
+    initialAssetSelector(initialAllocator),
+    settingsFileNames(initialAllocator)
 {
     this->assetReader = nullptr;
 

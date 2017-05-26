@@ -284,7 +284,7 @@ void D3D12StaticMeshRenderer::Create(Settings&& settings, Error& error)
                 return;
             }
             pipelineState.graphicsState.shaderFeatures.inputFormatHash = d3d12InputFormat->inputFormatHash;
-            graphicsPipelineStateDesc.InputLayout = { d3d12InputFormat->elements.data(), (UINT)d3d12InputFormat->elements.size() };
+            graphicsPipelineStateDesc.InputLayout = { d3d12InputFormat->elements.data(), static_cast<UINT>(d3d12InputFormat->elements.size()) };
 
             auto rootSignatureDescriptor = D3D12RootSignatureDescriptor::GetByTypeName(this->settings.rootSignatures, pipelineState.rootSignatureType);
             if (rootSignatureDescriptor == nullptr)
@@ -372,9 +372,9 @@ void D3D12StaticMeshRenderer::Create(Settings&& settings, Error& error)
     }
 
     //Build frame resources
-    for (auto& frameBuffer : this->settings.contextImpl->frameBuffers)
+    for (auto& frameStage : this->settings.contextImpl->frameStages)
     {
-        auto& staticMeshRendererFrameState = frameBuffer.staticMeshRendererFrameState;
+        auto& staticMeshRendererFrameState = frameStage.staticMeshRendererFrameState;
 
         //Constant buffers
         {
@@ -389,7 +389,7 @@ void D3D12StaticMeshRenderer::Create(Settings&& settings, Error& error)
                 staticMeshRendererFrameState.constantBuffers[i].Create(this->settings.contextImpl->device.Get(), *this->knownConstantBufferDescriptions[i], instanceCounts[i], error);
                 if (error)
                 {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create known constant buffer '%1%' for frame '%2%'.", i, frameBuffer.index));
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create known constant buffer '%1%' for frame '%2%'.", i, frameStage.index));
                     return;
                 }
             }
@@ -458,13 +458,20 @@ void D3D12StaticMeshRenderer::Create(Settings&& settings, Error& error)
 
 void D3D12StaticMeshRenderer::Destroy()
 {
+    this->graphicsRootSignatureAndPipelineStates.Destroy();
+
+    this->shaderFileBytes.Destroy();
+
+    this->graphicsPipelineStates.Destroy();
+
+    this->rootSignatures.Destroy();
 }
 
 void D3D12StaticMeshRenderer::UpdatePassAndMaterialConstants(D3D12StaticMeshRendererFrameState& frameState, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime)
 {
     //Pass
     {
-        auto windowBounds = this->settings.contextImpl->GetRenderingPixelBounds();
+        auto windowBounds = this->settings.contextImpl->windowPixelBounds;
 
         auto clientWidth = RoundToFloat(windowBounds.GetClientWidth());
         auto clientHeight = RoundToFloat(windowBounds.GetClientHeight());
@@ -702,7 +709,7 @@ void D3D12StaticMeshRenderer::RenderEntity(D3D12StaticMeshRendererFrameState& fr
                         if (foundPipelineStateSlot != nullptr)
                         {
                             //Get/add heaps
-                            ID3D12DescriptorHeap* heaps[] = { this->settings.contextImpl->textureResources.srvTextureDescHeap.heap.Get() };
+                            ID3D12DescriptorHeap* heaps[] = { this->settings.contextImpl->commonResources.srvTextureDescHeap.heap.Get() };
                             auto heapRef = foundPipelineStateSlot->Record(heaps, FINJIN_COUNT_OF(heaps));
                             if (heapRef != nullptr)
                             {
@@ -817,7 +824,7 @@ void D3D12StaticMeshRenderer::RenderQueued(D3D12StaticMeshRendererFrameState& fr
                     commandList->SetGraphicsRootDescriptorTable
                         (
                         static_cast<UINT>(D3D12StaticMeshRendererKnownRootSignatureBindings::TEXTURE),
-                        this->settings.contextImpl->textureResources.srvTextureDescHeap.GetGpuHeapStart()
+                        this->settings.contextImpl->commonResources.srvTextureDescHeap.GetGpuHeapStart()
                         );
 
                     for (auto item : heapRefs.opaqueEntities)

@@ -62,9 +62,9 @@ bool MacOSKeyboard::Create(MacOSInputContext* context, size_t index)
     UniCharCount actualKeyNameLength;
 
     this->state.buttons.resize(KeyboardConstants::MAX_BUTTON_COUNT);
-    for (size_t i = 0; i < this->state.buttons.size(); i++)
+    for (size_t buttonIndex = 0; buttonIndex < this->state.buttons.size(); buttonIndex++)
     {
-        auto virtualKey = static_cast<int>(i);
+        auto virtualKey = static_cast<int>(buttonIndex);
 
         switch (virtualKey)
         {
@@ -144,8 +144,8 @@ bool MacOSKeyboard::Create(MacOSInputContext* context, size_t index)
             }
         }
 
-        this->state.buttons[i]
-            .SetIndex(i)
+        this->state.buttons[buttonIndex]
+            .SetIndex(buttonIndex)
             .SetCode(virtualKey)
             .SetDisplayName(keyName)
             .SetSemantic(inputSemantic)

@@ -23,8 +23,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-MetalGpuContextSettings::MetalGpuContextSettings(Allocator* allocator) :
-    GpuContextCommonSettings(allocator),
+MetalGpuContextSettings::MetalGpuContextSettings(Allocator* initialAllocator) :
+    GpuContextCommonSettings(initialAllocator),
     colorFormat(static_cast<uint32_t>(MTLPixelFormatBGRA8Unorm)),
     depthStencilFormat(static_cast<uint32_t>(MTLPixelFormatInvalid))
 {

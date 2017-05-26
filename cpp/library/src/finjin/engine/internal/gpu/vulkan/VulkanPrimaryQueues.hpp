@@ -15,19 +15,23 @@
 
 
 //Includes----------------------------------------------------------------------
+#include "finjin/common/Error.hpp"
 #include "VulkanQueueFamilyIndexes.hpp"
-#include "VulkanIncludes.hpp"
 
 
 //Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    struct VulkanPrimaryQueues
+    using namespace Finjin::Common;
+
+    class VulkanPrimaryQueues
     {
+    public:
         VulkanPrimaryQueues();
 
-        void SetPresent(const VulkanQueueFamilyIndexes& indexes);
+        void Create(VulkanDeviceFunctions& vk, const VulkanQueueFamilyIndexes& indexes, Error& error);
 
+    public:
         VkQueue graphics;
         VkQueue compute;
         VkQueue transfer;

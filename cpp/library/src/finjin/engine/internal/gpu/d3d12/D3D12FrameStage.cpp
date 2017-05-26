@@ -37,4 +37,16 @@ D3D12FrameStage::D3D12FrameStage()
     this->renderTarget = nullptr;
 }
 
+void D3D12FrameStage::SetIndex(size_t index)
+{
+    this->index = index;
+
+    this->staticMeshRendererFrameState.index = index;
+}
+
+void D3D12FrameStage::Destroy()
+{
+    this->staticMeshRendererFrameState.Destroy();
+}
+
 #endif

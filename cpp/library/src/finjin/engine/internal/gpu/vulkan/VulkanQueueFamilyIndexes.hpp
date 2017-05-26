@@ -16,6 +16,7 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
+#include "finjin/common/StaticVector.hpp"
 #include "VulkanIncludes.hpp"
 #include "VulkanGpuDescription.hpp"
 
@@ -26,6 +27,8 @@ namespace Finjin { namespace Engine {
     class VulkanQueueFamilyIndexes
     {
     public:
+        enum { MAX_VALID_COUNT = 5 };
+
         VulkanQueueFamilyIndexes();
 
         void Enumerate(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VulkanInstanceFunctions& vk, VulkanQueueFamilyProperties& queueProperties, Error& error);
@@ -38,7 +41,7 @@ namespace Finjin { namespace Engine {
 
         size_t GetValidCount() const;
 
-        enum { MAX_VALID_COUNT = 5 };
+        StaticVector<VkDeviceQueueCreateInfo, MAX_VALID_COUNT> GetCreateInfo(const float* queuePriorities, size_t queuePriorityCount);
 
     private:
         void Reset();

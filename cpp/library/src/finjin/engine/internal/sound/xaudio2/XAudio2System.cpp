@@ -23,13 +23,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct XAudio2System::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     XAudio2System::Settings settings;
 
-    StaticVector<XAudio2Context*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<XAudio2Context*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

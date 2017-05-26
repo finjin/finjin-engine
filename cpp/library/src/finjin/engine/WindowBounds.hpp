@@ -27,6 +27,7 @@ namespace Finjin { namespace Engine {
     enum class WindowBoundsFlags
     {
         NONE = 0,
+
         BORDER = 1 << 0,
         MAXIMIZED = 1 << 1,
         LOCKED = 1 << 2

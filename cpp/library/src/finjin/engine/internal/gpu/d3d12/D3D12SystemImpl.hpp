@@ -21,7 +21,6 @@
 #include "D3D12SystemSettings.hpp"
 #include "D3D12Includes.hpp"
 #include "D3D12GpuDescription.hpp"
-#include "D3D12GpuID.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/WindowSize.hpp"
@@ -37,7 +36,7 @@ namespace Finjin { namespace Engine {
     public:
         D3D12SystemImpl(Allocator* allocator);
 
-        const D3D12GpuOutputs* GetAdapterOutputs(const D3D12GpuID& gpuID) const;
+        const D3D12GpuOutputs* GetAdapterOutputs(const Luid& gpuID) const;
 
         bool IsDebugEnabled() const;
 
@@ -45,7 +44,7 @@ namespace Finjin { namespace Engine {
 
         void EnumerateHardwareGpus();
         void EnumerateSoftwareGpus();
-        void GetHardwareD3DAdapter(D3D12GpuID& gpuID, IDXGIAdapter1** ppAdapter, D3D12GpuDescription& desc, Error& error);
+        void GetHardwareD3DAdapter(Luid& gpuID, IDXGIAdapter1** ppAdapter, D3D12GpuDescription& desc, Error& error);
 
     private:
         void EnumerateDeviceFeatures(ID3D12Device* device, D3D12GpuFeatures& features);
@@ -57,7 +56,7 @@ namespace Finjin { namespace Engine {
 
         Microsoft::WRL::ComPtr<IDXGIFactory4> dxgiFactory;
 
-        StaticVector<D3D12GpuContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+        StaticVector<D3D12GpuContext*, EngineConstants::MAX_WINDOWS> contexts;
     };
 
 } }

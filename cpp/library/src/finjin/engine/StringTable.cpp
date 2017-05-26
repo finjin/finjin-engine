@@ -36,7 +36,7 @@ const Utf8StringView& StringTable::Get(size_t index) const
     if (!this->instances.empty() && index < this->instances[0].items.size())
         return this->instances[0].items[index].second;
 
-    return Utf8StringView::Empty();
+    return Utf8StringView::GetEmpty();
 }
 
 const Utf8StringView& StringTable::Get(const char* key) const
@@ -50,7 +50,7 @@ const Utf8StringView& StringTable::Get(const char* key) const
             return foundAt->second;
     }
 
-    return Utf8StringView::Empty();
+    return Utf8StringView::GetEmpty();
 }
 
 const char* StringTable::GetOrDefault(const char* key, const char* defaultValue) const

@@ -292,16 +292,16 @@ namespace Finjin { namespace Engine {
             if (this->inputContext != nullptr && (!bindingValues.instanceDescriptor.empty() || !bindingValues.productDescriptor.empty()))
             {
                 auto deviceClass = InputDeviceComponentUtilities::GetDeviceClass(inputSource.deviceComponent); //inputSource.deviceComponent has been set at this point, so this is safe
-                auto deviceClassCount = this->inputContext->GetDeviceCount(deviceClass);
+                auto deviceCount = this->inputContext->GetDeviceCount(deviceClass);
 
                 if (!bindingValues.instanceDescriptor.empty())
                 {
                     //Try to find the matching instance descriptor
-                    for (size_t i = 0; i < deviceClassCount; i++)
+                    for (size_t deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
                     {
-                        if (bindingValues.instanceDescriptor == this->inputContext->GetDeviceInstanceDescriptor(deviceClass, i))
+                        if (bindingValues.instanceDescriptor == this->inputContext->GetDeviceInstanceDescriptor(deviceClass, deviceIndex))
                         {
-                            inputSource.deviceIndex = i;
+                            inputSource.deviceIndex = deviceIndex;
                             return DeviceIndexReadResult::FOUND_INSTANCE_DESCRIPTOR;
                         }
                     }
@@ -310,11 +310,11 @@ namespace Finjin { namespace Engine {
                 if (!bindingValues.productDescriptor.empty())
                 {
                     //Failed to find instance descriptor, so try to find matching product descriptor
-                    for (size_t i = 0; i < deviceClassCount; i++)
+                    for (size_t deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
                     {
-                        if (bindingValues.productDescriptor == this->inputContext->GetDeviceProductDescriptor(deviceClass, i))
+                        if (bindingValues.productDescriptor == this->inputContext->GetDeviceProductDescriptor(deviceClass, deviceIndex))
                         {
-                            inputSource.deviceIndex = i;
+                            inputSource.deviceIndex = deviceIndex;
                             return DeviceIndexReadResult::FOUND_PRODUCT_DESCRIPTOR;
                         }
                     }

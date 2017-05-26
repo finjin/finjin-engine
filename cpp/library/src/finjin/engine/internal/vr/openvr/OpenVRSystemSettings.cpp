@@ -22,7 +22,7 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-OpenVRSystemSettings::OpenVRSystemSettings()
+OpenVRSystemSettings::OpenVRSystemSettings(Allocator* initialAllocator) : VRSystemCommonSettings(initialAllocator)
 {
 }
 

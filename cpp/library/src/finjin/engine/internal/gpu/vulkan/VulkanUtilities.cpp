@@ -421,4 +421,56 @@ void VulkanUtilities::SetImageLayout
     SetImageLayout(vk, commandBuffer, image, oldImageLayout, newImageLayout, subresourceRange);
 }
 
+VkSampleCountFlagBits VulkanUtilities::GetSampleCountFlags(size_t sampleCount)
+{
+    if (sampleCount > 0)
+        sampleCount--;
+    if (sampleCount > 64)
+        sampleCount = 64;
+
+    return static_cast<VkSampleCountFlagBits>(VK_SAMPLE_COUNT_1_BIT << sampleCount);
+}
+
+bool VulkanUtilities::GetBestDepthStencilFormat(RequestedValue<VkFormat>& depthStencilFormat, bool stencilRequired, VulkanInstanceFunctions& vk, VkPhysicalDevice physicalDevice)
+{
+    depthStencilFormat.actual = VK_FORMAT_UNDEFINED;
+
+    //Build up list of formats to check, putting the requested one first
+    StaticVector<VkFormat, 10> formats;
+    if (depthStencilFormat.requested != VK_FORMAT_UNDEFINED)
+    {
+        if (!stencilRequired || IsDepthStencilFormat(depthStencilFormat.requested))
+            formats.push_back(depthStencilFormat.requested);
+    }
+    if (stencilRequired)
+    {
+        formats.push_back(VK_FORMAT_D32_SFLOAT_S8_UINT);
+        formats.push_back(VK_FORMAT_D24_UNORM_S8_UINT);
+        formats.push_back(VK_FORMAT_D16_UNORM_S8_UINT);
+    }
+    else
+    {
+        formats.push_back(VK_FORMAT_D32_SFLOAT);
+        formats.push_back(VK_FORMAT_D32_SFLOAT_S8_UINT);
+        formats.push_back(VK_FORMAT_D24_UNORM_S8_UINT);
+        formats.push_back(VK_FORMAT_D16_UNORM_S8_UINT);
+        formats.push_back(VK_FORMAT_D16_UNORM);
+    }
+
+    //Get first supported format
+    for (auto format : formats)
+    {
+        VkFormatProperties formatProperties;
+        vk.GetPhysicalDeviceFormatProperties(physicalDevice, format, &formatProperties);
+        if ((formatProperties.linearTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) ||
+            (formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
+        {
+            depthStencilFormat.actual = format;
+            break;
+        }
+    }
+
+    return depthStencilFormat.actual != VK_FORMAT_UNDEFINED;
+}
+
 #endif

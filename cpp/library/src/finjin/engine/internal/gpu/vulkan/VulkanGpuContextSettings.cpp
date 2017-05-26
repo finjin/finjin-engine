@@ -22,8 +22,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-VulkanGpuContextSettings::VulkanGpuContextSettings(Allocator* allocator) :
-    GpuContextCommonSettings(allocator),
+VulkanGpuContextSettings::VulkanGpuContextSettings(Allocator* initialAllocator) :
+    GpuContextCommonSettings(initialAllocator),
     colorSpace(VK_COLOR_SPACE_SRGB_NONLINEAR_KHR),
     colorFormat(VK_FORMAT_UNDEFINED),
     depthStencilFormat(VK_FORMAT_UNDEFINED)

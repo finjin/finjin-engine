@@ -21,7 +21,9 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-InputContextCommonSettings::InputContextCommonSettings(Allocator* allocator) : initialAssetFileSelector(allocator), settingsFileNames(allocator)
+InputContextCommonSettings::InputContextCommonSettings(Allocator* initialAllocator) :
+    initialAssetFileSelector(initialAllocator),
+    settingsFileNames(initialAllocator)
 {
     this->applicationHandle = nullptr;
     this->osWindow = nullptr;

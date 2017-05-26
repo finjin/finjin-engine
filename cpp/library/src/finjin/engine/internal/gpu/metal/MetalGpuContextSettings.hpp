@@ -27,7 +27,7 @@ namespace Finjin { namespace Engine {
 
     struct MetalGpuContextSettings : GpuContextCommonSettings
     {
-        MetalGpuContextSettings(Allocator* allocator);
+        MetalGpuContextSettings(Allocator* initialAllocator);
 
         RequestedValue<uint32_t> colorFormat; //MTLPixelFormat
         RequestedValue<uint32_t> depthStencilFormat; //MTLPixelFormat

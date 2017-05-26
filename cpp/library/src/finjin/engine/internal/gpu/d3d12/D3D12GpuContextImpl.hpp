@@ -15,21 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/ByteBuffer.hpp"
-#include "finjin/common/DynamicVector.hpp"
-#include "finjin/common/Error.hpp"
-#include "finjin/common/FiberSpinLock.hpp"
-#include "finjin/common/OperationStatus.hpp"
-#include "finjin/common/SimpleSpinLockMutex.hpp"
-#include "finjin/common/StaticUnorderedMap.hpp"
-#include "finjin/common/StaticVector.hpp"
-#include "finjin/common/UsableDynamicVector.hpp"
-#include "finjin/common/WindowsUtilities.hpp"
-#include "finjin/engine/Camera.hpp"
-#include "finjin/engine/GenericGpuNumericStructs.hpp"
-#include "finjin/engine/OSWindowEventListener.hpp"
-#include "finjin/engine/WindowSize.hpp"
+#include "finjin/engine/GpuContextCommonImpl.hpp"
 #include "D3D12DescriptorHeap.hpp"
 #include "D3D12DisplayMode.hpp"
 #include "D3D12FrameBuffer.hpp"
@@ -49,80 +35,72 @@ namespace Finjin { namespace Engine {
 
     class D3D12System;
 
-    class D3D12GpuContextImpl : public AllocatedClass, public OSWindowEventListener
+    class D3D12GpuContextImpl : public AllocatedClass, public GpuContextCommonImpl, public OSWindowEventListener
     {
     public:
         D3D12GpuContextImpl(Allocator* allocator);
+
+        void Create(const D3D12GpuContextSettings& settings, Error& error);
+        void Destroy();
 
         void CreateDevice(Error& error);
         void CreateDeviceSupportObjects(Error& error);
         void CreateRenderers(Error& error);
 
-        void Create(const D3D12GpuContextSettings& settings, Error& error);
-        void Destroy();
+        D3D12FrameStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
+        void PresentFrameStage(D3D12FrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error);
 
-        void GetBestFullScreenDisplayMode(D3D12DisplayMode& bestDisplayMode, size_t width, size_t height, D3D12RefreshRate refresh, HMONITOR theMonitor, Error& error);
-
-        bool ToggleFullScreenExclusive(Error& error);
-        bool StartResizeTargets(bool minimized, Error& error);
-        void FinishResizeTargets(Error& error);
+        void Execute(D3D12FrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
 
         uint64_t FlushGpu();
 
-        uint64_t EmitFenceValue();
-
-        void WaitForFenceValue(uint64_t v);
-        size_t BusyWaitForFenceValue(uint64_t v);
-
-        WindowBounds GetRenderingPixelBounds();
+        void CreateScreenSizeDependentResources(Error& error);
+        void DestroyScreenSizeDependentResources(bool resizing);
 
         void WindowResized(OSWindow* osWindow) override;
+
+        void UpdateResourceGpuResidencyStatus();
+
+        D3D12Texture* CreateTextureFromMainThread(FinjinTexture* texture, Error& error);
+        void* CreateLightFromMainThread(FinjinSceneObjectLight* light, Error& error);
+        void* CreateMeshFromMainThread(FinjinMesh* mesh, Error& error);
+
+        void CreateShader(D3D12ShaderType shaderType, const Utf8String& name, const uint8_t* bytes, size_t byteCount, bool makeLocalCopy, Error& error);
+        void CreateShader(D3D12ShaderType shaderType, const AssetReference& assetRef, Error& error);
 
         bool ResolveMeshRef(FinjinMesh& mesh, const AssetReference& assetRef);
         bool ResolveMaterialRef(FinjinMaterial& material, const AssetReference& assetRef);
         bool ResolveMaterialMaps(FinjinMaterial& material);
 
-        D3D12Texture* CreateTextureFromMainThread(FinjinTexture* texture, Error& error);
-        void UploadTexture(ID3D12GraphicsCommandList* commandList, FinjinTexture* texture);
-
-        void* CreateLightFromMainThread(FinjinSceneObjectLight* light, Error& error);
-
-        void* CreateMaterial(ID3D12GraphicsCommandList* commandList, FinjinMaterial* material, Error& error);
-
-        void* CreateMeshFromMainThread(FinjinMesh* mesh, Error& error);
-        void UploadMesh(ID3D12GraphicsCommandList* commandList, FinjinMesh* mesh, Error& error);
-
-        void CreateShader(D3D12ShaderType shaderType, const Utf8String& name, const uint8_t* bytes, size_t byteCount, bool makeLocalCopy, Error& error);
-        void CreateShader(D3D12ShaderType shaderType, const AssetReference& assetRef, Error& error);
-
-        D3D12RenderTarget* GetRenderTarget(D3D12FrameStage& frameStage, const Utf8String& name);
-
-        void StartGraphicsCommandList(D3D12FrameStage& frameStage, Error& error);
-        void StartRenderTarget(D3D12FrameStage& frameStage, D3D12RenderTarget* renderTarget, StaticVector<D3D12RenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>& dependentRenderTargets, Error& error);
-        void FinishRenderTarget(D3D12FrameStage& frameStage, Error& error);
-        void FinishGraphicsCommandList(D3D12FrameStage& frameStage, Error& error);
-
-        D3D12FrameStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
-        void FinishBackFrameBufferRender(D3D12FrameStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error);
-
-        void Execute(D3D12FrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
-
-        void UpdateResourceGpuResidencyStatus();
-
-        void CreateScreenSizeDependentResources(Error& error);
-        void DestroyScreenSizeDependentResources(bool resizing);
+        bool ToggleFullScreenExclusive(Error& error);
+        bool StartResizeTargets(bool minimized, Error& error);
+        void FinishResizeTargets(Error& error);
 
     private:
+        void* CreateMaterial(ID3D12GraphicsCommandList* commandList, FinjinMaterial* material, Error& error);
+
+        void UploadTexture(ID3D12GraphicsCommandList* commandList, FinjinTexture* texture);
+        void UploadMesh(ID3D12GraphicsCommandList* commandList, FinjinMesh* mesh, Error& error);
+
+        D3D12RenderTarget* GetRenderTarget(D3D12FrameStage& frameStage, const Utf8String& name);
+        void StartGraphicsCommands(D3D12FrameStage& frameStage, Error& error);
+        void FinishGraphicsCommands(D3D12FrameStage& frameStage, Error& error);
+        void StartRenderTarget(D3D12FrameStage& frameStage, D3D12RenderTarget* renderTarget, StaticVector<D3D12RenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>& dependentRenderTargets, Error& error);
+        void FinishRenderTarget(D3D12FrameStage& frameStage, Error& error);
+
+        uint64_t NewFenceValue();
+        uint64_t EmitFenceValue();
+        void SleepWaitForFenceValue(uint64_t fenceValue);
+
+        void GetBestFullScreenDisplayMode(D3D12DisplayMode& bestDisplayMode, size_t width, size_t height, D3D12RefreshRate refresh, HMONITOR theMonitor, Error& error);
+
         void CreateGraphicsCommandQueue(Error& error);
         void CreateSwapChain(Error& error);
 
-        void UpdateCachedFrameBufferSize();
+        void UpdatedCachedWindowSize();
 
     public:
         D3D12GpuContextSettings settings;
-
-        AssetClassFileReader settingsAssetClassFileReader;
-        AssetClassFileReader shaderAssetClassFileReader;
 
         struct InternalSettings
         {
@@ -142,71 +120,40 @@ namespace Finjin { namespace Engine {
 
         D3D12System* d3dSystem;
 
-        D3D12GpuDescription desc;
-        WindowBounds renderingPixelBounds;
+        D3D12GpuDescription deviceDescription;
+        StaticVector<D3D12_FEATURE_DATA_FORMAT_SUPPORT, (size_t)DXGI_FORMAT_V408 + 1> formatSupportByFormat; //Format support indexed by the format itself
 
-        ByteBuffer readBuffer;
-
-        struct MaterialMapTypeToGpuElements
-        {
-            MaterialMapTypeToGpuElements() {}
-            MaterialMapTypeToGpuElements(D3D12Material::MapIndex gpuMaterialMapIndex, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID, ShaderFeatureFlag gpuMaterialMapFlag)
-            {
-                this->gpuMaterialMapIndex = gpuMaterialMapIndex;
-                this->gpuBufferTextureIndexElementID = gpuBufferTextureIndexElementID;
-                this->gpuBufferAmountElementID = GpuStructuredAndConstantBufferStructMetadata::ElementID::NONE;
-                this->gpuMaterialMapFlag = gpuMaterialMapFlag;
-            }
-            MaterialMapTypeToGpuElements(D3D12Material::MapIndex gpuMaterialMapIndex, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferAmountElementID, ShaderFeatureFlag gpuMaterialMapFlag)
-            {
-                this->gpuMaterialMapIndex = gpuMaterialMapIndex;
-                this->gpuBufferTextureIndexElementID = gpuBufferTextureIndexElementID;
-                this->gpuBufferAmountElementID = gpuBufferAmountElementID;
-                this->gpuMaterialMapFlag = gpuMaterialMapFlag;
-            }
-
-            D3D12Material::MapIndex gpuMaterialMapIndex; //Index into D3D12Material maps
-            GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID; //ElementID (index) into shader constant or structured buffer for 'texture index'
-            GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferAmountElementID; //ElementID (index) into shader constant or structured buffer for 'amount'
-            ShaderFeatureFlag gpuMaterialMapFlag; //Single flag identifying map's shader usage
-        };
-
-        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(MaterialMapTypeToGpuElements, D3D12Material::MapIndex::COUNT) materialMapTypeToGpuElements;
+        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(GpuMaterialMapIndexToConstantBufferElements<D3D12Material::MapIndex>, D3D12Material::MapIndex::COUNT) materialMapTypeToElements;
 
         DynamicVector<D3D12_SUBRESOURCE_DATA> preallocatedSubresourceData;
         ByteBuffer preallocatedFootprintSubresourceData;
 
+        D3D12_VIEWPORT windowViewport;
+        D3D12_RECT windowScissorRect;
+
+        D3D12_VIEWPORT renderViewport;
+        D3D12_RECT renderScissorRect;
+
         Microsoft::WRL::ComPtr<ID3D12Device> device;
+
         Microsoft::WRL::ComPtr<ID3D12CommandQueue> graphicsCommandQueue;
         Microsoft::WRL::ComPtr<IDXGISwapChain3> swapChain;
-        D3D12DescriptorHeap swapChainRtvDescHeap;
-        D3D12DescriptorHeap swapChainDsvDescHeap;
-
-        size_t sequenceIndex;
-
-        size_t nextFrameBufferIndex;
-        StaticVector<D3D12FrameBuffer, EngineConstants::MAX_FRAME_BUFFERS> frameBuffers;
-        StaticVector<D3D12FrameStage, EngineConstants::MAX_FRAME_STAGES> frameStages;
-
-        D3D12TextureResources textureResources;
+        D3D12DescriptorHeap rtvDescHeap;
+        D3D12DescriptorHeap dsvDescHeap;
 
         HANDLE fenceEventHandle;
         Microsoft::WRL::ComPtr<ID3D12Fence> fence;
         std::atomic<uint64_t> fenceValue;
 
-        D3D12_VIEWPORT viewport;
-        D3D12_RECT scissorRect;
-
-        Camera camera;
-        MathVector4 clearColor;
-
+        D3D12CommonResources commonResources;
         D3D12AssetResources assetResources;
-
-        UsableDynamicVector<D3D12Light> lights;
 
         D3D12StaticMeshRenderer staticMeshRenderer;
 
-        FiberSpinLock createLock;
+        D3D12RenderTarget depthStencilRenderTarget;
+
+        StaticVector<D3D12FrameBuffer, EngineConstants::MAX_FRAME_BUFFERS> frameBuffers;
+        StaticVector<D3D12FrameStage, EngineConstants::MAX_FRAME_STAGES> frameStages;
     };
 
 } }

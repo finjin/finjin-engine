@@ -37,7 +37,7 @@ namespace Finjin { namespace Engine {
 
         struct Settings : InputContextCommonSettings
         {
-            Settings(Allocator* allocator) : InputContextCommonSettings(allocator)
+            Settings(Allocator* initialAllocator) : InputContextCommonSettings(initialAllocator)
             {
             }
         };
@@ -168,15 +168,15 @@ namespace Finjin { namespace Engine {
             if (AnySet(filter.deviceClasses & InputDeviceClass::GAME_CONTROLLER))
             {
                 auto gameControllerCount = GetGameControllerCount();
-                for (size_t i = 0; i < gameControllerCount; i++)
-                    changed.CheckGameController(GetGameController(i), i, filter);
+                for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
+                    changed.CheckGameController(GetGameController(gameControllerIndex), gameControllerIndex, filter);
             }
 
             if (AnySet(filter.deviceClasses & InputDeviceClass::TOUCH_SCREEN))
             {
                 auto touchScreenCount = GetTouchScreenCount();
-                for (size_t i = 0; i < touchScreenCount; i++)
-                    changed.CheckTouchScreen(GetTouchScreen(i), i, filter);
+                for (size_t touchScreenIndex = 0; touchScreenIndex < touchScreenCount; touchScreenIndex++)
+                    changed.CheckTouchScreen(GetTouchScreen(touchScreenIndex), touchScreenIndex, filter);
             }
         }
 

@@ -22,5 +22,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
+MetalSystemSettings::MetalSystemSettings(Allocator* initialAllocator) : GpuSystemCommonSettings(initialAllocator)
+{
+}
 
 #endif

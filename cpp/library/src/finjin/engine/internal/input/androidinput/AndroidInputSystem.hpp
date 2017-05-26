@@ -33,7 +33,7 @@ namespace Finjin { namespace Engine {
 
         struct Settings : InputSystemCommonSettings
         {
-            Settings()
+            Settings(Allocator* initialAllocator) : InputSystemCommonSettings(initialAllocator)
             {
                 this->useSystemBackButton = false;
 

@@ -15,16 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/ByteBuffer.hpp"
-#include "finjin/common/Error.hpp"
-#include "finjin/common/FiberSpinLock.hpp"
-#include "finjin/common/OperationStatus.hpp"
-#include "finjin/common/StaticVector.hpp"
-#include "finjin/engine/Camera.hpp"
-#include "finjin/engine/GpuContextCommonSettings.hpp"
-#include "finjin/engine/OSWindowEventListener.hpp"
-#include "finjin/engine/WindowSize.hpp"
+#include "finjin/engine/GpuContextCommonImpl.hpp"
 #include "MetalFrameBuffer.hpp"
 #include "MetalFrameStage.hpp"
 #include "MetalGpuContextSettings.hpp"
@@ -41,7 +32,7 @@ namespace Finjin { namespace Engine {
 
     class MetalSystem;
 
-    class MetalGpuContextImpl : public AllocatedClass, public OSWindowEventListener
+    class MetalGpuContextImpl : public AllocatedClass, public GpuContextCommonImpl, public OSWindowEventListener
     {
     public:
         MetalGpuContextImpl(Allocator* allocator);
@@ -54,14 +45,9 @@ namespace Finjin { namespace Engine {
         void CreateRenderers(Error& error);
 
         MetalFrameStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
-        void FinishBackFrameBufferRender(MetalFrameStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error);
-        MetalRenderTarget* GetRenderTarget(MetalFrameStage& frameStage, const Utf8String& name);
-        void StartGraphicsCommandList(MetalFrameStage& frameStage, Error& error);
-        void FinishGraphicsCommandList(MetalFrameStage& frameStage, Error& error);
+        void PresentFrameStage(MetalFrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error);
 
         void Execute(MetalFrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
-
-        MetalFrameBuffer& GetFrameBuffer(size_t index);
 
         void FlushGpu();
 
@@ -82,16 +68,18 @@ namespace Finjin { namespace Engine {
         bool ResolveMaterialMaps(FinjinMaterial& material);
 
     private:
-        void UpdateCachedFrameBufferSize();
-
+        MetalRenderTarget* GetRenderTarget(MetalFrameStage& frameStage, const Utf8String& name);
+        void StartGraphicsCommands(MetalFrameStage& frameStage, Error& error);
+        void FinishGraphicsCommands(MetalFrameStage& frameStage, Error& error);
         void StartRenderTarget(MetalFrameStage& frameStage, MetalRenderTarget* renderTarget, StaticVector<MetalRenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>& dependentRenderTargets, Error& error);
         void FinishRenderTarget(MetalFrameStage& frameStage, Error& error);
 
+        MetalFrameBuffer& GetFrameBuffer(size_t index);
+
+        void UpdatedCachedWindowSize();
+
     public:
         MetalGpuContextSettings settings;
-
-        AssetClassFileReader settingsAssetClassFileReader;
-        AssetClassFileReader shaderAssetClassFileReader;
 
         struct InternalSettings
         {
@@ -112,62 +100,26 @@ namespace Finjin { namespace Engine {
         MetalSystem* metalSystem;
 
         MetalGpuDescription deviceDescription;
+
+        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>, MetalMaterial::MapIndex::COUNT) materialMapTypeToElements;
+
+        MTLViewport windowViewport;
+        MTLScissorRect windowScissorRect;
+
+        MTLViewport renderViewport;
+        MTLScissorRect renderScissorRect;
+
         id<MTLDevice> device;
 
-        WindowBounds renderingPixelBounds;
-
-        ByteBuffer readBuffer;
-
-        struct MaterialMapTypeToGpuElements
-        {
-            MaterialMapTypeToGpuElements() {}
-            MaterialMapTypeToGpuElements(MetalMaterial::MapIndex gpuMaterialMapIndex, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID, ShaderFeatureFlag gpuMaterialMapFlag)
-            {
-                this->gpuMaterialMapIndex = gpuMaterialMapIndex;
-                this->gpuBufferTextureIndexElementID = gpuBufferTextureIndexElementID;
-                this->gpuBufferAmountElementID = GpuStructuredAndConstantBufferStructMetadata::ElementID::NONE;
-                this->gpuMaterialMapFlag = gpuMaterialMapFlag;
-            }
-            MaterialMapTypeToGpuElements(MetalMaterial::MapIndex gpuMaterialMapIndex, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferAmountElementID, ShaderFeatureFlag gpuMaterialMapFlag)
-            {
-                this->gpuMaterialMapIndex = gpuMaterialMapIndex;
-                this->gpuBufferTextureIndexElementID = gpuBufferTextureIndexElementID;
-                this->gpuBufferAmountElementID = gpuBufferAmountElementID;
-                this->gpuMaterialMapFlag = gpuMaterialMapFlag;
-            }
-
-            MetalMaterial::MapIndex gpuMaterialMapIndex; //Index into MetalMaterial maps
-            GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID; //ElementID (index) into shader constant or structured buffer for 'texture index'
-            GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferAmountElementID; //ElementID (index) into shader constant or structured buffer for 'amount'
-            ShaderFeatureFlag gpuMaterialMapFlag; //Single flag identifying map's shader usage
-        };
-
-        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(MaterialMapTypeToGpuElements, MetalMaterial::MapIndex::COUNT) materialMapTypeToGpuElements;
-
-        std::atomic<size_t> currentFrameBufferIndex;
-
-        size_t sequenceIndex;
-
-        StaticVector<MetalFrameBuffer, EngineConstants::MAX_FRAME_BUFFERS> frameBuffers;
-        StaticVector<MetalFrameStage, EngineConstants::MAX_FRAME_STAGES> frameStages;
-
-        MetalTextureResources textureResources;
-
-        MTLViewport viewport;
-        MTLScissorRect scissorRect;
-
-        Camera camera;
-        MathVector4 clearColor;
-
-        MetalRenderTarget depthStencilRenderTarget;
-
+        MetalCommonResources commonResources;
         MetalAssetResources assetResources;
-
-        UsableDynamicVector<MetalLight> lights;
 
         MetalStaticMeshRenderer staticMeshRenderer;
 
-        FiberSpinLock createLock;
+        MetalRenderTarget depthStencilRenderTarget;
+
+        StaticVector<MetalFrameBuffer, EngineConstants::MAX_FRAME_BUFFERS> frameBuffers;
+        StaticVector<MetalFrameStage, EngineConstants::MAX_FRAME_STAGES> frameStages;
     };
 
 } }

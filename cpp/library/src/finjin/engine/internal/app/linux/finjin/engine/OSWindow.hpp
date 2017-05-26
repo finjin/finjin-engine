@@ -68,6 +68,8 @@ namespace Finjin { namespace Engine {
 
         int GetDisplayID() const;
 
+        float GetDisplayDensity() const;
+
         OSWindowRect GetDisplayRect() const; //Gets the rectangle of the screen containing the window
         OSWindowRect GetDisplayVisibleRect() const;
 

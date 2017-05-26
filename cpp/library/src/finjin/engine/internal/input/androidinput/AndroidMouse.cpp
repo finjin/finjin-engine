@@ -292,18 +292,18 @@ void AndroidMouse::RefreshMice
 
     //Get the refreshed devices and add new devices to the end
     CreateMice(devicesBuffer, androidApp);
-    for (size_t i = 0; i < devicesBuffer.size(); i++)
+    for (size_t mouseIndex = 0; mouseIndex < devicesBuffer.size(); mouseIndex++)
     {
-        auto oldDevice = GetMouseByInstanceDescriptor(devices.data(), devices.size(), devicesBuffer[i].GetInstanceDescriptor());
+        auto oldDevice = GetMouseByInstanceDescriptor(devices.data(), devices.size(), devicesBuffer[mouseIndex].GetInstanceDescriptor());
         if (oldDevice == nullptr)
         {
-            FINJIN_DEBUG_LOG_INFO("New mouse found: %1%", devicesBuffer[i].productName);
+            FINJIN_DEBUG_LOG_INFO("New mouse found: %1%", devicesBuffer[mouseIndex].productName);
 
             if (!devices.full())
             {
                 auto newDeviceIndex = devices.size();
                 devices.push_back();
-                devices[newDeviceIndex] = devicesBuffer[i];
+                devices[newDeviceIndex] = devicesBuffer[mouseIndex];
                 devices[newDeviceIndex].isNewConnection = true;
             }
         }
@@ -311,7 +311,7 @@ void AndroidMouse::RefreshMice
         {
             FINJIN_DEBUG_LOG_INFO("Mouse %1% detected as connected. Instance descriptor: %2%", oldDevice->GetInstanceName(), oldDevice->GetInstanceDescriptor());
 
-            oldDevice->id = devicesBuffer[i].id;
+            oldDevice->id = devicesBuffer[mouseIndex].id;
             oldDevice->state.isConnected = true;
             oldDevice->state.connectionChanged = true;
         }
@@ -320,10 +320,10 @@ void AndroidMouse::RefreshMice
 
 AndroidMouse* AndroidMouse::GetMouseByInstanceDescriptor(AndroidMouse* mice, size_t mouseCount, const Utf8String& descriptor)
 {
-    for (size_t i = 0; i < mouseCount; i++)
+    for (size_t mouseIndex = 0; mouseIndex < mouseCount; mouseIndex++)
     {
-        if (mice[i].GetInstanceDescriptor() == descriptor)
-            return &mice[i];
+        if (mice[mouseIndex].GetInstanceDescriptor() == descriptor)
+            return &mice[mouseIndex];
     }
 
     return nullptr;
@@ -331,10 +331,10 @@ AndroidMouse* AndroidMouse::GetMouseByInstanceDescriptor(AndroidMouse* mice, siz
 
 AndroidMouse* AndroidMouse::GetMouseByID(AndroidMouse* mice, size_t mouseCount, int deviceID)
 {
-    for (size_t i = 0; i < mouseCount; i++)
+    for (size_t mouseIndex = 0; mouseIndex < mouseCount; mouseIndex++)
     {
-        if (mice[i].GetID() == deviceID)
-            return &mice[i];
+        if (mice[mouseIndex].GetID() == deviceID)
+            return &mice[mouseIndex];
     }
 
     return nullptr;

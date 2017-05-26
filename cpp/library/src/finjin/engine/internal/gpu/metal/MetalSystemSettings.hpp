@@ -26,7 +26,7 @@ namespace Finjin { namespace Engine {
 
     struct MetalSystemSettings : GpuSystemCommonSettings
     {
-        MetalSystemSettings() {}
+        MetalSystemSettings(Allocator* initialAllocator);
     };
 
 } }

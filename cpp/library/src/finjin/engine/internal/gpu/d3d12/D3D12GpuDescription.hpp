@@ -15,10 +15,10 @@
 
 
 //Includes----------------------------------------------------------------------
+#include "finjin/common/Luid.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Version.hpp"
 #include "D3D12GpuOutput.hpp"
-#include "D3D12GpuID.hpp"
 #include <dxgi1_4.h>
 #include <d3d12.h>
 
@@ -144,7 +144,7 @@ namespace Finjin { namespace Engine {
 
         D3D12GpuOutputs outputs;
 
-        D3D12GpuID GetGpuID() const;
+        Luid GetGpuID() const;
 
         uint64_t GetDedicatedDeviceMemorySize() const;
         uint64_t GetDedicatedSystemMemorySize() const;
@@ -155,7 +155,7 @@ namespace Finjin { namespace Engine {
     public:
         void SortBestToWorst();
 
-        const D3D12GpuDescription* GetByGpuID(const D3D12GpuID& gpuID) const;
+        const D3D12GpuDescription* GetByGpuID(const Luid& gpuID) const;
     };
 
     using D3D12SoftwareGpuDescriptions = StaticVector<D3D12GpuDescription, 1>;

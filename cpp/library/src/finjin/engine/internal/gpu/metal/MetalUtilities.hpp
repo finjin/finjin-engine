@@ -15,7 +15,9 @@
 
 
 //Includes----------------------------------------------------------------------
+#include "finjin/common/RequestedValue.hpp"
 #include "finjin/common/StaticVector.hpp"
+#include "MetalGpuDescription.hpp"
 #include "MetalIncludes.hpp"
 
 
@@ -35,9 +37,15 @@ namespace Finjin { namespace Engine {
     class MetalUtilities
     {
     public:
+        static size_t GetUniformBufferAlignedSize(size_t paddedSize, size_t size, size_t count, size_t minBufferOffsetAlignment);
+
         static bool IsDepthStencilFormat(MTLPixelFormat format);
 
-        static size_t GetUniformBufferAlignedSize(size_t paddedSize, size_t size, size_t count, size_t minBufferOffsetAlignment);
+        static bool GetBestColorFormat(RequestedValue<uint32_t>& colorFormat, MetalFeatureSet::Capabilities& caps);
+        static bool GetBestColorFormat(RequestedValue<MTLPixelFormat>& colorFormat, MetalFeatureSet::Capabilities& caps);
+
+        static bool GetBestDepthStencilFormat(RequestedValue<uint32_t>& depthStencilFormat, bool stencilRequired, MetalFeatureSet::Capabilities& caps);
+        static bool GetBestDepthStencilFormat(RequestedValue<MTLPixelFormat>& depthStencilFormat, bool stencilRequired, MetalFeatureSet::Capabilities& caps);
     };
 
 } }

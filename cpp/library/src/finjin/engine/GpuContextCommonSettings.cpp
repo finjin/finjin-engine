@@ -16,12 +16,16 @@
 #include "finjin/engine/GpuContextCommonSettings.hpp"
 #include "finjin/common/ConfigDocumentReader.hpp"
 #include "finjin/common/Convert.hpp"
+#include "finjin/engine/OSWindow.hpp"
 
 using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-GpuContextCommonSettings::GpuContextCommonSettings(Allocator* allocator) : initialAssetFileSelector(allocator), contextSettingsFileNames(allocator), staticMeshRendererSettingsFileNames(allocator)
+GpuContextCommonSettings::GpuContextCommonSettings(Allocator* initialAllocator) :
+    initialAssetFileSelector(initialAllocator),
+    contextSettingsFileNames(initialAllocator),
+    staticMeshRendererSettingsFileNames(initialAllocator)
 {
     this->applicationHandle = nullptr;
     this->osWindow = nullptr;

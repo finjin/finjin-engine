@@ -18,6 +18,7 @@
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "MetalRenderTarget.hpp"
+#include "MetalStaticMeshRendererFrameState.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -30,6 +31,10 @@ namespace Finjin { namespace Engine {
     public:
         MetalFrameStage();
 
+        void SetIndex(size_t index);
+
+        void Destroy();
+
     public:
         size_t index;
         size_t frameBufferIndex;
@@ -41,6 +46,8 @@ namespace Finjin { namespace Engine {
 
         MetalRenderTarget* renderTarget;
         StaticVector<MetalRenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES> dependentRenderTargets;
+
+        MetalStaticMeshRendererFrameState staticMeshRendererFrameState;
     };
 
 } }

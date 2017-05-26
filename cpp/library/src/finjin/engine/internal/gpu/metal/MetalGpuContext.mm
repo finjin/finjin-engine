@@ -70,7 +70,7 @@ size_t MetalGpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
     FINJIN_ERROR_METHOD_START(error);
 
     size_t count = 0;
-    
+
     switch (assetClass)
     {
         case AssetClass::SHADER:
@@ -192,11 +192,6 @@ MetalGpuContext::JobPipelineStage& MetalGpuContext::StartFrameStage(size_t index
     return impl->StartFrameStage(index, elapsedTime, totalElapsedTime);
 }
 
-void MetalGpuContext::StartBackFrameBufferRender(JobPipelineStage& frameStage)
-{
-    //auto& frameBuffer = impl->frameBuffers[frameStage.frameBufferIndex];
-}
-
 void MetalGpuContext::Execute(JobPipelineStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
@@ -211,11 +206,11 @@ void MetalGpuContext::FinishFrameStage(JobPipelineStage& frameStage)
     //std::cout << "VulkanGpuContext::FinishFrameStage()" << std::endl;
 }
 
-void MetalGpuContext::FinishBackFrameBufferRender(JobPipelineStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error)
+void MetalGpuContext::PresentFrameStage(JobPipelineStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    impl->FinishBackFrameBufferRender(frameStage, continueRendering, modifyingRenderTarget, presentSyncIntervalOverride, error);
+    impl->PresentFrameStage(frameStage, renderStatus, presentSyncIntervalOverride, error);
     if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
 }

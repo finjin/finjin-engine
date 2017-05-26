@@ -66,15 +66,15 @@ bool AndroidKeyboard::Create(android_app* androidApp)
 
     this->state.buttons.resize(KeyboardConstants::MAX_BUTTON_COUNT);
     Utf8String keyName;
-    for (size_t i = 0; i < this->state.buttons.size(); i++)
+    for (size_t buttonIndex = 0; buttonIndex < this->state.buttons.size(); buttonIndex++)
     {
-        if (jniUtils.GetStringArrayFieldElement(keyName, "keyCodeStrings", static_cast<int>(i)))
+        if (jniUtils.GetStringArrayFieldElement(keyName, "keyCodeStrings", static_cast<int>(buttonIndex)))
         {
             SimplifyButtonName(keyName);
 
             auto inputSemantic = InputComponentSemantic::NONE;
 
-            switch (i)
+            switch (buttonIndex)
             {
                 case AKEYCODE_DPAD_UP: inputSemantic = InputComponentSemantic::TOGGLE_UP; break;
                 case AKEYCODE_DPAD_LEFT: inputSemantic = InputComponentSemantic::TOGGLE_LEFT; break;
@@ -85,9 +85,9 @@ bool AndroidKeyboard::Create(android_app* androidApp)
                 case AKEYCODE_F1: inputSemantic = InputComponentSemantic::SETTINGS; break;
             }
 
-            this->state.buttons[i]
-                .SetIndex(i)
-                .SetCode(i)
+            this->state.buttons[buttonIndex]
+                .SetIndex(buttonIndex)
+                .SetCode(buttonIndex)
                 .SetSemantic(inputSemantic)
                 .SetProcessing(InputButtonProcessing::EVENT_DRIVEN)
                 .SetDisplayName(keyName)
@@ -227,18 +227,18 @@ void AndroidKeyboard::RefreshKeyboards
 
     //Get the refreshed devices and add new devices to the end
     CreateKeyboards(devicesBuffer, androidApp);
-    for (size_t i = 0; i < devicesBuffer.size(); i++)
+    for (size_t keyboardIndex = 0; keyboardIndex < devicesBuffer.size(); keyboardIndex++)
     {
-        auto oldDevice = GetKeyboardByInstanceDescriptor(devices.data(), devices.size(), devicesBuffer[i].GetInstanceDescriptor());
+        auto oldDevice = GetKeyboardByInstanceDescriptor(devices.data(), devices.size(), devicesBuffer[keyboardIndex].GetInstanceDescriptor());
         if (oldDevice == nullptr)
         {
-            FINJIN_DEBUG_LOG_INFO("New keyboard found: %1%", devicesBuffer[i].productName);
+            FINJIN_DEBUG_LOG_INFO("New keyboard found: %1%", devicesBuffer[keyboardIndex].productName);
 
             if (!devices.full())
             {
                 auto newDeviceIndex = devices.size();
                 devices.push_back();
-                devices[newDeviceIndex] = devicesBuffer[i];
+                devices[newDeviceIndex] = devicesBuffer[keyboardIndex];
                 devices[newDeviceIndex].isNewConnection = true;
             }
         }
@@ -246,7 +246,7 @@ void AndroidKeyboard::RefreshKeyboards
         {
             FINJIN_DEBUG_LOG_INFO("Keyboard %1% detected as connected. Instance descriptor: %2%", oldDevice->GetInstanceName(), oldDevice->GetInstanceDescriptor());
 
-            oldDevice->id = devicesBuffer[i].id;
+            oldDevice->id = devicesBuffer[keyboardIndex].id;
             oldDevice->state.isConnected = true;
             oldDevice->state.connectionChanged = true;
         }
@@ -255,10 +255,10 @@ void AndroidKeyboard::RefreshKeyboards
 
 AndroidKeyboard* AndroidKeyboard::GetKeyboardByInstanceDescriptor(AndroidKeyboard* keyboards, size_t keyboardCount, const Utf8String& descriptor)
 {
-    for (size_t i = 0; i < keyboardCount; i++)
+    for (size_t keyboardIndex = 0; keyboardIndex < keyboardCount; keyboardIndex++)
     {
-        if (keyboards[i].GetInstanceDescriptor() == descriptor)
-            return &keyboards[i];
+        if (keyboards[keyboardIndex].GetInstanceDescriptor() == descriptor)
+            return &keyboards[keyboardIndex];
     }
 
     return nullptr;
@@ -266,10 +266,10 @@ AndroidKeyboard* AndroidKeyboard::GetKeyboardByInstanceDescriptor(AndroidKeyboar
 
 AndroidKeyboard* AndroidKeyboard::GetKeyboardByID(AndroidKeyboard* keyboards, size_t keyboardCount, int deviceID)
 {
-    for (size_t i = 0; i < keyboardCount; i++)
+    for (size_t keyboardIndex = 0; keyboardIndex < keyboardCount; keyboardIndex++)
     {
-        if (keyboards[i].GetID() == deviceID)
-            return &keyboards[i];
+        if (keyboards[keyboardIndex].GetID() == deviceID)
+            return &keyboards[keyboardIndex];
     }
 
     return nullptr;

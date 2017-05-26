@@ -52,10 +52,10 @@ const char* AssetClassUtilities::ToString(AssetClass value, bool directoryName)
 
 AssetClass AssetClassUtilities::ParseFromExtension(const Utf8String& extension)
 {
-    for (size_t i = 0; i < (size_t)AssetClass::COUNT; i++)
+    for (size_t assetClass = 0; assetClass < (size_t)AssetClass::COUNT; assetClass++)
     {
-        if (extension.EndsWith(ToString(i)))
-            return static_cast<AssetClass>(i);
+        if (extension.EndsWith(ToString(assetClass)))
+            return static_cast<AssetClass>(assetClass);
     }
 
     return AssetClass::COUNT;

@@ -112,7 +112,7 @@ namespace Finjin { namespace Engine {
         const_iterator end() const { return this->commands.end(); }
         iterator end() { return this->commands.end(); }
 
-        bool AddHapticFeedback(InputDeviceClass deviceClass, size_t deviceIndex, const HapticFeedbackSettings& force, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool AddHapticFeedback(InputDeviceClass deviceClass, size_t deviceIndex, const HapticFeedbackSettings& force, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<InputCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -129,7 +129,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool StopHapticFeedback(InputDeviceClass deviceClass, size_t deviceIndex, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool StopHapticFeedback(InputDeviceClass deviceClass, size_t deviceIndex, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<InputCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -149,13 +149,14 @@ namespace Finjin { namespace Engine {
     enum class InputDevicePollFlag
     {
         NONE = 0,
+
         CHECK_FOR_NEW_DEVICES = 1 << 0
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputDevicePollFlag)
 
     struct InputContextCommonSettings
     {
-        InputContextCommonSettings(Allocator* allocator);
+        InputContextCommonSettings(Allocator* initialAllocator);
 
         void HandleTopLevelSetting(const Utf8StringView& key, const Utf8StringView& value, Error& error);
 

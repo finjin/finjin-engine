@@ -126,32 +126,32 @@ void LinuxGameController::Create(size_t index, int fd, const Path& devicePath)
 
     //Buttons
     this->state.buttons.resize(buttonCount);
-    for (size_t i = 0; i < this->state.buttons.size(); i++)
+    for (size_t buttonIndex = 0; buttonIndex < this->state.buttons.size(); buttonIndex++)
     {
         componentName = "Button ";
-        componentName += Convert::ToString(i + 1);
-        this->state.buttons[i].Reset();
-        this->state.buttons[i]
-            .SetIndex(i)
+        componentName += Convert::ToString(buttonIndex + 1);
+        this->state.buttons[buttonIndex].Reset();
+        this->state.buttons[buttonIndex]
+            .SetIndex(buttonIndex)
             .SetDisplayName(componentName)
             .SetProcessing(InputButtonProcessing::EVENT_DRIVEN);
     }
 
     //Axes
     this->state.axes.resize(axisCount);
-    for (size_t i = 0; i < this->state.axes.size(); i++)
+    for (size_t axisIndex = 0; axisIndex < this->state.axes.size(); axisIndex++)
     {
         componentName = "Axis ";
-        componentName += Convert::ToString(i + 1);
-        this->state.axes[i].Reset();
-        this->state.axes[i]
-            .SetIndex(i)
+        componentName += Convert::ToString(axisIndex + 1);
+        this->state.axes[axisIndex].Reset();
+        this->state.axes[axisIndex]
+            .SetIndex(axisIndex)
             .SetMinMax(-32767, 32767)
             .SetDeadZone(8689) //max(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
             .SetProcessing(InputAxisProcessing::NORMALIZE)
             .SetDisplayName(componentName);
 
-        auto& correction = corrections[i];
+        auto& correction = corrections[axisIndex];
         if (correctionCoefCount[correction.type] > 0)
         {
             //std::cout << "axis " << i << ", coef " << correction.coef[0] << ", " << correction.coef[1] << std::endl;
@@ -159,7 +159,7 @@ void LinuxGameController::Create(size_t index, int fd, const Path& devicePath)
             {
                 //It's a trigger
                 //std::cout << "  axis " << i << " is a trigger" << std::endl;
-                this->state.axes[i].SetRestValue(-32767);
+                this->state.axes[axisIndex].SetRestValue(-32767);
             }
         }
     }
@@ -170,7 +170,7 @@ void LinuxGameController::Destroy()
     if (this->fd >= 0)
     {
         close(this->fd);
-        this->fd = 0;
+        this->fd = -1;
     }
 
     Reset();
@@ -323,10 +323,10 @@ void LinuxGameController::CreateGameControllers(StaticVector<LinuxGameController
 
     Path devicePath;
 
-    for (size_t i = 0; i < 50 && !gameControllers.full(); i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < 50 && !gameControllers.full(); gameControllerIndex++)
     {
         devicePath = "/dev/input/js";
-        devicePath += Convert::ToString(i);
+        devicePath += Convert::ToString(gameControllerIndex);
 
         int fd = open(devicePath.c_str(), O_RDONLY | O_NONBLOCK);
         if (fd >= 0)
@@ -364,10 +364,10 @@ bool LinuxGameController::CheckForNewGameControllers(StaticVector<LinuxGameContr
 
     Path devicePath;
 
-    for (size_t i = 0; i < 50 && !gameControllers.full(); i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < 50 && !gameControllers.full(); gameControllerIndex++)
     {
         devicePath = "/dev/input/js";
-        devicePath += Convert::ToString(i);
+        devicePath += Convert::ToString(gameControllerIndex);
 
         if (GetGameControllerByDevicePath(gameControllers, devicePath) == nullptr)
         {

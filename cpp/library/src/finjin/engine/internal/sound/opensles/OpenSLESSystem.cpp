@@ -24,13 +24,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct OpenSLESSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     OpenSLESSystem::Settings settings;
 
-    StaticVector<OpenSLESContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<OpenSLESContext*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

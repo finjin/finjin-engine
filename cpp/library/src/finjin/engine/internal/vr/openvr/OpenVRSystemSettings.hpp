@@ -26,7 +26,7 @@ namespace Finjin { namespace Engine {
 
     struct OpenVRSystemSettings : VRSystemCommonSettings
     {
-        OpenVRSystemSettings();
+        OpenVRSystemSettings(Allocator* initialAllocator);
     };
 
 } }

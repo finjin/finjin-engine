@@ -61,27 +61,27 @@ void DisplayInfos::Enumerate()
     //Iterate over displays
     //First display will be main display
     size_t okCount = 0;
-    for (size_t i = 0; i < displayIDCount && okCount < size(); i++)
+    for (size_t displayIndex = 0; displayIndex < displayIDCount && okCount < size(); displayIndex++)
     {
-        if (CGDisplayIsActive(displayIDs[i]))
+        if (CGDisplayIsActive(displayIDs[displayIndex]))
         {
             DisplayInfo& displayInfo = (*this)[okCount];
 
             displayInfo.index = okCount;
 
-            displayInfo.isPrimary = CGDisplayIsMain(displayIDs[i]);
+            displayInfo.isPrimary = CGDisplayIsMain(displayIDs[displayIndex]);
 
-            GetNameForDisplayID(displayInfo.name, displayIDs[i]);
+            GetNameForDisplayID(displayInfo.name, displayIDs[displayIndex]);
 
-            displayInfo.rotation = CGDisplayRotation(displayIDs[i]);
+            displayInfo.rotation = CGDisplayRotation(displayIDs[displayIndex]);
 
-            auto rect = CGDisplayBounds(displayIDs[i]);
+            auto rect = CGDisplayBounds(displayIDs[displayIndex]);
             displayInfo.frame.x = rect.origin.x;
             displayInfo.frame.y = rect.origin.y;
             displayInfo.frame.width = rect.size.width;
             displayInfo.frame.height = rect.size.height;
 
-            auto displayRef = CGDisplayCopyDisplayMode(displayIDs[i]);
+            auto displayRef = CGDisplayCopyDisplayMode(displayIDs[displayIndex]);
             double pixelsWidth = CGDisplayModeGetPixelWidth(displayRef);
             displayInfo.density = round(pixelsWidth / rect.size.width);
 

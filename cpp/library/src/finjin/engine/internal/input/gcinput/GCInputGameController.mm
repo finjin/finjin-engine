@@ -75,9 +75,9 @@ void SetGCInputAxis(StaticVector<InputAxis, count>& axes, size_t index, float mi
 
 static bool ContainsGCController(NSArray<GCController*>* gcControllers, void* gcController)
 {
-    for (size_t i = 0; i < gcControllers.count; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gcControllers.count; gameControllerIndex++)
     {
-        if (gcControllers[i] == gcController)
+        if (gcControllers[gameControllerIndex] == gcController)
             return true;
     }
 
@@ -415,8 +415,8 @@ void GCInputGameController::CreateGameControllers(StaticVector<GCInputGameContro
     auto gameControllerCount = std::min(gameControllers.max_size(), (size_t)gcControllers.count);
     gameControllers.resize(gameControllerCount);
 
-    for (size_t i = 0; i < gameControllerCount; i++)
-        Create(gameControllers[i], i, gcControllers[i]);
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
+        Create(gameControllers[gameControllerIndex], gameControllerIndex, gcControllers[gameControllerIndex]);
 }
 
 void GCInputGameController::UpdateGameControllers(StaticVector<GCInputGameController, GameControllerConstants::MAX_GAME_CONTROLLERS>& gameControllers, bool isFirstUpdate, SimpleTimeDelta elapsedTime)
@@ -424,9 +424,9 @@ void GCInputGameController::UpdateGameControllers(StaticVector<GCInputGameContro
     auto gcControllers = [GCController controllers];
 
     //Update existing controllers
-    for (size_t i = 0; i < gameControllers.size(); i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllers.size(); gameControllerIndex++)
     {
-        auto& gameController = gameControllers[i];
+        auto& gameController = gameControllers[gameControllerIndex];
 
         if (gameController.state.isConnected)
         {
@@ -446,7 +446,7 @@ void GCInputGameController::UpdateGameControllers(StaticVector<GCInputGameContro
             else
             {
                 //Still connected
-                Update(gameController, elapsedTime, isFirstUpdate, gcControllers[i]);
+                Update(gameController, elapsedTime, isFirstUpdate, gcControllers[gameControllerIndex]);
             }
         }
         else
@@ -458,7 +458,7 @@ void GCInputGameController::UpdateGameControllers(StaticVector<GCInputGameContro
                 gameController.state.isConnected = true;
                 gameController.state.connectionChanged = true;
 
-                Update(gameController, 0, true, gcControllers[i]);
+                Update(gameController, 0, true, gcControllers[gameControllerIndex]);
             }
         }
     }
@@ -466,16 +466,16 @@ void GCInputGameController::UpdateGameControllers(StaticVector<GCInputGameContro
     //Figure out which controllers were newly connected and add those
     if (!gameControllers.full())
     {
-        for (size_t i = 0; i < gcControllers.count; i++)
+        for (size_t gameControllerIndex = 0; gameControllerIndex < gcControllers.count; gameControllerIndex++)
         {
-            if (!ContainsGCController(gameControllers, gcControllers[i]))
+            if (!ContainsGCController(gameControllers, gcControllers[gameControllerIndex]))
             {
                 auto newGameControllerIndex = gameControllers.size();
                 gameControllers.push_back();
 
-                Create(gameControllers[newGameControllerIndex], newGameControllerIndex, gcControllers[i]);
+                Create(gameControllers[newGameControllerIndex], newGameControllerIndex, gcControllers[gameControllerIndex]);
 
-                Update(gameControllers[newGameControllerIndex], 0, true, gcControllers[i]);
+                Update(gameControllers[newGameControllerIndex], 0, true, gcControllers[gameControllerIndex]);
 
                 gameControllers[newGameControllerIndex].isNewConnection = true;
             }

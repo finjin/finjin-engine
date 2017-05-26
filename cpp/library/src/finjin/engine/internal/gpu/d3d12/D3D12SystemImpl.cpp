@@ -22,11 +22,11 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-D3D12SystemImpl::D3D12SystemImpl(Allocator* allocator) : AllocatedClass(allocator)
+D3D12SystemImpl::D3D12SystemImpl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
 {
 }
 
-const D3D12GpuOutputs* D3D12SystemImpl::GetAdapterOutputs(const D3D12GpuID& gpuID) const
+const D3D12GpuOutputs* D3D12SystemImpl::GetAdapterOutputs(const Luid& gpuID) const
 {
     //Check software adapter first
     for (auto& desc : this->softwareGpuDescriptions)
@@ -135,7 +135,7 @@ void D3D12SystemImpl::EnumerateAdapterOutputs(IDXGIAdapter* adapter, D3D12GpuOut
     }
 }
 
-void D3D12SystemImpl::GetHardwareD3DAdapter(D3D12GpuID& gpuID, IDXGIAdapter1** ppAdapter, D3D12GpuDescription& desc, Error& error)
+void D3D12SystemImpl::GetHardwareD3DAdapter(Luid& gpuID, IDXGIAdapter1** ppAdapter, D3D12GpuDescription& desc, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 

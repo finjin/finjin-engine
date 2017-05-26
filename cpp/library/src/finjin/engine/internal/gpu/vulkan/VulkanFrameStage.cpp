@@ -35,4 +35,16 @@ VulkanFrameStage::VulkanFrameStage()
     this->renderTarget = nullptr;
 }
 
+void VulkanFrameStage::SetIndex(size_t index)
+{
+    this->index = index;
+
+    this->staticMeshRendererFrameState.index = index;
+}
+
+void VulkanFrameStage::Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks)
+{
+    this->staticMeshRendererFrameState.Destroy(vk, allocationCallbacks);
+}
+
 #endif

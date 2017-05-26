@@ -23,6 +23,7 @@
 #include "finjin/engine/ContextEventInfo.hpp"
 #include "finjin/engine/FinjinSceneAssets.hpp"
 #include "finjin/engine/GpuID.hpp"
+#include "finjin/engine/GpuRenderTargetSize.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
 #include "finjin/engine/ResourcePoolDescription.hpp"
 #include <boost/thread/null_mutex.hpp>
@@ -88,9 +89,9 @@ namespace Finjin { namespace Engine {
         {
             NOTIFY,
 
-            START_GRAPHICS_COMMAND_LIST,
-            FINISH_GRAPHICS_COMMAND_LIST,
-            EXECUTE_GRAPHICS_COMMAND_LISTS,
+            START_GRAPHICS_COMMANDS,
+            FINISH_GRAPHICS_COMMANDS,
+            EXECUTE_GRAPHICS_COMMANDS,
 
             START_RENDER_TARGET,
             FINISH_RENDER_TARGET,
@@ -124,27 +125,27 @@ namespace Finjin { namespace Engine {
         }
     };
 
-    struct StartGraphicsCommandListGpuCommand : public GpuCommand
+    struct StartGraphicsCommandsGpuCommand : public GpuCommand
     {
-        StartGraphicsCommandListGpuCommand()
+        StartGraphicsCommandsGpuCommand()
         {
-            this->type = Type::START_GRAPHICS_COMMAND_LIST;
+            this->type = Type::START_GRAPHICS_COMMANDS;
         }
     };
 
-    struct FinishGraphicsCommandListGpuCommand : public GpuCommand
+    struct FinishGraphicsCommandsGpuCommand : public GpuCommand
     {
-        FinishGraphicsCommandListGpuCommand()
+        FinishGraphicsCommandsGpuCommand()
         {
-            this->type = Type::FINISH_GRAPHICS_COMMAND_LIST;
+            this->type = Type::FINISH_GRAPHICS_COMMANDS;
         }
     };
 
-    struct ExecuteGraphicsCommandListsGpuCommand : public GpuCommand
+    struct ExecuteGraphicsCommandsGpuCommand : public GpuCommand
     {
-        ExecuteGraphicsCommandListsGpuCommand()
+        ExecuteGraphicsCommandsGpuCommand()
         {
-            this->type = Type::EXECUTE_GRAPHICS_COMMAND_LISTS;
+            this->type = Type::EXECUTE_GRAPHICS_COMMANDS;
         }
     };
 
@@ -253,7 +254,7 @@ namespace Finjin { namespace Engine {
         const_iterator end() const { return this->commands.end(); }
         iterator end() { return this->commands.end(); }
 
-        bool CreateNotify(const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool CreateNotify(const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<NotifyGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -266,9 +267,9 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool StartGraphicsCommandList(const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool StartGraphicsCommands(const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
-            auto command = NewObject<StartGraphicsCommandListGpuCommand>(FINJIN_CALLER_ARGUMENTS);
+            auto command = NewObject<StartGraphicsCommandsGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
                 return false;
 
@@ -279,9 +280,9 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool FinishGraphicsCommandList(const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool FinishGraphicsCommands(const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
-            auto command = NewObject<FinishGraphicsCommandListGpuCommand>(FINJIN_CALLER_ARGUMENTS);
+            auto command = NewObject<FinishGraphicsCommandsGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
                 return false;
 
@@ -292,9 +293,9 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool ExecuteGraphicsCommandLists(const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool ExecuteGraphicsCommands(const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
-            auto command = NewObject<ExecuteGraphicsCommandListsGpuCommand>(FINJIN_CALLER_ARGUMENTS);
+            auto command = NewObject<ExecuteGraphicsCommandsGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
                 return false;
 
@@ -305,7 +306,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool StartRenderTarget(const Utf8String* name, StaticVector<Utf8String, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>* dependentRenderTargets, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool StartRenderTarget(const Utf8String* name, StaticVector<Utf8String, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>* dependentRenderTargets, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<StartRenderTargetGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -320,10 +321,10 @@ namespace Finjin { namespace Engine {
             if (dependentRenderTargets != nullptr)
             {
                 command->dependentRenderTargetNames.resize(dependentRenderTargets->size());
-                for (size_t i = 0; i < dependentRenderTargets->size(); i++)
+                for (size_t dependentRenderTargetIndex = 0; dependentRenderTargetIndex < dependentRenderTargets->size(); dependentRenderTargetIndex++)
                 {
-                    command->dependentRenderTargetNames[i].SetAllocator(this);
-                    command->dependentRenderTargetNames[i] = (*dependentRenderTargets)[i];
+                    command->dependentRenderTargetNames[dependentRenderTargetIndex].SetAllocator(this);
+                    command->dependentRenderTargetNames[dependentRenderTargetIndex] = (*dependentRenderTargets)[dependentRenderTargetIndex];
                 }
             }
             command->eventInfo = eventInfo;
@@ -333,7 +334,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool FinishRenderTarget(const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool FinishRenderTarget(const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<FinishRenderTargetGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -346,7 +347,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool CreateMesh(FinjinMesh* asset, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool CreateMesh(FinjinMesh* asset, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<CreateMeshGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -360,7 +361,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool CreateTexture(FinjinTexture* asset, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool CreateTexture(FinjinTexture* asset, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<CreateTextureGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -374,7 +375,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool CreateMaterial(FinjinMaterial* asset, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool CreateMaterial(FinjinMaterial* asset, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<CreateMaterialGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -388,7 +389,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool SetClearColor(const MathVector4& color, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool SetClearColor(const MathVector4& color, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<SetClearColorGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -402,7 +403,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool SetCamera(const Camera& camera, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool SetCamera(const Camera& camera, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<SetCameraGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -416,7 +417,7 @@ namespace Finjin { namespace Engine {
             return true;
         }
 
-        bool RenderEntity(SceneNodeState& sceneNodeState, FinjinSceneObjectEntity* entity, const RenderShaderFeatureFlags& shaderFeatureFlags, const GpuCommandLights& sortedLights, const MathVector4& ambientLight, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        bool RenderEntity(SceneNodeState& sceneNodeState, FinjinSceneObjectEntity* entity, const RenderShaderFeatureFlags& shaderFeatureFlags, const GpuCommandLights& sortedLights, const MathVector4& ambientLight, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<RenderEntityGpuCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)
@@ -462,7 +463,7 @@ namespace Finjin { namespace Engine {
 
     struct GpuContextCommonSettings
     {
-        GpuContextCommonSettings(Allocator* allocator);
+        GpuContextCommonSettings(Allocator* initialAllocator);
 
         static size_t CalculateJobPipelineSize(size_t actualFrameCount);
 
@@ -473,6 +474,7 @@ namespace Finjin { namespace Engine {
 
         void* applicationHandle;
         OSWindow* osWindow;
+        GpuRenderTargetSize renderTargetSize;
         AssetFileReader* assetFileReader;
         AssetPathSelector initialAssetFileSelector;
         AssetReferences<EngineConstants::MAX_CONTEXT_SETTINGS_FILES> contextSettingsFileNames; //Usually "gpu-context.cfg"

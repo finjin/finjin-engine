@@ -23,13 +23,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct WindowsUWPInputSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     WindowsUWPInputSystem::Settings settings;
 
-    StaticVector<WindowsUWPInputContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<WindowsUWPInputContext*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

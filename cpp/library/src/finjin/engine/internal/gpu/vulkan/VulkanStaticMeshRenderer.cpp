@@ -142,15 +142,6 @@ VulkanStaticMeshRenderer::VulkanStaticMeshRenderer() :
     knownPipelineLayoutDescriptions(nullptr),
     knownUniformBufferDescriptions(nullptr)
 {
-    this->pipelineCache = VK_NULL_HANDLE;
-
-    //Vulkan clip space has inverted Y and half Z
-    this->clipInvertMatrix <<
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, -1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.5f, 0.0f,
-        0.0f, 0.0f, 0.5f, 1.0f
-        ;
 }
 
 void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
@@ -199,7 +190,7 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
     }
 
     //Set up base graphics pipeline builder
-    this->baseGraphicsPipelineBuilder.SetDefault();
+    this->baseGraphicsPipelineBuilder.SetDefaults();
 
     //Create shaders
     if (this->settings.pipelineShaderFileReference.IsValid())
@@ -389,21 +380,6 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
         }
     }
 
-    //Create pipeline cache
-    VulkanPipelineCacheCreateInfo pipelineCacheCreateInfo; //No special setup needed
-    auto result = this->settings.contextImpl->vk.CreatePipelineCache
-        (
-        this->settings.contextImpl->vk.device,
-        &pipelineCacheCreateInfo,
-        this->settings.contextImpl->settings.deviceAllocationCallbacks,
-        &this->pipelineCache
-        );
-    if (result != VK_SUCCESS)
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create pipeline cache. Vulkan error: %1%", VulkanResult::ToString(result)));
-        return;
-    }
-
     //Create pipelines
     {
         //Create pipeline collection
@@ -439,7 +415,7 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
             }
 
             //Set up pipeline creator---------------------------------------------------------------
-            VulkanGraphicsPipelineCreateInfoBuilder graphicsPipelineCreateInfoCreator = this->baseGraphicsPipelineBuilder; //Copy
+            VulkanGraphicsPipelineCreateInfoBuilder graphicsPipelineCreateInfoBuilder = this->baseGraphicsPipelineBuilder; //Copy
 
             //Vertex input format------------------------------
             {
@@ -453,7 +429,7 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
                 vulkanInputFormat->SetBinding(VERTEX_BUFFER_BIND_ID);
                 pipelineDescription.graphicsState.shaderFeatures.inputFormatHash = vulkanInputFormat->inputFormatHash;
 
-                auto& vertexInputStateCreateInfo = graphicsPipelineCreateInfoCreator.UseVertexInputState();
+                auto& vertexInputStateCreateInfo = graphicsPipelineCreateInfoBuilder.UseVertexInputState();
                 vertexInputStateCreateInfo.vertexBindingDescriptionCount = 1;
                 vertexInputStateCreateInfo.pVertexBindingDescriptions = &vulkanInputFormat->vertexBinding;
                 vertexInputStateCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(vulkanInputFormat->attributes.size());
@@ -482,12 +458,12 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
                 }
                 auto pipelineLayoutDescriptionIndex = pipelineLayoutDescription - this->settings.pipelineLayouts.data();
                 pipelineLayout = &this->pipelineLayouts[pipelineLayoutDescriptionIndex];
-                graphicsPipelineCreateInfoCreator.graphicsPipelineCreateInfo.layout = pipelineLayout->vkpipelineLayout;
+                graphicsPipelineCreateInfoBuilder.graphicsPipelineCreateInfo.layout = pipelineLayout->vkpipelineLayout;
             }
 
             //Pass/subpass-----------------------------------
-            graphicsPipelineCreateInfoCreator.graphicsPipelineCreateInfo.renderPass = this->settings.contextImpl->renderPass;
-            graphicsPipelineCreateInfoCreator.graphicsPipelineCreateInfo.subpass = VK_NULL_HANDLE;
+            graphicsPipelineCreateInfoBuilder.graphicsPipelineCreateInfo.renderPass = this->settings.contextImpl->sceneRenderPass;
+            graphicsPipelineCreateInfoBuilder.graphicsPipelineCreateInfo.subpass = VK_NULL_HANDLE;
 
             //Shaders-----------------------------------
             for (size_t shaderType = 0; shaderType < (size_t)VulkanShaderType::COUNT; shaderType++)
@@ -518,18 +494,18 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
 
                 if (shader != nullptr)
                 {
-                    auto& shaderStageToCreate = graphicsPipelineCreateInfoCreator.AddShaderStage();
-                    shaderStageToCreate.pName = "main";
-                    shaderStageToCreate.module = shader->shaderModule;
+                    auto& shaderStage = graphicsPipelineCreateInfoBuilder.AddShaderStage();
+                    shaderStage.pName = FINJIN_VULKAN_DEFAULT_SHADER_ENTRY_POINT_NAME;
+                    shaderStage.module = shader->shaderModule;
 
                     switch (static_cast<VulkanShaderType>(shaderType))
                     {
-                        case VulkanShaderType::VERTEX: shaderStageToCreate.stage = VK_SHADER_STAGE_VERTEX_BIT; break;
-                        case VulkanShaderType::TESSELLATION_CONTROL: shaderStageToCreate.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
-                        case VulkanShaderType::TESSELLATION_EVALUATION: shaderStageToCreate.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT; break;
-                        case VulkanShaderType::GEOMETRY: shaderStageToCreate.stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
-                        case VulkanShaderType::FRAGMENT: shaderStageToCreate.stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
-                        case VulkanShaderType::COMPUTE: shaderStageToCreate.stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
+                        case VulkanShaderType::VERTEX: shaderStage.stage = VK_SHADER_STAGE_VERTEX_BIT; break;
+                        case VulkanShaderType::TESSELLATION_CONTROL: shaderStage.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT; break;
+                        case VulkanShaderType::TESSELLATION_EVALUATION: shaderStage.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT; break;
+                        case VulkanShaderType::GEOMETRY: shaderStage.stage = VK_SHADER_STAGE_GEOMETRY_BIT; break;
+                        case VulkanShaderType::FRAGMENT: shaderStage.stage = VK_SHADER_STAGE_FRAGMENT_BIT; break;
+                        case VulkanShaderType::COMPUTE: shaderStage.stage = VK_SHADER_STAGE_COMPUTE_BIT; break;
                         default:
                         {
                             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Shader type '%1%' improperly specified for a graphics pipeline.", VulkanShaderTypeUtilities::ToString(static_cast<VulkanShaderType>(shaderType))));
@@ -542,41 +518,33 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
             //Rasterization state-------------------------
             if (AnySet(pipelineDescription.graphicsState.shaderFeatures.flags & ShaderFeatureFlag::RENDERING_FILL_WIREFRAME))
             {
-                auto& rasterizationState = graphicsPipelineCreateInfoCreator.UseRasterizationState();
+                auto& rasterizationState = graphicsPipelineCreateInfoBuilder.UseRasterizationState();
                 rasterizationState.polygonMode = VK_POLYGON_MODE_LINE;
             }
 
             //Primitive topology-------------------------
             if (pipelineDescription.graphicsState.primitiveTopology.IsSet())
             {
-                auto& inputAssemblyState = graphicsPipelineCreateInfoCreator.UseInputAssemblyState();
+                auto& inputAssemblyState = graphicsPipelineCreateInfoBuilder.UseInputAssemblyState();
                 inputAssemblyState.topology = pipelineDescription.graphicsState.primitiveTopology;
             }
 
             //Dynamic state-------------------------
             if (!pipelineDescription.graphicsState.dynamicState.empty())
             {
-                auto& dynamicState = graphicsPipelineCreateInfoCreator.UseDynamicState();
+                auto& dynamicState = graphicsPipelineCreateInfoBuilder.UseDynamicState();
                 dynamicState.dynamicStateCount = static_cast<uint32_t>(pipelineDescription.graphicsState.dynamicState.size());
                 dynamicState.pDynamicStates = pipelineDescription.graphicsState.dynamicState.data();
             }
 
             //Create pipeline--------------------------------
             this->pipelines.push_back();
-            result = this->settings.contextImpl->vk.CreateGraphicsPipelines
-                (
-                this->settings.contextImpl->vk.device,
-                this->pipelineCache,
-                1,
-                &graphicsPipelineCreateInfoCreator.graphicsPipelineCreateInfo,
-                this->settings.contextImpl->settings.deviceAllocationCallbacks,
-                &this->pipelines.back()
-                );
-            if (result != VK_SUCCESS)
+            graphicsPipelineCreateInfoBuilder.CreatePipeline(&this->pipelines.back(), this->settings.contextImpl->commonResources.pipelineCache, this->settings.contextImpl->vk, this->settings.contextImpl->settings.deviceAllocationCallbacks, error);
+            if (error)
             {
                 this->pipelines.pop_back();
 
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create pipeline '%1%'. Vulkan result: %2%", pipelineDescription.typeName, VulkanResult::ToString(result)));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create pipeline '%1%'.", pipelineDescription.typeName));
                 return;
             }
 
@@ -594,9 +562,9 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
     }
 
     //Build frame resources
-    for (auto& frameBuffer : this->settings.contextImpl->frameBuffers)
+    for (auto& frameStage : this->settings.contextImpl->frameStages)
     {
-        auto& staticMeshRendererFrameState = frameBuffer.staticMeshRendererFrameState;
+        auto& staticMeshRendererFrameState = frameStage.staticMeshRendererFrameState;
 
         //Uniform buffers
         {
@@ -611,7 +579,7 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
                 staticMeshRendererFrameState.uniformBuffers[i].Create(this->settings.contextImpl->vk, this->settings.contextImpl->settings.deviceAllocationCallbacks, *this->knownUniformBufferDescriptions[i], instanceCounts[i], this->settings.contextImpl->physicalDeviceDescription, error);
                 if (error)
                 {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create known uniform buffer '%1%' for frame '%2%'.", i, frameBuffer.index));
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create known uniform buffer '%1%' for frame stage '%2%'.", i, frameStage.index));
                     return;
                 }
             }
@@ -624,10 +592,10 @@ void VulkanStaticMeshRenderer::Create(Settings&& settings, Error& error)
         VulkanDescriptorSetAllocateInfo descriptorSetAllocateInfo(pipelineLayoutDescriptorPool.vkpool);
         descriptorSetAllocateInfo.descriptorSetCount = 1;
         descriptorSetAllocateInfo.pSetLayouts = pipelineLayoutDescriptorSetLayouts.data();
-        result = this->settings.contextImpl->vk.AllocateDescriptorSets(this->settings.contextImpl->vk.device, &descriptorSetAllocateInfo, &staticMeshRendererFrameState.descriptorSet);
+        auto result = this->settings.contextImpl->vk.AllocateDescriptorSets(this->settings.contextImpl->vk.device, &descriptorSetAllocateInfo, &staticMeshRendererFrameState.descriptorSet);
         if (result != VK_SUCCESS)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate primary descriptor set for frame '%1%'. Vulkan result: %2%", frameBuffer.index, VulkanResult::ToString(result)));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate primary descriptor set for frame stage '%1%'. Vulkan result: %2%", frameStage.index, VulkanResult::ToString(result)));
             return;
         }
 
@@ -744,39 +712,36 @@ void VulkanStaticMeshRenderer::Destroy()
         return;
 
     for (auto& pool : this->knownPipelineLayoutDescriptorPools)
-        this->settings.contextImpl->vk.DestroyDescriptorPool(this->settings.contextImpl->vk.device, pool.vkpool, this->settings.contextImpl->settings.deviceAllocationCallbacks);
+    {
+        if (pool.vkpool != VK_NULL_HANDLE)
+        {
+            this->settings.contextImpl->vk.DestroyDescriptorPool(this->settings.contextImpl->vk.device, pool.vkpool, this->settings.contextImpl->settings.deviceAllocationCallbacks);
+            pool.vkpool = VK_NULL_HANDLE;
+        }
+    }
+
+    this->graphicsPipelineLayoutAndPipelines.Destroy();
 
     for (auto& pipeline : this->pipelines)
         this->settings.contextImpl->vk.DestroyPipeline(this->settings.contextImpl->vk.device, pipeline, this->settings.contextImpl->settings.deviceAllocationCallbacks);
-
-    this->settings.contextImpl->vk.DestroyPipelineCache(this->settings.contextImpl->vk.device, this->pipelineCache, this->settings.contextImpl->settings.deviceAllocationCallbacks);
+    this->pipelines.Destroy();
 
     for (auto& pipelineLayout : this->pipelineLayouts)
         this->settings.contextImpl->vk.DestroyPipelineLayout(this->settings.contextImpl->vk.device, pipelineLayout.vkpipelineLayout, this->settings.contextImpl->settings.deviceAllocationCallbacks);
+    this->pipelineLayouts.Destroy();
 
     for (auto& descriptorSetLayout : this->descriptorSetLayouts)
         this->settings.contextImpl->vk.DestroyDescriptorSetLayout(this->settings.contextImpl->vk.device, descriptorSetLayout.vkdescriptorSetLayout, this->settings.contextImpl->settings.deviceAllocationCallbacks);
+    this->descriptorSetLayouts.Destroy();
 
-    for (auto& frameBuffer : this->settings.contextImpl->frameBuffers)
-    {
-        auto& staticMeshRendererFrameState = frameBuffer.staticMeshRendererFrameState;
-
-        for (size_t i = 0; i < (size_t)VulkanStaticMeshRendererKnownUniformBuffer::COUNT; i++)
-        {
-            staticMeshRendererFrameState.uniformBuffers[i].Destroy(this->settings.contextImpl->vk, this->settings.contextImpl->settings.deviceAllocationCallbacks);
-        }
-
-        /*for (auto& renderTarget : staticMeshRendererFrameState.renderTargetRenderStates)
-        {
-        }*/
-    }
+    this->shaderFileBytes.Destroy();
 }
 
 void VulkanStaticMeshRenderer::UpdatePassAndMaterialConstants(VulkanStaticMeshRendererFrameState& frameState, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime)
 {
     //Pass
     {
-        auto windowBounds = this->settings.contextImpl->renderingPixelBounds;
+        auto windowBounds = this->settings.contextImpl->windowPixelBounds;
 
         auto clientWidth = RoundToFloat(windowBounds.GetClientWidth());
         auto clientHeight = RoundToFloat(windowBounds.GetClientHeight());
@@ -785,7 +750,7 @@ void VulkanStaticMeshRenderer::UpdatePassAndMaterialConstants(VulkanStaticMeshRe
         this->settings.contextImpl->camera.Update();
 
         auto viewMatrix = this->settings.contextImpl->camera.GetViewMatrix();
-        MathMatrix4 projectionMatrix = this->clipInvertMatrix * this->settings.contextImpl->camera.GetProjectionMatrix();
+        MathMatrix4 projectionMatrix = this->settings.contextImpl->commonResources.clipInvertMatrix * this->settings.contextImpl->camera.GetProjectionMatrix();
 
         MathMatrix4 viewProjectionMatrix = projectionMatrix * viewMatrix;
         MathMatrix4 viewInverseMatrix = viewMatrix.inverse();
@@ -1014,7 +979,7 @@ void VulkanStaticMeshRenderer::RenderEntity(VulkanStaticMeshRendererFrameState& 
                         if (foundPipelineSlot != nullptr)
                         {
                             //Get/add descriptor sets
-                            VkDescriptorSet descriptorSets[] = { this->settings.contextImpl->textureResources.textureDescriptorSet };
+                            VkDescriptorSet descriptorSets[] = { this->settings.contextImpl->commonResources.textureDescriptorSet };
                             auto heapRef = foundPipelineSlot->Record(descriptorSets, FINJIN_COUNT_OF(descriptorSets));
                             if (heapRef != nullptr)
                             {
@@ -1115,7 +1080,7 @@ void VulkanStaticMeshRenderer::RenderQueued(VulkanStaticMeshRendererFrameState& 
                         pipelineLayoutSlot.second.pipelineLayout->vkpipelineLayout,
                         (uint32_t)VulkanStaticMeshRendererKnownDescriptorSetLayout::TEXTURES,
                         1,
-                        &this->settings.contextImpl->textureResources.textureDescriptorSet,
+                        &this->settings.contextImpl->commonResources.textureDescriptorSet,
                         0,
                         nullptr
                         );
@@ -1131,8 +1096,6 @@ void VulkanStaticMeshRenderer::RenderQueued(VulkanStaticMeshRendererFrameState& 
                         auto& vulkanSubmesh = vulkanMesh->submeshes[item->subentityIndex];
 
                         {
-                            uint32_t pushConstantOffsetInBytes = 0;
-
                             //TODO: Work out a better system where the metadata 'id' is used
                             EnumArray<StandardPushConstant, StandardPushConstant::COUNT, VulkanPushConstant> standardPushConstants;
                             standardPushConstants[StandardPushConstant::OBJECT_INDEX].ui = static_cast<uint32_t>(item->gpuBufferIndex);
@@ -1143,11 +1106,10 @@ void VulkanStaticMeshRenderer::RenderQueued(VulkanStaticMeshRendererFrameState& 
                                 commandBuffer,
                                 pipelineLayoutSlot.second.pipelineLayout->vkpipelineLayout,
                                 VK_SHADER_STAGE_ALL,
-                                pushConstantOffsetInBytes,
+                                0,
                                 pushConstantsInBytes,
                                 standardPushConstants.data()
                                 );
-                            pushConstantOffsetInBytes += pushConstantsInBytes;
                         }
 
                         //Vertex buffer

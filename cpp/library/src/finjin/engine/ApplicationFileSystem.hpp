@@ -15,6 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
+#include "finjin/common/StaticUnorderedMap.hpp"
 #include "finjin/common/Utf8String.hpp"
 
 
@@ -52,6 +53,27 @@ namespace Finjin { namespace Engine {
             }
         }
 
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ApplicationFileSystem, ApplicationFileSystem::COUNT)& GetLookup()
+        {
+            static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ApplicationFileSystem, ApplicationFileSystem::COUNT) lookup
+                (
+                "application-assets", ApplicationFileSystem::READ_APPLICATION_ASSETS,
+                "user-data", ApplicationFileSystem::READ_USER_DATA,
+                "user-application-cache-data", ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA,
+                "application-data", ApplicationFileSystem::READ_WRITE_APPLICATION_DATA,
+                "user-application-data", ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA
+                );
+
+            return lookup;
+        }
+
+        template <typename T>
+        static ApplicationFileSystem Parse(const T& s, ApplicationFileSystem defaultValue)
+        {
+            auto& lookup = GetLookup();
+            return lookup.GetOrDefault(s, defaultValue);
+        }
+
         template <typename T>
         static void Parse(ApplicationFileSystem& value, const T& s, Error& error)
         {
@@ -60,23 +82,6 @@ namespace Finjin { namespace Engine {
             value = Parse(s, ApplicationFileSystem::COUNT);
             if (value == ApplicationFileSystem::COUNT)
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to parse streaming file format. Invalid value in '%1%'.", s));
-        }
-
-        template <typename T>
-        static ApplicationFileSystem Parse(const T& s, ApplicationFileSystem defaultValue)
-        {
-            if (s == "application-assets")
-                return ApplicationFileSystem::READ_APPLICATION_ASSETS;
-            else if (s == "user-data")
-                return ApplicationFileSystem::READ_USER_DATA;
-            else if (s == "user-application-cache-data")
-                return ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA;
-            else if (s == "application-data")
-                return ApplicationFileSystem::READ_WRITE_APPLICATION_DATA;
-            else if (s == "user-application-data")
-                return ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA;
-            else
-                return defaultValue;
         }
     };
 

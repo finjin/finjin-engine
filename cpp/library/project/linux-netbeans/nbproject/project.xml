@@ -10,7 +10,16 @@
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
-                <sourceRootElem>/home/build/finjin-3rd-party/cpp/bullet3/src</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/bullet/src</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Source</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Source</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Source</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Source</sourceRootElem>
+                <sourceRootElem>/home/build/finjin-3rd-party/cpp/imgui</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

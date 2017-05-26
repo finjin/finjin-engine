@@ -29,10 +29,9 @@ namespace Finjin { namespace Engine {
 
     struct VulkanSystemSettings : GpuSystemCommonSettings
     {
-        VulkanSystemSettings();
+        VulkanSystemSettings(Allocator* initialAllocator);
 
         Path driverRuntimePath; //Optional directory to search for Vulkan dll/so
-        Utf8String applicationName; //Optional name of application
         Version applicationVersion; //Optional version of application
         bool enableDebug;
     };

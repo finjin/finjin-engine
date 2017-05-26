@@ -72,9 +72,7 @@ namespace Finjin { namespace Engine {
         MTLRenderPipelineDescriptor* graphicsPipelineStateDesc;
         DynamicVector<id<MTLRenderPipelineState> > graphicsPipelineStates;
 
-        ByteBuffer shaderFileBytes;
-        dispatch_data_t shaderLibraryDispatchData;
-        id<MTLLibrary> shaderLibrary;
+        MetalShaderLibrary shaderLibrary;
 
         struct PipelineStateByHash
         {

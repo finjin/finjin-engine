@@ -226,11 +226,11 @@ void WindowsUWPInputContext::Create(const Settings& settings, Error& error)
     //Enumerate the devices-------------------------------------
 
     //XInput game controllers-----------------------
-    for (size_t i = 0; i < impl->gameControllers.size(); i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < impl->gameControllers.size(); gameControllerIndex++)
     {
-        auto& gameController = impl->gameControllers[i];
+        auto& gameController = impl->gameControllers[gameControllerIndex];
 
-        gameController.Create(i);
+        gameController.Create(gameControllerIndex);
         ConfigureInputDevice(gameController, gameController.GetProductDescriptor(), impl->xinputDevicesAssetReader, impl->configFileBuffer);
     }
 
@@ -396,7 +396,7 @@ const Utf8String& WindowsUWPInputContext::GetDeviceProductDescriptor(InputDevice
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerProductDescriptor(index);
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 const Utf8String& WindowsUWPInputContext::GetDeviceInstanceDescriptor(InputDeviceClass deviceClass, size_t index) const
@@ -408,7 +408,7 @@ const Utf8String& WindowsUWPInputContext::GetDeviceInstanceDescriptor(InputDevic
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerInstanceDescriptor(index);
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 InputDeviceSemantic WindowsUWPInputContext::GetDeviceSemantic(InputDeviceClass deviceClass, size_t index) const
@@ -604,7 +604,7 @@ FileOperationResult WindowsUWPInputContext::ReadInputBinding(InputDeviceClass de
     if (deviceClass == InputDeviceClass::GAME_CONTROLLER)
         impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, XInputSystem::GetSystemInternalName());
     else
-        impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, Utf8String::Empty());
+        impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, Utf8String::GetEmpty());
 
     impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_DEVICE_DESCRIPTOR, GetDeviceProductDescriptor(deviceClass, deviceIndex));
 

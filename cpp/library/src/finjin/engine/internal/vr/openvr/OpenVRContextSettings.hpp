@@ -28,7 +28,7 @@ namespace Finjin { namespace Engine {
 
     struct OpenVRContextSettings : VRContextCommonSettings
     {
-        OpenVRContextSettings(Allocator* allocator);
+        OpenVRContextSettings(Allocator* initialAllocator);
 
         FINJIN_VR_CONTEXT_DEVICE_CALLBACKS(OpenVRContext);
     };

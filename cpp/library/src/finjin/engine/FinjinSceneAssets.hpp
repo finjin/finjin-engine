@@ -835,7 +835,7 @@ namespace Finjin { namespace Engine {
         {
             Key()
             {
-                this->time = TimeDuration::Zero();
+                this->time = TimeDuration::GetZero();
                 FINJIN_ZERO_ITEM(this->m44);
             }
 

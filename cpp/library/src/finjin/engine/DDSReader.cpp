@@ -370,7 +370,7 @@ Utf8String DDSReader::GetReadHeaderResultString(ReadHeaderResult result) const
         case ReadHeaderResult::INVALID_PIXEL_FORMAT_SIZE: return "Invalid pixel format size.";
         case ReadHeaderResult::FAILED_TO_READ_DXT10_HEADER: return "Failed to read DXT10 header.";
         case ReadHeaderResult::IMAGE_BYTE_SWAPPING_REQUIRED: return "Image byte swapping required.";
-        default: return Utf8String::Empty();
+        default: return Utf8String::GetEmpty();
     }
 }
 

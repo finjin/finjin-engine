@@ -51,8 +51,8 @@ using namespace Finjin::Engine;
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
 
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowOnPointerDown(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
+        for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+            osWindow->GetWindowEventListener(listenerIndex)->WindowOnPointerDown(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
 }
 
@@ -73,8 +73,8 @@ using namespace Finjin::Engine;
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
 
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowOnPointerUp(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
+        for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+            osWindow->GetWindowEventListener(listenerIndex)->WindowOnPointerUp(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
 }
 
@@ -90,8 +90,8 @@ using namespace Finjin::Engine;
         InputCoordinate x(locationInView.x, InputCoordinate::Type::DIPS, density);
         InputCoordinate y(locationInView.y, InputCoordinate::Type::DIPS, density);
 
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowOnPointerMove(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
+        for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+            osWindow->GetWindowEventListener(listenerIndex)->WindowOnPointerMove(osWindow, PointerType::TOUCH_SCREEN, pointerID, x, y, 0);
     }
 }
 

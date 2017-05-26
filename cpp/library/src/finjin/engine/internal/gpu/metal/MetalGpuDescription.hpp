@@ -29,12 +29,14 @@ namespace Finjin { namespace Engine {
     enum class MetalFeatureSetCapability
     {
         NONE = 0,
+
         FILTER = 1 << 0,
         WRITE = 1 << 1,
         COLOR = 1 << 2,
         BLEND = 1 << 3,
         MSAA = 1 << 4,
         RESOLVE = 1 << 5,
+
         ALL = FILTER | WRITE | COLOR | BLEND | MSAA | RESOLVE
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(MetalFeatureSetCapability)

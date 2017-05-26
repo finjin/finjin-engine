@@ -116,8 +116,7 @@ namespace Finjin { namespace Engine {
         GpuContext* gpuContext;
 
         JobPipelineStage* jobPipelineStage;
-        bool continueRendering;
-        bool modifyingRenderTarget;
+        RenderStatus renderStatus;
         size_t presentSyncIntervalOverride;
     };
 

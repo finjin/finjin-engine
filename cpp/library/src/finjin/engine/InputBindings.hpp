@@ -63,6 +63,7 @@ namespace Finjin { namespace Engine {
     enum class InputBindingsConfigurationFlag : uint32_t
     {
         NONE = 0,
+
         CONNECTED_ONLY = 1 << 0
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputBindingsConfigurationFlag)
@@ -332,14 +333,14 @@ namespace Finjin { namespace Engine {
         {
             this->unitConverter = nullptr;
 
-            for (size_t i = 0; i < this->defaultMouseAxisSensitivity.size(); i++)
-                this->defaultMouseAxisSensitivity[i] = defaults.mouseAxisSensitivity;
+            for (size_t axisIndex = 0; axisIndex < this->defaultMouseAxisSensitivity.size(); axisIndex++)
+                this->defaultMouseAxisSensitivity[axisIndex] = defaults.mouseAxisSensitivity;
 
-            for (size_t i = 0; i < this->defaultGameControllerAxisDeadZone.size(); i++)
+            for (size_t axisIndex = 0; axisIndex < this->defaultGameControllerAxisDeadZone.size(); axisIndex++)
             {
-                this->defaultGameControllerAxisDeadZone[i] = defaults.gameControllerAxisDeadZone;
+                this->defaultGameControllerAxisDeadZone[axisIndex] = defaults.gameControllerAxisDeadZone;
 
-                this->defaultGameControllerAxisSensitivity[i] = defaults.gameControllerAxisSensitivity;
+                this->defaultGameControllerAxisSensitivity[axisIndex] = defaults.gameControllerAxisSensitivity;
             }
 
             Reset();
@@ -353,14 +354,14 @@ namespace Finjin { namespace Engine {
         {
             this->bindings.clear();
 
-            for (size_t i = 0; i < this->defaultMouseAxisSensitivity.size(); i++)
-                this->mouseAxisSensitivity[i] = this->defaultMouseAxisSensitivity[i];
+            for (size_t axisIndex = 0; axisIndex < this->defaultMouseAxisSensitivity.size(); axisIndex++)
+                this->mouseAxisSensitivity[axisIndex] = this->defaultMouseAxisSensitivity[axisIndex];
 
-            for (size_t i = 0; i < this->gameControllerAxisSensitivity.size(); i++)
+            for (size_t axisIndex = 0; axisIndex < this->gameControllerAxisSensitivity.size(); axisIndex++)
             {
-                this->gameControllerAxisDeadZone[i] = this->defaultGameControllerAxisDeadZone[i];
+                this->gameControllerAxisDeadZone[axisIndex] = this->defaultGameControllerAxisDeadZone[axisIndex];
 
-                this->gameControllerAxisSensitivity[i] = this->defaultGameControllerAxisSensitivity[i];
+                this->gameControllerAxisSensitivity[axisIndex] = this->defaultGameControllerAxisSensitivity[axisIndex];
             }
         }
 
@@ -390,7 +391,7 @@ namespace Finjin { namespace Engine {
         }
 
         template <typename InputCommands>
-        void AddHapticFeedback(InputCommands& inputCommands, const HapticFeedbackSettings& force, InputDeviceClass deviceClass, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        void AddHapticFeedback(InputCommands& inputCommands, const HapticFeedbackSettings& force, InputDeviceClass deviceClass, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             std::array<BitArray<InputDeviceConstants::MAX_DEVICES>, InputDeviceClassUtilities::COUNT> triggeredDevices;
 
@@ -404,7 +405,7 @@ namespace Finjin { namespace Engine {
         }
 
         template <typename InputCommands>
-        void StopHapticFeedback(InputCommands& inputCommands, InputDeviceClass deviceClass, const ContextEventInfo& eventInfo = ContextEventInfo::Empty())
+        void StopHapticFeedback(InputCommands& inputCommands, InputDeviceClass deviceClass, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             std::array<BitArray<InputDeviceConstants::MAX_DEVICES>, InputDeviceClassUtilities::COUNT> triggeredDevices;
 
@@ -507,8 +508,8 @@ namespace Finjin { namespace Engine {
         }
         void SetGameControllerAxisDeadZone(float deadZone)
         {
-            for (size_t i = 0; i < this->gameControllerAxisDeadZone.size(); i++)
-                this->gameControllerAxisDeadZone[i] = deadZone;
+            for (size_t axisIndex = 0; axisIndex < this->gameControllerAxisDeadZone.size(); axisIndex++)
+                this->gameControllerAxisDeadZone[axisIndex] = deadZone;
         }
 
         //Gets/sets the sensitivity for a game controller axis
@@ -574,10 +575,10 @@ namespace Finjin { namespace Engine {
          */
         void SetInputBindingsDeviceIndex(size_t deviceIndex, InputDeviceClass deviceClass = InputDeviceClass::ALL)
         {
-            for (size_t i = 0; i < this->bindings.size(); i++)
+            for (size_t bindingIndex = 0; bindingIndex < this->bindings.size(); bindingIndex++)
             {
-                if (AnySet(this->bindings[i].deviceClass & deviceClass))
-                    this->bindings[i].inputSource.deviceIndex = deviceIndex;
+                if (AnySet(this->bindings[bindingIndex].deviceClass & deviceClass))
+                    this->bindings[bindingIndex].inputSource.deviceIndex = deviceIndex;
             }
         }
 
@@ -670,19 +671,19 @@ namespace Finjin { namespace Engine {
             {
                 //Using an instance descriptor is the most direct search since it's device and instance-specific
 
-                for (size_t i = 0; i < deviceCount; i++)
+                for (size_t deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
                 {
-                    if (inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, i) == criteria.instanceDescriptor)
+                    if (inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, deviceIndex) == criteria.instanceDescriptor)
                     {
                         if (AnySet(criteria.flags & InputBindingsConfigurationFlag::CONNECTED_ONLY) &&
-                            !inputContext->IsDeviceConnected(criteria.deviceClass, i))
+                            !inputContext->IsDeviceConnected(criteria.deviceClass, deviceIndex))
                         {
                             return InputBindingsConfigurationResult::Type::NOT_CONNECTED;
                         }
 
-                        if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, i, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
+                        if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, deviceIndex, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
                         {
-                            inputContext->TranslateInputBindingsSemantics(*this, criteria.deviceClass, i);
+                            inputContext->TranslateInputBindingsSemantics(*this, criteria.deviceClass, deviceIndex);
                             FinishBindingsInitialization();
 
                             return InputBindingsConfigurationResult
@@ -690,7 +691,7 @@ namespace Finjin { namespace Engine {
                                 InputBindingsConfigurationResult::Type::SUCCESS,
                                 criteria.productDescriptor,
                                 criteria.instanceDescriptor,
-                                i
+                                deviceIndex
                                 );
                         }
                         else
@@ -710,31 +711,31 @@ namespace Finjin { namespace Engine {
                 //A product descriptor was specified, so find the matching device and initialize
 
                 size_t validDeviceIndex = 0;
-                for (size_t i = 0; i < deviceCount; i++)
+                for (size_t deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
                 {
-                    if (inputContext->GetDeviceProductDescriptor(criteria.deviceClass, i) == criteria.productDescriptor)
+                    if (inputContext->GetDeviceProductDescriptor(criteria.deviceClass, deviceIndex) == criteria.productDescriptor)
                     {
                         if (AnySet(criteria.flags & InputBindingsConfigurationFlag::CONNECTED_ONLY) &&
-                            !inputContext->IsDeviceConnected(criteria.deviceClass, i))
+                            !inputContext->IsDeviceConnected(criteria.deviceClass, deviceIndex))
                         {
                             //Device is disconnected. Skip
                             continue;
                         }
 
                         if (criteria.IsMatchingDeviceIndex(validDeviceIndex) &&
-                            criteria.IsMatchingDeviceSemantic(inputContext->GetDeviceSemantic(criteria.deviceClass, i)))
+                            criteria.IsMatchingDeviceSemantic(inputContext->GetDeviceSemantic(criteria.deviceClass, deviceIndex)))
                         {
-                            if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, i, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
+                            if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, deviceIndex, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
                             {
-                                inputContext->TranslateInputBindingsSemantics(*this, criteria.deviceClass, i);
+                                inputContext->TranslateInputBindingsSemantics(*this, criteria.deviceClass, deviceIndex);
                                 FinishBindingsInitialization();
 
                                 return InputBindingsConfigurationResult
                                     (
                                     InputBindingsConfigurationResult::Type::SUCCESS,
                                     criteria.productDescriptor,
-                                    inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, i),
-                                    i
+                                    inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, deviceIndex),
+                                    deviceIndex
                                     );
                             }
                             else
@@ -763,29 +764,29 @@ namespace Finjin { namespace Engine {
                 }
 
                 size_t validDeviceIndex = 0;
-                for (size_t i = 0; i < deviceCount; i++)
+                for (size_t deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
                 {
                     if (criteria.IsMatchingDeviceIndex(validDeviceIndex) &&
-                        criteria.IsMatchingDeviceSemantic(inputContext->GetDeviceSemantic(criteria.deviceClass, i)))
+                        criteria.IsMatchingDeviceSemantic(inputContext->GetDeviceSemantic(criteria.deviceClass, deviceIndex)))
                     {
                         if (AnySet(criteria.flags & InputBindingsConfigurationFlag::CONNECTED_ONLY) &&
-                            !inputContext->IsDeviceConnected(criteria.deviceClass, i))
+                            !inputContext->IsDeviceConnected(criteria.deviceClass, deviceIndex))
                         {
                             //Device is disconnected. Skip
                             continue;
                         }
 
-                        if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, i, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
+                        if (GetActionBindingsFromConfiguration(inputContext, criteria.deviceClass, deviceIndex, configFileName, configFileBuffer) == GetActionBindingsResult::SUCCESS)
                         {
-                            inputContext->TranslateInputBindingsSemantics(*this, criteria.deviceClass, i);
+                            inputContext->TranslateInputBindingsSemantics(*this, criteria.deviceClass, deviceIndex);
                             FinishBindingsInitialization();
 
                             return InputBindingsConfigurationResult
                                 (
                                 InputBindingsConfigurationResult::Type::SUCCESS,
                                 criteria.productDescriptor,
-                                inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, i),
-                                i
+                                inputContext->GetDeviceInstanceDescriptor(criteria.deviceClass, deviceIndex),
+                                deviceIndex
                                 );
                         }
                         else
@@ -821,30 +822,30 @@ namespace Finjin { namespace Engine {
         {
             if (binding.inputSource.semantic != InputComponentSemantic::NONE)
             {
-                for (size_t i = 0; i < device->GetAxisCount(); i++)
+                for (size_t axisIndex = 0; axisIndex < device->GetAxisCount(); axisIndex++)
                 {
-                    auto component = device->GetAxis(i);
+                    auto component = device->GetAxis(axisIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
                         int direction = InputComponentSemanticUtilities::GetMoveLookToggleDirection(binding.inputSource.semantic);
-                        binding.inputSource = InputSource::FromGameControllerAxis(i, direction);
+                        binding.inputSource = InputSource::FromGameControllerAxis(axisIndex, direction);
                         return true;
                     }
                 }
 
-                for (size_t i = 0; i < device->GetButtonCount(); i++)
+                for (size_t buttonIndex = 0; buttonIndex < device->GetButtonCount(); buttonIndex++)
                 {
-                    auto component = device->GetButton(i);
+                    auto component = device->GetButton(buttonIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
-                        binding.inputSource = InputSource::FromGameControllerButton(i);
+                        binding.inputSource = InputSource::FromGameControllerButton(buttonIndex);
                         return true;
                     }
                 }
 
-                for (size_t i = 0; i < device->GetPovCount(); i++)
+                for (size_t povIndex = 0; povIndex < device->GetPovCount(); povIndex++)
                 {
-                    auto component = device->GetPov(i);
+                    auto component = device->GetPov(povIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
                         auto direction = PovDirection::CENTERED;
@@ -856,17 +857,17 @@ namespace Finjin { namespace Engine {
                             direction |= PovDirection::LEFT;
                         else if (AnySet(binding.inputSource.semantic & InputComponentSemantic::TOGGLE_RIGHT))
                             direction |= PovDirection::RIGHT;
-                        binding.inputSource = InputSource::FromGameControllerPov(i, direction);
+                        binding.inputSource = InputSource::FromGameControllerPov(povIndex, direction);
                         return true;
                     }
                 }
 
-                for (size_t i = 0; i < device->GetLocatorCount(); i++)
+                for (size_t locatorIndex = 0; locatorIndex < device->GetLocatorCount(); locatorIndex++)
                 {
-                    auto component = device->GetLocator(i);
+                    auto component = device->GetLocator(locatorIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
-                        binding.inputSource = InputSource::FromGameControllerLocator(i);
+                        binding.inputSource = InputSource::FromGameControllerLocator(locatorIndex);
                         return true;
                     }
                 }
@@ -884,11 +885,11 @@ namespace Finjin { namespace Engine {
                 {
                     case InputDeviceComponent::GAME_CONTROLLER_BUTTON:
                     {
-                        for (size_t i = 0; i < device->GetButtonCount(); i++)
+                        for (size_t buttonIndex = 0; buttonIndex < device->GetButtonCount(); buttonIndex++)
                         {
-                            if (device->GetButton(i)->GetCode() == binding.inputSource.buttonCode)
+                            if (device->GetButton(buttonIndex)->GetCode() == binding.inputSource.buttonCode)
                             {
-                                binding.inputSource.buttonIndex = i;
+                                binding.inputSource.buttonIndex = buttonIndex;
                                 return true;
                             }
                         }
@@ -897,11 +898,11 @@ namespace Finjin { namespace Engine {
                     }
                     case InputDeviceComponent::GAME_CONTROLLER_AXIS:
                     {
-                        for (size_t i = 0; i < device->GetAxisCount(); i++)
+                        for (size_t axisIndex = 0; axisIndex < device->GetAxisCount(); axisIndex++)
                         {
-                            if (device->GetAxis(i)->GetCode() == binding.inputSource.axisCode)
+                            if (device->GetAxis(axisIndex)->GetCode() == binding.inputSource.axisCode)
                             {
-                                binding.inputSource.axisIndex = i;
+                                binding.inputSource.axisIndex = axisIndex;
                                 return true;
                             }
                         }
@@ -910,11 +911,11 @@ namespace Finjin { namespace Engine {
                     }
                     case InputDeviceComponent::GAME_CONTROLLER_POV:
                     {
-                        for (size_t i = 0; i < device->GetPovCount(); i++)
+                        for (size_t povIndex = 0; povIndex < device->GetPovCount(); povIndex++)
                         {
-                            if (device->GetPov(i)->GetCode() == binding.inputSource.povCode)
+                            if (device->GetPov(povIndex)->GetCode() == binding.inputSource.povCode)
                             {
-                                binding.inputSource.povIndex = i;
+                                binding.inputSource.povIndex = povIndex;
                                 return true;
                             }
                         }
@@ -923,11 +924,11 @@ namespace Finjin { namespace Engine {
                     }
                     case InputDeviceComponent::GAME_CONTROLLER_LOCATOR:
                     {
-                        for (size_t i = 0; i < device->GetLocatorCount(); i++)
+                        for (size_t locatorIndex = 0; locatorIndex < device->GetLocatorCount(); locatorIndex++)
                         {
-                            if (device->GetLocator(i)->GetCode() == binding.inputSource.locatorCode)
+                            if (device->GetLocator(locatorIndex)->GetCode() == binding.inputSource.locatorCode)
                             {
-                                binding.inputSource.locatorIndex = i;
+                                binding.inputSource.locatorIndex = locatorIndex;
                                 return true;
                             }
                         }
@@ -957,12 +958,12 @@ namespace Finjin { namespace Engine {
         {
             if (binding.inputSource.semantic != InputComponentSemantic::NONE)
             {
-                for (size_t i = 0; i < device->GetButtonCount(); i++)
+                for (size_t buttonIndex = 0; buttonIndex < device->GetButtonCount(); buttonIndex++)
                 {
-                    auto component = device->GetButton(i);
+                    auto component = device->GetButton(buttonIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
-                        binding.inputSource = InputSource::FromKeyboardKey(i);
+                        binding.inputSource = InputSource::FromKeyboardKey(buttonIndex);
                         return true;
                     }
                 }
@@ -980,11 +981,11 @@ namespace Finjin { namespace Engine {
                 {
                     case InputDeviceComponent::KEYBOARD_KEY:
                     {
-                        for (size_t i = 0; i < device->GetButtonCount(); i++)
+                        for (size_t buttonIndex = 0; buttonIndex < device->GetButtonCount(); buttonIndex++)
                         {
-                            if (device->GetButton(i)->GetCode() == binding.inputSource.keyCode)
+                            if (device->GetButton(buttonIndex)->GetCode() == binding.inputSource.keyCode)
                             {
-                                binding.inputSource.keyIndex = i;
+                                binding.inputSource.keyIndex = buttonIndex;
                                 return true;
                             }
                         }
@@ -1014,23 +1015,23 @@ namespace Finjin { namespace Engine {
         {
             if (binding.inputSource.semantic != InputComponentSemantic::NONE)
             {
-                for (size_t i = 0; i < device->GetAxisCount(); i++)
+                for (size_t axisIndex = 0; axisIndex < device->GetAxisCount(); axisIndex++)
                 {
-                    auto component = device->GetAxis(i);
+                    auto component = device->GetAxis(axisIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
                         int direction = InputComponentSemanticUtilities::GetMoveLookToggleDirection(binding.inputSource.semantic);
-                        binding.inputSource = InputSource::FromMouseRelativeAxis(i, direction);
+                        binding.inputSource = InputSource::FromMouseRelativeAxis(axisIndex, direction);
                         return true;
                     }
                 }
 
-                for (size_t i = 0; i < device->GetButtonCount(); i++)
+                for (size_t buttonIndex = 0; buttonIndex < device->GetButtonCount(); buttonIndex++)
                 {
-                    auto component = device->GetButton(i);
+                    auto component = device->GetButton(buttonIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
-                        binding.inputSource = InputSource::FromMouseButton(i);
+                        binding.inputSource = InputSource::FromMouseButton(buttonIndex);
                         return true;
                     }
                 }
@@ -1048,11 +1049,11 @@ namespace Finjin { namespace Engine {
                 {
                     case InputDeviceComponent::MOUSE_BUTTON:
                     {
-                        for (size_t i = 0; i < device->GetButtonCount(); i++)
+                        for (size_t buttonIndex = 0; buttonIndex < device->GetButtonCount(); buttonIndex++)
                         {
-                            if (device->GetButton(i)->GetCode() == binding.inputSource.buttonCode)
+                            if (device->GetButton(buttonIndex)->GetCode() == binding.inputSource.buttonCode)
                             {
-                                binding.inputSource.buttonIndex = i;
+                                binding.inputSource.buttonIndex = buttonIndex;
                                 return true;
                             }
                         }
@@ -1062,11 +1063,11 @@ namespace Finjin { namespace Engine {
                     case InputDeviceComponent::MOUSE_RELATIVE_AXIS:
                     case InputDeviceComponent::MOUSE_ABSOLUTE_AXIS:
                     {
-                        for (size_t i = 0; i < device->GetAxisCount(); i++)
+                        for (size_t axisIndex = 0; axisIndex < device->GetAxisCount(); axisIndex++)
                         {
-                            if (device->GetAxis(i)->GetCode() == binding.inputSource.axisCode)
+                            if (device->GetAxis(axisIndex)->GetCode() == binding.inputSource.axisCode)
                             {
-                                binding.inputSource.axisIndex = i;
+                                binding.inputSource.axisIndex = axisIndex;
                                 return true;
                             }
                         }
@@ -1096,12 +1097,12 @@ namespace Finjin { namespace Engine {
         {
             if (binding.inputSource.semantic != InputComponentSemantic::NONE)
             {
-                for (size_t i = 0; i < device->GetLocatorCount(); i++)
+                for (size_t locatorIndex = 0; locatorIndex < device->GetLocatorCount(); locatorIndex++)
                 {
-                    auto component = device->GetLocator(i);
+                    auto component = device->GetLocator(locatorIndex);
                     if (AnySet(component->GetSemantic() & binding.inputSource.semantic))
                     {
-                        binding.inputSource = InputSource::FromHeadsetLocator(i);
+                        binding.inputSource = InputSource::FromHeadsetLocator(locatorIndex);
                         return true;
                     }
                 }
@@ -1119,11 +1120,11 @@ namespace Finjin { namespace Engine {
                 {
                     case InputDeviceComponent::HEADSET_LOCATOR:
                     {
-                        for (size_t i = 0; i < device->GetLocatorCount(); i++)
+                        for (size_t locatorIndex = 0; locatorIndex < device->GetLocatorCount(); locatorIndex++)
                         {
-                            if (device->GetLocator(i)->GetCode() == binding.inputSource.locatorCode)
+                            if (device->GetLocator(locatorIndex)->GetCode() == binding.inputSource.locatorCode)
                             {
-                                binding.inputSource.locatorIndex = i;
+                                binding.inputSource.locatorIndex = locatorIndex;
                                 return true;
                             }
                         }
@@ -1155,9 +1156,9 @@ namespace Finjin { namespace Engine {
         template <typename T>
         bool FloatsDiffer(const T& a, const T& b) const
         {
-            for (size_t i = 0; i < a.size(); i++)
+            for (size_t floatIndex = 0; floatIndex < a.size(); floatIndex++)
             {
-                if (a[i] != b[i])
+                if (a[floatIndex] != b[floatIndex])
                     return true;
             }
             return false;
@@ -1166,9 +1167,9 @@ namespace Finjin { namespace Engine {
         template <typename T>
         bool FloatsDiffer(const T& a, float b)
         {
-            for (size_t i = 0; i < a.size(); i++)
+            for (size_t floatIndex = 0; floatIndex < a.size(); floatIndex++)
             {
-                if (a[i] != b)
+                if (a[floatIndex] != b)
                     return true;
             }
             return false;

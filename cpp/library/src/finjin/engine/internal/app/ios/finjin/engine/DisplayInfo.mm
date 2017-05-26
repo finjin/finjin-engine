@@ -42,21 +42,21 @@ void DisplayInfos::Enumerate()
     resize(static_cast<size_t>(screens.count));
 
     //First display will be main display
-    for (size_t i = 0; i < size(); i++)
+    for (size_t displayIndex = 0; displayIndex < size(); displayIndex++)
     {
-        DisplayInfo& displayInfo = (*this)[i];
+        DisplayInfo& displayInfo = (*this)[displayIndex];
 
-        displayInfo.index = i;
+        displayInfo.index = displayIndex;
 
-        displayInfo.isPrimary = screens[i] == mainScreen;
+        displayInfo.isPrimary = screens[displayIndex] == mainScreen;
 
-        displayInfo.density = screens[i].nativeScale;
+        displayInfo.density = screens[displayIndex].nativeScale;
 
         displayInfo.hasSmallScreen = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone;
         displayInfo.hasTouchScreen = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone || [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
         displayInfo.usesScreenEdgePadding = !displayInfo.hasSmallScreen;
 
-        auto rect = screens[i].bounds;
+        auto rect = screens[displayIndex].bounds;
         displayInfo.frame.x = rect.origin.x;
         displayInfo.frame.y = rect.origin.y;
         displayInfo.frame.width = rect.size.width;

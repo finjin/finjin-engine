@@ -57,15 +57,15 @@ namespace Finjin { namespace Engine {
         template <typename T>
         static AssetClass Parse(const T& value)
         {
-            for (size_t i = 0; i < (size_t)AssetClass::COUNT; i++)
+            for (size_t assetClass = 0; assetClass < (size_t)AssetClass::COUNT; assetClass++)
             {
-                if (value == ToString(i, false) || value == ToString(i, true))
-                    return static_cast<AssetClass>(i);
+                if (value == ToString(assetClass, false) || value == ToString(assetClass, true))
+                    return static_cast<AssetClass>(assetClass);
             }
 
             return AssetClass::COUNT;
         }
-        
+
         template <typename T>
         static bool IsDirectoryName(const T& path, AssetClass assetClass)
         {

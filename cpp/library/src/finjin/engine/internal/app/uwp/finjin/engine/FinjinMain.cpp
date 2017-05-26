@@ -70,6 +70,7 @@ private:
 
     std::unique_ptr<ApplicationDelegate> applicationDelegate;
     std::unique_ptr<Application> app;
+    bool errorOccurred;
 };
 
 ref class ApplicationFrameworkViewSource sealed : IFrameworkViewSource
@@ -88,8 +89,9 @@ private:
 
 //ApplicationFrameworkView
 ApplicationFrameworkView::ApplicationFrameworkView(intptr_t _applicationDelegate, Platform::Array<Platform::String^>^ _args) :
+    args(_args),
     applicationDelegate(reinterpret_cast<ApplicationDelegate*>(_applicationDelegate)),
-    args(_args)
+    errorOccurred(false)
 {
 }
 
@@ -114,7 +116,7 @@ void ApplicationFrameworkView::SetWindow(CoreWindow^ window)
 
 void ApplicationFrameworkView::Load(Platform::String^ entryPoint)
 {
-    if (this->app == nullptr)
+    if (!this->errorOccurred && this->app == nullptr)
     {
         ApplicationView::TerminateAppOnFinalViewClose = true; //Ensures the application is terminated when closed
 
@@ -132,14 +134,20 @@ void ApplicationFrameworkView::Load(Platform::String^ entryPoint)
         this->app->ReadCommandLineSettings(argsProcessor, error);
         if (error)
         {
-            FINJIN_DEBUG_LOG_ERROR(error.ToString().c_str());
+            this->errorOccurred = true;
+
+            this->app->ReportError(error);
+
             return;
         }
 
         this->app->Initialize(error);
         if (error)
         {
-            FINJIN_DEBUG_LOG_ERROR(error.ToString().c_str());
+            this->errorOccurred = true;
+
+            this->app->ReportError(error);
+
             return;
         }
     }
@@ -148,20 +156,25 @@ void ApplicationFrameworkView::Load(Platform::String^ entryPoint)
 void ApplicationFrameworkView::Run()
 {
     //This method is called after the window becomes active.
-    FINJIN_DECLARE_ERROR(error);
 
-    for (auto& appViewport : this->app->GetViewportsController())
-        appViewport->GetOSWindow()->SetTitle();
-
-    this->app->MainLoop(error);
-    if (error)
+    if (!this->errorOccurred)
     {
-        this->app->ReportError(error);
+        FINJIN_DECLARE_ERROR(error);
+
+        for (auto& appViewport : this->app->GetViewportsController())
+            appViewport->GetOSWindow()->SetTitle();
+
+        this->app->MainLoop(error);
+        if (error)
+            this->app->ReportError(error);
     }
 
     //Shut down
-    this->app->Destroy();
-    this->app.reset();
+    if (this->app != nullptr)
+    {
+        this->app->Destroy();
+        this->app.reset();
+    }
 
     this->applicationDelegate.reset();
 }
@@ -174,7 +187,8 @@ void ApplicationFrameworkView::Uninitialize()
 void ApplicationFrameworkView::OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args)
 {
     //Activate core window so that Run() will run
-    CoreWindow::GetForCurrentThread()->Activate();
+    if (!this->errorOccurred)
+        CoreWindow::GetForCurrentThread()->Activate();
 }
 
 void ApplicationFrameworkView::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
@@ -182,16 +196,19 @@ void ApplicationFrameworkView::OnSuspending(Platform::Object^ sender, Suspending
     //Save app state asynchronously after requesting a deferral. Holding a deferral indicates that the application is busy performing suspending operations.
     //Be aware that a deferral may not be held indefinitely. After about five seconds, the app will be forced to exit.
 
-    FINJIN_DECLARE_ERROR(error);
-    this->app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::PAUSE), error);
-
-    SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
-    create_task([deferral]()
+    if (!this->errorOccurred)
     {
-        //TODO: Implement more logic here?
+        FINJIN_DECLARE_ERROR(error);
+        this->app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::PAUSE), error);
 
-        deferral->Complete();
-    });
+        SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
+        create_task([deferral]()
+        {
+            //TODO: Implement more logic here?
+
+            deferral->Complete();
+        });
+    }
 }
 
 void ApplicationFrameworkView::OnResuming(Platform::Object^ sender, Platform::Object^ args)
@@ -200,23 +217,35 @@ void ApplicationFrameworkView::OnResuming(Platform::Object^ sender, Platform::Ob
     //By default, data and state are persisted when resuming from suspend.
     //Note that this event does not occur if the app was previously terminated.
 
-    FINJIN_DECLARE_ERROR(error);
-    this->app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::RESUME), error);
+    if (!this->errorOccurred)
+    {
+        FINJIN_DECLARE_ERROR(error);
+        this->app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::RESUME), error);
+    }
 }
 
 void ApplicationFrameworkView::OnDpiChanged(DisplayInformation^ sender, Object^ args)
 {
-    //sender->LogicalDpi
-    //this->mainAppDelegate->OnWindowSizeChanged();
+    if (!this->errorOccurred)
+    {
+        //sender->LogicalDpi
+        //this->mainAppDelegate->OnWindowSizeChanged();
+    }
 }
 
 void ApplicationFrameworkView::OnOrientationChanged(DisplayInformation^ sender, Object^ args)
 {
-    //this->mainAppDelegate->OnWindowSizeChanged();
+    if (!this->errorOccurred)
+    {
+        //this->mainAppDelegate->OnWindowSizeChanged();
+    }
 }
 
 void ApplicationFrameworkView::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
 {
+    if (!this->errorOccurred)
+    {
+    }
 }
 
 //ApplicationFrameworkViewSource

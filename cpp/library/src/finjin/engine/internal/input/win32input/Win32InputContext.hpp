@@ -43,7 +43,7 @@ namespace Finjin { namespace Engine {
 
         struct Settings : InputContextCommonSettings
         {
-            Settings(Allocator* allocator) : InputContextCommonSettings(allocator)
+            Settings(Allocator* initialAllocator) : InputContextCommonSettings(initialAllocator)
             {
             }
         };
@@ -243,30 +243,30 @@ namespace Finjin { namespace Engine {
             if (AnySet(filter.deviceClasses & InputDeviceClass::GAME_CONTROLLER))
             {
                 auto gameControllerCount = GetXInputGameControllerCount();
-                for (size_t i = 0; i < gameControllerCount && !changed.full(); i++)
-                    changed.CheckGameController(GetXInputGameController(i), i, filter);
+                for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount && !changed.full(); gameControllerIndex++)
+                    changed.CheckGameController(GetXInputGameController(gameControllerIndex), gameControllerIndex, filter);
 
                 gameControllerCount = GetDInputGameControllerCount();
-                for (size_t i = 0; i < gameControllerCount && !changed.full(); i++)
-                    changed.CheckGameController(GetDInputGameController(i), i, filter);
+                for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount && !changed.full(); gameControllerIndex++)
+                    changed.CheckGameController(GetDInputGameController(gameControllerIndex), gameControllerIndex, filter);
 
                 gameControllerCount = GetExternalGameControllerCount();
-                for (size_t i = 0; i < gameControllerCount && !changed.full(); i++)
-                    changed.CheckGameController(GetExternalGameController(i), i, filter);
+                for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount && !changed.full(); gameControllerIndex++)
+                    changed.CheckGameController(GetExternalGameController(gameControllerIndex), gameControllerIndex, filter);
             }
 
             if (AnySet(filter.deviceClasses & InputDeviceClass::KEYBOARD))
             {
                 auto keyboardCount = GetKeyboardCount();
-                for (size_t i = 0; i < keyboardCount && !changed.full(); i++)
-                    changed.CheckKeyboard(GetKeyboard(i), i, filter);
+                for (size_t keyboardIndex = 0; keyboardIndex < keyboardCount && !changed.full(); keyboardIndex++)
+                    changed.CheckKeyboard(GetKeyboard(keyboardIndex), keyboardIndex, filter);
             }
 
             if (AnySet(filter.deviceClasses & InputDeviceClass::MOUSE))
             {
                 auto mouseCount = GetMouseCount();
-                for (size_t i = 0; i < mouseCount && !changed.full(); i++)
-                    changed.CheckMouse(GetMouse(i), i, filter);
+                for (size_t mouseIndex = 0; mouseIndex < mouseCount && !changed.full(); mouseIndex++)
+                    changed.CheckMouse(GetMouse(mouseIndex), mouseIndex, filter);
             }
         }
 

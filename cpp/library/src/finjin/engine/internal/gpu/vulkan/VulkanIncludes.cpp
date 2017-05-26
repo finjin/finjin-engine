@@ -121,6 +121,8 @@ void VulkanInstanceFunctions::InitializeInstance(VkInstance instance, VulkanGlob
     this->GetPhysicalDeviceQueueFamilyProperties2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR>(this->GetInstanceProcAddr(instance, "vkGetPhysicalDeviceQueueFamilyProperties2KHR"));
     this->GetPhysicalDeviceMemoryProperties2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceMemoryProperties2KHR>(this->GetInstanceProcAddr(instance, "vkGetPhysicalDeviceMemoryProperties2KHR"));
     this->GetPhysicalDeviceSparseImageFormatProperties2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR>(this->GetInstanceProcAddr(instance, "vkGetPhysicalDeviceSparseImageFormatProperties2KHR"));
+    this->GetPhysicalDeviceSurfaceCapabilities2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR>(this->GetInstanceProcAddr(instance, "vkGetPhysicalDeviceSurfaceCapabilities2KHR"));
+    this->GetPhysicalDeviceSurfaceFormats2KHR = reinterpret_cast<PFN_vkGetPhysicalDeviceSurfaceFormats2KHR>(this->GetInstanceProcAddr(instance, "vkGetPhysicalDeviceSurfaceFormats2KHR"));
     this->CreateDebugReportCallbackEXT = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(this->GetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT"));
     this->DestroyDebugReportCallbackEXT = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(this->GetInstanceProcAddr(instance, "vkDestroyDebugReportCallbackEXT"));
     this->DebugReportMessageEXT = reinterpret_cast<PFN_vkDebugReportMessageEXT>(this->GetInstanceProcAddr(instance, "vkDebugReportMessageEXT"));
@@ -302,6 +304,7 @@ void VulkanDeviceFunctions::InitializeDevice(VkDevice device, VulkanInstanceFunc
     this->DestroyDescriptorUpdateTemplateKHR = reinterpret_cast<PFN_vkDestroyDescriptorUpdateTemplateKHR>(this->GetDeviceProcAddr(device, "vkDestroyDescriptorUpdateTemplateKHR"));
     this->UpdateDescriptorSetWithTemplateKHR = reinterpret_cast<PFN_vkUpdateDescriptorSetWithTemplateKHR>(this->GetDeviceProcAddr(device, "vkUpdateDescriptorSetWithTemplateKHR"));
     this->CmdPushDescriptorSetWithTemplateKHR = reinterpret_cast<PFN_vkCmdPushDescriptorSetWithTemplateKHR>(this->GetDeviceProcAddr(device, "vkCmdPushDescriptorSetWithTemplateKHR"));
+    this->GetSwapchainStatusKHR = reinterpret_cast<PFN_vkGetSwapchainStatusKHR>(this->GetDeviceProcAddr(device, "vkGetSwapchainStatusKHR"));
     this->DebugMarkerSetObjectTagEXT = reinterpret_cast<PFN_vkDebugMarkerSetObjectTagEXT>(this->GetDeviceProcAddr(device, "vkDebugMarkerSetObjectTagEXT"));
     this->DebugMarkerSetObjectNameEXT = reinterpret_cast<PFN_vkDebugMarkerSetObjectNameEXT>(this->GetDeviceProcAddr(device, "vkDebugMarkerSetObjectNameEXT"));
     this->CmdDebugMarkerBeginEXT = reinterpret_cast<PFN_vkCmdDebugMarkerBeginEXT>(this->GetDeviceProcAddr(device, "vkCmdDebugMarkerBeginEXT"));

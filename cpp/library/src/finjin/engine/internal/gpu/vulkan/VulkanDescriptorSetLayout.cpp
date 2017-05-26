@@ -143,7 +143,7 @@ void VulkanDescriptorSetLayoutDescription::CreateFromScope
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto bindingCount = reader.GetSectionCountBeneathCurrent(Utf8String::Empty());
+    auto bindingCount = reader.GetSectionCountBeneathCurrent(Utf8String::GetEmpty());
     if (bindingCount > 0)
     {
         if (!descriptorSetLayoutDescriptor.bindings.Create(bindingCount, allocator, allocator))
@@ -159,12 +159,12 @@ void VulkanDescriptorSetLayoutDescription::CreateFromScope
         }
         FINJIN_ZERO_MEMORY(descriptorSetLayoutDescriptor.vkbindings.data(), descriptorSetLayoutDescriptor.vkbindings.size() * sizeof(VkDescriptorSetLayoutBinding));
 
-        for (size_t i = 0; i < descriptorSetLayoutDescriptor.vkbindings.size(); i++)
+        for (size_t bindingIndex = 0; bindingIndex < descriptorSetLayoutDescriptor.vkbindings.size(); bindingIndex++)
         {
-            descriptorSetLayoutDescriptor.bindings[i].vkbinding = &descriptorSetLayoutDescriptor.vkbindings[i];
+            descriptorSetLayoutDescriptor.bindings[bindingIndex].vkbinding = &descriptorSetLayoutDescriptor.vkbindings[bindingIndex];
 
-            descriptorSetLayoutDescriptor.vkbindings[i].binding = static_cast<uint32_t>(i);
-            descriptorSetLayoutDescriptor.vkbindings[i].descriptorCount = 1;
+            descriptorSetLayoutDescriptor.vkbindings[bindingIndex].binding = static_cast<uint32_t>(bindingIndex);
+            descriptorSetLayoutDescriptor.vkbindings[bindingIndex].descriptorCount = 1;
         }
 
         bindingCount = 0;

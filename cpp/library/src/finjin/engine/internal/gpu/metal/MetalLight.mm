@@ -22,8 +22,6 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-
-//MetalLight
 MetalLight::MetalLight(Allocator* allocator)
 {
     this->finjinLight = nullptr;

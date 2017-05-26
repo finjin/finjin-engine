@@ -23,7 +23,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-D3D12SystemSettings::D3D12SystemSettings()
+D3D12SystemSettings::D3D12SystemSettings(Allocator* initialAllocator) :
+    GpuSystemCommonSettings(initialAllocator)
 {
     this->softwareGpuRequirement = SoftwareGpuRequirement::DISALLOW;
 

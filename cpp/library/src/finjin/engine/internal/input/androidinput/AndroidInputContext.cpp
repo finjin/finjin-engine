@@ -155,28 +155,31 @@ void AndroidInputContext::Create(const Settings& settings, Error& error)
     //Game controllers
     AndroidGameController::CreateGameControllers(impl->gameControllers, androidApp);
     FINJIN_DEBUG_LOG_INFO("Discovered %1% game controllers", impl->gameControllers.size());
-    for (size_t i = 0; i < impl->gameControllers.size(); i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < impl->gameControllers.size(); gameControllerIndex++)
     {
-        FINJIN_DEBUG_LOG_INFO("Game controller %1% ID: %2%, instance descriptor: %3%, product descriptor: %4%", i, impl->gameControllers[i].GetID(), impl->gameControllers[i].GetInstanceDescriptor(), impl->gameControllers[i].GetProductDescriptor());
-        ConfigureInputDevice(impl->gameControllers[i], impl->gameControllers[i].GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
+        auto& gameController = impl->gameControllers[gameControllerIndex];
+        FINJIN_DEBUG_LOG_INFO("Game controller %1% ID: %2%, instance descriptor: %3%, product descriptor: %4%", gameControllerIndex, gameController.GetID(), gameController.GetInstanceDescriptor(), gameController.GetProductDescriptor());
+        ConfigureInputDevice(gameController, gameController.GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
     }
 
     //Mice
     AndroidMouse::CreateMice(impl->mice, androidApp);
     FINJIN_DEBUG_LOG_INFO("Discovered %1% mice", impl->mice.size());
-    for (size_t i = 0; i < impl->mice.size(); i++)
+    for (size_t mouseIndex = 0; mouseIndex < impl->mice.size(); mouseIndex++)
     {
-        FINJIN_DEBUG_LOG_INFO("Mouse %1% ID: %2%", i, impl->mice[i].GetID());
-        ConfigureInputDevice(impl->mice[i], impl->mice[i].GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
+        auto& mouse = impl->mice[mouseIndex];
+        FINJIN_DEBUG_LOG_INFO("Mouse %1% ID: %2%", mouseIndex, mouse.GetID());
+        ConfigureInputDevice(mouse, mouse.GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
     }
 
     //Keyboard
     AndroidKeyboard::CreateKeyboards(impl->keyboards, androidApp);
     FINJIN_DEBUG_LOG_INFO("Discovered %1% keyboards", impl->keyboards.size());
-    for (size_t i = 0; i < impl->keyboards.size(); i++)
+    for (size_t keyboardIndex = 0; keyboardIndex < impl->keyboards.size(); keyboardIndex++)
     {
-        FINJIN_DEBUG_LOG_INFO("Keyboard %1% ID: %2%", i, impl->keyboards[i].GetID());
-        ConfigureInputDevice(impl->keyboards[i], impl->keyboards[i].GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
+        auto& keyboard = impl->keyboards[keyboardIndex];
+        FINJIN_DEBUG_LOG_INFO("Keyboard %1% ID: %2%", keyboardIndex, keyboard.GetID());
+        ConfigureInputDevice(keyboard, keyboard.GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
     }
 
     //Touch screen
@@ -310,7 +313,7 @@ const Utf8String& AndroidInputContext::GetDeviceProductDescriptor(InputDeviceCla
         case InputDeviceClass::GAME_CONTROLLER: return impl->gameControllers[index].GetProductDescriptor();
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 const Utf8String& AndroidInputContext::GetDeviceInstanceDescriptor(InputDeviceClass deviceClass, size_t index) const
@@ -322,7 +325,7 @@ const Utf8String& AndroidInputContext::GetDeviceInstanceDescriptor(InputDeviceCl
         case InputDeviceClass::GAME_CONTROLLER: return impl->gameControllers[index].GetInstanceDescriptor();
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 InputDeviceSemantic AndroidInputContext::GetDeviceSemantic(InputDeviceClass deviceClass, size_t index) const
@@ -573,9 +576,9 @@ int32_t AndroidInputContext::HandleApplicationInputEvent(void* _androidInputEven
 
                 if (gameController != nullptr)
                 {
-                    for (size_t i = 0; i < gameController->GetAxisCount(); i++)
+                    for (size_t axisIndex = 0; axisIndex < gameController->GetAxisCount(); axisIndex++)
                     {
-                        auto axis = gameController->GetAxis(i);
+                        auto axis = gameController->GetAxis(axisIndex);
                         auto axisValue = AMotionEvent_getAxisValue(androidInputEvent, axis->GetCode(), 0);
 
                         axis->Update(axisValue);
@@ -592,9 +595,9 @@ int32_t AndroidInputContext::HandleApplicationInputEvent(void* _androidInputEven
 
                 if (mouse != nullptr)
                 {
-                    for (size_t i = 0; i < mouse->GetAxisCount(); i++)
+                    for (size_t axisIndex = 0; axisIndex < mouse->GetAxisCount(); axisIndex++)
                     {
-                        auto axis = mouse->GetAxis(i);
+                        auto axis = mouse->GetAxis(axisIndex);
                         auto axisValue = AMotionEvent_getAxisValue(androidInputEvent, axis->GetCode(), 0);
                         switch (axis->GetCode())
                         {
@@ -639,14 +642,14 @@ int32_t AndroidInputContext::HandleApplicationInputEvent(void* _androidInputEven
                 else if (action == AMOTION_EVENT_ACTION_MOVE)
                 {
                     size_t pointerCount = AMotionEvent_getPointerCount(androidInputEvent);
-                    for (size_t i = 0; i < pointerCount; i++)
+                    for (size_t pointerIndex = 0; pointerIndex < pointerCount; pointerIndex++)
                     {
-                        auto pointerID = AMotionEvent_getPointerId(androidInputEvent, i);
+                        auto pointerID = AMotionEvent_getPointerId(androidInputEvent, pointerIndex);
                         auto pointer = impl->touchScreen.GetPointer(pointerType, pointerID);
                         if (pointer != nullptr)
                         {
-                            auto inputX = InputCoordinate(AMotionEvent_getX(androidInputEvent, i), InputCoordinate::Type::PIXELS, screenDensity).ToDipsValue();
-                            auto inputY = InputCoordinate(AMotionEvent_getY(androidInputEvent, i), InputCoordinate::Type::PIXELS, screenDensity).ToDipsValue();
+                            auto inputX = InputCoordinate(AMotionEvent_getX(androidInputEvent, pointerIndex), InputCoordinate::Type::PIXELS, screenDensity).ToDipsValue();
+                            auto inputY = InputCoordinate(AMotionEvent_getY(androidInputEvent, pointerIndex), InputCoordinate::Type::PIXELS, screenDensity).ToDipsValue();
                             pointer->Update(true, inputX, inputY);
                         }
                     }

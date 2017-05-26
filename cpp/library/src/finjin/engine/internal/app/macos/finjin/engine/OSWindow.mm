@@ -75,8 +75,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
 
-    for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-        osWindow->GetWindowEventListener(i)->WindowOnPointerDown(osWindow, PointerType::MOUSE, 0, x, y, buttons);
+    for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+        osWindow->GetWindowEventListener(listenerIndex)->WindowOnPointerDown(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
 
 - (void)mouseDragged:(NSEvent*)theEvent
@@ -86,8 +86,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
 
-    for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-        osWindow->GetWindowEventListener(i)->WindowOnPointerMove(osWindow, PointerType::MOUSE, 0, x, y, buttons);
+    for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+        osWindow->GetWindowEventListener(listenerIndex)->WindowOnPointerMove(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
 
 - (void)mouseUp:(NSEvent*)theEvent
@@ -97,8 +97,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
 
-    for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-        osWindow->GetWindowEventListener(i)->WindowOnPointerUp(osWindow, PointerType::MOUSE, 0, x, y, buttons);
+    for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+        osWindow->GetWindowEventListener(listenerIndex)->WindowOnPointerUp(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
 
 - (void)rightMouseDown:(NSEvent*)theEvent
@@ -138,8 +138,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     InputCoordinate y(theEvent.locationInWindow.y, InputCoordinate::Type::DIPS, density);
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
 
-    for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-        osWindow->GetWindowEventListener(i)->WindowOnPointerMove(osWindow, PointerType::MOUSE, 0, x, y, buttons);
+    for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+        osWindow->GetWindowEventListener(listenerIndex)->WindowOnPointerMove(osWindow, PointerType::MOUSE, 0, x, y, buttons);
 }
 
 - (void)scrollWheel:(NSEvent*)theEvent
@@ -150,8 +150,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     auto buttons = static_cast<int>([NSEvent pressedMouseButtons]);
     auto wheelDelta = theEvent.scrollingDeltaY;
 
-    for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-        osWindow->GetWindowEventListener(i)->WindowOnMouseWheel(osWindow, PointerType::MOUSE, 0, x, y, buttons, wheelDelta);
+    for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+        osWindow->GetWindowEventListener(listenerIndex)->WindowOnMouseWheel(osWindow, PointerType::MOUSE, 0, x, y, buttons, wheelDelta);
 }
 
 - (void)keyDown:(NSEvent*)theEvent
@@ -171,14 +171,14 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
         DynamicVector<Path> fileNames;
         if (fileNames.Create(files.count, FINJIN_ALLOCATOR_NULL, FINJIN_ALLOCATOR_NULL))
         {
-            for (NSUInteger i = 0; i < files.count; i++)
+            for (NSUInteger fileIndex = 0; fileIndex < files.count; fileIndex++)
             {
-                auto* s = (NSString*)files[i];
-                fileNames[i] = s.UTF8String;
+                auto* s = (NSString*)files[fileIndex];
+                fileNames[fileIndex] = s.UTF8String;
             }
 
-            for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-                osWindow->GetWindowEventListener(i)->WindowOnDropFiles(osWindow, fileNames.data(), fileNames.size());
+            for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+                osWindow->GetWindowEventListener(listenerIndex)->WindowOnDropFiles(osWindow, fileNames.data(), fileNames.size());
         }
     }
 }
@@ -192,12 +192,12 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     auto shiftDown = (theEvent.modifierFlags & NSEventModifierFlagShift) != 0;
     auto altDown = (theEvent.modifierFlags & NSEventModifierFlagOption) != 0;
 
-    for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
+    for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
     {
         if (pressed)
-            osWindow->GetWindowEventListener(i)->WindowOnKeyDown(osWindow, virtualKey, scanCode, controlDown, shiftDown, altDown);
+            osWindow->GetWindowEventListener(listenerIndex)->WindowOnKeyDown(osWindow, virtualKey, scanCode, controlDown, shiftDown, altDown);
         else
-            osWindow->GetWindowEventListener(i)->WindowOnKeyUp(osWindow, virtualKey, scanCode, controlDown, shiftDown, altDown);
+            osWindow->GetWindowEventListener(listenerIndex)->WindowOnKeyUp(osWindow, virtualKey, scanCode, controlDown, shiftDown, altDown);
     }
 }
 
@@ -208,8 +208,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     {
         osWindow->GetWindowSize().WindowResized(osWindow->GetImpl()->IsMaximized());
 
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowResized(osWindow);
+        for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+            osWindow->GetWindowEventListener(listenerIndex)->WindowResized(osWindow);
     }
 }
 
@@ -219,8 +219,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
     {
         osWindow->GetWindowSize().WindowMoved(osWindow->GetImpl()->IsMaximized());
 
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowMoved(osWindow);
+        for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+            osWindow->GetWindowEventListener(listenerIndex)->WindowMoved(osWindow);
     }
 }
 
@@ -228,8 +228,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
 {
     if (osWindow != nullptr)
     {
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowGainedFocus(osWindow);
+        for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+            osWindow->GetWindowEventListener(listenerIndex)->WindowGainedFocus(osWindow);
     }
 }
 
@@ -237,8 +237,8 @@ static NSRect OSRectToNSRect(OSWindowRect windowFrame)
 {
     if (osWindow != nullptr)
     {
-        for (size_t i = 0; i < osWindow->GetWindowEventListenerCount(); i++)
-            osWindow->GetWindowEventListener(i)->WindowLostFocus(osWindow);
+        for (size_t listenerIndex = 0; listenerIndex < osWindow->GetWindowEventListenerCount(); listenerIndex++)
+            osWindow->GetWindowEventListener(listenerIndex)->WindowLostFocus(osWindow);
     }
 }
 

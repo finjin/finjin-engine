@@ -162,15 +162,15 @@ namespace Finjin { namespace Engine {
                 "map-environment-amount", ElementID::MAP_ENVIRONMENT_AMOUNT,
                 "map-shininess-amount", ElementID::MAP_SHININESS_AMOUNT
                 );
-            
+
             return lookup;
         }
-        
+
         template <typename T>
         static void ParseElementID(ElementID& result, const T& value, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& lookup = GetLookup();
             result = lookup.GetOrDefault(value, ElementID::COUNT);
             if (result == ElementID::COUNT)
@@ -266,7 +266,7 @@ namespace Finjin { namespace Engine {
 
             COUNT
         };
-        
+
         static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ElementID, (size_t)ElementID::COUNT + 2)& GetLookup()
         {
             static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(ElementID, (size_t)ElementID::COUNT + 2) lookup //"color" and "tex-coord" are extra/redundant
@@ -300,7 +300,7 @@ namespace Finjin { namespace Engine {
                 "tex-coord-6", ElementID::TEX_COORD_6,
                 "tex-coord-7", ElementID::TEX_COORD_7
                 );
-            
+
             return lookup;
         }
 

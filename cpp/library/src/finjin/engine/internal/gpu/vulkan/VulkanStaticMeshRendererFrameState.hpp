@@ -216,16 +216,27 @@ namespace Finjin { namespace Engine {
         DynamicUnorderedMap<size_t, PipelineSlot, MapPairConstructNone<size_t, PipelineSlot>, PassthroughHash> pipelineSlots;
     };
 
-    struct VulkanStaticMeshRendererFrameState
+    class VulkanStaticMeshRendererFrameState
     {
-        //An instance of this struct goes into VulkanFrameBuffer
-
+    public:
         VulkanStaticMeshRendererFrameState()
         {
             this->index = 0;
             this->descriptorSet = VK_NULL_HANDLE;
         }
 
+        void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks)
+        {
+            for (auto& buffer : this->uniformBuffers)
+                buffer.Destroy(vk, allocationCallbacks);
+
+            this->descriptorSet = VK_NULL_HANDLE;
+
+            this->opaqueMaterials.Destroy();
+            this->lights.Destroy();
+        }
+
+    public:
         size_t index;
 
         EnumArray<VulkanStaticMeshRendererKnownUniformBuffer, VulkanStaticMeshRendererKnownUniformBuffer::COUNT, VulkanGpuRenderingUniformBuffer> uniformBuffers;

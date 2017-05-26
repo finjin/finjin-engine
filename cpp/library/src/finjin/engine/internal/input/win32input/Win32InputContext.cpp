@@ -238,10 +238,10 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
     }
 
     //XInput game controllers-----------------------
-    for (size_t i = 0; i < impl->xinputGameControllers.size(); i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < impl->xinputGameControllers.size(); gameControllerIndex++)
     {
-        impl->xinputGameControllers[i].Create(i);
-        ConfigureInputDevice(impl->xinputGameControllers[i], impl->xinputGameControllers[i].GetProductDescriptor(), impl->xinputDevicesAssetReader, impl->configFileBuffer);
+        impl->xinputGameControllers[gameControllerIndex].Create(gameControllerIndex);
+        ConfigureInputDevice(impl->xinputGameControllers[gameControllerIndex], impl->xinputGameControllers[gameControllerIndex].GetProductDescriptor(), impl->xinputDevicesAssetReader, impl->configFileBuffer);
     }
 
     //DirectInput----------------------------------------
@@ -254,44 +254,44 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
 
     //Enumerate the devices
     impl->dinput->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumGameControllersCallback, this, DIEDFL_ATTACHEDONLY);
-    for (size_t i = 0; i < impl->dinputGameControllerCount; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < impl->dinputGameControllerCount; gameControllerIndex++)
     {
-        impl->dinputGameControllers[i].Create(this, impl->dinputGameControllerConfigs[i], error);
+        impl->dinputGameControllers[gameControllerIndex].Create(this, impl->dinputGameControllerConfigs[gameControllerIndex], error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize game controller '%1%'.", impl->dinputGameControllerConfigs[i].GetDebugName()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize game controller '%1%'.", impl->dinputGameControllerConfigs[gameControllerIndex].GetDebugName()));
             return;
         }
 
-        ConfigureInputDevice(impl->dinputGameControllers[i], impl->dinputGameControllerConfigs[i].GetProductDescriptor(), impl->dinputDevicesAssetReader, impl->configFileBuffer);
+        ConfigureInputDevice(impl->dinputGameControllers[gameControllerIndex], impl->dinputGameControllerConfigs[gameControllerIndex].GetProductDescriptor(), impl->dinputDevicesAssetReader, impl->configFileBuffer);
     }
 
     impl->dinput->EnumDevices(DI8DEVCLASS_POINTER, EnumMiceCallback, this, DIEDFL_ATTACHEDONLY);
     impl->mice.resize(impl->mouseFoundConfigs.size());
-    for (size_t i = 0; i < impl->mouseFoundConfigs.size(); i++)
+    for (size_t mouseIndex = 0; mouseIndex < impl->mouseFoundConfigs.size(); mouseIndex++)
     {
-        impl->mice[i].Create(this, impl->mouseFoundConfigs[i], error);
+        impl->mice[mouseIndex].Create(this, impl->mouseFoundConfigs[mouseIndex], error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize mouse '%1%'.", impl->mouseFoundConfigs[i].GetDebugName()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize mouse '%1%'.", impl->mouseFoundConfigs[mouseIndex].GetDebugName()));
             return;
         }
 
-        ConfigureInputDevice(impl->mice[i], impl->mouseFoundConfigs[i].GetProductDescriptor(), impl->dinputDevicesAssetReader, impl->configFileBuffer);
+        ConfigureInputDevice(impl->mice[mouseIndex], impl->mouseFoundConfigs[mouseIndex].GetProductDescriptor(), impl->dinputDevicesAssetReader, impl->configFileBuffer);
     }
 
     impl->dinput->EnumDevices(DI8DEVCLASS_KEYBOARD, EnumKeyboardsCallback, this, DIEDFL_ATTACHEDONLY);
     impl->keyboards.resize(impl->keyboardFoundConfigs.size());
-    for (size_t i = 0; i < impl->keyboardFoundConfigs.size(); i++)
+    for (size_t keyboardIndex = 0; keyboardIndex < impl->keyboardFoundConfigs.size(); keyboardIndex++)
     {
-        impl->keyboards[i].Create(this, impl->keyboardFoundConfigs[i], error);
+        impl->keyboards[keyboardIndex].Create(this, impl->keyboardFoundConfigs[keyboardIndex], error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize keyboard '%1%'.", impl->keyboardFoundConfigs[i].GetDebugName()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize keyboard '%1%'.", impl->keyboardFoundConfigs[keyboardIndex].GetDebugName()));
             return;
         }
 
-        ConfigureInputDevice(impl->keyboards[i], impl->keyboardFoundConfigs[i].GetProductDescriptor(), impl->dinputDevicesAssetReader, impl->configFileBuffer);
+        ConfigureInputDevice(impl->keyboards[keyboardIndex], impl->keyboardFoundConfigs[keyboardIndex].GetProductDescriptor(), impl->dinputDevicesAssetReader, impl->configFileBuffer);
     }
 
     impl->updateCount = 0;
@@ -340,9 +340,9 @@ void Win32InputContext::Update(SimpleTimeDelta elapsedTime, InputDevicePollFlag 
     for (auto& device : impl->xinputGameControllers)
         device.Update(elapsedTime, isFirstUpdate);
 
-    for (size_t i = 0; i < impl->dinputGameControllerCount; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < impl->dinputGameControllerCount; gameControllerIndex++)
     {
-        auto& device = impl->dinputGameControllers[i];
+        auto& device = impl->dinputGameControllers[gameControllerIndex];
         device.Update(elapsedTime, isFirstUpdate);
     }
 
@@ -449,9 +449,9 @@ void Win32InputContext::HandleDeviceChanges()
     for (auto& device : impl->xinputGameControllers)
         device.ClearChanged();
 
-    for (size_t i = 0; i < impl->dinputGameControllerCount; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < impl->dinputGameControllerCount; gameControllerIndex++)
     {
-        auto& device = impl->dinputGameControllers[i];
+        auto& device = impl->dinputGameControllers[gameControllerIndex];
         device.ClearChanged();
     }
 
@@ -467,9 +467,9 @@ void Win32InputContext::HandleApplicationViewportLostFocus()
     for (auto& device : impl->xinputGameControllers)
         device.StopHapticFeedback();
 
-    for (size_t i = 0; i < impl->dinputGameControllerCount; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < impl->dinputGameControllerCount; gameControllerIndex++)
     {
-        auto& device = impl->dinputGameControllers[i];
+        auto& device = impl->dinputGameControllers[gameControllerIndex];
         device.StopHapticFeedback();
     }
 
@@ -502,7 +502,7 @@ const Utf8String& Win32InputContext::GetDeviceProductDescriptor(InputDeviceClass
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerProductDescriptor(index);
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 const Utf8String& Win32InputContext::GetDeviceInstanceDescriptor(InputDeviceClass deviceClass, size_t index) const
@@ -514,7 +514,7 @@ const Utf8String& Win32InputContext::GetDeviceInstanceDescriptor(InputDeviceClas
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerInstanceDescriptor(index);
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 InputDeviceSemantic Win32InputContext::GetDeviceSemantic(InputDeviceClass deviceClass, size_t index) const

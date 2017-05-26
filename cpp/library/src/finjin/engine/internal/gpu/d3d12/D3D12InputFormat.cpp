@@ -39,10 +39,10 @@ void D3D12InputFormat::Create(const GpuInputFormatStruct& inputFormat, Allocator
         return;
     }
 
-    for (size_t i = 0; i < inputFormat.elements.size(); i++)
+    for (size_t elementIndex = 0; elementIndex < inputFormat.elements.size(); elementIndex++)
     {
-        auto& element = inputFormat.elements[i];
-        auto& d3d12Element = this->elements[i];
+        auto& element = inputFormat.elements[elementIndex];
+        auto& d3d12Element = this->elements[elementIndex];
 
         d3d12Element.InputSlot = 0;
         d3d12Element.AlignedByteOffset = static_cast<UINT>(element.gpuPaddedOffset);

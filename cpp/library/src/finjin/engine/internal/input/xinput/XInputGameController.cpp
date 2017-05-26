@@ -226,14 +226,12 @@ void XInputGameController::Update(SimpleTimeDelta elapsedTime, bool isFirstUpdat
 
             _SetForce();
 
-            for (size_t i = 0; i < 2; i++)
+            for (size_t forceFeedbackIndex = 0; forceFeedbackIndex < 2; forceFeedbackIndex++)
             {
-                auto& forceFeedback = impl->forceFeedback[i];
+                auto& forceFeedback = impl->forceFeedback[forceFeedbackIndex];
 
                 if (forceFeedback.IsActive())
-                {
                     forceFeedback.Update(elapsedTime);
-                }
             }
         }
         else
@@ -374,9 +372,9 @@ InputLocator* XInputGameController::GetLocator(size_t locatorIndex)
 
 void XInputGameController::AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count)
 {
-    for (size_t i = 0; i < count; i++)
+    for (size_t forceIndex = 0; forceIndex < count; forceIndex++)
     {
-        auto& force = forces[i];
+        auto& force = forces[forceIndex];
 
         switch (force.motorIndex)
         {
@@ -404,26 +402,26 @@ size_t XInputGameController::CreateGameControllers(XInputGameController* gameCon
 {
     gameControllerCount = std::min(gameControllerCount, (size_t)XUSER_MAX_COUNT);
 
-    for (size_t i = 0; i < gameControllerCount; i++)
-        gameControllers[i].Create(i);
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
+        gameControllers[gameControllerIndex].Create(gameControllerIndex);
 
     return gameControllerCount;
 }
 
 size_t XInputGameController::UpdateGameControllers(SimpleTimeDelta elapsedTime, XInputGameController* gameControllers, size_t gameControllerCount)
 {
-    for (size_t i = 0; i < gameControllerCount; i++)
-        gameControllers[i].Update(elapsedTime, false);
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
+        gameControllers[gameControllerIndex].Update(elapsedTime, false);
 
     return gameControllerCount;
 }
 
 XInputGameController* XInputGameController::GetGameControllerByInstanceDescriptor(XInputGameController* gameControllers, size_t gameControllerCount, const Utf8String& descriptor)
 {
-    for (size_t i = 0; i < gameControllerCount; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
     {
-        if (gameControllers[i].GetInstanceDescriptor() == descriptor)
-            return &gameControllers[i];
+        if (gameControllers[gameControllerIndex].GetInstanceDescriptor() == descriptor)
+            return &gameControllers[gameControllerIndex];
     }
 
     return nullptr;

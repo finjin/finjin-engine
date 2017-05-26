@@ -22,13 +22,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct IOSInputSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     IOSInputSystem::Settings settings;
 
-    StaticVector<IOSInputContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<IOSInputContext*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

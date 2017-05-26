@@ -47,7 +47,7 @@ namespace Finjin { namespace Engine {
 
         struct Settings : SoundContextCommonSettings
         {
-            Settings(Allocator* allocator) : SoundContextCommonSettings(allocator)
+            Settings(Allocator* initialAllocator) : SoundContextCommonSettings(initialAllocator)
             {
             }
         };

@@ -33,6 +33,9 @@ namespace Finjin { namespace Engine {
 
         struct Settings : InputSystemCommonSettings
         {
+            Settings(Allocator* initialAllocator) : InputSystemCommonSettings(initialAllocator)
+            {
+            }
         };
 
         void Create(const Settings& settings, Error& error);

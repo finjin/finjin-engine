@@ -25,7 +25,7 @@ namespace Finjin { namespace Engine {
 
     struct VRSystemCommonSettings
     {
-        VRSystemCommonSettings()
+        VRSystemCommonSettings(Allocator* initialAllocator)
         {
             this->allocator = nullptr;
         }

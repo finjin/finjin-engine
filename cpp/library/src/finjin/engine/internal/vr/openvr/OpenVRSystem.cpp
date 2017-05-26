@@ -33,7 +33,7 @@ public:
 public:
     OpenVRSystemSettings settings;
 
-    StaticVector<OpenVRContext*, 1> contexts; //The actual objects
+    StaticVector<OpenVRContext*, 1> contexts;
 };
 
 

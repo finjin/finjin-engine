@@ -25,6 +25,8 @@ using namespace Finjin::Engine;
 MetalFrameBuffer::MetalFrameBuffer()
 {
     this->index = 0;
+    this->commandBufferWaitIndex = 0;
+    this->commandBufferCommitIndex = 0;
 
     this->commandQueue = nullptr;
 }
@@ -32,20 +34,47 @@ MetalFrameBuffer::MetalFrameBuffer()
 void MetalFrameBuffer::SetIndex(size_t index)
 {
     this->index = index;
+}
 
-    this->staticMeshRendererFrameState.index = index;
+void MetalFrameBuffer::Destroy()
+{
+    ResetCommandBuffers();
+
+    this->freeCommandBuffers.Destroy();
+    this->commandBuffersToExecute.Destroy();
+
+    this->renderTarget.Destroy();
+
+    this->commandQueue = nullptr;
+}
+
+void MetalFrameBuffer::CreateCommandBuffers(size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    if (!this->freeCommandBuffers.CreateEmpty(maxGpuCommandListsPerStage, allocator, nullptr))
+    {
+        FINJIN_SET_ERROR(error, "Failed to create free command buffers collection");
+        return;
+    }
+
+    if (!this->commandBuffersToExecute.CreateEmpty(maxGpuCommandListsPerStage, allocator, nullptr))
+    {
+        FINJIN_SET_ERROR(error, "Failed to create execute command buffers collection.");
+        return;
+    }
 }
 
 id<MTLCommandBuffer> MetalFrameBuffer::NewGraphicsCommandBuffer()
 {
-    if (this->commandBuffersToExecute.full())
+    if (!this->freeCommandBuffers.push_back())
         return nullptr;
 
-    auto result = [this->commandQueue commandBufferWithUnretainedReferences];
-    assert(result != nullptr);
+    auto commandBuffer = this->freeCommandBuffers.back();
 
-    this->commandBuffersToExecute.push_back(result);
-    return result;
+    this->commandBuffersToExecute.push_back(commandBuffer);
+
+    return commandBuffer;
 }
 
 id<MTLCommandBuffer> MetalFrameBuffer::GetCurrentGraphicsCommandBuffer()
@@ -55,21 +84,58 @@ id<MTLCommandBuffer> MetalFrameBuffer::GetCurrentGraphicsCommandBuffer()
 
 void MetalFrameBuffer::CommitCommandBuffers()
 {
-    for (auto buffer : this->commandBuffersToExecute)
-        [buffer commit];
+    if (this->commandBufferCommitIndex < this->commandBuffersToExecute.size())
+    {
+        for (; this->commandBufferCommitIndex < this->commandBuffersToExecute.size(); this->commandBufferCommitIndex++)
+        {
+            auto commandBuffer = this->commandBuffersToExecute[this->commandBufferCommitIndex];
+            [commandBuffer commit];
+        }
+    }
 }
 
 void MetalFrameBuffer::WaitForCommandBuffers()
 {
-    for (auto& buffer : this->commandBuffersToExecute)
-        [buffer waitUntilCompleted];
+    for (; this->commandBufferWaitIndex < this->commandBufferCommitIndex; this->commandBufferWaitIndex++)
+    {
+        auto commandBuffer = this->commandBuffersToExecute[this->commandBufferWaitIndex];
+        [commandBuffer waitUntilCompleted];
+        commandBuffer = nullptr;
+    }
 }
 
 void MetalFrameBuffer::ResetCommandBuffers()
 {
-    for (auto& buffer : this->commandBuffersToExecute)
-        buffer = nullptr;
+    for (auto& commandBuffer : this->commandBuffersToExecute)
+        commandBuffer = nullptr;
     this->commandBuffersToExecute.clear();
+
+    this->freeCommandBuffers.maximize();
+    for (auto& commandBuffer : this->freeCommandBuffers)
+        commandBuffer = nullptr;
+    this->freeCommandBuffers.clear();
+
+    this->commandBufferWaitIndex = 0;
+    this->commandBufferCommitIndex = 0;
+}
+
+void MetalFrameBuffer::WaitForNotInUse()
+{
+    while (!this->commandBuffersToExecute.empty())
+    {
+        //Spin
+    }
+}
+
+void MetalFrameBuffer::CreateFreeCommandBuffers()
+{
+    this->freeCommandBuffers.maximize();
+    for (auto& commandBuffer : this->freeCommandBuffers)
+    {
+        if (commandBuffer == nullptr)
+            commandBuffer = [this->commandQueue commandBufferWithUnretainedReferences];
+    }
+    this->freeCommandBuffers.clear();
 }
 
 #endif

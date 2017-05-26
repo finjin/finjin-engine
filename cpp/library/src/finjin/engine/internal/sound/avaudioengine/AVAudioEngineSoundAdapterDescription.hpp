@@ -28,8 +28,6 @@ namespace Finjin { namespace Engine {
     class AVAudioEngineSoundAdapterDescription
     {
     public:
-        AVAudioEngineSoundAdapterID adapterID;
-
         AVAudioEngineSoundAdapterDescription()
         {
         }
@@ -38,7 +36,11 @@ namespace Finjin { namespace Engine {
         {
             return this->adapterID;
         }
+
+    public:
+        AVAudioEngineSoundAdapterID adapterID;
     };
+
     class AVAudioEngineSoundAdapterDescriptions : public StaticVector<AVAudioEngineSoundAdapterDescription, EngineConstants::MAX_SOUND_ADAPTERS>
     {
     public:

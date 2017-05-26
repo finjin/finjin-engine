@@ -227,19 +227,19 @@ size_t D3D12GpuFeatures::GetStandardFeatureLevelsLowestToHighest(D3D_FEATURE_LEV
     else
     {
         size_t count = 0;
-        for (size_t i = FINJIN_COUNT_OF(standardFeatureLevelFeatures) - 1; i != (size_t)-1 && count < maxCount; i--)
-            featureLevels[count++] = standardFeatureLevelFeatures[i].featureLevel;
+        for (size_t featureLevelIndex = FINJIN_COUNT_OF(standardFeatureLevelFeatures) - 1; featureLevelIndex != (size_t)-1 && count < maxCount; featureLevelIndex--)
+            featureLevels[count++] = standardFeatureLevelFeatures[featureLevelIndex].featureLevel;
         return count;
     }
 }
 
 bool D3D12GpuFeatures::SetStandardFeatures(D3D_FEATURE_LEVEL featureLevel)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(standardFeatureLevelFeatures); i++)
+    for (size_t featureLevelIndex = 0; featureLevelIndex < FINJIN_COUNT_OF(standardFeatureLevelFeatures); featureLevelIndex++)
     {
-        if (standardFeatureLevelFeatures[i].featureLevel == featureLevel)
+        if (standardFeatureLevelFeatures[featureLevelIndex].featureLevel == featureLevel)
         {
-            this->standardFeatures = standardFeatureLevelFeatures[i];
+            this->standardFeatures = standardFeatureLevelFeatures[featureLevelIndex];
             return true;
         }
     }
@@ -260,7 +260,7 @@ D3D12GpuDescription::D3D12GpuDescription(UINT index, const DXGI_ADAPTER_DESC1& d
     this->desc = desc;
 }
 
-D3D12GpuID D3D12GpuDescription::GetGpuID() const
+Luid D3D12GpuDescription::GetGpuID() const
 {
     return this->desc.AdapterLuid;
 }
@@ -296,7 +296,7 @@ void D3D12HardwareGpuDescriptions::SortBestToWorst()
     });
 }
 
-const D3D12GpuDescription* D3D12HardwareGpuDescriptions::GetByGpuID(const D3D12GpuID& gpuID) const
+const D3D12GpuDescription* D3D12HardwareGpuDescriptions::GetByGpuID(const Luid& gpuID) const
 {
     for (const auto& desc : *this)
     {

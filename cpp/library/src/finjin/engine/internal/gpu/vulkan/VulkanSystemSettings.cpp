@@ -23,7 +23,10 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-VulkanSystemSettings::VulkanSystemSettings() : applicationVersion(1)
+VulkanSystemSettings::VulkanSystemSettings(Allocator* initialAllocator) :
+    GpuSystemCommonSettings(initialAllocator),
+    driverRuntimePath(initialAllocator),
+    applicationVersion(1)
 {
     this->enableDebug = FINJIN_DEBUG ? true : false;
 }

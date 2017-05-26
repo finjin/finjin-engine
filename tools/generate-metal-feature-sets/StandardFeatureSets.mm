@@ -1514,11 +1514,11 @@
 };
 static bool GetStandardFeatureSet(MetalFeatureSet& result, MTLFeatureSet gpuFamily)
 {
-    for (size_t i = 0; i < FINJIN_COUNT_OF(standardFeatureSets); i++)
+    for (size_t featureSetIndex = 0; featureSetIndex < FINJIN_COUNT_OF(standardFeatureSets); featureSetIndex++)
     {
-        if (standardFeatureSets[i].gpuFamily == gpuFamily)
+        if (standardFeatureSets[featureSetIndex].gpuFamily == gpuFamily)
         {
-            result = standardFeatureSets[i];
+            result = standardFeatureSets[featureSetIndex];
             return true;
         }
     }

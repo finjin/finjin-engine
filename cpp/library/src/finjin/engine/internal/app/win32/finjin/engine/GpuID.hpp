@@ -16,9 +16,9 @@
 
 //Includes----------------------------------------------------------------------
 #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
-    #include "finjin/engine/internal/gpu/d3d12/D3D12GpuID.hpp"
+    #include "finjin/common/Luid.hpp"
     namespace Finjin { namespace Engine {
-        using GpuID = D3D12GpuID;
+        using GpuID = Finjin::Common::Luid;
     } }
 #elif FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_VULKAN
     #include "finjin/common/Utf8String.hpp"

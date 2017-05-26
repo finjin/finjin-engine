@@ -188,24 +188,24 @@ struct OpenVRContext::Impl : public AllocatedClass
 
     void UpdateDeviceRenderModelsForTexture(vr::TextureID_t textureID, vr::RenderModel_TextureMap_t* texture)
     {
-        for (size_t i = 0; i < this->loadingRenderModels.size();)
+        for (size_t modelIndex = 0; modelIndex < this->loadingRenderModels.size();)
         {
-            auto& loadingRenderModel = this->loadingRenderModels[i];
+            auto& loadingRenderModel = this->loadingRenderModels[modelIndex];
             if (loadingRenderModel.model->diffuseTextureId == textureID)
             {
                 UpdateDeviceRenderModels(loadingRenderModel.name, loadingRenderModel.model, texture);
-                this->loadingRenderModels.erase(this->loadingRenderModels.begin() + i);
+                this->loadingRenderModels.erase(this->loadingRenderModels.begin() + modelIndex);
             }
             else
-                i++;
+                modelIndex++;
         }
     }
 
     void UpdateAsyncResources()
     {
-        for (size_t i = 0; i < this->loadingRenderModels.size();)
+        for (size_t modelIndex = 0; modelIndex < this->loadingRenderModels.size();)
         {
-            auto& loadingRenderModel = this->loadingRenderModels[i];
+            auto& loadingRenderModel = this->loadingRenderModels[modelIndex];
 
             auto vrError = vr::VRRenderModels()->LoadRenderModel_Async(loadingRenderModel.name.c_str(), &loadingRenderModel.model);
             if (vrError == vr::VRRenderModelError_None)
@@ -228,20 +228,20 @@ struct OpenVRContext::Impl : public AllocatedClass
                 }
 
                 //Remove from "loading" vector
-                this->loadingRenderModels.erase(this->loadingRenderModels.begin() + i);
+                this->loadingRenderModels.erase(this->loadingRenderModels.begin() + modelIndex);
             }
             else if (vrError != vr::VRRenderModelError_Loading)
             {
                 FINJIN_DEBUG_LOG_ERROR("Failed to continue loading VR render model '%1%'.", loadingRenderModel.name);
-                this->loadingRenderModels.erase(this->loadingRenderModels.begin() + i);
+                this->loadingRenderModels.erase(this->loadingRenderModels.begin() + modelIndex);
             }
             else
-                i++;
+                modelIndex++;
         }
 
-        for (size_t i = 0; i < this->loadingRenderModelTextures.size();)
+        for (size_t textureIndex = 0; textureIndex < this->loadingRenderModelTextures.size();)
         {
-            auto& loadingRenderModelTexture = this->loadingRenderModelTextures[i];
+            auto& loadingRenderModelTexture = this->loadingRenderModelTextures[textureIndex];
 
             auto vrError = vr::VRRenderModels()->LoadTexture_Async(loadingRenderModelTexture.textureID, &loadingRenderModelTexture.texture);
             if (vrError == vr::VRRenderModelError_None)
@@ -255,15 +255,15 @@ struct OpenVRContext::Impl : public AllocatedClass
                 UpdateDeviceRenderModelsForTexture(loadingRenderModelTexture.textureID, loadingRenderModelTexture.texture);
 
                 //Remove from "loading" vector
-                this->loadingRenderModelTextures.erase(this->loadingRenderModelTextures.begin() + i);
+                this->loadingRenderModelTextures.erase(this->loadingRenderModelTextures.begin() + textureIndex);
             }
             else if (vrError != vr::VRRenderModelError_Loading)
             {
                 FINJIN_DEBUG_LOG_ERROR("Failed to continue loading VR render model texture '%1%'.", loadingRenderModelTexture.textureID);
-                this->loadingRenderModelTextures.erase(this->loadingRenderModelTextures.begin() + i);
+                this->loadingRenderModelTextures.erase(this->loadingRenderModelTextures.begin() + textureIndex);
             }
             else
-                i++;
+                textureIndex++;
         }
     }
 

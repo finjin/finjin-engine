@@ -47,11 +47,11 @@ bool WindowsUWPMouse::Create(size_t index)
     Utf8String componentName;
 
     this->state.buttons.resize(8);
-    for (size_t i = 0; i < this->state.buttons.size(); i++)
+    for (size_t buttonIndex = 0; buttonIndex < this->state.buttons.size(); buttonIndex++)
     {
         auto inputSemantic = InputComponentSemantic::NONE;
 
-        switch (i)
+        switch (buttonIndex)
         {
             case 0:
             {
@@ -75,38 +75,38 @@ bool WindowsUWPMouse::Create(size_t index)
             {
                 inputSemantic = InputComponentSemantic::SHIFT_LEFT; //This is probably a button on the left side of the mouse
                 componentName = "Button ";
-                componentName += Convert::ToString(i + 1);
+                componentName += Convert::ToString(buttonIndex + 1);
                 break;
             }
             case 4:
             {
                 inputSemantic = InputComponentSemantic::SHIFT_RIGHT; //This is probably a button on the right side of the mouse
                 componentName = "Button ";
-                componentName += Convert::ToString(i + 1);
+                componentName += Convert::ToString(buttonIndex + 1);
                 break;
             }
             default:
             {
                 componentName = "Button ";
-                componentName += Convert::ToString(i + 1);
+                componentName += Convert::ToString(buttonIndex + 1);
                 break;
             }
         }
 
-        this->state.buttons[i]
-            .SetIndex(i)
+        this->state.buttons[buttonIndex]
+            .SetIndex(buttonIndex)
             .SetSemantic(inputSemantic)
             .SetProcessing(InputButtonProcessing::EVENT_DRIVEN)
             .SetDisplayName(componentName);
     }
 
     this->state.axes.resize(3);
-    for (size_t i = 0; i < this->state.axes.size(); i++)
+    for (size_t axisIndex = 0; axisIndex < this->state.axes.size(); axisIndex++)
     {
         auto inputSemantic = InputComponentSemantic::NONE;
         auto inputProcessing = InputAxisProcessing::NONE;
 
-        switch (i)
+        switch (axisIndex)
         {
             case 0:
             {
@@ -132,13 +132,13 @@ bool WindowsUWPMouse::Create(size_t index)
             default:
             {
                 componentName = "Axis ";
-                componentName += Convert::ToString(i + 1);
+                componentName += Convert::ToString(axisIndex + 1);
                 break;
             }
         }
 
-        this->state.axes[i]
-            .SetIndex(i)
+        this->state.axes[axisIndex]
+            .SetIndex(axisIndex)
             .SetSemantic(inputSemantic)
             .SetProcessing(inputProcessing)
             .SetDisplayName(componentName);

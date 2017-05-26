@@ -18,6 +18,7 @@
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/DynamicVector.hpp"
 #include "D3D12RenderTarget.hpp"
+#include "D3D12StaticMeshRendererFrameState.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -30,6 +31,10 @@ namespace Finjin { namespace Engine {
     public:
         D3D12FrameStage();
 
+        void SetIndex(size_t index);
+
+        void Destroy();
+
     public:
         size_t index;
         size_t frameBufferIndex;
@@ -41,6 +46,8 @@ namespace Finjin { namespace Engine {
 
         D3D12RenderTarget* renderTarget;
         StaticVector<D3D12RenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES> dependentRenderTargets;
+
+        D3D12StaticMeshRendererFrameState staticMeshRendererFrameState;
     };
 
 } }

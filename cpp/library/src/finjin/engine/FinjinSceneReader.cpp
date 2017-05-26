@@ -6752,7 +6752,7 @@ void AddMaterialMappings
             }
             else if (propertyName == StandardAssetDocumentPropertyNames::TEXTURE_OFFSET)
             {
-                auto isValueDone = reader.ReadFloats(dataHeader, map.textureOffset.data(), 3, error) == 3;
+                auto isValueDone = reader.ReadFloats(dataHeader, map.textureOffset.data(), map.textureOffset.size(), error) == map.textureOffset.size();
                 if (error)
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%'.", StandardAssetDocumentPropertyNames::TEXTURE_OFFSET.name));
                 else if (!isValueDone)
@@ -6764,22 +6764,24 @@ void AddMaterialMappings
             {
                 if (dataHeader.IsOnlyOrFirstOccurrence())
                 {
-                    for (size_t i = 0; i < 3; i++)
-                        callbacks->textureAddressMode[i].clear();
+                    for (auto& mode : callbacks->textureAddressMode)
+                        mode.clear();
                 }
-                reader.ReadStrings(dataHeader, callbacks->textureAddressMode, 3, error);
+                auto isValueDone = reader.ReadStrings(dataHeader, callbacks->textureAddressMode.data(), callbacks->textureAddressMode.size(), error) == callbacks->textureAddressMode.size();
                 if (error)
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read string array property '%1%'.", StandardAssetDocumentPropertyNames::TEXTURE_ADDRESS_MODE.name));
+                else if (!isValueDone)
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read string array property '%1%' in a single read.", StandardAssetDocumentPropertyNames::TEXTURE_ADDRESS_MODE.name));
                 else
                 {
-                    for (size_t i = 0; i < 3; i++)
+                    for (size_t modeIndex = 0; modeIndex < callbacks->textureAddressMode.size(); modeIndex++)
                     {
-                        if (callbacks->textureAddressMode[i] == StandardAssetDocumentPropertyValues::TextureAddressMode::CLAMP)
-                            map.textureAddressMode[i] = FinjinTextureAddressMode::CLAMP;
-                        else if (callbacks->textureAddressMode[i] == StandardAssetDocumentPropertyValues::TextureAddressMode::MIRROR)
-                            map.textureAddressMode[i] = FinjinTextureAddressMode::MIRROR;
-                        else if (callbacks->textureAddressMode[i] == StandardAssetDocumentPropertyValues::TextureAddressMode::WRAP)
-                            map.textureAddressMode[i] = FinjinTextureAddressMode::WRAP;
+                        if (callbacks->textureAddressMode[modeIndex] == StandardAssetDocumentPropertyValues::TextureAddressMode::CLAMP)
+                            map.textureAddressMode[modeIndex] = FinjinTextureAddressMode::CLAMP;
+                        else if (callbacks->textureAddressMode[modeIndex] == StandardAssetDocumentPropertyValues::TextureAddressMode::MIRROR)
+                            map.textureAddressMode[modeIndex] = FinjinTextureAddressMode::MIRROR;
+                        else if (callbacks->textureAddressMode[modeIndex] == StandardAssetDocumentPropertyValues::TextureAddressMode::WRAP)
+                            map.textureAddressMode[modeIndex] = FinjinTextureAddressMode::WRAP;
                     }
 
                     PRINT_VALUE3(state.GetDepth(), "texture address mode", callbacks->textureAddressMode[0], callbacks->textureAddressMode[1], callbacks->textureAddressMode[2]);
@@ -6967,15 +6969,15 @@ void FinjinCommonDataChunkReaderCallbacksState::Create(const FinjinCommonDataChu
         }
 
         auto allZero = true;
-        for (size_t i = 0; i < settings.assetCounts.size(); i++)
+        for (size_t assetClass = 0; assetClass < settings.assetCounts.size(); assetClass++)
         {
-            if (settings.assetCounts[i] > 0)
+            if (settings.assetCounts[assetClass] > 0)
             {
                 allZero = false;
 
-                if (!this->assetBucketsByClass[i].assetHandlesByName.Create(settings.assetCounts[i], settings.assetCounts[i], settings.allocator, settings.allocator))
+                if (!this->assetBucketsByClass[assetClass].assetHandlesByName.Create(settings.assetCounts[assetClass], settings.assetCounts[assetClass], settings.allocator, settings.allocator))
                 {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create assets by name lookup for '%1%'.", AssetClassUtilities::ToString(i)));
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create assets by name lookup for '%1%'.", AssetClassUtilities::ToString(assetClass)));
                     return;
                 }
             }
@@ -7010,8 +7012,8 @@ void FinjinCommonDataChunkReaderCallbacksState::Create(const FinjinCommonDataChu
 
 void FinjinCommonDataChunkReaderCallbacksState::Destroy()
 {
-    for (size_t i = 0; i < this->assetBucketsByClass.size(); i++)
-        this->assetBucketsByClass[i].assetHandlesByName.Destroy();
+    for (size_t assetClass = 0; assetClass < this->assetBucketsByClass.size(); assetClass++)
+        this->assetBucketsByClass[assetClass].assetHandlesByName.Destroy();
 
     this->encounteredFilePaths.Destroy();
 
@@ -9007,7 +9009,7 @@ void HandwrittenUserDataTypesReader::ParseClass(State& state, UserDataTypes* use
                         }
 
                         if (data->controlType == UserDataControlType::NONE)
-                            data->controlType = UserDataTypes::GetControlType(*data, Utf8String::Empty());
+                            data->controlType = UserDataTypes::GetControlType(*data, Utf8String::GetEmpty());
 
                         if (data->type.type == UserDataPrimitiveType::INT_DATA_TYPE)
                         {
@@ -9768,12 +9770,12 @@ void FinjinSceneReader::RequestRead(const AssetReference* assetRefs, size_t coun
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    for (size_t i = 0; i < count; i++)
+    for (size_t assetRefIndex = 0; assetRefIndex < count; assetRefIndex++)
     {
-        RequestRead(assetRefs[i], true, error);
+        RequestRead(assetRefs[assetRefIndex], true, error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to request read for asset '%1%'", assetRefs[i].ToUriString()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to request read for asset '%1%'", assetRefs[assetRefIndex].ToUriString()));
             return;
         }
     }

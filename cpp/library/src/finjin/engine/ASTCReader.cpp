@@ -88,7 +88,7 @@ Utf8String ASTCReader::GetReadHeaderResultString(ReadHeaderResult result) const
         case ReadHeaderResult::FAILED_TO_READ_HEADER: return "Failed to read header.";
         case ReadHeaderResult::IMAGE_BYTE_SWAPPING_REQUIRED: return "Image byte swapping required.";
         case ReadHeaderResult::INVALID_BLOCK_DIMENSIONS: return "Invalid block dimensions.";
-        default: return Utf8String::Empty();
+        default: return Utf8String::GetEmpty();
     }
 }
 

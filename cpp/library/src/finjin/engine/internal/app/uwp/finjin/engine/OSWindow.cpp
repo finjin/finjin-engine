@@ -28,6 +28,29 @@ using namespace Windows::UI::Core;
 using namespace Windows::UI::ViewManagement;
 
 
+//Macros------------------------------------------------------------------------
+#define USE_MESSAGE_BOX_FOR_MESSAGES 0 //Disabled since the below ShowMessageDialog() does not work
+
+
+//Local functions---------------------------------------------------------------
+static void CommandInvokedHandler(Windows::UI::Popups::IUICommand^ command)
+{
+    CoreApplication::Exit();
+}
+
+static void ShowMessageDialog(const Utf8String& message, const Utf8String& title)
+{
+    Utf8StringToWideString messageW(message);
+    Utf8StringToWideString titleW(title);
+
+    auto messageDialog = ref new Windows::UI::Popups::MessageDialog(ref new Platform::String(messageW.c_str()), ref new Platform::String(titleW.c_str()));
+    messageDialog->Commands->Append(ref new Windows::UI::Popups::UICommand(ref new Platform::String(L"Close"), ref new Windows::UI::Popups::UICommandInvokedHandler(CommandInvokedHandler)));
+    messageDialog->ShowAsync();
+
+    CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessUntilQuit);
+}
+
+
 //Local types-------------------------------------------------------------------
 struct PointerEventArgsUtility
 {
@@ -418,7 +441,7 @@ bool OSWindow::Impl::IsMaximized() const
         else if (applicationView->IsFullScreenMode)
             FINJIN_DEBUG_LOG_INFO("OSWindow::Impl::IsMaximized(): It is in full screen mode")
 
-        auto isFullScreen = (applicationView->AdjacentToLeftDisplayEdge && applicationView->AdjacentToRightDisplayEdge) || applicationView->IsFullScreenMode;
+            auto isFullScreen = (applicationView->AdjacentToLeftDisplayEdge && applicationView->AdjacentToRightDisplayEdge) || applicationView->IsFullScreenMode;
         return isFullScreen;
     }
     else
@@ -507,12 +530,16 @@ const Utf8String& OSWindow::GetInternalName() const
 
 void OSWindow::ShowMessage(const Utf8String& message, const Utf8String& title)
 {
-    //Do nothing
+#if USE_MESSAGE_BOX_FOR_MESSAGES
+    ShowMessageDialog(message, title);
+#endif
 }
 
 void OSWindow::ShowErrorMessage(const Utf8String& message, const Utf8String& title)
 {
-    //Do nothing
+#if USE_MESSAGE_BOX_FOR_MESSAGES
+    ShowMessageDialog(message, title);
+#endif
 }
 
 void OSWindow::ApplyWindowSize()
@@ -682,6 +709,11 @@ int OSWindow::GetDisplayID() const
     return static_cast<int>(GetBestDisplay(GetRect())->index);
 }
 
+float OSWindow::GetDisplayDensity() const
+{
+    return GetBestDisplay(GetRect())->density;
+}
+
 OSWindowRect OSWindow::GetDisplayRect() const
 {
     return GetBestDisplay(GetRect())->frame;
@@ -793,11 +825,6 @@ void OSWindow::HideTheCursor()
 {
     auto window = reinterpret_cast<CoreWindow^>(impl->windowHandle);
     window->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 1);
-}
-
-float OSWindow::GetDisplayDensity() const
-{
-    return GetBestDisplay(GetRect())->density;
 }
 
 void OSWindow::SetTitle() const

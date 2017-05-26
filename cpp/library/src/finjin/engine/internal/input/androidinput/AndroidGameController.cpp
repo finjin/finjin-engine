@@ -357,18 +357,18 @@ void AndroidGameController::RefreshGameControllers
 
     //Get the refreshed devices and add new devices to the end
     CreateGameControllers(devicesBuffer, androidApp);
-    for (size_t i = 0; i < devicesBuffer.size(); i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < devicesBuffer.size(); gameControllerIndex++)
     {
-        auto oldDevice = GetGameControllerByInstanceDescriptor(devices.data(), devices.size(), devicesBuffer[i].GetInstanceDescriptor());
+        auto oldDevice = GetGameControllerByInstanceDescriptor(devices.data(), devices.size(), devicesBuffer[gameControllerIndex].GetInstanceDescriptor());
         if (oldDevice == nullptr)
         {
-            FINJIN_DEBUG_LOG_INFO("New game controller found: %1%, id=%2%, instance descriptor=%3%", devicesBuffer[i].productName, devicesBuffer[i].id, devicesBuffer[i].instanceDescriptor);
+            FINJIN_DEBUG_LOG_INFO("New game controller found: %1%, id=%2%, instance descriptor=%3%", devicesBuffer[gameControllerIndex].productName, devicesBuffer[gameControllerIndex].id, devicesBuffer[gameControllerIndex].instanceDescriptor);
 
             if (!devices.full())
             {
                 auto newDeviceIndex = devices.size();
                 devices.push_back();
-                devices[newDeviceIndex] = devicesBuffer[i];
+                devices[newDeviceIndex] = devicesBuffer[gameControllerIndex];
                 devices[newDeviceIndex].isNewConnection = true;
             }
         }
@@ -376,7 +376,7 @@ void AndroidGameController::RefreshGameControllers
         {
             FINJIN_DEBUG_LOG_INFO("GameController %1% detected as connected. Instance descriptor: %2%", oldDevice->GetInstanceName(), oldDevice->GetInstanceDescriptor());
 
-            oldDevice->id = devicesBuffer[i].id;
+            oldDevice->id = devicesBuffer[gameControllerIndex].id;
             oldDevice->state.isConnected = true;
             oldDevice->state.connectionChanged = true;
         }
@@ -385,10 +385,10 @@ void AndroidGameController::RefreshGameControllers
 
 AndroidGameController* AndroidGameController::GetGameControllerByInstanceDescriptor(AndroidGameController* gameControllers, size_t gameControllerCount, const Utf8String& descriptor)
 {
-    for (size_t i = 0; i < gameControllerCount; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
     {
-        if (gameControllers[i].GetInstanceDescriptor() == descriptor)
-            return &gameControllers[i];
+        if (gameControllers[gameControllerIndex].GetInstanceDescriptor() == descriptor)
+            return &gameControllers[gameControllerIndex];
     }
 
     return nullptr;
@@ -396,10 +396,10 @@ AndroidGameController* AndroidGameController::GetGameControllerByInstanceDescrip
 
 AndroidGameController* AndroidGameController::GetGameControllerByID(AndroidGameController* gameControllers, size_t gameControllerCount, int deviceID)
 {
-    for (size_t i = 0; i < gameControllerCount; i++)
+    for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
     {
-        if (gameControllers[i].GetID() == deviceID)
-            return &gameControllers[i];
+        if (gameControllers[gameControllerIndex].GetID() == deviceID)
+            return &gameControllers[gameControllerIndex];
     }
 
     return nullptr;

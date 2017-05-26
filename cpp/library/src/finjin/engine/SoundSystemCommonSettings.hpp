@@ -25,7 +25,7 @@ namespace Finjin { namespace Engine {
 
     struct SoundSystemCommonSettings
     {
-        SoundSystemCommonSettings()
+        SoundSystemCommonSettings(Allocator* initialAllocator)
         {
             this->allocator = nullptr;
         }

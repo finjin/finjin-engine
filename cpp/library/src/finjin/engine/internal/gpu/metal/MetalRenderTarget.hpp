@@ -31,24 +31,75 @@ namespace Finjin { namespace Engine {
     public:
         MetalRenderTarget();
 
-        void CreateDepthStencil(id<MTLDevice> device, size_t width, size_t height, MTLPixelFormat depthStencilFormat, Error& error);
+        void CreateColor
+            (
+            id<MTLDevice> device,
+            size_t width,
+            size_t height,
+            MTLPixelFormat colorFormat,
+            bool isScreenSizeDependent,
+            Error& error
+            );
+
+        void CreateDepthStencil
+            (
+            id<MTLDevice> device,
+            size_t width,
+            size_t height,
+            MTLPixelFormat depthStencilFormat,
+            bool isScreenSizeDependent,
+            Error& error
+            );
+
+        void Destroy();
+        void DestroyScreenSizeDependentResources();
 
         bool HasDepthStencil() const;
 
-        void DestroyScreenSizeDependentResources();
-
     public:
-        StaticVector<id<CAMetalDrawable>, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> renderTargetOutputResources;
+        struct ColorOutput
+        {
+            ColorOutput()
+            {
+                this->texture = nullptr;
+                this->drawable = nullptr;
+            }
+
+            void Destroy()
+            {
+                this->texture = nullptr;
+                this->drawable = nullptr;
+            }
+
+            id<MTLTexture> GetTexture()
+            {
+                if (this->drawable != nullptr)
+                    return this->drawable.texture;
+                return this->texture;
+            }
+
+            id<MTLTexture> texture;
+            id<CAMetalDrawable> drawable;
+        };
+        StaticVector<ColorOutput, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> colorOutputs;
+
+        MTLTextureDescriptor* colorTextureDesc;
+        bool isColorScreenSizeDependent;
 
         MTLTextureDescriptor* depthStencilTextureDesc;
-        id<MTLDepthStencilState> depthStencilState;
         id<MTLTexture> depthStencilTexture;
+        MTLDepthStencilDescriptor* depthStencilStateDesc;
+        id<MTLDepthStencilState> depthStencilState;
+        bool isDepthStencilScreenSizeDependent;
 
         MTLRenderPassDescriptor* renderPassDescriptor;
         id<MTLRenderCommandEncoder> renderCommandEncoder;
 
         StaticVector<MTLViewport, 1> viewports;
         StaticVector<MTLScissorRect, 1> scissorRects;
+
+        StaticVector<MTLViewport, 1> defaultViewport;
+        StaticVector<MTLScissorRect, 1> defaultScissorRect;
 
         Setting<MathVector4> clearColor;
     };

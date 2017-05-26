@@ -22,18 +22,20 @@
 //Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    struct ApplicationViewportsClosing : public StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_WINDOWS>
+    class ApplicationViewportsClosing : public StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_WINDOWS>
     {
-        ApplicationViewportsClosing()
-        {
-        }
+    public:
+        ApplicationViewportsClosing() {}
 
-        ApplicationViewportsClosing(ApplicationViewportsClosing&& other)
+        ApplicationViewportsClosing(const ApplicationViewportsClosing& other) = delete;
+        ApplicationViewportsClosing& operator = (const ApplicationViewportsClosing& other) = delete;
+
+        explicit ApplicationViewportsClosing(ApplicationViewportsClosing&& other)
         {
             resize(other.size());
 
-            for (size_t i = 0; i < this->count; i++)
-                this->items[i] = std::move(other[i]);
+            for (size_t viewportIndex = 0; viewportIndex < this->count; viewportIndex++)
+                this->items[viewportIndex] = std::move(other[viewportIndex]);
 
             other.count = 0;
         }
@@ -42,8 +44,8 @@ namespace Finjin { namespace Engine {
         {
             resize(other.size());
 
-            for (size_t i = 0; i < this->count; i++)
-                this->items[i] = std::move(other[i]);
+            for (size_t viewportIndex = 0; viewportIndex < this->count; viewportIndex++)
+                this->items[viewportIndex] = std::move(other[viewportIndex]);
 
             other.count = 0;
 
@@ -51,13 +53,15 @@ namespace Finjin { namespace Engine {
         }
     };
 
-    struct ApplicationViewportsFocusState
+    class ApplicationViewportsFocusState
     {
+    public:
         ApplicationViewportsFocusState()
         {
             this->anyHadFocus = this->anyHasFocus = this->anyLostFocus = false;
         }
 
+    public:
         bool anyHadFocus;
         bool anyHasFocus;
         bool anyLostFocus;
@@ -83,8 +87,8 @@ namespace Finjin { namespace Engine {
         bool RequestFullScreenToggle(ApplicationViewport* appViewport);
         bool RequestFullScreenToggle();
 
-        ApplicationViewportsClosing GetAllViewports();
-        ApplicationViewportsClosing GetViewportsClosing();
+        void GetAllViewports(ApplicationViewportsClosing& all);
+        void GetViewportsClosing(ApplicationViewportsClosing& closing);
 
         bool FindAndDeleteAndRemove(ApplicationViewport* appViewport);
 

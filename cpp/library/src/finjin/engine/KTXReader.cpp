@@ -99,7 +99,7 @@ Utf8String KTXReader::GetReadHeaderResultString(ReadHeaderResult result) const
         case ReadHeaderResult::FAILED_TO_READ_HEADER: return "Failed to read header.";
         case ReadHeaderResult::FAILED_TO_SKIP_KEY_VALUE_DATA: return "Failed to skip key/value data.";
         case ReadHeaderResult::IMAGE_BYTE_SWAPPING_REQUIRED: return "Image byte swapping required.";
-        default: return Utf8String::Empty();
+        default: return Utf8String::GetEmpty();
     }
 }
 

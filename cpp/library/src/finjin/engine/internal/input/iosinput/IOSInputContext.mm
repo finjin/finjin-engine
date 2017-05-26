@@ -57,7 +57,9 @@ struct IOSInputContext::Impl : public AllocatedClass, public OSWindowEventListen
 //Implementation----------------------------------------------------------------
 
 //IOSInputContext::Impl
-IOSInputContext::Impl::Impl(Allocator* allocator, IOSInputSystem* inputSystem) : AllocatedClass(allocator), settings(allocator)
+IOSInputContext::Impl::Impl(Allocator* allocator, IOSInputSystem* inputSystem) :
+    AllocatedClass(allocator),
+    settings(allocator)
 {
     this->inputSystem = inputSystem;
 
@@ -247,7 +249,7 @@ const Utf8String& IOSInputContext::GetDeviceProductDescriptor(InputDeviceClass d
         default: break;
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 const Utf8String& IOSInputContext::GetDeviceInstanceDescriptor(InputDeviceClass deviceClass, size_t index) const
@@ -258,7 +260,7 @@ const Utf8String& IOSInputContext::GetDeviceInstanceDescriptor(InputDeviceClass 
         default: break;
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 InputDeviceSemantic IOSInputContext::GetDeviceSemantic(InputDeviceClass deviceClass, size_t index) const
@@ -311,7 +313,7 @@ FileOperationResult IOSInputContext::ReadInputBinding(InputDeviceClass deviceCla
     if (deviceClass == InputDeviceClass::GAME_CONTROLLER)
         impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, GCInputSystem::GetSystemInternalName());
     else
-        impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, Utf8String::Empty());
+        impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, Utf8String::GetEmpty());
 
     impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_DEVICE_DESCRIPTOR, GetDeviceProductDescriptor(deviceClass, deviceIndex));
 

@@ -31,8 +31,11 @@ namespace Finjin { namespace Engine {
         MacOSInputSystem();
         ~MacOSInputSystem();
 
-        struct Settings : public InputSystemCommonSettings
+        struct Settings : InputSystemCommonSettings
         {
+            Settings(Allocator* initialAllocator) : InputSystemCommonSettings(initialAllocator)
+            {
+            }
         };
 
         void Create(const Settings& settings, Error& error);

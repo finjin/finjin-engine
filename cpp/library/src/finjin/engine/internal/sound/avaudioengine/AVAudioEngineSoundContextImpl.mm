@@ -810,7 +810,7 @@ void AVAudioEngineSoundContextImpl::CreateBuffer(AVAudioEngineSoundBuffer* item,
                 case 1:
                 {
                     auto* sourceData = static_cast<const uint8_t*>(wavData.data) + channelIndex;
-                    for (size_t i = 0; i < frameCount; i++)
+                    for (size_t frameIndex = 0; frameIndex < frameCount; frameIndex++)
                     {
                         *destBufferData = RoundToFloat(*sourceData) / 128.0f - 1.0f;
                         Limit(*destBufferData, -1.0f, 1.0f);
@@ -823,7 +823,7 @@ void AVAudioEngineSoundContextImpl::CreateBuffer(AVAudioEngineSoundBuffer* item,
                 case 2:
                 {
                     auto* sourceData = static_cast<const int16_t*>(wavData.data) + channelIndex;
-                    for (size_t i = 0; i < frameCount; i++)
+                    for (size_t frameIndex = 0; frameIndex < frameCount; frameIndex++)
                     {
                         *destBufferData = RoundToFloat(*sourceData) / 32767.0f;
                         Limit(*destBufferData, -1.0f, 1.0f);

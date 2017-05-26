@@ -71,7 +71,7 @@ size_t D3D12GpuContext::GetExternalAssetFileExtensions(StaticVector<Utf8String, 
     FINJIN_ERROR_METHOD_START(error);
 
     size_t count = 0;
-    
+
     switch (assetClass)
     {
         case AssetClass::SHADER:
@@ -198,11 +198,6 @@ D3D12GpuContext::JobPipelineStage& D3D12GpuContext::StartFrameStage(size_t index
     return impl->StartFrameStage(index, elapsedTime, totalElapsedTime);
 }
 
-void D3D12GpuContext::StartBackFrameBufferRender(JobPipelineStage& frameStage)
-{
-    //auto& frameBuffer = impl->frameBuffers[frameStage.frameBufferIndex];
-}
-
 void D3D12GpuContext::Execute(JobPipelineStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
@@ -219,11 +214,11 @@ void D3D12GpuContext::FinishFrameStage(JobPipelineStage& frameStage)
     impl->UpdateResourceGpuResidencyStatus();
 }
 
-void D3D12GpuContext::FinishBackFrameBufferRender(JobPipelineStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error)
+void D3D12GpuContext::PresentFrameStage(JobPipelineStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    impl->FinishBackFrameBufferRender(frameStage, continueRendering, modifyingRenderTarget, presentSyncIntervalOverride, error);
+    impl->PresentFrameStage(frameStage, renderStatus, presentSyncIntervalOverride, error);
     if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
 }

@@ -107,9 +107,11 @@ namespace Finjin { namespace Engine {
     enum class SoundContextChange
     {
         NONE = 0,
+
         ROLLOFF_FACTOR = 1 << 0,
         REFERENCE_DISTANCE = 1 << 1,
         MAX_DISTANCE = 1 << 2,
+
         ALL = 0xffff
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(SoundContextChange)

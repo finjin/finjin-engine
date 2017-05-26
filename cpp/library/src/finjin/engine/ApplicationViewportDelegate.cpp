@@ -141,8 +141,8 @@ ApplicationViewportRenderContext::ApplicationViewportRenderContext(Allocator* al
     this->gpuContext = nullptr;
 
     this->jobPipelineStage = nullptr;
-    this->continueRendering = true;
-    this->modifyingRenderTarget = false;
+    this->renderStatus.continueRendering = true;
+    this->renderStatus.modifyingRenderTarget = false;
     this->presentSyncIntervalOverride = 0;
 }
 

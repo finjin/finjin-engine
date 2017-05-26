@@ -99,21 +99,111 @@ namespace Finjin { namespace Engine {
         VulkanMesh* waitingToBeResidentMeshesHead;
     };
 
-    struct VulkanTextureResources
+    struct VulkanCommonResources
     {
-        VulkanTextureResources()
+        VulkanCommonResources(Allocator* allocator)
         {
+            //Vulkan clip space has inverted Y and half Z
+            this->clipInvertMatrix <<
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, -1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 0.5f, 0.0f,
+                0.0f, 0.0f, 0.5f, 1.0f
+                ;
+
+            this->pipelineCache = VK_NULL_HANDLE;
+
             this->defaultSampler = VK_NULL_HANDLE;
+
+            for (auto& shader : this->fullScreenShaders)
+                shader.name.Create(allocator);
+
             this->texturesDescriptorSetLayout = VK_NULL_HANDLE;
             this->textureDescriptorPool = VK_NULL_HANDLE;
             this->textureDescriptorSet = VK_NULL_HANDLE;
+
+            this->fullScreenQuadDescriptorSetLayout = VK_NULL_HANDLE;
+            this->fullScreenQuadDescriptorPool = VK_NULL_HANDLE;
+            this->fullScreenQuadDescriptorSet = VK_NULL_HANDLE;
+            this->fullScreenQuadPipelineLayout = VK_NULL_HANDLE;
+            this->fullScreenQuadPipeline = VK_NULL_HANDLE;
         }
 
+        void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks)
+        {
+            if (this->fullScreenQuadDescriptorPool != VK_NULL_HANDLE)
+            {
+                vk.DestroyDescriptorPool(vk.device, this->fullScreenQuadDescriptorPool, allocationCallbacks);
+                this->fullScreenQuadDescriptorPool = VK_NULL_HANDLE;
+                this->fullScreenQuadDescriptorSet = VK_NULL_HANDLE; //Freed with pool
+            }
+
+            if (this->fullScreenQuadPipeline != VK_NULL_HANDLE)
+            {
+                vk.DestroyPipeline(vk.device, this->fullScreenQuadPipeline, allocationCallbacks);
+                this->fullScreenQuadPipeline = VK_NULL_HANDLE;
+            }
+
+            if (this->fullScreenQuadPipelineLayout != VK_NULL_HANDLE)
+            {
+                vk.DestroyPipelineLayout(vk.device, this->fullScreenQuadPipelineLayout, allocationCallbacks);
+                this->fullScreenQuadPipelineLayout = VK_NULL_HANDLE;
+            }
+
+            if (this->texturesDescriptorSetLayout != VK_NULL_HANDLE)
+            {
+                vk.DestroyDescriptorSetLayout(vk.device, this->texturesDescriptorSetLayout, allocationCallbacks);
+                this->texturesDescriptorSetLayout = VK_NULL_HANDLE;
+            }
+
+            if (this->textureDescriptorPool != VK_NULL_HANDLE)
+            {
+                vk.DestroyDescriptorPool(vk.device, this->textureDescriptorPool, allocationCallbacks);
+                this->textureDescriptorPool = VK_NULL_HANDLE;
+                this->textureDescriptorSet = VK_NULL_HANDLE; //Freed with pool
+            }
+
+            if (this->fullScreenQuadDescriptorSetLayout != VK_NULL_HANDLE)
+            {
+                vk.DestroyDescriptorSetLayout(vk.device, this->fullScreenQuadDescriptorSetLayout, allocationCallbacks);
+                this->fullScreenQuadDescriptorSetLayout = VK_NULL_HANDLE;
+            }
+
+            for (auto& shader : this->fullScreenShaders)
+                shader.Destroy(vk, allocationCallbacks);
+
+            if (this->defaultSampler != VK_NULL_HANDLE)
+            {
+                vk.DestroySampler(vk.device, this->defaultSampler, allocationCallbacks);
+                this->defaultSampler = VK_NULL_HANDLE;
+            }
+
+            if (this->pipelineCache != VK_NULL_HANDLE)
+            {
+                vk.DestroyPipelineCache(vk.device, this->pipelineCache, allocationCallbacks);
+                this->pipelineCache = VK_NULL_HANDLE;
+            }
+        }
+
+        MathMatrix4 clipInvertMatrix;
+
+        UsableDynamicVector<VulkanLight> lights;
+
+        VkPipelineCache pipelineCache;
+
         VkSampler defaultSampler;
+
+        std::array<VulkanShader, 2> fullScreenShaders; //0 = vertex shader, 1 = pixel shader
 
         VkDescriptorSetLayout texturesDescriptorSetLayout;
         VkDescriptorPool textureDescriptorPool;
         VkDescriptorSet textureDescriptorSet;
+
+        VkDescriptorSetLayout fullScreenQuadDescriptorSetLayout;
+        VkDescriptorPool fullScreenQuadDescriptorPool;
+        VkDescriptorSet fullScreenQuadDescriptorSet;
+        VkPipelineLayout fullScreenQuadPipelineLayout;
+        VkPipeline fullScreenQuadPipeline;
     };
 
 } }

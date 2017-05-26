@@ -26,22 +26,41 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    struct D3D12RenderTarget
+    class D3D12RenderTarget
     {
+    public:
         D3D12RenderTarget();
 
-        void CreateDepthStencil(ID3D12Device* device, UINT width, UINT height, DXGI_FORMAT depthStencilFormat, float maxDepth, UINT multisampleCount, UINT multisampleQuality, Error& error);
+        void CreateColor(ID3D12Device* device, UINT width, UINT height, DXGI_FORMAT colorFormat, UINT multisampleCount, UINT multisampleQuality, bool isScreenSizeDependent, Error& error);
+        void CreateDepthStencil(ID3D12Device* device, UINT width, UINT height, DXGI_FORMAT depthStencilFormat, float maxDepth, UINT multisampleCount, UINT multisampleQuality, bool isScreenSizeDependent, Error& error);
 
+        void Destroy();
         void DestroyScreenSizeDependentResources();
 
         bool HasDepthStencil() const;
 
-        StaticVector<Microsoft::WRL::ComPtr<ID3D12Resource>, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> renderTargetOutputResources;
+    public:
+        struct Resource
+        {
+            Resource();
 
-        Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource;
+            void Destroy();
+            void DestroyScreenSizeDependentResources();
 
-        size_t renderTargetResourceHeapIndex;
-        size_t depthStencilResourceHeapIndex;
+            ID3D12Resource* Get();
+
+            Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+            size_t rtvDescHeapIndex;
+            size_t dsvDescHeapIndex;
+            size_t srvDescHeapIndex;
+            bool isScreenSizeDependent;
+        };
+        StaticVector<Resource, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> colorOutputs;
+
+        Resource depthStencilResource;
+
+        StaticVector<D3D12_VIEWPORT, 1> defaultViewport;
+        StaticVector<D3D12_RECT, 1> defaultScissorRect;
 
         StaticVector<D3D12_VIEWPORT, EngineConstants::MAX_RENDER_TARGET_VIEWPORTS> viewports;
         StaticVector<D3D12_RECT, EngineConstants::MAX_RENDER_TARGET_VIEWPORTS> scissorRects;

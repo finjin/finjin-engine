@@ -36,7 +36,7 @@ static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceClass, InputD
         "headset", InputDeviceClass::HEADSET,
         "all", InputDeviceClass::ALL
         );
-    
+
     return lookup;
 }
 
@@ -67,7 +67,7 @@ static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceComponent, In
 
         "headset-locator", InputDeviceComponent::HEADSET_LOCATOR
         );
-    
+
     return lookup;
 }
 
@@ -80,7 +80,7 @@ static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceSemantic, Inp
         "left-hand", InputDeviceSemantic::LEFT_HAND,
         "right-hand", InputDeviceSemantic::RIGHT_HAND
         );
-    
+
     return lookup;
 }
 
@@ -166,7 +166,7 @@ static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputComponentSemantic, 
 
         "locator", InputComponentSemantic::LOCATOR
         );
-    
+
     return lookup;
 }
 
@@ -184,7 +184,7 @@ static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(PovDirection, PovDirecti
         "left", PovDirection::LEFT,
         "up-left", PovDirection::UP_LEFT
         );
-    
+
     return lookup;
 }
 
@@ -200,10 +200,10 @@ static void GetMultitouchInfo(InputTouchScreen::Pointer** pointers, size_t point
     float pinchRadius = 0;
 
     //Add up the centers
-    for (size_t i = 0; i < pointerCount; i++)
+    for (size_t pointerIndex = 0; pointerIndex < pointerCount; pointerIndex++)
     {
-        x += pointers[i]->GetX().GetAbsoluteValue();
-        y += pointers[i]->GetY().GetAbsoluteValue();
+        x += pointers[pointerIndex]->GetX().GetAbsoluteValue();
+        y += pointers[pointerIndex]->GetY().GetAbsoluteValue();
     }
 
     if (pointerCount > 1)
@@ -217,10 +217,10 @@ static void GetMultitouchInfo(InputTouchScreen::Pointer** pointers, size_t point
         //Get average radius
         float relativeX;
         float relativeY;
-        for (size_t i = 0; i < pointerCount; i++)
+        for (size_t pointerIndex = 0; pointerIndex < pointerCount; pointerIndex++)
         {
-            relativeX = pointers[i]->GetX().GetAbsoluteValue() - x;
-            relativeY = pointers[i]->GetY().GetAbsoluteValue() - y;
+            relativeX = pointers[pointerIndex]->GetX().GetAbsoluteValue() - x;
+            relativeY = pointers[pointerIndex]->GetY().GetAbsoluteValue() - y;
             pinchRadius += sqrtf(relativeX * relativeX + relativeY * relativeY);
         }
         pinchRadius /= floatCount;
@@ -1451,8 +1451,8 @@ void InputTouchScreen::Reset(bool isConstructing)
     this->previousTouchCount.Reset(0);
     this->touchCount = 0;
 
-    for (size_t i = 0; i < this->allPointers.size(); i++)
-        this->allPointers[i].Reset();
+    for (size_t pointerIndex = 0; pointerIndex < this->allPointers.size(); pointerIndex++)
+        this->allPointers[pointerIndex].Reset();
     this->pointers.clear();
 
     this->multitouch.Reset();
@@ -1460,9 +1460,9 @@ void InputTouchScreen::Reset(bool isConstructing)
 
 InputTouchScreen::Pointer* InputTouchScreen::ConnectPointer(PointerType pointerType, int pointerID)
 {
-    for (size_t i = 0; i < this->allPointers.size(); i++)
+    for (size_t pointerIndex = 0; pointerIndex < this->allPointers.size(); pointerIndex++)
     {
-        auto pointer = &this->allPointers[i];
+        auto pointer = &this->allPointers[pointerIndex];
         if (!pointer->isEnabled)
         {
             pointer->screen = this;
@@ -1555,18 +1555,18 @@ void InputTouchScreen::ClearChanged()
 {
     this->previousTouchCount = this->touchCount;
 
-    for (size_t i = 0; i < this->pointers.size();)
+    for (size_t pointerIndex = 0; pointerIndex < this->pointers.size();)
     {
-        if (!this->pointers[i]->GetContact().GetValue())
+        if (!this->pointers[pointerIndex]->GetContact().GetValue())
         {
             //Pointer is no longer down, so reset/remove it
-            this->pointers[i]->Reset();
-            this->pointers.erase(&this->pointers[i]);
+            this->pointers[pointerIndex]->Reset();
+            this->pointers.erase(&this->pointers[pointerIndex]);
         }
         else
         {
-            this->pointers[i]->ClearChanged();
-            i++;
+            this->pointers[pointerIndex]->ClearChanged();
+            pointerIndex++;
         }
     }
 

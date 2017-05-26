@@ -30,9 +30,10 @@ namespace Finjin { namespace Engine {
         D3D12DescriptorHeap();
 
         void Create(ID3D12Device* device, const D3D12_DESCRIPTOR_HEAP_DESC& desc, Error& error);
+        void Destroy();
 
-        D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHeapStart();
-        D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHeapStart();
+        CD3DX12_CPU_DESCRIPTOR_HANDLE GetCpuHeapStart(size_t descriptorOffset = 0);
+        CD3DX12_GPU_DESCRIPTOR_HANDLE GetGpuHeapStart(size_t descriptorOffset = 0);
 
     public:
         Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heap;

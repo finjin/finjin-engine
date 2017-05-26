@@ -47,12 +47,12 @@ void VulkanInputFormat::Create(const GpuInputFormatStruct& inputFormat, Allocato
     this->vertexBinding.stride = static_cast<uint32_t>(inputFormat.totalSize);
     this->vertexBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-    for (size_t i = 0; i < inputFormat.elements.size(); i++)
+    for (size_t elementIndex = 0; elementIndex < inputFormat.elements.size(); elementIndex++)
     {
-        auto& element = inputFormat.elements[i];
-        auto& vulkanAttribute = this->attributes[i];
+        auto& element = inputFormat.elements[elementIndex];
+        auto& vulkanAttribute = this->attributes[elementIndex];
 
-        vulkanAttribute.location = static_cast<uint32_t>(i);
+        vulkanAttribute.location = static_cast<uint32_t>(elementIndex);
         vulkanAttribute.binding = this->vertexBinding.binding;
         vulkanAttribute.offset = static_cast<uint32_t>(element.gpuPaddedOffset);
 

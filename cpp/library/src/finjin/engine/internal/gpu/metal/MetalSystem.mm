@@ -84,7 +84,11 @@ void MetalSystem::Create(const Settings& settings, Error& error)
 
         auto& deviceDescription = impl->deviceDescriptions.back();
 
-        deviceDescription.gpuID = device.name.UTF8String;
+        if (deviceDescription.gpuID.assign(device.name.UTF8String).HasError())
+        {
+            FINJIN_SET_ERROR(error, "Failed to assign GPU ID.");
+            return;
+        }
 
     #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_TVOS
         if ([device supportsFeatureSet:MTLFeatureSet_tvOS_GPUFamily1_v2])
@@ -110,7 +114,7 @@ void MetalSystem::Create(const Settings& settings, Error& error)
             deviceDescription.SetStandardFeatureSet(MTLFeatureSet_iOS_GPUFamily2_v1);
         else if ([device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily1_v1])
             deviceDescription.SetStandardFeatureSet(MTLFeatureSet_iOS_GPUFamily1_v1);
-    #else
+    #elif FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
         if ([device supportsFeatureSet:MTLFeatureSet_OSX_ReadWriteTextureTier2])
         {
             deviceDescription.SetStandardFeatureSet(MTLFeatureSet_OSX_GPUFamily1_v2);

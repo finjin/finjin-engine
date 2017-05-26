@@ -23,8 +23,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-D3D12GpuContextSettings::D3D12GpuContextSettings(Allocator* allocator) :
-    GpuContextCommonSettings(allocator),
+D3D12GpuContextSettings::D3D12GpuContextSettings(Allocator* initialAllocator) :
+    GpuContextCommonSettings(initialAllocator),
     colorFormat(DXGI_FORMAT_UNKNOWN),
     depthStencilFormat(DXGI_FORMAT_UNKNOWN)
 {

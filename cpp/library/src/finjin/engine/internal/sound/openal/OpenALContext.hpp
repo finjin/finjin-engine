@@ -46,8 +46,10 @@ namespace Finjin { namespace Engine {
     enum class OpenALKnownExtension
     {
         NONE = 0,
+
         EFX = 1 << 0,
         EXTENDED_CHANNEL_FORMATS = 1 << 1,
+
         ALL = EFX | EXTENDED_CHANNEL_FORMATS
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(OpenALKnownExtension)
@@ -60,7 +62,7 @@ namespace Finjin { namespace Engine {
 
         struct Settings : SoundContextCommonSettings
         {
-            Settings(Allocator* allocator) : SoundContextCommonSettings(allocator)
+            Settings(Allocator* initialAllocator) : SoundContextCommonSettings(initialAllocator)
             {
                 this->requestedExtensions = OpenALKnownExtension::ALL;
             }

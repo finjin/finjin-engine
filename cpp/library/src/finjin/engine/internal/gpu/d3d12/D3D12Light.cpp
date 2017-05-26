@@ -22,8 +22,6 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-
-//D3D12Light
 D3D12Light::D3D12Light(Allocator* allocator)
 {
     this->finjinLight = nullptr;

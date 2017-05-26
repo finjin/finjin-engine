@@ -23,13 +23,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct AVAudioEngineSoundSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     AVAudioEngineSoundSystem::Settings settings;
 
-    StaticVector<AVAudioEngineSoundContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<AVAudioEngineSoundContext*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

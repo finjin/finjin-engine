@@ -18,7 +18,8 @@
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/common/Setting.hpp"
-#include "VulkanIncludes.hpp"
+#include "VulkanGpuDescription.hpp"
+#include "VulkanUtilities.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -26,37 +27,76 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    struct VulkanRenderTarget
+    class VulkanRenderTarget
     {
+    public:
         VulkanRenderTarget();
 
-        VkImage image;
-        VkDeviceMemory mem;
-        VkImageView view;
+        bool IsScreenSizeDependent() const;
 
-        struct Viewport
+        void CreateColor
+            (
+            VkPhysicalDevice physicalDevice,
+            const VulkanGpuDescription& physicalDeviceDescription,
+            VulkanInstanceFunctions& instanceVk,
+            VulkanDeviceFunctions& deviceVk,
+            VkAllocationCallbacks* allocationCallbacks,
+            VkCommandBuffer graphicsCommandBuffer,
+            size_t width,
+            size_t height,
+            VkFormat colorFormat,
+            size_t multisampleCount,
+            bool isScreenSizeDependent,
+            Error& error
+            );
+
+        void CreateDepthStencil
+            (
+            VkPhysicalDevice physicalDevice,
+            const VulkanGpuDescription& physicalDeviceDescription,
+            VulkanInstanceFunctions& instanceVk,
+            VulkanDeviceFunctions& deviceVk,
+            VkAllocationCallbacks* allocationCallbacks,
+            VkCommandBuffer graphicsCommandBuffer,
+            size_t width,
+            size_t height,
+            VkFormat depthStencilFormat,
+            size_t multisampleCount,
+            bool isScreenSizeDependent,
+            Error& error
+            );
+
+        void CreateFrameBuffer(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks, VulkanFramebufferCreateInfo& frameBufferCreateInfo, size_t colorViewIndex, Error& error);
+
+        void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
+        void DestroyScreenSizeDependentResources(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
+
+    public:
+        struct Resource
         {
-            Viewport()
-            {
-                this->width = this->height = 0;
-            }
+            Resource();
 
-            float width;
-            float height;
+            void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
+            void DestroyScreenSizeDependentResources(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
+
+            bool isImageOwned;
+            VkImage image;
+            VkDeviceMemory mem;
+            VkImageView view;
+            bool isScreenSizeDependent;
         };
-        StaticVector<Viewport, EngineConstants::MAX_RENDER_TARGET_VIEWPORTS> viewports;
 
-        struct ScissorRect
-        {
-            ScissorRect()
-            {
-                this->width = this->height = 0;
-            }
+        StaticVector<Resource, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> colorOutputs;
 
-            uint32_t width;
-            uint32_t height;
-        };
-        StaticVector<ScissorRect, EngineConstants::MAX_RENDER_TARGET_VIEWPORTS> scissorRects;
+        Resource depthStencilResource;
+
+        VkFramebuffer vkframeBuffer;
+
+        StaticVector<VkViewport, 1> defaultViewport;
+        StaticVector<VkRect2D, 1> defaultScissorRect;
+
+        StaticVector<VkViewport, EngineConstants::MAX_RENDER_TARGET_VIEWPORTS> viewports;
+        StaticVector<VkRect2D, EngineConstants::MAX_RENDER_TARGET_VIEWPORTS> scissorRects;
 
         Setting<MathVector4> clearColor;
     };

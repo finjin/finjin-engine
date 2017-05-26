@@ -138,8 +138,8 @@ bool OpenVRDeviceImpl::GetInfo(vr::IVRSystem* ivrSystem)
             this->gameControllerState.buttons.resize(this->gameControllerState.buttons.max_size());
             this->gameControllerState.axes.resize(this->gameControllerState.axes.max_size());
 
-            for (size_t i = 0; i < this->gameControllerState.buttons.size(); i++)
-                this->gameControllerState.buttons[i].SetIndex(i);
+            for (size_t buttonIndex = 0; buttonIndex < this->gameControllerState.buttons.size(); buttonIndex++)
+                this->gameControllerState.buttons[buttonIndex].SetIndex(buttonIndex);
 
             this->gameControllerState.buttons[vr::k_EButton_System].SetCode(vr::k_EButton_System).SetDisplayName("System").SetSemantic(InputComponentSemantic::SYSTEM_HOME);
             this->gameControllerState.buttons[vr::k_EButton_ApplicationMenu].SetCode(vr::k_EButton_ApplicationMenu).SetDisplayName("Application").SetSemantic(InputComponentSemantic::SETTINGS);

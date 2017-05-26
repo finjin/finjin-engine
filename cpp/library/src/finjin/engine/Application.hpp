@@ -220,6 +220,7 @@ namespace Finjin { namespace Engine {
 
     private:
         void ReadBootFile(Error& error);
+        size_t GetBytesUsed();
 
     private:
         void* applicationHandle; //Platform-specific pointer to the application
@@ -275,6 +276,10 @@ namespace Finjin { namespace Engine {
         //PhysicsContext::Settings physicsContextSettings;
         //PhysicsSystem::Settings physicsSystemSettings;
         //PhysicsSystem physicsSystem;
+
+        //PathfindingContext::Settings pathfindingContextSettings;
+        //PathfindingSystem::Settings pathfindingSystemSettings;
+        //PathfindingSystem pathfindingSystem;
 
     #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
         VRContext::Settings vrContextSettings;

@@ -112,6 +112,8 @@ namespace Finjin { namespace Engine {
         PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR GetPhysicalDeviceQueueFamilyProperties2KHR; //VK_KHR_get_physical_device_properties2
         PFN_vkGetPhysicalDeviceMemoryProperties2KHR GetPhysicalDeviceMemoryProperties2KHR; //VK_KHR_get_physical_device_properties2
         PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR GetPhysicalDeviceSparseImageFormatProperties2KHR; //VK_KHR_get_physical_device_properties2
+        PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR GetPhysicalDeviceSurfaceCapabilities2KHR; //VK_KHR_get_surface_capabilities2
+        PFN_vkGetPhysicalDeviceSurfaceFormats2KHR GetPhysicalDeviceSurfaceFormats2KHR; //VK_KHR_get_surface_capabilities2
         PFN_vkCreateDebugReportCallbackEXT CreateDebugReportCallbackEXT; //VK_EXT_debug_report
         PFN_vkDestroyDebugReportCallbackEXT DestroyDebugReportCallbackEXT; //VK_EXT_debug_report
         PFN_vkDebugReportMessageEXT DebugReportMessageEXT; //VK_EXT_debug_report
@@ -282,6 +284,7 @@ namespace Finjin { namespace Engine {
         PFN_vkDestroyDescriptorUpdateTemplateKHR DestroyDescriptorUpdateTemplateKHR; //VK_KHR_descriptor_update_template
         PFN_vkUpdateDescriptorSetWithTemplateKHR UpdateDescriptorSetWithTemplateKHR; //VK_KHR_descriptor_update_template
         PFN_vkCmdPushDescriptorSetWithTemplateKHR CmdPushDescriptorSetWithTemplateKHR; //VK_KHR_descriptor_update_template
+        PFN_vkGetSwapchainStatusKHR GetSwapchainStatusKHR; //VK_KHR_shared_presentable_image
         PFN_vkDebugMarkerSetObjectTagEXT DebugMarkerSetObjectTagEXT; //VK_EXT_debug_marker
         PFN_vkDebugMarkerSetObjectNameEXT DebugMarkerSetObjectNameEXT; //VK_EXT_debug_marker
         PFN_vkCmdDebugMarkerBeginEXT CmdDebugMarkerBeginEXT; //VK_EXT_debug_marker

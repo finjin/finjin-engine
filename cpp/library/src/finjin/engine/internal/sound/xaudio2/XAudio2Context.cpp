@@ -275,7 +275,7 @@ size_t XAudio2Context::GetExternalAssetFileExtensions(StaticVector<Utf8String, E
     FINJIN_ERROR_METHOD_START(error);
 
     size_t count = 0;
-    
+
     switch (assetClass)
     {
         case AssetClass::SOUND:

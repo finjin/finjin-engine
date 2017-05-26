@@ -29,7 +29,7 @@ namespace Finjin { namespace Engine {
 
     struct VulkanGpuContextSettings : GpuContextCommonSettings
     {
-        VulkanGpuContextSettings(Allocator* allocator);
+        VulkanGpuContextSettings(Allocator* initialAllocator);
 
         RequestedValue<VkColorSpaceKHR> colorSpace;
         RequestedValue<VkFormat> colorFormat;

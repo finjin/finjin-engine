@@ -73,4 +73,46 @@ void VulkanSurfaceFormats::Enumerate(VkPhysicalDevice physicalDevice, VkSurfaceK
     }
 }
 
+bool VulkanSurfaceFormats::GetBestColorFormatAndSpace(RequestedValue<VkFormat>& colorFormat, RequestedValue<VkColorSpaceKHR>& colorSpace, VkFormat defaultColorFormat) const
+{
+    auto surfaceFormatFoundAt = FindFormat(colorFormat.requested, colorSpace.requested);
+    if (surfaceFormatFoundAt != end())
+    {
+        //Requested color format and color space are valid
+        colorFormat.actual = surfaceFormatFoundAt->format;
+        colorSpace.actual = surfaceFormatFoundAt->colorSpace;
+        return true;
+    }
+    else
+    {
+        surfaceFormatFoundAt = FindFormat(colorFormat.requested);
+        if (surfaceFormatFoundAt != end())
+        {
+            //Requested color format is valid
+            colorFormat.actual = surfaceFormatFoundAt->format;
+            colorSpace.actual = surfaceFormatFoundAt->colorSpace;
+            return true;
+        }
+        else if (!empty())
+        {
+            if (size() == 1 && begin()->format == VK_FORMAT_UNDEFINED)
+            {
+                //The surface has no preferred format
+                colorFormat.actual = defaultColorFormat;
+                colorSpace.actual = begin()->colorSpace;
+                return true;
+            }
+            else
+            {
+                //Use preferred format
+                colorFormat.actual = begin()->format;
+                colorSpace.actual = begin()->colorSpace;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 #endif

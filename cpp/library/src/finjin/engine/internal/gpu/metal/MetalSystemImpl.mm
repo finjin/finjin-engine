@@ -22,7 +22,7 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-MetalSystemImpl::MetalSystemImpl(Allocator* allocator) : AllocatedClass(allocator)
+MetalSystemImpl::MetalSystemImpl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
 {
 }
 

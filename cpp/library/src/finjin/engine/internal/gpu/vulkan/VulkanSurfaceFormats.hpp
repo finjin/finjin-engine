@@ -16,6 +16,7 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
+#include "finjin/common/RequestedValue.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "VulkanUtilities.hpp"
 
@@ -35,6 +36,8 @@ namespace Finjin { namespace Engine {
 
         const_iterator FindFormat(VkFormat format) const;
         const_iterator FindFormat(VkFormat format, VkColorSpaceKHR colorSpace) const;
+
+        bool GetBestColorFormatAndSpace(RequestedValue<VkFormat>& colorFormat, RequestedValue<VkColorSpaceKHR>& colorSpace, VkFormat defaultColorFormat) const;
 
         void Enumerate(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VulkanInstanceFunctions& vk, Error& error);
     };

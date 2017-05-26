@@ -457,10 +457,10 @@ UserDataControlType UserDataTypes::GetControlType(const UserDataClass::Item& ite
 
 void UserDataTypes::FixName(Utf8String& name)
 {
-    for (size_t i = 0; i < name.length(); i++)
+    for (size_t charIndex = 0; charIndex < name.length(); charIndex++)
     {
-        if (!IsValidNameChar(name[i]))
-            name[i] = ' ';
+        if (!IsValidNameChar(name[charIndex]))
+            name[charIndex] = ' ';
     }
 
     name.RemoveWhitespace();

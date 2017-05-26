@@ -40,14 +40,23 @@ void D3D12DescriptorHeap::Create(ID3D12Device* device, const D3D12_DESCRIPTOR_HE
     this->descriptorSize = device->GetDescriptorHandleIncrementSize(desc.Type);
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE D3D12DescriptorHeap::GetCpuHeapStart()
+void D3D12DescriptorHeap::Destroy()
 {
-    return this->heap->GetCPUDescriptorHandleForHeapStart();
+    this->heap = nullptr;
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE D3D12DescriptorHeap::GetGpuHeapStart()
+CD3DX12_CPU_DESCRIPTOR_HANDLE D3D12DescriptorHeap::GetCpuHeapStart(size_t descriptorOffset)
 {
-    return this->heap->GetGPUDescriptorHandleForHeapStart();
+    CD3DX12_CPU_DESCRIPTOR_HANDLE result(this->heap->GetCPUDescriptorHandleForHeapStart());
+    result.Offset(static_cast<UINT>(descriptorOffset), this->descriptorSize);
+    return result;
+}
+
+CD3DX12_GPU_DESCRIPTOR_HANDLE D3D12DescriptorHeap::GetGpuHeapStart(size_t descriptorOffset)
+{
+    CD3DX12_GPU_DESCRIPTOR_HANDLE result(this->heap->GetGPUDescriptorHandleForHeapStart());
+    result.Offset(static_cast<UINT>(descriptorOffset), this->descriptorSize);
+    return result;
 }
 
 #endif

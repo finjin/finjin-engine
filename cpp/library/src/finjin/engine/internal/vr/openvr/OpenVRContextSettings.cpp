@@ -22,7 +22,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-OpenVRContextSettings::OpenVRContextSettings(Allocator* allocator) : VRContextCommonSettings(allocator)
+OpenVRContextSettings::OpenVRContextSettings(Allocator* initialAllocator) :
+    VRContextCommonSettings(initialAllocator)
 {
 }
 

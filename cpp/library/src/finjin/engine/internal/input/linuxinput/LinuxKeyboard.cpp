@@ -65,9 +65,9 @@ bool LinuxKeyboard::Create(LinuxInputContext* context, size_t index)
     auto keySyms = xcb_key_symbols_alloc(this->context->GetSettings().osWindow->GetConnection());
 
     this->state.buttons.resize(KeyboardConstants::MAX_BUTTON_COUNT);
-    for (size_t i = 0; i < this->state.buttons.size(); i++)
+    for (size_t buttonIndex = 0; buttonIndex < this->state.buttons.size(); buttonIndex++)
     {
-        auto keySym = xcb_key_symbols_get_keysym(keySyms, i, 0);
+        auto keySym = xcb_key_symbols_get_keysym(keySyms, buttonIndex, 0);
 
         keyName.clear();
         inputSemantic = InputComponentSemantic::NONE;
@@ -88,8 +88,8 @@ bool LinuxKeyboard::Create(LinuxInputContext* context, size_t index)
             }
         }
 
-        this->state.buttons[i]
-            .SetIndex(i)
+        this->state.buttons[buttonIndex]
+            .SetIndex(buttonIndex)
             .SetCode(keySym)
             .SetDisplayName(keyName)
             .SetSemantic(inputSemantic)

@@ -49,7 +49,7 @@ void Application::InitializeGlobals(Error& error)
     FINJIN_ERROR_METHOD_START(error);
 
     //Set up root file system
-    GetFileSystem(ApplicationFileSystem::READ_APPLICATION_ASSETS).AddDirectory(this->standardPaths.applicationBundleDirectory.path, error);
+    GetFileSystem(ApplicationFileSystem::READ_APPLICATION_ASSETS).AddDirectory(this->standardPaths[WhichStandardPath::APPLICATION_BUNDLE_DIRECTORY].path, error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to add application assets to file system.");
@@ -180,7 +180,11 @@ bool Application::MainLoop(Error& error)
 
 void Application::ReportError(const Error& error)
 {
-    FINJIN_DEBUG_LOG_ERROR("%1%", error.ToString());
+    auto errorString = error.ToString();
+
+    FINJIN_DEBUG_LOG_ERROR("%1%", errorString);
+
+    OSWindow::ShowErrorMessage(errorString, this->applicationDelegate->GetName(ApplicationNameFormat::DISPLAY));
 }
 
 void Application::ShowTheCursor()

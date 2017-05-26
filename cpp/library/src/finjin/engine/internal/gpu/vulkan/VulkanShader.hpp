@@ -28,7 +28,7 @@ namespace Finjin { namespace Engine {
     class VulkanShader
     {
     public:
-        VulkanShader(Allocator* allocator);
+        VulkanShader(Allocator* allocator = nullptr);
 
         void Create(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks, Allocator* allocator, const Utf8String& name, const void* bytes, size_t byteCount, bool makeLocalCopy, Error& error);
         void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);

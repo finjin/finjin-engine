@@ -17,7 +17,6 @@
 //Includes----------------------------------------------------------------------
 #include "D3D12Includes.hpp"
 #include "D3D12Utilities.hpp"
-#include "D3D12StaticMeshRendererFrameState.hpp"
 #include "D3D12RenderTarget.hpp"
 
 
@@ -29,28 +28,45 @@ namespace Finjin { namespace Engine {
     class D3D12FrameBuffer
     {
     public:
+        struct GraphicsCommandList
+        {
+            GraphicsCommandList()
+            {
+                this->fenceValue = 0;
+            }
+
+            uint64_t fenceValue;
+            Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
+        };
+
+    public:
         D3D12FrameBuffer();
 
         void SetIndex(size_t index);
 
-        ID3D12GraphicsCommandList* NewGraphicsCommandList();
-        ID3D12GraphicsCommandList* GetCurrentGraphicsCommandList();
-        void ExecuteCommandLists(ID3D12CommandQueue* queue);
+        void Destroy();
+
+        void CreateCommandLists(ID3D12Device* device, size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error);
+
+        GraphicsCommandList* NewGraphicsCommandList();
+        GraphicsCommandList* GetCurrentGraphicsCommandList();
+        void ExecuteCommandLists(ID3D12CommandQueue* queue, uint64_t fenceValue);
+        void WaitForCommandLists(ID3D12Fence* fence);
         void ResetCommandLists();
 
-        void ResetFences(uint64_t value);
+        void WaitForNotInUse();
 
     public:
         size_t index;
+        std::atomic<size_t> commandListWaitIndex;
+        std::atomic<size_t> commandListCommitIndex;
+
         D3D12RenderTarget renderTarget;
 
-        uint64_t framePresentCompletedFenceValue;
-
         Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
-        DynamicVector<Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> > graphicsCommandLists;
-        DynamicVector<ID3D12CommandList*> commandListsToExecute;
-
-        D3D12StaticMeshRendererFrameState staticMeshRendererFrameState;
+        DynamicVector<GraphicsCommandList> freeGraphicsCommandLists;
+        DynamicVector<GraphicsCommandList*> graphicsCommandListsToExecute;
+        DynamicVector<ID3D12GraphicsCommandList*> plainGraphicsCommandLists;
     };
 
 } }

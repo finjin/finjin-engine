@@ -30,7 +30,7 @@ namespace Finjin { namespace Engine {
     class AssetReference
     {
     public:
-        static const AssetReference& Empty();
+        static const AssetReference& GetEmpty();
 
         AssetReference(Allocator* allocator = nullptr);
 

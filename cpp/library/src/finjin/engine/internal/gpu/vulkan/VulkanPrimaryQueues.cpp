@@ -31,8 +31,50 @@ VulkanPrimaryQueues::VulkanPrimaryQueues()
     this->present = VK_NULL_HANDLE;
 }
 
-void VulkanPrimaryQueues::SetPresent(const VulkanQueueFamilyIndexes& indexes)
+void VulkanPrimaryQueues::Create(VulkanDeviceFunctions& vk, const VulkanQueueFamilyIndexes& indexes, Error& error)
 {
+    FINJIN_ERROR_METHOD_START(error);
+
+    if (indexes.IsGraphicsValid())
+    {
+        vk.GetDeviceQueue(vk.device, indexes.graphics, 0, &this->graphics);
+        if (this->graphics == VK_NULL_HANDLE)
+        {
+            FINJIN_SET_ERROR(error, "Failed to get graphics queue.");
+            return;
+        }
+    }
+
+    if (indexes.IsComputeValid())
+    {
+        vk.GetDeviceQueue(vk.device, indexes.compute, 0, &this->compute);
+        if (this->compute == VK_NULL_HANDLE)
+        {
+            FINJIN_SET_ERROR(error, "Failed to get compute queue.");
+            return;
+        }
+    }
+
+    if (indexes.IsTransferValid())
+    {
+        vk.GetDeviceQueue(vk.device, indexes.transfer, 0, &this->transfer);
+        if (this->transfer == VK_NULL_HANDLE)
+        {
+            FINJIN_SET_ERROR(error, "Failed to get transfer queue.");
+            return;
+        }
+    }
+
+    if (indexes.IsSparseBindingValid())
+    {
+        vk.GetDeviceQueue(vk.device, indexes.sparseBinding, 0, &this->sparseBinding);
+        if (this->sparseBinding == VK_NULL_HANDLE)
+        {
+            FINJIN_SET_ERROR(error, "Failed to get sparse binding queue.");
+            return;
+        }
+    }
+
     if (indexes.present == indexes.graphics)
         this->present = this->graphics;
     else if (indexes.present == indexes.compute)

@@ -48,10 +48,10 @@ void MetalInputFormat::Create(const GpuInputFormatStruct& inputFormat, Error& er
     layout.stepFunction = MTLVertexStepFunctionPerVertex;
     layout.stepRate = 1;
 
-    for (size_t i = 0; i < inputFormat.elements.size(); i++)
+    for (size_t elementIndex = 0; elementIndex < inputFormat.elements.size(); elementIndex++)
     {
-        auto& element = inputFormat.elements[i];
-        auto metalAttribute = this->vertexDescriptor.attributes[i];
+        auto& element = inputFormat.elements[elementIndex];
+        auto metalAttribute = this->vertexDescriptor.attributes[elementIndex];
 
         metalAttribute.offset = element.gpuPaddedOffset;
         metalAttribute.bufferIndex = DEFAULT_BUFFER_INDEX;
@@ -81,8 +81,8 @@ void MetalInputFormat::Create(const GpuInputFormatStruct& inputFormat, Error& er
 
 void MetalInputFormat::SetBufferIndex(size_t index)
 {
-    for (size_t i = 0; i < this->inputFormatElementCount; i++)
-        this->vertexDescriptor.attributes[i].bufferIndex = static_cast<NSUInteger>(index);
+    for (size_t elementIndex = 0; elementIndex < this->inputFormatElementCount; elementIndex++)
+        this->vertexDescriptor.attributes[elementIndex].bufferIndex = static_cast<NSUInteger>(index);
 }
 
 #endif

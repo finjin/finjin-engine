@@ -80,10 +80,10 @@ namespace Finjin { namespace Engine {
         template <typename StringType>
         static const SoundFormat* FindByTypeName(const SoundFormat* formats, size_t count, const StringType& typeName)
         {
-            for (size_t i = 0; i < count; i++)
+            for (size_t formatIndex = 0; formatIndex < count; formatIndex++)
             {
-                if (formats[i].typeName == typeName)
-                    return &formats[i];
+                if (formats[formatIndex].typeName == typeName)
+                    return &formats[formatIndex];
             }
 
             return nullptr;
@@ -97,14 +97,14 @@ namespace Finjin { namespace Engine {
 
         static const SoundFormat* FindByFormat(const SoundFormat* formats, size_t count, const SoundFormat& format)
         {
-            for (size_t i = 0; i < count; i++)
+            for (size_t formatIndex = 0; formatIndex < count; formatIndex++)
             {
-                if (formats[i].channelCount == format.channelCount &&
-                    formats[i].bytesPerChannel == format.bytesPerChannel &&
-                    formats[i].samplesPerSecond == format.samplesPerSecond &&
-                    formats[i].sampleType == format.sampleType)
+                if (formats[formatIndex].channelCount == format.channelCount &&
+                    formats[formatIndex].bytesPerChannel == format.bytesPerChannel &&
+                    formats[formatIndex].samplesPerSecond == format.samplesPerSecond &&
+                    formats[formatIndex].sampleType == format.sampleType)
                 {
-                    return &formats[i];
+                    return &formats[formatIndex];
                 }
             }
 

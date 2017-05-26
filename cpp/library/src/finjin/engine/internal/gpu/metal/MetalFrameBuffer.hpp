@@ -15,8 +15,8 @@
 
 
 //Includes----------------------------------------------------------------------
+#include "finjin/common/DynamicVector.hpp"
 #include "MetalIncludes.hpp"
-#include "MetalStaticMeshRendererFrameState.hpp"
 #include "MetalRenderTarget.hpp"
 
 
@@ -32,20 +32,31 @@ namespace Finjin { namespace Engine {
 
         void SetIndex(size_t index);
 
+        void Destroy();
+
+        void CreateCommandBuffers(size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error);
+
         id<MTLCommandBuffer> NewGraphicsCommandBuffer();
         id<MTLCommandBuffer> GetCurrentGraphicsCommandBuffer();
         void CommitCommandBuffers();
         void WaitForCommandBuffers();
         void ResetCommandBuffers();
 
+        void WaitForNotInUse();
+
+        void CreateFreeCommandBuffers();
+
     public:
         size_t index;
+        std::atomic<size_t> commandBufferWaitIndex;
+        std::atomic<size_t> commandBufferCommitIndex;
+
         MetalRenderTarget renderTarget;
 
         id<MTLCommandQueue> commandQueue;
-        StaticVector<id<MTLCommandBuffer>, 20> commandBuffersToExecute;
 
-        MetalStaticMeshRendererFrameState staticMeshRendererFrameState;
+        DynamicVector<id<MTLCommandBuffer> > freeCommandBuffers;
+        DynamicVector<id<MTLCommandBuffer> > commandBuffersToExecute;
     };
 
 } }

@@ -344,8 +344,6 @@ void OSWindow::ShowMessage(const Utf8String& message, const Utf8String& title)
     Utf8StringToWideString messageW(message);
     Utf8StringToWideString titleW(title);
     MessageBoxExW(reinterpret_cast<HWND>(impl->windowHandle), messageW.c_str(), titleW.c_str(), MB_OK, 0);
-#else
-    std::cout << title << ": " << message << std::endl;
 #endif
 }
 
@@ -355,8 +353,6 @@ void OSWindow::ShowErrorMessage(const Utf8String& message, const Utf8String& tit
     Utf8StringToWideString messageW(message);
     Utf8StringToWideString titleW(title);
     MessageBoxExW(nullptr, messageW.c_str(), titleW.c_str(), MB_OK | MB_ICONERROR, 0);
-#else
-    std::cout << "Error - " << title << ": " << message << std::endl;
 #endif
 }
 

@@ -23,7 +23,7 @@ AssetReference::AssetReference(Allocator* allocator) : filePath(allocator), obje
 {
 }
 
-const AssetReference& AssetReference::Empty()
+const AssetReference& AssetReference::GetEmpty()
 {
     static const AssetReference value;
     return value;

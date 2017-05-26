@@ -21,7 +21,9 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-SoundContextCommonSettings::SoundContextCommonSettings(Allocator* allocator) : initialAssetFileSelector(allocator), settingsFileNames(allocator)
+SoundContextCommonSettings::SoundContextCommonSettings(Allocator* initialAllocator) :
+    initialAssetFileSelector(initialAllocator),
+    settingsFileNames(initialAllocator)
 {
     this->applicationHandle = nullptr;
     this->osWindow = nullptr;

@@ -16,6 +16,9 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Allocator.hpp"
+#include "finjin/common/ByteBuffer.hpp"
+#include "finjin/engine/AssetClassFileReader.hpp"
+#include "finjin/engine/AssetReference.hpp"
 #include "MetalIncludes.hpp"
 #include "MetalShaderType.hpp"
 
@@ -25,12 +28,26 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
+    class MetalShaderLibrary
+    {
+    public:
+        MetalShaderLibrary();
+
+        void Create(id<MTLDevice> device, const AssetReference& shaderFileAssetReference, AssetClassFileReader& assetClassFileReader, ByteBuffer& readBuffer, Allocator* allocator, Error& error);
+        void Destroy();
+
+    public:
+        ByteBuffer fileBytes;
+        dispatch_data_t dispatchData;
+        id<MTLLibrary> metalLibrary;
+    };
+
     class MetalShader
     {
     public:
         MetalShader(Allocator* allocator);
 
-        void Create(Allocator* allocator, const Utf8String& functionName, id<MTLLibrary> shaderLibrary, Error& error);
+        void Create(id<MTLLibrary> shaderLibrary, const Utf8String& functionName, Error& error);
         void Destroy();
 
         void HandleCreationFailed();

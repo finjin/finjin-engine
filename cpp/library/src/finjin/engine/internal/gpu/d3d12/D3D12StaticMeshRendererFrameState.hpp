@@ -181,9 +181,24 @@ namespace Finjin { namespace Engine {
         DynamicUnorderedMap<size_t, PipelineStateSlot, MapPairConstructNone<size_t, PipelineStateSlot>, PassthroughHash> pipelineStateSlots;
     };
 
-    struct D3D12StaticMeshRendererFrameState
+    class D3D12StaticMeshRendererFrameState
     {
-        //An instance of this struct goes into D3D12FrameBuffer
+    public:
+        D3D12StaticMeshRendererFrameState()
+        {
+            this->index = 0;
+        }
+
+        void Destroy()
+        {
+            for (auto& buffer : this->constantBuffers)
+                buffer.Destroy();
+
+            this->opaqueMaterials.Destroy();
+            this->lights.Destroy();
+        }
+
+    public:
         size_t index;
 
         EnumArray<D3D12StaticMeshRendererKnownConstantBuffer, D3D12StaticMeshRendererKnownConstantBuffer::COUNT, D3D12GpuRenderingConstantBuffer> constantBuffers;

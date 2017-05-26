@@ -466,7 +466,7 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
 
     if (NeedsToModifyRenderTarget())
     {
-        FinishWork(true, true);
+        FinishWork(RenderStatus(true, true));
 
         ApplyModifyRenderTarget(error);
         if (error)
@@ -492,7 +492,7 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
             //Render previous frame if buffering requirement has been met
             if (++impl->renderTickCount >= impl->jobProcessingPipelineSize)
             {
-                FinishFrame(true, false, -1, error);
+                FinishFrame(RenderStatus(true, false), -1, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, "Error while finishing frame.");
@@ -503,14 +503,14 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
     }
 }
 
-void ApplicationViewport::FinishWork(bool continueRendering, bool modifyingRenderTarget)
+void ApplicationViewport::FinishWork(RenderStatus renderStatus)
 {
     if (!impl->stages.empty())
     {
         while ((impl->jobPipelineStageRenderIndex % impl->stages.size()) != (impl->jobPipelineStageUpdateIndex % impl->stages.size()))
         {
             FINJIN_DECLARE_ERROR(error);
-            FinishFrame(continueRendering, modifyingRenderTarget, 0, error);
+            FinishFrame(renderStatus, 0, error);
         }
     }
 
@@ -559,7 +559,7 @@ int ApplicationViewport::Update(JobSystem& jobSystem, Error& error)
     return stepCount;
 }
 
-void ApplicationViewport::FinishFrame(bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error)
+void ApplicationViewport::FinishFrame(RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -568,8 +568,7 @@ void ApplicationViewport::FinishFrame(bool continueRendering, bool modifyingRend
     //auto& jobPipelineStage = stage.jobPipelineStage;
     auto& renderContext = *stage.renderContext.get();
 
-    renderContext.continueRendering = continueRendering;
-    renderContext.modifyingRenderTarget = modifyingRenderTarget;
+    renderContext.renderStatus = renderStatus;
     renderContext.presentSyncIntervalOverride = presentSyncIntervalOverride;
 
     if (stage.hasFrame)

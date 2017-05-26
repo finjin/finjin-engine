@@ -24,13 +24,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct AndroidInputSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     AndroidInputSystem::Settings settings;
 
-    StaticVector<AndroidInputContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<AndroidInputContext*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

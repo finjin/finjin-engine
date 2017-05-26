@@ -89,7 +89,7 @@ public:
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path type for item at index %1%.", i));
                     return EnumerationResult::INCOMPLETE;
                 }
-                
+
                 assert(apkAssetPathType == 0 || apkAssetPathType == 1); //Values are defined in FinjinNativeActivity.java
                 auto type = apkAssetPathType == 0 ? FileSystemEntryType::FILE : FileSystemEntryType::DIRECTORY;
                 if (AnySet(type & types))
@@ -100,7 +100,7 @@ public:
                         FINJIN_SET_ERROR(error, "Failed to get free free database entry for Android APK path.");
                         return EnumerationResult::INCOMPLETE;
                     }
-                    
+
                     if (!jniUtils.GetStringArrayFieldElement(fileSystemEntry->relativePath, "apkAssetPaths", i))
                     {
                         items.CancelAdd(fileSystemEntry);
@@ -108,7 +108,7 @@ public:
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path for item at index %1%.", i));
                         return EnumerationResult::INCOMPLETE;
                     }
-                    
+
                     int64_t apkAssetPathSize;
                     if (!jniUtils.GetLongArrayFieldElement(apkAssetPathSize, "apkAssetPathSizes", i))
                     {
@@ -117,7 +117,7 @@ public:
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path size for item at index %1%.", i));
                         return EnumerationResult::INCOMPLETE;
                     }
-                    
+
                     fileSystemEntry->decompressedSize = static_cast<size_t>(apkAssetPathSize);
                     fileSystemEntry->type = type;
                 }
@@ -135,7 +135,7 @@ public:
 
     const Path& GetFileSystemPath() const override
     {
-        return Path::Empty();
+        return Path::GetEmpty();
     }
 
     FileOperationResult Read(const Path& relativeFilePath, ByteBuffer& buffer, Error& error) override
@@ -373,7 +373,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_INIT_WINDOW: 5");
 
             //Start job system
-            windowedApp->GetJobSystem().Start(error);
+            windowedApp->GetJobSystem().Start(true, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to start job system.");

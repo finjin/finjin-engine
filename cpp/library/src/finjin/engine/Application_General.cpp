@@ -28,7 +28,7 @@ using namespace Finjin::Engine;
 
 
 //Macros------------------------------------------------------------------------
-#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12 && !FINJIN_TARGET_PLATFORM_IS_WINDOWS_UWP
+#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12 && FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_WINDOWS_WIN32
     #define TOGGLE_FULLSCREEN_EXCLUSIVE_ON_LOST_FOCUS 1 //Sometimes helpful to set this to 0 during multi-screen development on Windows
 #else
     #define TOGGLE_FULLSCREEN_EXCLUSIVE_ON_LOST_FOCUS 0
@@ -72,30 +72,24 @@ private:
 //Implementation----------------------------------------------------------------
 
 //Memory allocators
-#if FINJIN_TARGET_PLATFORM_IS_WINDOWS
-    #define NEW_THROW throw()
-#else
-    #define NEW_THROW throw(std::bad_alloc)
-#endif
-
-void* operator new(size_t n) NEW_THROW
+void* operator new(size_t byteCount) FINJIN_GLOBAL_NEW_THROW
 {
-    return Allocator::SystemAllocate(n, FINJIN_CALLER_ARGUMENTS);
+    return Allocator::SystemAllocate(byteCount, FINJIN_CALLER_ARGUMENTS);
 }
 
-void operator delete(void* p) noexcept
+void operator delete(void* mem) noexcept
 {
-    Allocator::SystemDeallocate(p);
+    Allocator::SystemDeallocate(mem);
 }
 
-void* operator new[](size_t n) NEW_THROW
+void* operator new[](size_t byteCount) FINJIN_GLOBAL_NEW_THROW
 {
-    return Allocator::SystemAllocate(n, FINJIN_CALLER_ARGUMENTS);
+    return Allocator::SystemAllocate(byteCount, FINJIN_CALLER_ARGUMENTS);
 }
 
-void operator delete[](void* p) noexcept
+void operator delete[](void* mem) noexcept
 {
-    Allocator::SystemDeallocate(p);
+    Allocator::SystemDeallocate(mem);
 }
 
 //WindowedViewportUpdateContext
@@ -175,11 +169,15 @@ Application::Application(Allocator* allocator, ApplicationDelegate* applicationD
     workingPath2(allocator),
     workingAssetRef(allocator),
     defaultStringsAssetFileNames(allocator),
+    inputSystemSettings(allocator),
     inputContextSettings(allocator),
     gpuContextSettings(allocator),
+    gpuSystemSettings(allocator),
+    soundSystemSettings(allocator),
     soundContextSettings(allocator)
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     ,
+    vrSystemSettings(allocator),
     vrContextSettings(allocator)
 #endif
 {
@@ -317,14 +315,15 @@ void Application::OnSystemMessage(const ApplicationSystemMessage& message, Error
         }
         case ApplicationSystemMessage::PAUSE:
         {
+            RenderStatus renderStatus(true, false);
             for (auto& appViewport : this->appViewportsController)
-                appViewport->FinishWork(true, false);
+                appViewport->FinishWork(renderStatus);
             this->jobSystem.Stop();
             break;
         }
         case ApplicationSystemMessage::RESUME:
         {
-            this->jobSystem.Start(error);
+            this->jobSystem.Start(true, error);
             if (error)
                 FINJIN_SET_ERROR(error, "Failed to start job system during resume.");
             break;
@@ -387,7 +386,8 @@ void Application::Tick(Error& error)
         }
 
         //Handle viewports that are in the process of being closed
-        auto closingWindows = this->appViewportsController.GetViewportsClosing();
+        ApplicationViewportsClosing closingWindows;
+        this->appViewportsController.GetViewportsClosing(closingWindows);
         for (auto& appViewport : closingWindows)
         {
             HandleApplicationViewportEndOfLife(appViewport.get(), true);
@@ -412,12 +412,12 @@ void Application::Initialize(Error& error)
         VirtualFileSystem::Settings fileSystemSettings;
         fileSystemSettings.allocator = GetAllocator();
         fileSystemSettings.searchEntryTypes = FILE_SYSTEM_DATABASE_ENTRY_TYPES;
-        
+
         for (size_t applicationFileSystemIndex = 0; applicationFileSystemIndex < (size_t)ApplicationFileSystem::COUNT; applicationFileSystemIndex++)
         {
             auto& fileSystem = this->fileSystems[applicationFileSystemIndex];
             auto applicationFileSystem = static_cast<ApplicationFileSystem>(applicationFileSystemIndex);
-            
+
             fileSystemSettings.maxEntries = this->applicationDelegate->GetMaxFileSystemEntries(applicationFileSystem, fileSystemSettings.searchEntryTypes);
             if (fileSystemSettings.maxEntries > 0)
             {
@@ -451,7 +451,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after global initialization: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after global initialization: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Read and process boot files
     if (this->applicationDelegate->GetBootFileNameCount() > 0)
@@ -493,7 +493,7 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after reading boot file: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after reading boot file: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Set up file systems----------------------------------------------------------------------------
 
@@ -520,9 +520,9 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    if (!this->standardPaths.userApplicationSettingsDirectory.path.empty())
+    if (!this->standardPaths[WhichStandardPath::USER_APPLICATION_SETTINGS_DIRECTORY].path.empty())
     {
-        auto& standardPath = this->standardPaths.userApplicationSettingsDirectory;
+        auto& standardPath = this->standardPaths[WhichStandardPath::USER_APPLICATION_SETTINGS_DIRECTORY];
         if (!standardPath.isSystemCreated)
             standardPath.path.CreateDirectories();
 
@@ -535,9 +535,9 @@ void Application::Initialize(Error& error)
     }
 
     //Handle temp directory
-    if (!this->standardPaths.userApplicationTemporaryDirectory.path.empty())
+    if (!this->standardPaths[WhichStandardPath::USER_APPLICATION_TEMPORARY_DIRECTORY].path.empty())
     {
-        auto& standardPath = this->standardPaths.userApplicationTemporaryDirectory;
+        auto& standardPath = this->standardPaths[WhichStandardPath::USER_APPLICATION_TEMPORARY_DIRECTORY];
         if (!standardPath.isSystemCreated)
             standardPath.path.CreateDirectories();
 
@@ -551,9 +551,9 @@ void Application::Initialize(Error& error)
     }
 
     //Handle application settings directory
-    if (!this->standardPaths.applicationSettingsDirectory.path.empty())
+    if (!this->standardPaths[WhichStandardPath::APPLICATION_SETTINGS_DIRECTORY].path.empty())
     {
-        auto& standardPath = this->standardPaths.applicationSettingsDirectory;
+        auto& standardPath = this->standardPaths[WhichStandardPath::APPLICATION_SETTINGS_DIRECTORY];
         if (!standardPath.isSystemCreated)
             standardPath.path.CreateDirectories();
 
@@ -591,7 +591,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after updating file database: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after updating file database: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Set up asset readers------------------------------------------------------------------
 
@@ -655,12 +655,16 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after asset class file readers: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after asset class file readers: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Memory settings/allocator--------------------------------------------
 
     //Read settings
-    this->workingAssetRef.ForLocalFile("memory.cfg");
+    if (this->workingAssetRef.ForLocalFile("memory.cfg").HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign 'memory.cfg' to working asset reference.");
+        return;
+    }
     this->assetClassFileReaders[AssetClass::SETTINGS].ReadAndParseSettingsFile(this->memorySettings, this->configFileBuffer, this->workingAssetRef, error);
     if (error)
     {
@@ -674,7 +678,16 @@ void Application::Initialize(Error& error)
     if (foundApplicationArenaSettings != nullptr)
         applicationArenaSettings.byteCount = foundApplicationArenaSettings->byteCount;
     else
-        applicationArenaSettings.byteCount = MemorySize::MEBIBYTE * 500;
+        applicationArenaSettings.byteCount = MemorySize::MEBIBYTE * 250;
+    {
+        auto applicationSystemMemoryFree = GetAllocator()->GetBytesFree();
+        if (this->applicationDelegate->GetApplicationSettings().checkSystemMemoryFree.value &&
+            applicationArenaSettings.byteCount > applicationSystemMemoryFree)
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate %1% from system memory. Only %2% is available. Try closing some applications.", MemorySize::ToString(applicationArenaSettings.byteCount), MemorySize::ToString(applicationSystemMemoryFree)));
+            return;
+        }
+    }
     auto applicationArena = GetAllocator()->AllocateArena(applicationArenaSettings, FINJIN_CALLER_ARGUMENTS);
     if (applicationArena.IsNull())
     {
@@ -693,7 +706,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after initializing application allocator: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after initializing application allocator: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Read various settings-------------------------------------------------------------------------
 
@@ -716,7 +729,11 @@ void Application::Initialize(Error& error)
     }
 
     //File operaton queue settings
-    this->workingAssetRef.ForLocalFile("file-system-operations-queue.cfg");
+    if (this->workingAssetRef.ForLocalFile("file-system-operations-queue.cfg").HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign 'file-system-operations-queue.cfg' to working asset reference.");
+        return;
+    }
     this->fileSystemOperationQueueSettings.allocator = &this->applicationAllocator;
     this->assetClassFileReaders[AssetClass::SETTINGS].ReadAndParseSettingsFile(this->fileSystemOperationQueueSettings, this->configFileBuffer, this->workingAssetRef, error);
     if (error)
@@ -726,7 +743,11 @@ void Application::Initialize(Error& error)
     }
 
     //Asset read queue settings
-    this->workingAssetRef.ForLocalFile("asset-read-queue.cfg");
+    if (this->workingAssetRef.ForLocalFile("asset-read-queue.cfg").HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign 'asset-read-queue.cfg' to working asset reference.");
+        return;
+    }
     this->assetReadQueueSettings.allocator = &this->applicationAllocator;
     this->assetClassFileReaders[AssetClass::SETTINGS].ReadAndParseSettingsFile(this->assetReadQueueSettings, this->configFileBuffer, this->workingAssetRef, error);
     if (error)
@@ -736,7 +757,11 @@ void Application::Initialize(Error& error)
     }
 
     //Job system settings
-    this->workingAssetRef.ForLocalFile("job-system.cfg");
+    if (this->workingAssetRef.ForLocalFile("job-system.cfg").HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign 'job-system.cfg' to working asset reference.");
+        return;
+    }
     this->jobSystemSettings.allocator = &this->applicationAllocator;
     this->assetClassFileReaders[AssetClass::SETTINGS].ReadAndParseSettingsFile(this->jobSystemSettings, this->configFileBuffer, this->workingAssetRef, error);
     if (error)
@@ -862,7 +887,7 @@ void Application::Initialize(Error& error)
     }
 #endif
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after reading settings: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after reading settings: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Initialize various systems------------------------------------------------------------
 
@@ -910,7 +935,7 @@ void Application::Initialize(Error& error)
         //this->logicalCpus.Output(std::cout); //For testing
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after asset read queue: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after asset read queue: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Job system
     {
@@ -923,12 +948,16 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creating job system: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after creating job system: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Input, sound, GPU, VR
     this->inputSystemSettings.allocator = &this->applicationAllocator;
     this->soundSystemSettings.allocator = &this->applicationAllocator;
-    this->gpuSystemSettings.applicationName = this->applicationDelegate->GetName(ApplicationNameFormat::LOWER_CASE);
+    if (this->gpuSystemSettings.applicationName.assign(this->applicationDelegate->GetName(ApplicationNameFormat::LOWER_CASE)).HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign application name to GPU system settings.");
+        return;
+    }
     this->gpuSystemSettings.allocator = &this->applicationAllocator;
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     this->vrSystemSettings.allocator = &this->applicationAllocator;
@@ -940,7 +969,7 @@ void Application::Initialize(Error& error)
         return;
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creating systems: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after creating systems: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Initialize windows------------------------------------------------------------------------
     Setting<size_t> mainApplicationViewportIndex(0);
@@ -1032,7 +1061,7 @@ void Application::Initialize(Error& error)
         this->appViewportsController.push_back(std::move(appViewport));
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creating windows: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage after creating windows: %1%", MemorySize::ToString(GetBytesUsed()));
 
     //Set first window to be the main window if no windows were designated as being the main window
     if (!mainApplicationViewportIndex.IsSet() && !this->appViewportsController.empty())
@@ -1051,7 +1080,7 @@ void Application::Initialize(Error& error)
 
         this->applicationDelegate->OnInitializedApplicationViewportsController(&this->appViewportsController);
 
-        this->jobSystem.Start(error);
+        this->jobSystem.Start(true, error);
         if (error)
         {
             FINJIN_SET_ERROR(error, "Failed to start job system.");
@@ -1059,7 +1088,7 @@ void Application::Initialize(Error& error)
         }
     }
 
-    FINJIN_DEBUG_LOG_INFO("Memory usage after creation: %1%", MemorySize::ToString(this->estimatedBytesFreeAtInitialization - GetAllocator()->GetBytesFree()));
+    FINJIN_DEBUG_LOG_INFO("Memory usage at end of application initialization: %1%", MemorySize::ToString(GetBytesUsed()));
 
     this->applicationDelegate->OnStart();
 }
@@ -1069,7 +1098,8 @@ void Application::Destroy()
     this->assetReadQueue.Destroy();
     this->fileSystemOperationQueue.Destroy();
 
-    auto closingWindows = this->appViewportsController.GetAllViewports();
+    ApplicationViewportsClosing closingWindows;
+    this->appViewportsController.GetAllViewports(closingWindows);
     for (auto& appViewport : closingWindows)
     {
         HandleApplicationViewportEndOfLife(appViewport.get(), true);
@@ -1190,8 +1220,9 @@ void Application::HandleApplicationViewportLostFocus(ApplicationViewport* appVie
         //Have to assume that Windows is going to forcibly remove the full screen exclusive state of at least one window
         //So to be safe, let all windows finish their scheduled work and then toggle out of full screen exclusive
 
+        RenderStatus renderStatus(false, false);
         for (auto& otherAppViewport : this->appViewportsController)
-            otherAppViewport->FinishWork(false, false);
+            otherAppViewport->FinishWork(renderStatus);
 
         this->appViewportsController.RequestFullScreenToggle();
     }
@@ -1502,7 +1533,7 @@ void Application::HandleApplicationViewportEndOfLife(ApplicationViewport* appVie
 {
     //Let the application delegate perform application specific logic on the window
     //At a minimum it should let any async work finish
-    appViewport->FinishWork(false, false);
+    appViewport->FinishWork(RenderStatus(false, false));
     appViewport->GetDelegate()->OnApplicationViewportClosing(appViewport);
 
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
@@ -1626,9 +1657,9 @@ void Application::ReadBootFile(Error& error)
                         }
                     #endif
 
-                        if (this->workingPath.assign(this->standardPaths.applicationBundleDirectory.path).HasError())
+                        if (this->workingPath.assign(this->standardPaths[WhichStandardPath::APPLICATION_BUNDLE_DIRECTORY].path).HasError())
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign application bundle directory '%1%' to working path.", this->standardPaths.applicationBundleDirectory.path));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign application bundle directory '%1%' to working path.", this->standardPaths[WhichStandardPath::APPLICATION_BUNDLE_DIRECTORY].path));
                             return;
                         }
                         if ((this->workingPath /= this->workingPath2).HasError())
@@ -1659,9 +1690,9 @@ void Application::ReadBootFile(Error& error)
                         }
                     #endif
 
-                        if (this->workingPath.assign(this->standardPaths.applicationBundleDirectory.path).HasError())
+                        if (this->workingPath.assign(this->standardPaths[WhichStandardPath::APPLICATION_BUNDLE_DIRECTORY].path).HasError())
                         {
-                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign application bundle directory '%1%' to working path.", this->standardPaths.applicationBundleDirectory.path));
+                            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign application bundle directory '%1%' to working path.", this->standardPaths[WhichStandardPath::APPLICATION_BUNDLE_DIRECTORY].path));
                             return;
                         }
                         if ((this->workingPath /= this->workingPath2).HasError())
@@ -1809,4 +1840,13 @@ void Application::ReadBootFile(Error& error)
             default: break;
         }
     }
+}
+
+size_t Application::GetBytesUsed()
+{
+    auto bytesFreeNow = GetAllocator()->GetBytesFree();
+    if (bytesFreeNow <= this->estimatedBytesFreeAtInitialization)
+        return this->estimatedBytesFreeAtInitialization - bytesFreeNow;
+    else
+        return 0;
 }

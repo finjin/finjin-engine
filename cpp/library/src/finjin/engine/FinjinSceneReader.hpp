@@ -96,8 +96,8 @@ namespace Finjin { namespace Engine {
 
             this->tempString.Create(settings.setupAllocator);
 
-            for (size_t i = 0; i < 3; i++)
-                this->textureAddressMode[i].Create(settings.setupAllocator);
+            for (auto& mode : this->textureAddressMode)
+                mode.Create(settings.setupAllocator);
 
             this->userDataClassPropertiesLookupPointer = settings.userDataClassPropertiesLookup;
             if (this->userDataClassPropertiesLookupPointer == nullptr)
@@ -119,8 +119,8 @@ namespace Finjin { namespace Engine {
 
             this->tempString.Destroy();
 
-            for (size_t i = 0; i < 3; i++)
-                this->textureAddressMode[i].Destroy();
+            for (auto& mode : this->textureAddressMode)
+                mode.Destroy();
 
             this->userDataClassPropertiesLookupPointer = nullptr;
             this->userDataClassPropertiesLookup.Destroy();
@@ -133,7 +133,7 @@ namespace Finjin { namespace Engine {
 
         SimpleUri tempSimpleUri; //Used to parse URIs for temporary use
         Utf8String tempString; //Used to read strings for temporary use
-        Utf8String textureAddressMode[3]; //Used to read strings for temporary use
+        std::array<Utf8String, 3> textureAddressMode; //Used to read strings for temporary use
 
         UserDataClassPropertyPointers* userDataClassPropertiesLookupPointer;
         UserDataClassPropertyPointers userDataClassPropertiesLookup;

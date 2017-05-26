@@ -132,7 +132,7 @@ namespace Finjin { namespace Engine {
 
     struct VRContextCommonSettings
     {
-        VRContextCommonSettings(Allocator* allocator);
+        VRContextCommonSettings(Allocator* initialAllocator);
 
         void HandleTopLevelSetting(const Utf8StringView& key, const Utf8StringView& value, Error& error);
 

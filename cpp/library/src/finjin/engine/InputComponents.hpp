@@ -58,12 +58,14 @@ namespace Finjin { namespace Engine {
     enum class InputDeviceClass : uint32_t
     {
         NONE = 0,
+
         KEYBOARD = 1 << 0,
         MOUSE = 1 << 1,
         GAME_CONTROLLER = 1 << 2,
         TOUCH_SCREEN = 1 << 3,
         ACCELEROMETER = 1 << 4,
         HEADSET = 1 << 5,
+
         ALL = KEYBOARD | MOUSE | GAME_CONTROLLER | TOUCH_SCREEN | ACCELEROMETER | HEADSET
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputDeviceClass)
@@ -81,12 +83,14 @@ namespace Finjin { namespace Engine {
     enum class InputDeviceComponentClass : uint32_t
     {
         NONE = 0,
+
         BUTTON = 1 << 0,
         AXIS = 1 << 1,
         POV = 1 << 2,
         COUNT = 1 << 3,
         RADIUS = 1 << 4,
         LOCATOR = 1 << 5,
+
         ALL = BUTTON | AXIS | POV | COUNT | RADIUS | LOCATOR
     };
     FINJIN_ENUM_BITWISE_OPERATIONS(InputDeviceComponentClass)
@@ -256,6 +260,7 @@ namespace Finjin { namespace Engine {
     enum class InputAxisProcessing : uint32_t
     {
         NONE = 0,
+
         NORMALIZE = 1 << 0,
         LIMIT_MIN_MAX = 1 << 1,
         IS_ABSOLUTE = 1 << 2,
@@ -829,9 +834,9 @@ namespace Finjin { namespace Engine {
         }
 
         auto count = device->GetButtonCount();
-        for (size_t i = 0; i < count; i++)
+        for (size_t buttonIndex = 0; buttonIndex < count; buttonIndex++)
         {
-            auto component = device->GetButton(i);
+            auto component = device->GetButton(buttonIndex);
             if (component->GetCode() == code)
                 return component;
         }
@@ -850,9 +855,9 @@ namespace Finjin { namespace Engine {
         }
 
         auto count = device->GetAxisCount();
-        for (size_t i = 0; i < count; i++)
+        for (size_t axisIndex = 0; axisIndex < count; axisIndex++)
         {
-            auto component = device->GetAxis(i);
+            auto component = device->GetAxis(axisIndex);
             if (component->GetCode() == code)
                 return component;
         }
@@ -871,9 +876,9 @@ namespace Finjin { namespace Engine {
         }
 
         auto count = device->GetPovCount();
-        for (size_t i = 0; i < count; i++)
+        for (size_t povIndex = 0; povIndex < count; povIndex++)
         {
-            auto component = device->GetPov(i);
+            auto component = device->GetPov(povIndex);
             if (component->GetCode() == code)
                 return component;
         }
@@ -892,9 +897,9 @@ namespace Finjin { namespace Engine {
         }
 
         auto count = device->GetLocatorCount();
-        for (size_t i = 0; i < count; i++)
+        for (size_t locatorIndex = 0; locatorIndex < count; locatorIndex++)
         {
-            auto component = device->GetLocator(i);
+            auto component = device->GetLocator(locatorIndex);
             if (component->GetCode() == code)
                 return component;
         }

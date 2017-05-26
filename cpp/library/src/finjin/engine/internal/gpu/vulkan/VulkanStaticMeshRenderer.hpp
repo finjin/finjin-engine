@@ -19,9 +19,10 @@
 #include "finjin/engine/FinjinSceneAssets.hpp"
 #include "finjin/engine/GpuContextCommonSettings.hpp"
 #include "VulkanDescriptorPool.hpp"
+#include "VulkanDescriptorSetLayout.hpp"
+#include "VulkanPipelineBuilder.hpp"
 #include "VulkanPipeline.hpp"
 #include "VulkanPipelineLayout.hpp"
-#include "VulkanDescriptorSetLayout.hpp"
 #include "VulkanStaticMeshRendererFrameState.hpp"
 
 
@@ -76,13 +77,11 @@ namespace Finjin { namespace Engine {
 
         ByteBuffer shaderFileBytes;
 
-
         DynamicVector<VulkanDescriptorSetLayout> descriptorSetLayouts;
 
         VulkanGraphicsPipelineCreateInfoBuilder baseGraphicsPipelineBuilder;
         DynamicVector<VulkanPipelineLayout> pipelineLayouts;
 
-        VkPipelineCache pipelineCache;
         DynamicVector<VkPipeline> pipelines;
 
         struct PipelineLayoutAndPipeline
@@ -101,8 +100,6 @@ namespace Finjin { namespace Engine {
         DynamicUnorderedMap<size_t, PipelineLayoutAndPipeline, MapPairConstructNone<size_t, PipelineLayoutAndPipeline>, PassthroughHash> graphicsPipelineLayoutAndPipelines;
 
         EnumArray<VulkanStaticMeshRendererKnownPipelineLayoutDescription, VulkanStaticMeshRendererKnownPipelineLayoutDescription::COUNT, VulkanDescriptorPool> knownPipelineLayoutDescriptorPools;
-
-        MathMatrix4 clipInvertMatrix;
 
         enum class StandardPushConstant
         {

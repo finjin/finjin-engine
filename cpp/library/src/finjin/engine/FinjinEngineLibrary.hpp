@@ -26,7 +26,8 @@
 //Engine version
 #define FINJIN_ENGINE_VERSION_MAJOR 0
 #define FINJIN_ENGINE_VERSION_MINOR 3
-#define FINJIN_ENGINE_VERSION_PATCH 5
+#define FINJIN_ENGINE_VERSION_PATCH 6
+#define FINJIN_ENGINE_VERSION_STRING "0.3.6"
 
 //GPU system
 #define FINJIN_TARGET_GPU_SYSTEM_D3D12 1
@@ -125,6 +126,29 @@ namespace Finjin { namespace Engine {
         enum { MAX_RENDER_TARGET_BARRIERS = MAX_RENDER_TARGET_OUTPUTS + MAX_RENDER_TARGET_DEPENDENCIES * MAX_RENDER_TARGET_OUTPUTS };
 
         enum { MAX_LIGHTS_PER_OBJECT = 4 }; //A limit of 4 allows 4 indices to be packed into a shader uint4
+    };
+
+    struct RenderStatus
+    {
+        RenderStatus()
+        {
+            this->continueRendering = false;
+            this->modifyingRenderTarget = false;
+        }
+
+        RenderStatus(bool c, bool m)
+        {
+            this->continueRendering = c;
+            this->modifyingRenderTarget = m;
+        }
+
+        bool SuccessRequired() const
+        {
+            return this->continueRendering && !this->modifyingRenderTarget;
+        }
+
+        bool continueRendering;
+        bool modifyingRenderTarget;
     };
 
 } }

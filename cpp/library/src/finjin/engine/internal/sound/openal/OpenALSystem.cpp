@@ -24,13 +24,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct OpenALSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     OpenALSystem::Settings settings;
 
-    StaticVector<OpenALContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<OpenALContext*, EngineConstants::MAX_WINDOWS> contexts;
 
     OpenALAdapterDescriptions adapterDescriptions;
     Utf8String defaultDeviceSpecifier;

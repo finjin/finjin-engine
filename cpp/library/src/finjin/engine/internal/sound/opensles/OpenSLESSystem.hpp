@@ -33,6 +33,9 @@ namespace Finjin { namespace Engine {
 
         struct Settings : SoundSystemCommonSettings
         {
+            Settings(Allocator* initialAllocator) : SoundSystemCommonSettings(initialAllocator)
+            {
+            }
         };
 
         void Create(const Settings& settings, Error& error);

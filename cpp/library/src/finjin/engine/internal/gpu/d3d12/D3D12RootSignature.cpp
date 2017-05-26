@@ -19,300 +19,10 @@
 #include "D3D12RootSignature.hpp"
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/StaticVector.hpp"
+#include "D3D12RootSignatureBuilder.hpp"
 #include "D3D12Utilities.hpp"
 
 using namespace Finjin::Engine;
-
-
-//Local types-------------------------------------------------------------------
-struct D3D12DescriptorRange : public D3D12_DESCRIPTOR_RANGE
-{
-    D3D12DescriptorRange() { FINJIN_ZERO_ITEM(*this); }
-
-    D3D12DescriptorRange
-        (
-        D3D12_DESCRIPTOR_RANGE_TYPE rangeType,
-        UINT numDescriptors,
-        UINT baseShaderRegister,
-        UINT registerSpace,
-        UINT offsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND
-        )
-    {
-        this->RangeType = rangeType;
-        this->NumDescriptors = numDescriptors;
-        this->BaseShaderRegister = baseShaderRegister;
-        this->RegisterSpace = registerSpace;
-        this->OffsetInDescriptorsFromTableStart = offsetInDescriptorsFromTableStart;
-    }
-};
-
-struct D3D12ShaderRootParameter
-{
-    D3D12ShaderRootParameter()
-    {
-        this->parameterType = (D3D12_ROOT_PARAMETER_TYPE)-1;
-        this->shaderRegister = 0;
-        this->registerSpace = 0;
-        this->num32BitValues = 0;
-        this->visibility = D3D12_SHADER_VISIBILITY_ALL;
-    }
-
-    D3D12ShaderRootParameter(D3D12_ROOT_PARAMETER_TYPE parameterType, UINT shaderRegister, UINT registerSpace, D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
-    {
-        this->parameterType = parameterType;
-        this->shaderRegister = shaderRegister;
-        this->registerSpace = registerSpace;
-        this->num32BitValues = 0;
-        this->visibility = visibility;
-    }
-
-    D3D12ShaderRootParameter(UINT shaderRegister, UINT registerSpace, UINT num32BitValues, D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
-    {
-        this->parameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
-        this->shaderRegister = shaderRegister;
-        this->registerSpace = registerSpace;
-        this->num32BitValues = num32BitValues;
-        this->visibility = visibility;
-    }
-
-    D3D12_ROOT_PARAMETER_TYPE parameterType;
-    UINT shaderRegister;
-    UINT registerSpace;
-    UINT num32BitValues;
-    D3D12_SHADER_VISIBILITY visibility;
-
-    StaticVector<D3D12DescriptorRange, 8> descriptorTable;
-};
-
-class D3D12RootParametersBuilder
-{
-public:
-    D3D12RootParametersBuilder() { }
-
-    void Reset() { this->params.clear(); }
-
-    void Set(const D3D12ShaderRootParameter* params, size_t count, Error& error)
-    {
-        FINJIN_ERROR_METHOD_START(error);
-
-        if (count > this->params.max_size())
-        {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("The specified number of parameters '%1%' exceeds the maximum '%2%'.", count, this->params.max_size()));
-            return;
-        }
-
-        this->params.clear();
-        for (size_t i = 0; i < count; i++)
-        {
-            Add(params[i], error);
-            if (error)
-            {
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add root parameter %1%.", i));
-                return;
-            }
-        }
-    }
-
-    void Add(const D3D12ShaderRootParameter& param, Error& error)
-    {
-        FINJIN_ERROR_METHOD_START(error);
-
-        if (this->params.full())
-        {
-            FINJIN_SET_ERROR(error, "The maximum number of root parameters have been added.");
-            return;
-        }
-
-        CD3DX12_ROOT_PARAMETER newParam;
-        FINJIN_ZERO_ITEM(newParam);
-
-        switch (param.parameterType)
-        {
-            case D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE:
-            {
-                newParam.InitAsDescriptorTable(static_cast<UINT>(param.descriptorTable.size()), param.descriptorTable.data(), param.visibility);
-                break;
-            }
-            case D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS:
-            {
-                newParam.InitAsConstants(param.num32BitValues, param.shaderRegister, param.registerSpace, param.visibility);
-                break;
-            }
-            case D3D12_ROOT_PARAMETER_TYPE_CBV:
-            {
-                newParam.InitAsConstantBufferView(param.shaderRegister, param.registerSpace, param.visibility);
-                break;
-            }
-            case D3D12_ROOT_PARAMETER_TYPE_SRV:
-            {
-                newParam.InitAsShaderResourceView(param.shaderRegister, param.registerSpace, param.visibility);
-                break;
-            }
-            case D3D12_ROOT_PARAMETER_TYPE_UAV:
-            {
-                newParam.InitAsUnorderedAccessView(param.shaderRegister, param.registerSpace, param.visibility);
-                break;
-            }
-        }
-
-        this->params.push_back(newParam);
-    }
-
-    const D3D12_ROOT_PARAMETER* Get() const { return this->params.data(); }
-
-    UINT GetCount() const { return static_cast<UINT>(this->params.size()); }
-
-private:
-    StaticVector<CD3DX12_ROOT_PARAMETER, 64> params;
-};
-
-class D3D12StaticSamplersBuilder
-{
-public:
-    D3D12StaticSamplersBuilder() { }
-
-    void Reset() { return this->samplers.clear(); }
-
-    void CreateDefaults()
-    {
-        const CD3DX12_STATIC_SAMPLER_DESC pointWrap
-            (
-            0,
-            D3D12_FILTER_MIN_MAG_MIP_POINT,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP
-            );
-
-        const CD3DX12_STATIC_SAMPLER_DESC pointClamp
-            (
-            1,
-            D3D12_FILTER_MIN_MAG_MIP_POINT,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP
-            );
-
-        const CD3DX12_STATIC_SAMPLER_DESC linearWrap
-            (
-            2,
-            D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP
-            );
-
-        const CD3DX12_STATIC_SAMPLER_DESC linearClamp
-            (
-            3,
-            D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP
-            );
-
-        const CD3DX12_STATIC_SAMPLER_DESC anisotropicWrap
-            (
-            4,
-            D3D12_FILTER_ANISOTROPIC,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-            0.0f, //mipLODBias
-            8 //maxAnisotropy
-            );
-
-        const CD3DX12_STATIC_SAMPLER_DESC anisotropicClamp
-            (
-            5,
-            D3D12_FILTER_ANISOTROPIC,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-            0.0f, //mipLODBias
-            8 //maxAnisotropy
-            );
-
-        CD3DX12_STATIC_SAMPLER_DESC staticSamplers[] =
-            {
-            pointWrap,
-            pointClamp,
-            linearWrap,
-            linearClamp,
-            anisotropicWrap,
-            anisotropicClamp
-            };
-
-        this->samplers.assign(staticSamplers, FINJIN_COUNT_OF(staticSamplers));
-    }
-
-    const CD3DX12_STATIC_SAMPLER_DESC* Get() const { return this->samplers.data(); }
-
-    UINT GetCount() const { return static_cast<UINT>(this->samplers.size()); }
-
-private:
-    StaticVector<CD3DX12_STATIC_SAMPLER_DESC, 16> samplers;
-};
-
-class D3D12RootSignature
-{
-public:
-    D3D12RootSignature() { Reset(); }
-
-    void Reset()
-    {
-        this->rootParameters.Reset();
-        this->staticSamplers.Reset();
-        this->flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-    }
-
-    D3D12RootParametersBuilder& GetRootParameters() { return this->rootParameters; }
-    D3D12StaticSamplersBuilder& GetStaticSamplers() { return this->staticSamplers; }
-
-    D3D12_ROOT_SIGNATURE_FLAGS GetFlags() const { return this->flags; }
-    void SetFlags(D3D12_ROOT_SIGNATURE_FLAGS value) { this->flags = value; }
-
-    void Create(Microsoft::WRL::ComPtr<ID3D12RootSignature>& rootSig, ID3D12Device* device, Error& error)
-    {
-        FINJIN_ERROR_METHOD_START(error);
-
-        CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc
-            (
-            this->rootParameters.GetCount(),
-            this->rootParameters.Get(),
-            this->staticSamplers.GetCount(),
-            this->staticSamplers.Get(),
-            this->flags
-            );
-
-        Microsoft::WRL::ComPtr<ID3DBlob> serializedRootSig;
-        Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
-        auto result = D3D12SerializeRootSignature(&rootSigDesc, D3D_ROOT_SIGNATURE_VERSION_1, serializedRootSig.GetAddressOf(), errorBlob.GetAddressOf());
-        if (FINJIN_CHECK_HRESULT_FAILED(result))
-        {
-            FINJIN_D3D12_SET_ERROR_BLOB(error, "Failed to serialize root signature", errorBlob);
-            return;
-        }
-
-        result = device->CreateRootSignature
-            (
-            0,
-            serializedRootSig->GetBufferPointer(),
-            serializedRootSig->GetBufferSize(),
-            IID_PPV_ARGS(rootSig.GetAddressOf())
-            );
-        if (FINJIN_CHECK_HRESULT_FAILED(result))
-        {
-            FINJIN_SET_ERROR(error, "Failed to create root signature.");
-            return;
-        }
-    }
-
-private:
-    D3D12RootParametersBuilder rootParameters;
-    D3D12StaticSamplersBuilder staticSamplers;
-    D3D12_ROOT_SIGNATURE_FLAGS flags;
-};
 
 
 //Implementation----------------------------------------------------------------
@@ -326,13 +36,13 @@ void D3D12RootSignatureDescriptor::CreateRootSignature(Microsoft::WRL::ComPtr<ID
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    D3D12RootSignature rootSignatureBuilder;
+    D3D12RootSignatureBuilder rootSignatureBuilder;
 
     for (auto& rootSignatureElement : this->elements)
     {
         if (rootSignatureElement.type == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
         {
-            D3D12ShaderRootParameter table;
+            D3D12ShaderRootParameterBuilder table;
             table.parameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
             table.visibility = rootSignatureElement.visibility;
 
@@ -357,7 +67,7 @@ void D3D12RootSignatureDescriptor::CreateRootSignature(Microsoft::WRL::ComPtr<ID
         }
         else
         {
-            D3D12ShaderRootParameter parameter(rootSignatureElement.type, static_cast<UINT>(rootSignatureElement.shaderRegister), static_cast<UINT>(rootSignatureElement.registerSpace), rootSignatureElement.visibility);
+            D3D12ShaderRootParameterBuilder parameter(rootSignatureElement.type, static_cast<UINT>(rootSignatureElement.shaderRegister), static_cast<UINT>(rootSignatureElement.registerSpace), rootSignatureElement.visibility);
             rootSignatureBuilder.GetRootParameters().Add(parameter, error);
             if (error)
             {
@@ -467,7 +177,7 @@ void D3D12RootSignatureDescriptor::CreateFromScope
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto elementCount = reader.GetSectionCountBeneathCurrent(Utf8String::Empty());
+    auto elementCount = reader.GetSectionCountBeneathCurrent(Utf8String::GetEmpty());
     if (elementCount > 0)
     {
         if (!rootSignature.elements.Create(elementCount, allocator, allocator))
@@ -525,7 +235,7 @@ void D3D12RootSignatureDescriptor::CreateFromScope
 
                         element.type = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 
-                        descriptorTableElementCount = reader.GetSectionCountBeneathCurrent(Utf8String::Empty());
+                        descriptorTableElementCount = reader.GetSectionCountBeneathCurrent(Utf8String::GetEmpty());
                         if (!element.descriptorTable.Create(descriptorTableElementCount, allocator, allocator))
                         {
                             FINJIN_SET_ERROR(error, "Failed to create descriptor table elements.");

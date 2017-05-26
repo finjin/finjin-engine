@@ -30,42 +30,26 @@
 using namespace Finjin::Engine;
 
 
-//Local functions---------------------------------------------------------------
-static bool IsFormatAvailable(MetalFeatureSetCapability formatCapabilities)
+//Local types-------------------------------------------------------------------
+struct MetalFullScreenQuadKnownBindings
 {
-    //The presence of either RESOLVE or MSAA seems to be sufficient
-    return AnySet(formatCapabilities & (MetalFeatureSetCapability::RESOLVE | MetalFeatureSetCapability::MSAA));
-}
-
-static bool IsSupportedColorFormat(MetalFeatureSet::Capabilities& caps, MTLPixelFormat format)
-{
-    switch (format)
+    struct VertexStageBuffer
     {
-        case MTLPixelFormatBGRA8Unorm: return IsFormatAvailable(caps.BGRA8Unorm);
-        case MTLPixelFormatBGRA8Unorm_sRGB: return IsFormatAvailable(caps.BGRA8Unorm_sRGB);
-        case MTLPixelFormatRGBA8Unorm: return IsFormatAvailable(caps.RGBA8Unorm);
-        case MTLPixelFormatRGBA8Unorm_sRGB: return IsFormatAvailable(caps.RGBA8Unorm_sRGB);
+        enum
+        {
+            VERTEX,
+            MODEL_VIEW_PROJECTION_MATRIX
+        };
+    };
 
-        default: return false;
-    }
-}
-
-static bool IsSupportedDepthStencilFormat(MetalFeatureSet::Capabilities& caps, MTLPixelFormat format)
-{
-    switch (format)
+    struct FragmentStageBuffer
     {
-    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
-        case MTLPixelFormatDepth16Unorm: return IsFormatAvailable(caps.Depth16Unorm);
-        case MTLPixelFormatDepth24Unorm_Stencil8: return IsFormatAvailable(caps.Depth24Unorm_Stencil8);
-        case MTLPixelFormatX24_Stencil8: return IsFormatAvailable(caps.X24_Stencil8);
-    #endif
-        case MTLPixelFormatDepth32Float: return IsFormatAvailable(caps.Depth32Float);
-        case MTLPixelFormatDepth32Float_Stencil8: return IsFormatAvailable(caps.Depth32Float_Stencil8);
-        case MTLPixelFormatX32_Stencil8: return IsFormatAvailable(caps.X32_Stencil8);
-
-        default: return false;
-    }
-}
+        enum
+        {
+            TEXTURE
+        };
+    };
+};
 
 
 //Implementation----------------------------------------------------------------
@@ -184,14 +168,14 @@ GpuInputFormatStruct* MetalGpuContextImpl::InternalSettings::GetInputFormat(cons
         {
             if (count == inputFormat.GetElementCount())
             {
-                size_t i = 0;
-                for (i = 0; i < count; i++)
+                size_t elementIndex = 0;
+                for (elementIndex = 0; elementIndex < count; elementIndex++)
                 {
-                    auto inputFormatElement = inputFormat.GetElement(i);
-                    if (elements[i].id != inputFormatElement->elementID || elements[i].type != inputFormatElement->type)
+                    auto inputFormatElement = inputFormat.GetElement(elementIndex);
+                    if (elements[elementIndex].id != inputFormatElement->elementID || elements[elementIndex].type != inputFormatElement->type)
                         break;
                 }
-                if (i == count)
+                if (elementIndex == count)
                     return &inputFormat;
             }
         }
@@ -203,21 +187,22 @@ GpuInputFormatStruct* MetalGpuContextImpl::InternalSettings::GetInputFormat(cons
 //MetalGpuContextImpl
 MetalGpuContextImpl::MetalGpuContextImpl(Allocator* allocator) :
     AllocatedClass(allocator),
+    GpuContextCommonImpl(allocator),
     settings(allocator),
-    clearColor(0, 0, 0, 0),
-    materialMapTypeToGpuElements
+    materialMapTypeToElements
         (
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_DIFFUSE, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::DIFFUSE, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_DIFFUSE_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_DIFFUSE_AMOUNT, ShaderFeatureFlag::MAP_DIFFUSE),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_SPECULAR, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::SPECULAR, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SPECULAR_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SPECULAR_AMOUNT, ShaderFeatureFlag::MAP_SPECULAR),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_REFLECTION, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::REFLECTION, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFLECTION_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFLECTION_AMOUNT, ShaderFeatureFlag::MAP_REFLECTION),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_REFRACTION, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::REFRACTION, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFRACTION_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFRACTION_AMOUNT, ShaderFeatureFlag::MAP_REFRACTION),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_BUMP, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::BUMP, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_BUMP_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_BUMP_AMOUNT, ShaderFeatureFlag::MAP_BUMP),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_HEIGHT, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::HEIGHT, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_HEIGHT_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_HEIGHT_AMOUNT, ShaderFeatureFlag::MAP_HEIGHT),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_SELF_ILLUMINATION, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::SELF_ILLUMINATION, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SELF_ILLUMINATION_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SELF_ILLUMINATION_AMOUNT, ShaderFeatureFlag::MAP_SELF_ILLUMINATION),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_OPACITY, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::OPACITY, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_OPACITY_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_OPACITY_AMOUNT, ShaderFeatureFlag::MAP_OPACITY),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_ENVIRONMENT, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::ENVIRONMENT, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_ENVIRONMENT_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_ENVIRONMENT_AMOUNT, ShaderFeatureFlag::MAP_ENVIRONMENT),
-        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_SHININESS, MaterialMapTypeToGpuElements(MetalMaterial::MapIndex::SHININESS, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SHININESS_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SHININESS_AMOUNT, ShaderFeatureFlag::MAP_SHININESS)
-        )
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_DIFFUSE, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::DIFFUSE, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_DIFFUSE_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_DIFFUSE_AMOUNT, ShaderFeatureFlag::MAP_DIFFUSE),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_SPECULAR, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::SPECULAR, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SPECULAR_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SPECULAR_AMOUNT, ShaderFeatureFlag::MAP_SPECULAR),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_REFLECTION, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::REFLECTION, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFLECTION_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFLECTION_AMOUNT, ShaderFeatureFlag::MAP_REFLECTION),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_REFRACTION, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::REFRACTION, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFRACTION_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_REFRACTION_AMOUNT, ShaderFeatureFlag::MAP_REFRACTION),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_BUMP, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::BUMP, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_BUMP_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_BUMP_AMOUNT, ShaderFeatureFlag::MAP_BUMP),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_HEIGHT, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::HEIGHT, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_HEIGHT_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_HEIGHT_AMOUNT, ShaderFeatureFlag::MAP_HEIGHT),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_SELF_ILLUMINATION, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::SELF_ILLUMINATION, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SELF_ILLUMINATION_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SELF_ILLUMINATION_AMOUNT, ShaderFeatureFlag::MAP_SELF_ILLUMINATION),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_OPACITY, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::OPACITY, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_OPACITY_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_OPACITY_AMOUNT, ShaderFeatureFlag::MAP_OPACITY),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_ENVIRONMENT, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::ENVIRONMENT, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_ENVIRONMENT_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_ENVIRONMENT_AMOUNT, ShaderFeatureFlag::MAP_ENVIRONMENT),
+        StandardAssetDocumentPropertyValues::TypeName::MATERIAL_MAP_SHININESS, GpuMaterialMapIndexToConstantBufferElements<MetalMaterial::MapIndex>(MetalMaterial::MapIndex::SHININESS, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SHININESS_TEXTURE_INDEX, GpuStructuredAndConstantBufferStructMetadata::ElementID::MAP_SHININESS_AMOUNT, ShaderFeatureFlag::MAP_SHININESS)
+        ),
+    commonResources(allocator)
 {
     this->device = nullptr;
 
@@ -225,12 +210,8 @@ MetalGpuContextImpl::MetalGpuContextImpl(Allocator* allocator) :
 
     this->device = nullptr;
 
-    this->currentFrameBufferIndex = 0;
-
-    this->sequenceIndex = 0;
-
-    FINJIN_ZERO_ITEM(this->viewport);
-    FINJIN_ZERO_ITEM(this->scissorRect);
+    FINJIN_ZERO_ITEM(this->renderViewport);
+    FINJIN_ZERO_ITEM(this->renderScissorRect);
 }
 
 void MetalGpuContextImpl::Create(const MetalGpuContextSettings& settings, Error& error)
@@ -282,27 +263,19 @@ void MetalGpuContextImpl::Destroy()
 
     if (this->device != nullptr)
     {
+        for (auto& frameBuffer : this->frameBuffers)
+            frameBuffer.Destroy();
+
+        for (auto& frameStage : this->frameStages)
+            frameStage.Destroy();
+
+        this->depthStencilRenderTarget.Destroy();
+
         this->staticMeshRenderer.Destroy();
 
         this->assetResources.Destroy();
+        this->commonResources.Destroy();
 
-        //Destroy screen size dependent resources
-        DestroyScreenSizeDependentResources(false);
-
-        //Destroy frame buffer resources
-        for (auto& frameBuffer : this->frameBuffers)
-        {
-            frameBuffer.ResetCommandBuffers();
-
-            frameBuffer.commandQueue = nullptr;
-        }
-        this->frameStages.clear();
-
-        //Destroy texture objects
-        this->textureResources.defaultSamperDescriptor = nullptr;
-        this->textureResources.defaultSampler = nullptr;
-
-        //Destroy device
         this->device = nullptr;
     }
 }
@@ -311,7 +284,7 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    //Find device---------------
+    //Find device
     this->device = this->metalSystem->GetImpl()->GetBestMetalDevice(this->settings.gpuID, this->deviceDescription, error);
     if (error)
     {
@@ -319,78 +292,18 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
         return;
     }
 
-    //Determine color format--------------
+    //Determine color format
+    if (!MetalUtilities::GetBestColorFormat(this->settings.colorFormat, this->deviceDescription.featureSet.capabilities))
     {
-        StaticVector<MTLPixelFormat, 10> formats;
-
-        if (this->settings.colorFormat.requested == MTLPixelFormatInvalid)
-            formats.push_back(static_cast<MTLPixelFormat>(this->settings.colorFormat.requested));
-
-        formats.push_back(MTLPixelFormatBGRA8Unorm);
-        formats.push_back(MTLPixelFormatBGRA8Unorm_sRGB);
-        formats.push_back(MTLPixelFormatRGBA8Unorm);
-        formats.push_back(MTLPixelFormatRGBA8Unorm_sRGB);
-
-        //Get first supported format
-        for (auto format : formats)
-        {
-            if (IsSupportedColorFormat(this->deviceDescription.featureSet.capabilities, format))
-            {
-                this->settings.colorFormat.actual = format;
-                break;
-            }
-        }
-
-        if (this->settings.colorFormat.actual == MTLPixelFormatInvalid)
-        {
-            FINJIN_SET_ERROR(error, "Failed to find a supported color format.");
-            return;
-        }
+        FINJIN_SET_ERROR(error, "Failed to determine supported color format.");
+        return;
     }
 
-    //Determine depth/stencil format---------------
+    //Determine depth/stencil format
+    if (!MetalUtilities::GetBestDepthStencilFormat(this->settings.depthStencilFormat, this->settings.stencilRequired, this->deviceDescription.featureSet.capabilities))
     {
-        StaticVector<MTLPixelFormat, 10> formats;
-
-        if (this->settings.depthStencilFormat.requested != MTLPixelFormatInvalid)
-        {
-            if (!this->settings.stencilRequired || MetalUtilities::IsDepthStencilFormat(static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.requested)))
-                formats.push_back(static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.requested));
-        }
-
-        if (this->settings.stencilRequired)
-        {
-        #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
-            formats.push_back(MTLPixelFormatDepth24Unorm_Stencil8);
-        #endif
-            formats.push_back(MTLPixelFormatDepth32Float_Stencil8);
-        }
-        else
-        {
-            formats.push_back(MTLPixelFormatDepth32Float);
-        #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
-            formats.push_back(MTLPixelFormatDepth24Unorm_Stencil8);
-            formats.push_back(MTLPixelFormatDepth32Float_Stencil8);
-            formats.push_back(MTLPixelFormatDepth16Unorm);
-        #endif
-            formats.push_back(MTLPixelFormatDepth32Float_Stencil8);
-        }
-
-        //Get first supported format
-        for (auto format : formats)
-        {
-            if (IsSupportedDepthStencilFormat(this->deviceDescription.featureSet.capabilities, format))
-            {
-                this->settings.depthStencilFormat.actual = format;
-                break;
-            }
-        }
-
-        if (this->settings.depthStencilFormat.actual == MTLPixelFormatInvalid)
-        {
-            FINJIN_SET_ERROR(error, "Failed to find a supported depth/stencil format.");
-            return;
-        }
+        FINJIN_SET_ERROR(error, "Failed to determine supported depth/stencil format.");
+        return;
     }
 
     //Initialize Metal layer
@@ -399,16 +312,46 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
     metalLayer.pixelFormat = static_cast<MTLPixelFormat>(this->settings.colorFormat.actual);
 
     //Determine some settings-------------------------------------------
-    UpdateCachedFrameBufferSize();
+    UpdatedCachedWindowSize();
+    auto maxRenderTargetSize = this->settings.renderTargetSize.EvaluateMax(nullptr, &this->windowPixelBounds);
 
     this->settings.frameBufferCount.actual = this->settings.frameBufferCount.requested;
     this->frameBuffers.resize(this->settings.frameBufferCount.actual);
     for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
     {
         auto& frameBuffer = this->frameBuffers[frameBufferIndex];
+
         frameBuffer.SetIndex(frameBufferIndex);
 
         frameBuffer.commandQueue = [this->device newCommandQueue];
+
+        frameBuffer.CreateCommandBuffers(this->settings.maxGpuCommandListsPerStage, GetAllocator(), error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create command buffer objects for frame buffer %1%.", frameBufferIndex));
+            return;
+        }
+
+        if (this->settings.renderTargetSize.GetType() == GpuRenderTargetSizeType::EXPLICIT_SIZE)
+        {
+            frameBuffer.renderTarget.CreateColor(this->device, maxRenderTargetSize[0], maxRenderTargetSize[1], static_cast<MTLPixelFormat>(this->settings.colorFormat.actual), false, error);
+            if (error)
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
+                return;
+            }
+        }
+    }
+
+    if (this->settings.renderTargetSize.GetType() == GpuRenderTargetSizeType::EXPLICIT_SIZE &&
+        this->settings.depthStencilFormat.actual != MTLPixelFormatInvalid)
+    {
+        this->depthStencilRenderTarget.CreateDepthStencil(this->device, maxRenderTargetSize[0], maxRenderTargetSize[1], static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.actual), false, error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to create depth/stencil buffer.");
+            return;
+        }
     }
 
     this->settings.jobProcessingPipelineSize = GpuContextCommonSettings::CalculateJobPipelineSize(this->settings.frameBufferCount.actual);
@@ -416,24 +359,9 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
     for (size_t frameStageIndex = 0; frameStageIndex < this->frameStages.size(); frameStageIndex++)
     {
         auto& frameStage = this->frameStages[frameStageIndex];
-        frameStage.index = frameStageIndex;
-    }
 
-    //Create other resources
-    /*{
-        auto drawableSize = CGSizeMake(this->renderingPixelBounds.GetClientWidth(), this->renderingPixelBounds.GetClientHeight());
-        
-        auto offscreenRenderTextureDesc = [[MTLTextureDescriptor alloc] init];
-        offscreenRenderTextureDesc.textureType = MTLTextureType2D;
-        offscreenRenderTextureDesc.width = drawableSize.width; //this->setting.renderDimensions.width
-        offscreenRenderTextureDesc.height = drawableSize.height; //this->setting.renderDimensions.height
-        offscreenRenderTextureDesc.pixelFormat = static_cast<MTLPixelFormat>(this->settings.colorFormat.actual);
-        offscreenRenderTextureDesc.mipmapLevelCount = 1;
-        offscreenRenderTextureDesc.resourceOptions = MTLResourceStorageModePrivate;
-        offscreenRenderTextureDesc.usage = MTLTextureUsageRenderTarget;
-        
-        //auto offscreenRenderTexture = [this->device newTextureWithDescriptor:offscreenRenderTextureDesc];
-    }*/
+        frameStage.SetIndex(frameStageIndex);
+    }
 }
 
 void MetalGpuContextImpl::CreateDeviceSupportObjects(Error& error)
@@ -532,27 +460,82 @@ void MetalGpuContextImpl::CreateDeviceSupportObjects(Error& error)
         return;
     }
 
-    if (!this->lights.Create(this->settings.maxLights, GetAllocator(), GetAllocator()))
+    if (!this->commonResources.lights.Create(this->settings.maxLights, GetAllocator(), GetAllocator()))
     {
         FINJIN_SET_ERROR(error, "Failed to allocate light lookup.");
         return;
     }
-    for (size_t lightIndex = 0; lightIndex < this->lights.items.size(); lightIndex++)
-        this->lights.items[lightIndex].gpuBufferIndex = lightIndex;
+    for (size_t lightIndex = 0; lightIndex < this->commonResources.lights.items.size(); lightIndex++)
+        this->commonResources.lights.items[lightIndex].gpuBufferIndex = lightIndex;
 
     //Create texture samplers
     {
-        this->textureResources.defaultSamperDescriptor = [[MTLSamplerDescriptor alloc] init];
-        this->textureResources.defaultSamperDescriptor.minFilter = MTLSamplerMinMagFilterLinear;
-        this->textureResources.defaultSamperDescriptor.magFilter = MTLSamplerMinMagFilterLinear;
-        this->textureResources.defaultSamperDescriptor.sAddressMode = MTLSamplerAddressModeRepeat;
-        this->textureResources.defaultSamperDescriptor.tAddressMode = MTLSamplerAddressModeRepeat;
-        this->textureResources.defaultSamperDescriptor.mipFilter = MTLSamplerMipFilterLinear;
-        this->textureResources.defaultSamperDescriptor.maxAnisotropy = 1;
-        this->textureResources.defaultSamperDescriptor.normalizedCoordinates = YES;
-        this->textureResources.defaultSamperDescriptor.lodMinClamp = 0.0f;
-        this->textureResources.defaultSamperDescriptor.lodMaxClamp = FLT_MAX;
-        this->textureResources.defaultSampler = [this->device newSamplerStateWithDescriptor:this->textureResources.defaultSamperDescriptor];
+        this->commonResources.defaultSamplerDescriptor = [[MTLSamplerDescriptor alloc] init];
+        this->commonResources.defaultSamplerDescriptor.minFilter = MTLSamplerMinMagFilterLinear;
+        this->commonResources.defaultSamplerDescriptor.magFilter = MTLSamplerMinMagFilterLinear;
+        this->commonResources.defaultSamplerDescriptor.sAddressMode = MTLSamplerAddressModeRepeat;
+        this->commonResources.defaultSamplerDescriptor.tAddressMode = MTLSamplerAddressModeRepeat;
+        this->commonResources.defaultSamplerDescriptor.rAddressMode = MTLSamplerAddressModeRepeat;
+        this->commonResources.defaultSamplerDescriptor.mipFilter = MTLSamplerMipFilterLinear;
+        this->commonResources.defaultSamplerDescriptor.maxAnisotropy = 1;
+        this->commonResources.defaultSamplerDescriptor.normalizedCoordinates = YES;
+        this->commonResources.defaultSamplerDescriptor.lodMinClamp = 0.0f;
+        this->commonResources.defaultSamplerDescriptor.lodMaxClamp = FLT_MAX;
+        this->commonResources.defaultSampler = [this->device newSamplerStateWithDescriptor:this->commonResources.defaultSamplerDescriptor];
+    }
+
+    //Create full screen shader resources
+    {
+        this->workingAssetReference.ForUriString("common-shaders.metallib", this->workingUri, error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to parse common shaders asset reference.");
+            return;
+        }
+
+        this->commonResources.commonShaderLibrary.Create(this->device, this->workingAssetReference, this->shaderAssetClassFileReader, this->readBuffer, GetAllocator(), error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to create common shader library.");
+            return;
+        }
+
+        this->commonResources.fullScreenQuadShaders.vertexShader.Create(this->commonResources.commonShaderLibrary.metalLibrary, "fullscreen_quad_vertex_main", error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to create vertex shader 'fullscreen_quad_vertex_main'.");
+            return;
+        }
+
+        this->commonResources.fullScreenQuadShaders.fragmentShader.Create(this->commonResources.commonShaderLibrary.metalLibrary, "fullscreen_quad_fragment_main", error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to create fragment shader 'fullscreen_quad_fragment_main'.");
+            return;
+        }
+
+        this->commonResources.fullScreenQuadMesh.Create(this->device, error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to create full screen quad mesh.");
+            return;
+        }
+
+        this->commonResources.fullScreenQuadGraphicsPipelineStateDesc = [[MTLRenderPipelineDescriptor alloc] init];
+        this->commonResources.fullScreenQuadGraphicsPipelineStateDesc.sampleCount = 1;
+        this->commonResources.fullScreenQuadGraphicsPipelineStateDesc.vertexFunction = this->commonResources.fullScreenQuadShaders.vertexShader.metalFunction;
+        this->commonResources.fullScreenQuadGraphicsPipelineStateDesc.fragmentFunction = this->commonResources.fullScreenQuadShaders.fragmentShader.metalFunction;
+        this->commonResources.fullScreenQuadGraphicsPipelineStateDesc.vertexDescriptor = this->commonResources.fullScreenQuadMesh.vertexDescriptor;
+        this->commonResources.fullScreenQuadGraphicsPipelineStateDesc.colorAttachments[0].pixelFormat = static_cast<MTLPixelFormat>(this->settings.colorFormat.actual);
+        {
+            NSError* nserror = nullptr;
+            this->commonResources.fullScreenQuadGraphicsPipelineState = [this->device newRenderPipelineStateWithDescriptor:this->commonResources.fullScreenQuadGraphicsPipelineStateDesc error:&nserror];
+            if (this->commonResources.fullScreenQuadGraphicsPipelineState == nullptr)
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create full screen quad Metal pipeline: %1%", nserror.localizedDescription.UTF8String));
+                return;
+            }
+        }
     }
 
     CreateScreenSizeDependentResources(error);
@@ -602,85 +585,120 @@ MetalFrameStage& MetalGpuContextImpl::StartFrameStage(size_t index, SimpleTimeDe
 {
     auto& frameStage = this->frameStages[index];
 
-    frameStage.frameBufferIndex = this->currentFrameBufferIndex++ % this->frameBuffers.size();
+    auto frameBufferIndex = this->currentFrameBufferIndex++ % this->frameBuffers.size();
 
-    auto metalLayer = this->settings.osWindow->GetImpl()->GetMetalLayer();
-    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+    auto& frameBuffer = this->frameBuffers[frameBufferIndex];
 
-    frameBuffer.WaitForCommandBuffers();
-    frameBuffer.ResetCommandBuffers();
+    //Wait for previous frame to complete
+    frameBuffer.WaitForNotInUse();
+    frameStage.frameBufferIndex = frameBufferIndex;
 
-    auto drawable = metalLayer.nextDrawable;
-    //assert(drawable != nullptr);
-    while (drawable == nullptr)
-    {
-        drawable = metalLayer.nextDrawable;
-    }
-    if (drawable != nullptr)
-    {
-        frameBuffer.renderTarget.renderTargetOutputResources.resize(1);
-        frameBuffer.renderTarget.renderTargetOutputResources[0] = drawable;
-    }
-
+    //Update state
     frameStage.elapsedTime = elapsedTime;
-
     frameStage.totalElapsedTime = totalElapsedTime;
-
     frameStage.sequenceIndex = this->sequenceIndex++;
+
+    frameBuffer.CreateFreeCommandBuffers();
 
     return frameStage;
 }
 
-void MetalGpuContextImpl::FinishBackFrameBufferRender(MetalFrameStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error)
+void MetalGpuContextImpl::PresentFrameStage(MetalFrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
     auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 
-    if (!frameBuffer.renderTarget.renderTargetOutputResources.empty())
+    //Process update
+    if (renderStatus.SuccessRequired())
     {
-        auto commandBuffer = frameBuffer.GetCurrentGraphicsCommandBuffer();
-        [commandBuffer presentDrawable:frameBuffer.renderTarget.renderTargetOutputResources[0]];
+        //Get next drawable/back buffer
+        auto metalLayer = this->settings.osWindow->GetImpl()->GetMetalLayer();
+        auto drawable = metalLayer.nextDrawable;
+        assert(drawable != nullptr);
+        if (drawable == nullptr)
+        {
+            frameBuffer.WaitForCommandBuffers();
+            frameBuffer.ResetCommandBuffers();
+
+            FINJIN_SET_ERROR(error, "Failed to get next drawable.");
+            return;
+        }
+
+        //Encode commands to draw the off screen render target onto a full screen quad on the back buffer----------------
+        auto commandBuffer = frameBuffer.NewGraphicsCommandBuffer();
+        assert(commandBuffer != nullptr);
+
+        //Color attachment
+        auto colorAttachment = frameBuffer.renderTarget.renderPassDescriptor.colorAttachments[0];
+        colorAttachment.texture = drawable.texture;
+        colorAttachment.loadAction = MTLLoadActionLoad;
+        colorAttachment.storeAction = MTLStoreActionStore;
+
+        //Depth/stencil attachments
+        auto depthAttachment = frameBuffer.renderTarget.renderPassDescriptor.depthAttachment;
+        depthAttachment.texture = nullptr;
+        depthAttachment.loadAction = MTLLoadActionLoad;
+        depthAttachment.storeAction = MTLStoreActionStore;
+
+        if (MetalUtilities::IsDepthStencilFormat(static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.actual)))
+        {
+            auto stencilAttachment = frameBuffer.renderTarget.renderPassDescriptor.stencilAttachment;
+            stencilAttachment.texture = nullptr;
+            stencilAttachment.loadAction = MTLLoadActionLoad;
+            stencilAttachment.storeAction = MTLStoreActionStore;
+        }
+
+        auto renderCommandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:frameBuffer.renderTarget.renderPassDescriptor];
+
+        [renderCommandEncoder setViewport:this->windowViewport];
+        [renderCommandEncoder setScissorRect:this->windowScissorRect];
+
+        [renderCommandEncoder setCullMode:MTLCullModeNone];
+
+        [renderCommandEncoder setRenderPipelineState:this->commonResources.fullScreenQuadGraphicsPipelineState];
+
+        [renderCommandEncoder setVertexBuffer:this->commonResources.fullScreenQuadMesh.vertexBuffer offset:0 atIndex:MetalFullScreenQuadKnownBindings::VertexStageBuffer::VERTEX];
+
+        MathMatrix4 modelViewProjectionMatrix;
+        {
+            modelViewProjectionMatrix.setIdentity();
+            /*auto translation = MathAffineTransform(MathTranslation(0.0f, 0.0f, 0.0f)); //Translation is in normalized device coordinates [-1, 1]
+             auto scale = MathAffineTransform(MathScaling(1.0f, 1.0f, 1.0f));
+             modelViewProjectionMatrix = (translation * scale).matrix();*/
+        }
+        MathMatrix4Values metalMatrix;
+        GetColumnOrderMatrixData(metalMatrix, modelViewProjectionMatrix);
+        [renderCommandEncoder setVertexBytes:metalMatrix.a length:sizeof(metalMatrix) atIndex:MetalFullScreenQuadKnownBindings::VertexStageBuffer::MODEL_VIEW_PROJECTION_MATRIX];
+
+        //MathVector4 multiplyColor(1,1,1,1);
+        //[renderCommandEncoder setFragmentBytes:multiplyColor.data() length:4*sizeof(float) atIndex:MetalFullScreenQuadKnownBindings::FragmentStage::MULTIPLY_COLOR];
+
+        //MathVector4 addColor(0,0,0,0);
+        //[renderCommandEncoder setFragmentBytes:addColor.data() length:4*sizeof(float) atIndex:MetalFullScreenQuadKnownBindings::FragmentStage::ADD_COLOR];
+
+        [renderCommandEncoder setFragmentTexture:frameBuffer.renderTarget.colorOutputs[0].GetTexture() atIndex:MetalFullScreenQuadKnownBindings::FragmentStageBuffer::TEXTURE];
+
+        [renderCommandEncoder drawPrimitives:this->commonResources.fullScreenQuadMesh.primitiveType vertexStart:0 vertexCount:this->commonResources.fullScreenQuadMesh.vertexCount];
+
+        [renderCommandEncoder endEncoding];
+        renderCommandEncoder = nullptr;
+
+        //Encode the "present" command
+        [commandBuffer presentDrawable:drawable];
+
+        //Commit the encoded commands
         frameBuffer.CommitCommandBuffers();
-
-        auto renderTarget = &frameBuffer.renderTarget;
-        auto colorAttachment = renderTarget->renderPassDescriptor.colorAttachments[0];
+        frameBuffer.WaitForCommandBuffers();
+        frameBuffer.ResetCommandBuffers();
         colorAttachment.texture = nullptr;
-
-        frameBuffer.renderTarget.renderTargetOutputResources[0] = nullptr;
-        frameBuffer.renderTarget.renderTargetOutputResources.clear();
     }
-}
-
-MetalRenderTarget* MetalGpuContextImpl::GetRenderTarget(MetalFrameStage& frameStage, const Utf8String& name)
-{
-    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
-
-    if (name.empty())
-        return &frameBuffer.renderTarget;
-
-    return nullptr;
-}
-
-void MetalGpuContextImpl::StartGraphicsCommandList(MetalFrameStage& frameStage, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
-
-    auto commandBuffer = frameBuffer.NewGraphicsCommandBuffer();
-    if (commandBuffer == nullptr)
+    else
     {
-        FINJIN_SET_ERROR(error, "Failed to get an available graphics command buffer.");
-        return;
+        //No rendering required
+        frameBuffer.WaitForCommandBuffers();
+        frameBuffer.ResetCommandBuffers();
     }
-}
-
-void MetalGpuContextImpl::FinishGraphicsCommandList(MetalFrameStage& frameStage, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    //auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 }
 
 void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error)
@@ -712,9 +730,9 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
 
                 break;
             }
-            case GpuCommand::Type::START_GRAPHICS_COMMAND_LIST:
+            case GpuCommand::Type::START_GRAPHICS_COMMANDS:
             {
-                StartGraphicsCommandList(frameStage, error);
+                StartGraphicsCommands(frameStage, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, "Failed to start command list.");
@@ -722,9 +740,9 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
                 }
                 break;
             }
-            case GpuCommand::Type::FINISH_GRAPHICS_COMMAND_LIST:
+            case GpuCommand::Type::FINISH_GRAPHICS_COMMANDS:
             {
-                FinishGraphicsCommandList(frameStage, error);
+                FinishGraphicsCommands(frameStage, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, "Failed to finish command list.");
@@ -732,10 +750,9 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
                 }
                 break;
             }
-            case GpuCommand::Type::EXECUTE_GRAPHICS_COMMAND_LISTS:
+            case GpuCommand::Type::EXECUTE_GRAPHICS_COMMANDS:
             {
-                assert(0 && "Not yet supported or needed");
-                //frameBuffer.ExecuteCommandLists(this->graphicsCommandQueue.Get());
+                frameBuffer.CommitCommandBuffers();
                 break;
             }
             case GpuCommand::Type::START_RENDER_TARGET:
@@ -766,7 +783,7 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
             }
             case GpuCommand::Type::FINISH_RENDER_TARGET:
             {
-                auto& command = static_cast<FinishRenderTargetGpuCommand&>(baseCommand);
+                //auto& command = static_cast<FinishRenderTargetGpuCommand&>(baseCommand);
 
                 if (lastRenderTarget == nullptr)
                 {
@@ -774,20 +791,15 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
                     return;
                 }
 
-                if (lastRenderTarget == GetRenderTarget(frameStage, Utf8String::Empty()))
+                if (lastRenderTarget == GetRenderTarget(frameStage, Utf8String::GetEmpty()))
                 {
                     //Main render target finished
                     auto commandBuffer = frameBuffer.GetCurrentGraphicsCommandBuffer();
                     assert(commandBuffer != nullptr);
 
-                    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
-                    this->staticMeshRenderer.UpdatePassAndMaterialConstants(frameBuffer.staticMeshRendererFrameState, frameStage.elapsedTime, frameStage.totalElapsedTime);
-                    this->staticMeshRenderer.RenderQueued
-                        (
-                        frameBuffer.staticMeshRendererFrameState,
-                        commandBuffer,
-                        lastRenderTarget->renderCommandEncoder
-                        );
+                    //auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+                    this->staticMeshRenderer.UpdatePassAndMaterialConstants(frameStage.staticMeshRendererFrameState, frameStage.elapsedTime, frameStage.totalElapsedTime);
+                    this->staticMeshRenderer.RenderQueued(frameStage.staticMeshRendererFrameState, commandBuffer, lastRenderTarget->renderCommandEncoder);
                 }
 
                 FinishRenderTarget(frameStage, error);
@@ -847,9 +859,9 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
             {
                 auto& command = static_cast<RenderEntityGpuCommand&>(baseCommand);
 
-                auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+                //auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 
-                this->staticMeshRenderer.RenderEntity(frameBuffer.staticMeshRendererFrameState, command.sceneNodeState, command.entity, command.shaderFeatureFlags, command.sortedLights, command.ambientLight);
+                this->staticMeshRenderer.RenderEntity(frameStage.staticMeshRendererFrameState, command.sceneNodeState, command.entity, command.shaderFeatureFlags, command.sortedLights, command.ambientLight);
 
                 if (command.eventInfo.HasEventID())
                 {
@@ -871,133 +883,62 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
     }
 }
 
-MetalFrameBuffer& MetalGpuContextImpl::GetFrameBuffer(size_t index)
-{
-    return this->frameBuffers[index];
-}
-
 void MetalGpuContextImpl::FlushGpu()
 {
     //Do nothing. No special handling necessary for now
-}
-
-void MetalGpuContextImpl::StartRenderTarget(MetalFrameStage& frameStage, MetalRenderTarget* renderTarget, StaticVector<MetalRenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>& dependentRenderTargets, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
-
-    //Hold onto render targets for FinishRenderTarget()----------------------
-    if (renderTarget == nullptr)
-        renderTarget = &frameBuffer.renderTarget;
-    frameStage.renderTarget = renderTarget;
-    frameStage.dependentRenderTargets = dependentRenderTargets;
-
-    //Set up render pass descriptor-----------------------------
-
-    //Create render pass descriptor if necessary
-    if (renderTarget->renderPassDescriptor == nullptr)
-        renderTarget->renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
-
-    //Color attachment
-    auto colorAttachment = renderTarget->renderPassDescriptor.colorAttachments[0];
-    colorAttachment.texture = renderTarget->renderTargetOutputResources[0].texture;
-    colorAttachment.loadAction = MTLLoadActionClear;
-    colorAttachment.storeAction = MTLStoreActionStore;
-    auto& clearColor = renderTarget->clearColor.IsSet() ? renderTarget->clearColor.value : this->clearColor;
-    colorAttachment.clearColor = MTLClearColorMake(clearColor(0), clearColor(1), clearColor(2), clearColor(3));
-
-    //Depth/stencil attachments
-    auto depthAttachment = renderTarget->renderPassDescriptor.depthAttachment;
-    depthAttachment.texture = this->depthStencilRenderTarget.depthStencilTexture;
-    depthAttachment.loadAction = MTLLoadActionClear;
-    depthAttachment.storeAction = MTLStoreActionStore;
-    depthAttachment.clearDepth = 1.0;
-
-    if (MetalUtilities::IsDepthStencilFormat(static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.actual)))
-    {
-        auto stencilAttachment = renderTarget->renderPassDescriptor.stencilAttachment;
-        stencilAttachment.texture = this->depthStencilRenderTarget.depthStencilTexture;
-        stencilAttachment.loadAction = MTLLoadActionClear;
-        stencilAttachment.storeAction = MTLStoreActionStore;
-        stencilAttachment.clearStencil = 0;
-    }
-
-    //Get render encoder------------------------------
-    auto commandBuffer = frameBuffer.GetCurrentGraphicsCommandBuffer();
-
-    renderTarget->renderCommandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderTarget->renderPassDescriptor];
-    if (renderTarget->renderCommandEncoder != nullptr)
-    {
-        if (!renderTarget->viewports.empty())
-            [renderTarget->renderCommandEncoder setViewport:renderTarget->viewports[0]];
-        else
-            [renderTarget->renderCommandEncoder setViewport:this->viewport];
-
-        if (!renderTarget->scissorRects.empty())
-            [renderTarget->renderCommandEncoder setScissorRect:renderTarget->scissorRects[0]];
-        else
-            [renderTarget->renderCommandEncoder setScissorRect:this->scissorRect];
-
-        [renderTarget->renderCommandEncoder setDepthStencilState:this->depthStencilRenderTarget.depthStencilState];
-        [renderTarget->renderCommandEncoder setCullMode:MTLCullModeBack];
-        [renderTarget->renderCommandEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
-    }
-}
-
-void MetalGpuContextImpl::FinishRenderTarget(MetalFrameStage& frameStage, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    //auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
-
-    auto renderTarget = frameStage.renderTarget;
-
-    if (renderTarget->renderCommandEncoder != nullptr)
-    {
-        [renderTarget->renderCommandEncoder endEncoding];
-        renderTarget->renderCommandEncoder = nullptr;
-    }
 }
 
 void MetalGpuContextImpl::CreateScreenSizeDependentResources(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    //Update layer drawable size
+    auto drawableSize = CGSizeMake(this->windowPixelBounds.GetClientWidth(), this->windowPixelBounds.GetClientHeight());
     auto metalLayer = this->settings.osWindow->GetImpl()->GetMetalLayer();
-
-    auto drawableSize = CGSizeMake(this->renderingPixelBounds.GetClientWidth(), this->renderingPixelBounds.GetClientHeight());
     metalLayer.drawableSize = drawableSize;
 
-    this->viewport.originX = 0;
-    this->viewport.originY = 0;
-    this->viewport.width = drawableSize.width;
-    this->viewport.height = drawableSize.height;
-    this->viewport.znear = 0;
-    this->viewport.zfar = this->settings.maxDepthValue;
-
-    this->scissorRect.x = 0;
-    this->scissorRect.y = 0;
-    this->scissorRect.width = drawableSize.width;
-    this->scissorRect.height = drawableSize.height;
-
-    //Create depth buffer
-    if (this->settings.depthStencilFormat.actual != MTLPixelFormatInvalid)
+    //Create render targets
+    if (this->settings.renderTargetSize.GetType() == GpuRenderTargetSizeType::WINDOW_SIZE)
     {
-        this->depthStencilRenderTarget.CreateDepthStencil(this->device, drawableSize.width, drawableSize.height, static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.actual), error);
-        if (error)
-            FINJIN_SET_ERROR(error, "Failed to create depth/stencil buffer.");
+        auto maxRenderTargetSize = this->settings.renderTargetSize.EvaluateMax(nullptr, &this->windowPixelBounds);
+
+        //Create color buffers
+        for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
+        {
+            auto& frameBuffer = this->frameBuffers[frameBufferIndex];
+
+            frameBuffer.renderTarget.CreateColor(this->device, maxRenderTargetSize[0], maxRenderTargetSize[1], static_cast<MTLPixelFormat>(this->settings.colorFormat.actual), true, error);
+            if (error)
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
+                return;
+            }
+        }
+
+        //Create depth buffer
+        if (this->settings.depthStencilFormat.actual != MTLPixelFormatInvalid)
+        {
+            this->depthStencilRenderTarget.CreateDepthStencil(this->device, maxRenderTargetSize[0], maxRenderTargetSize[1], static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.actual), true, error);
+            if (error)
+            {
+                FINJIN_SET_ERROR(error, "Failed to create depth/stencil buffer.");
+                return;
+            }
+        }
     }
 }
 
 void MetalGpuContextImpl::DestroyScreenSizeDependentResources(bool resizing)
 {
+    for (auto& frameBuffer : this->frameBuffers)
+        frameBuffer.renderTarget.DestroyScreenSizeDependentResources();
+
     this->depthStencilRenderTarget.DestroyScreenSizeDependentResources();
 }
 
 void MetalGpuContextImpl::WindowResized(OSWindow* osWindow)
 {
-    UpdateCachedFrameBufferSize();
+    UpdatedCachedWindowSize();
 }
 
 MetalTexture* MetalGpuContextImpl::CreateTextureFromMainThread(FinjinTexture* texture, Error& error)
@@ -1146,9 +1087,9 @@ void* MetalGpuContextImpl::CreateMaterialFromMainThread(FinjinMaterial* material
 
     for (auto& map : material->maps)
     {
-        auto foundAt = this->materialMapTypeToGpuElements.find(map.typeName);
-        assert(foundAt != this->materialMapTypeToGpuElements.end());
-        if (foundAt != this->materialMapTypeToGpuElements.end())
+        auto foundAt = this->materialMapTypeToElements.find(map.typeName);
+        assert(foundAt != this->materialMapTypeToElements.end());
+        if (foundAt != this->materialMapTypeToElements.end())
         {
             map.gpuMaterialMapIndex = static_cast<size_t>(foundAt->second.gpuMaterialMapIndex);
             map.gpuBufferTextureIndexElementID = static_cast<size_t>(foundAt->second.gpuBufferTextureIndexElementID);
@@ -1170,7 +1111,7 @@ void* MetalGpuContextImpl::CreateLightFromMainThread(FinjinSceneObjectLight* lig
 
     std::unique_lock<FiberSpinLock> thisLock(this->createLock);
 
-    auto metalLight = this->lights.Use();
+    auto metalLight = this->commonResources.lights.Use();
     if (metalLight == nullptr)
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to add light '%1%' to collection.", light->name));
@@ -1312,7 +1253,7 @@ void MetalGpuContextImpl::CreateShader(MetalShaderType shaderType, const Utf8Str
 
     auto& metalShader = *addedShader.value;
 
-    metalShader.Create(GetAllocator(), name, shaderLibrary, error);
+    metalShader.Create(shaderLibrary, name, error);
     if (error)
     {
         metalShader.HandleCreationFailed();
@@ -1359,10 +1300,156 @@ bool MetalGpuContextImpl::ResolveMaterialMaps(FinjinMaterial& material)
     return metalMaterial->isFullyResolved;
 }
 
-void MetalGpuContextImpl::UpdateCachedFrameBufferSize()
+MetalRenderTarget* MetalGpuContextImpl::GetRenderTarget(MetalFrameStage& frameStage, const Utf8String& name)
 {
-    this->renderingPixelBounds = this->settings.osWindow->GetWindowSize().GetSafeCurrentBounds();
-    this->renderingPixelBounds.Scale(this->settings.osWindow->GetDisplayDensity());
+    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    if (name.empty())
+        return &frameBuffer.renderTarget;
+
+    return nullptr;
+}
+
+void MetalGpuContextImpl::StartGraphicsCommands(MetalFrameStage& frameStage, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    auto commandBuffer = frameBuffer.NewGraphicsCommandBuffer();
+    if (commandBuffer == nullptr)
+    {
+        FINJIN_SET_ERROR(error, "Failed to get an available graphics command buffer.");
+        return;
+    }
+}
+
+void MetalGpuContextImpl::FinishGraphicsCommands(MetalFrameStage& frameStage, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    //auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+}
+
+void MetalGpuContextImpl::StartRenderTarget(MetalFrameStage& frameStage, MetalRenderTarget* renderTarget, StaticVector<MetalRenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>& dependentRenderTargets, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    //Hold onto render targets for FinishRenderTarget()----------------------
+    renderTarget->defaultViewport.resize(1);
+    renderTarget->defaultViewport[0] = this->renderViewport;
+
+    renderTarget->defaultScissorRect.resize(1);
+    renderTarget->defaultScissorRect[0] = this->renderScissorRect;
+
+    frameStage.renderTarget = renderTarget;
+    frameStage.dependentRenderTargets = dependentRenderTargets;
+
+    //Set up render pass descriptor-----------------------------
+
+    //Create render pass descriptor if necessary
+    if (renderTarget->renderPassDescriptor == nullptr)
+        renderTarget->renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+
+    //Color attachment
+    auto colorAttachment = renderTarget->renderPassDescriptor.colorAttachments[0];
+    colorAttachment.texture = renderTarget->colorOutputs[0].GetTexture();
+    colorAttachment.loadAction = MTLLoadActionClear;
+    colorAttachment.storeAction = MTLStoreActionStore;
+    auto& clearColor = renderTarget->clearColor.IsSet() ? renderTarget->clearColor.value : this->clearColor;
+    colorAttachment.clearColor = MTLClearColorMake(clearColor(0), clearColor(1), clearColor(2), clearColor(3));
+
+    //Depth/stencil attachments
+    auto depthAttachment = renderTarget->renderPassDescriptor.depthAttachment;
+    depthAttachment.texture = this->depthStencilRenderTarget.depthStencilTexture;
+    depthAttachment.loadAction = MTLLoadActionClear;
+    depthAttachment.storeAction = MTLStoreActionStore;
+    depthAttachment.clearDepth = this->settings.maxDepthValue;
+
+    if (MetalUtilities::IsDepthStencilFormat(static_cast<MTLPixelFormat>(this->settings.depthStencilFormat.actual)))
+    {
+        auto stencilAttachment = renderTarget->renderPassDescriptor.stencilAttachment;
+        stencilAttachment.texture = this->depthStencilRenderTarget.depthStencilTexture;
+        stencilAttachment.loadAction = MTLLoadActionClear;
+        stencilAttachment.storeAction = MTLStoreActionStore;
+        stencilAttachment.clearStencil = 0;
+    }
+
+    //Get render encoder------------------------------
+    auto commandBuffer = frameBuffer.GetCurrentGraphicsCommandBuffer();
+
+    renderTarget->renderCommandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderTarget->renderPassDescriptor];
+    if (renderTarget->renderCommandEncoder != nullptr)
+    {
+        if (!renderTarget->viewports.empty())
+            [renderTarget->renderCommandEncoder setViewport:renderTarget->viewports[0]];
+        else
+            [renderTarget->renderCommandEncoder setViewport:renderTarget->defaultViewport[0]];
+
+        if (!renderTarget->scissorRects.empty())
+            [renderTarget->renderCommandEncoder setScissorRect:renderTarget->scissorRects[0]];
+        else
+            [renderTarget->renderCommandEncoder setScissorRect:renderTarget->defaultScissorRect[0]];
+
+        [renderTarget->renderCommandEncoder setDepthStencilState:this->depthStencilRenderTarget.depthStencilState];
+        [renderTarget->renderCommandEncoder setCullMode:MTLCullModeBack];
+        [renderTarget->renderCommandEncoder setFrontFacingWinding:MTLWindingCounterClockwise];
+    }
+}
+
+void MetalGpuContextImpl::FinishRenderTarget(MetalFrameStage& frameStage, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    //auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    auto renderTarget = frameStage.renderTarget;
+
+    if (renderTarget->renderCommandEncoder != nullptr)
+    {
+        [renderTarget->renderCommandEncoder endEncoding];
+        renderTarget->renderCommandEncoder = nullptr;
+    }
+}
+
+MetalFrameBuffer& MetalGpuContextImpl::GetFrameBuffer(size_t index)
+{
+    return this->frameBuffers[index];
+}
+
+void MetalGpuContextImpl::UpdatedCachedWindowSize()
+{
+    this->windowPixelBounds = this->settings.osWindow->GetWindowSize().GetSafeCurrentBounds();
+    this->windowPixelBounds.Scale(this->settings.osWindow->GetDisplayDensity());
+
+    this->windowViewport.originX = 0;
+    this->windowViewport.originY = 0;
+    this->windowViewport.width = this->windowPixelBounds.GetClientWidth();
+    this->windowViewport.height = this->windowPixelBounds.GetClientHeight();
+    this->windowViewport.znear = 0;
+    this->windowViewport.zfar = this->settings.maxDepthValue;
+
+    this->windowScissorRect.x = 0;
+    this->windowScissorRect.y = 0;
+    this->windowScissorRect.width = this->windowPixelBounds.GetClientWidth();
+    this->windowScissorRect.height = this->windowPixelBounds.GetClientHeight();
+
+
+    this->renderTargetSize = this->settings.renderTargetSize.Evaluate(nullptr, &this->windowPixelBounds);
+
+    this->renderViewport.originX = 0;
+    this->renderViewport.originY = 0;
+    this->renderViewport.width = this->renderTargetSize[0];
+    this->renderViewport.height = this->renderTargetSize[1];
+    this->renderViewport.znear = 0;
+    this->renderViewport.zfar = this->settings.maxDepthValue;
+
+    this->renderScissorRect.x = 0;
+    this->renderScissorRect.y = 0;
+    this->renderScissorRect.width = this->renderTargetSize[0];
+    this->renderScissorRect.height = this->renderTargetSize[1];
 }
 
 #endif

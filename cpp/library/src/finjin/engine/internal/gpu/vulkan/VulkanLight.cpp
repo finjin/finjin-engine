@@ -22,8 +22,6 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-
-//VulkanLight
 VulkanLight::VulkanLight(Allocator* allocator)
 {
     this->finjinLight = nullptr;

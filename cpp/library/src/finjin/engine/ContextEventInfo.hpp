@@ -33,7 +33,7 @@ namespace Finjin { namespace Engine {
             return this->id != (ID)-1;
         }
 
-        static const ContextEventInfo& Empty()
+        static const ContextEventInfo& GetEmpty()
         {
             static const ContextEventInfo value;
             return value;

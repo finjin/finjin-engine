@@ -122,21 +122,15 @@ bool ApplicationViewportsController::RequestFullScreenToggle()
         return false;
 }
 
-ApplicationViewportsClosing ApplicationViewportsController::GetAllViewports()
+void ApplicationViewportsController::GetAllViewports(ApplicationViewportsClosing& all)
 {
-    ApplicationViewportsClosing all;
-
     for (size_t viewportIndex = 0; viewportIndex < this->appViewports.size(); viewportIndex++)
         all.push_back(std::move(this->appViewports[viewportIndex]));
     this->appViewports.clear();
-
-    return all;
 }
 
-ApplicationViewportsClosing ApplicationViewportsController::GetViewportsClosing()
+void ApplicationViewportsController::GetViewportsClosing(ApplicationViewportsClosing& closing)
 {
-    ApplicationViewportsClosing closing;
-
     //See if any window has requested the application exit
     bool exitApplication = false;
     for (size_t viewportIndex = 0; viewportIndex < this->appViewports.size(); viewportIndex++)
@@ -159,8 +153,6 @@ ApplicationViewportsClosing ApplicationViewportsController::GetViewportsClosing(
         else
             viewportIndex++;
     }
-
-    return closing;
 }
 
 bool ApplicationViewportsController::FindAndDeleteAndRemove(ApplicationViewport* appViewport)

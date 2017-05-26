@@ -18,6 +18,7 @@
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Math.hpp"
+#include "finjin/common/RequestedValue.hpp"
 #include "VulkanShaderType.hpp"
 #include "VulkanTexture.hpp"
 #include "VulkanGpuDescription.hpp"
@@ -29,6 +30,8 @@
 #else
     #define FINJIN_CHECK_VKRESULT_FAILED(res) (res) != VK_SUCCESS
 #endif
+
+#define FINJIN_VULKAN_DEFAULT_SHADER_ENTRY_POINT_NAME "main"
 
 
 //Types-------------------------------------------------------------------------
@@ -86,6 +89,10 @@ namespace Finjin { namespace Engine {
             VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
             VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
             );
+
+        static VkSampleCountFlagBits GetSampleCountFlags(size_t sampleCount);
+
+        static bool GetBestDepthStencilFormat(RequestedValue<VkFormat>& depthStencilFormat, bool stencilRequired, VulkanInstanceFunctions& vk, VkPhysicalDevice physicalDevice);
     };
 
     struct VulkanFenceCreateInfo : VkFenceCreateInfo
@@ -95,6 +102,14 @@ namespace Finjin { namespace Engine {
             FINJIN_ZERO_ITEM(*this);
             this->sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         }
+
+        VulkanFenceCreateInfo(VkFenceCreateFlags flags)
+        {
+            FINJIN_ZERO_ITEM(*this);
+            this->sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+
+            this->flags = flags;
+        }
     };
 
     struct VulkanCommandPoolCreateInfo : VkCommandPoolCreateInfo
@@ -103,6 +118,15 @@ namespace Finjin { namespace Engine {
         {
             FINJIN_ZERO_ITEM(*this);
             this->sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        }
+
+        VulkanCommandPoolCreateInfo(uint32_t queueFamilyIndex, VkCommandPoolCreateFlags flags)
+        {
+            FINJIN_ZERO_ITEM(*this);
+            this->sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+
+            this->queueFamilyIndex = queueFamilyIndex;
+            this->flags = flags;
         }
     };
 
@@ -166,6 +190,21 @@ namespace Finjin { namespace Engine {
         {
             FINJIN_ZERO_ITEM(*this);
             this->sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        }
+
+        VulkanImageViewCreateInfo(VkImage image, VkFormat format, VkImageAspectFlagBits aspectMask)
+        {
+            FINJIN_ZERO_ITEM(*this);
+            this->sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+
+            this->format = format;
+            this->subresourceRange.aspectMask = aspectMask;
+            this->subresourceRange.baseMipLevel = 0;
+            this->subresourceRange.levelCount = 1;
+            this->subresourceRange.baseArrayLayer = 0;
+            this->subresourceRange.layerCount = 1;
+            this->viewType = VK_IMAGE_VIEW_TYPE_2D;
+            this->image = image;
         }
     };
 
@@ -534,235 +573,33 @@ namespace Finjin { namespace Engine {
         }
     };
 
-    struct VulkanGraphicsPipelineCreateInfoBuilder
+    struct VulkanSamplerCreateInfo : VkSamplerCreateInfo
     {
-        VulkanGraphicsPipelineCreateInfoBuilder()
-        {
-            Reset();
-        }
-
-        VulkanGraphicsPipelineCreateInfoBuilder(const VulkanGraphicsPipelineCreateInfoBuilder& other)
-        {
-            operator = (other);
-        }
-
-        void operator = (const VulkanGraphicsPipelineCreateInfoBuilder& other)
-        {
-            //Custom assignment operator to update pointers as necessary
-            FINJIN_COPY_MEMORY(this, &other, sizeof(VulkanGraphicsPipelineCreateInfoBuilder));
-            if (this->graphicsPipelineCreateInfo.pVertexInputState != nullptr)
-                UseVertexInputState();
-            if (this->graphicsPipelineCreateInfo.pInputAssemblyState != nullptr)
-                UseInputAssemblyState();
-            if (this->graphicsPipelineCreateInfo.pTessellationState != nullptr)
-                UseTessellationState();
-            if (this->graphicsPipelineCreateInfo.pViewportState != nullptr)
-                UseViewportState();
-            if (this->graphicsPipelineCreateInfo.pRasterizationState != nullptr)
-                UseRasterizationState();
-            if (this->graphicsPipelineCreateInfo.pMultisampleState != nullptr)
-                UseMultisampleState();
-            if (this->graphicsPipelineCreateInfo.pDepthStencilState != nullptr)
-                UseDepthStencilState();
-            if (this->graphicsPipelineCreateInfo.pColorBlendState != nullptr)
-                UseColorBlendState();
-            if (this->graphicsPipelineCreateInfo.pDynamicState != nullptr)
-                UseDynamicState();
-
-            if (this->multisampleState.pSampleMask != nullptr)
-                this->multisampleState.pSampleMask = &this->multisampleMask;
-            if (this->dynamicState.pDynamicStates != nullptr)
-                this->dynamicState.pDynamicStates = this->dynamicStateValues.data();
-            if (this->graphicsPipelineCreateInfo.pStages != nullptr)
-                this->graphicsPipelineCreateInfo.pStages = this->stages.data();
-        }
-
-        void Reset()
+        VulkanSamplerCreateInfo()
         {
             FINJIN_ZERO_ITEM(*this);
-            this->graphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-            this->vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-            this->inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-            this->tessellationState.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
-            this->viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-            this->rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-            this->multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-            this->depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-            this->colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-            this->dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+            this->sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
         }
 
-        void SetDefault()
+        VulkanSamplerCreateInfo(VkFilter filter, VkSamplerAddressMode addressMode)
         {
-            Reset();
+            FINJIN_ZERO_ITEM(*this);
+            this->sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 
-            {
-                auto& inputAssemblyState = UseInputAssemblyState();
-                inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-            }
-
-            {
-                auto& rasterizationState = UseRasterizationState();
-                rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
-                rasterizationState.cullMode = VK_CULL_MODE_BACK_BIT;
-                rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-                rasterizationState.depthClampEnable = VK_FALSE;
-                rasterizationState.rasterizerDiscardEnable = VK_FALSE;
-                rasterizationState.depthBiasEnable = VK_FALSE;
-                rasterizationState.lineWidth = 1.0f;
-            }
-
-            {
-                auto& blendState = UseDefaultColorBlendState();
-            }
-
-            {
-                auto& viewportState = UseViewportState();
-                viewportState.viewportCount = 1;
-                viewportState.scissorCount = 1;
-            }
-
-            {
-                AddDynamicState(VK_DYNAMIC_STATE_VIEWPORT);
-                AddDynamicState(VK_DYNAMIC_STATE_SCISSOR);
-            }
-
-            {
-                auto& depthStencilState = UseDepthStencilState();
-                depthStencilState.depthTestEnable = VK_TRUE;
-                depthStencilState.depthWriteEnable = VK_TRUE;
-                depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-                depthStencilState.depthBoundsTestEnable = VK_FALSE;
-                depthStencilState.back.failOp = VK_STENCIL_OP_KEEP;
-                depthStencilState.back.passOp = VK_STENCIL_OP_KEEP;
-                depthStencilState.back.compareOp = VK_COMPARE_OP_ALWAYS;
-                depthStencilState.stencilTestEnable = VK_FALSE;
-                depthStencilState.front = depthStencilState.back;
-            }
-
-            {
-                auto& multisampleState = UseMultisampleState();
-                multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-            }
+            this->magFilter = filter;
+            this->minFilter = filter;
+            this->mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+            this->addressModeU = addressMode;
+            this->addressModeV = addressMode;
+            this->addressModeW = addressMode;
+            this->mipLodBias = 0.0;
+            this->anisotropyEnable = VK_FALSE;
+            this->maxAnisotropy = 1.0f;
+            this->compareOp = VK_COMPARE_OP_NEVER;
+            this->minLod = 0.0;
+            this->maxLod = 0.0; //FLT_MAX
+            this->compareEnable = VK_FALSE;
         }
-
-        VkPipelineVertexInputStateCreateInfo& UseVertexInputState()
-        {
-            this->graphicsPipelineCreateInfo.pVertexInputState = &this->vertexInputState;
-            return this->vertexInputState;
-        }
-
-        VkPipelineInputAssemblyStateCreateInfo& UseInputAssemblyState()
-        {
-            this->graphicsPipelineCreateInfo.pInputAssemblyState = &this->inputAssemblyState;
-            return this->inputAssemblyState;
-        }
-
-        VkPipelineTessellationStateCreateInfo& UseTessellationState()
-        {
-            this->graphicsPipelineCreateInfo.pTessellationState = &this->tessellationState;
-            return this->tessellationState;
-        }
-
-        VkPipelineViewportStateCreateInfo& UseViewportState()
-        {
-            this->graphicsPipelineCreateInfo.pViewportState = &this->viewportState;
-            return this->viewportState;
-        }
-
-        VkPipelineRasterizationStateCreateInfo& UseRasterizationState()
-        {
-            this->graphicsPipelineCreateInfo.pRasterizationState = &this->rasterizationState;
-            return this->rasterizationState;
-        }
-
-        VkPipelineMultisampleStateCreateInfo& UseMultisampleState()
-        {
-            this->graphicsPipelineCreateInfo.pMultisampleState = &this->multisampleState;
-            return this->multisampleState;
-        }
-
-        void SetMultisampleMask(uint32_t mask)
-        {
-            this->multisampleMask = mask;
-            this->multisampleState.pSampleMask = &this->multisampleMask;
-        }
-
-        VkPipelineDepthStencilStateCreateInfo& UseDepthStencilState()
-        {
-            this->graphicsPipelineCreateInfo.pDepthStencilState = &this->depthStencilState;
-            return this->depthStencilState;
-        }
-
-        static VkPipelineColorBlendAttachmentState& GetDefaultBlendAttachmentState()
-        {
-            static VkPipelineColorBlendAttachmentState defaultBlendAttachmentState = {};
-            defaultBlendAttachmentState.colorWriteMask = 0xf;
-            return defaultBlendAttachmentState;
-        }
-
-        VkPipelineColorBlendStateCreateInfo& UseDefaultColorBlendState()
-        {
-            this->colorBlendState.attachmentCount = 1;
-            this->colorBlendState.pAttachments = &GetDefaultBlendAttachmentState();
-
-            this->graphicsPipelineCreateInfo.pColorBlendState = &this->colorBlendState;
-            return this->colorBlendState;
-        }
-
-        VkPipelineColorBlendStateCreateInfo& UseColorBlendState()
-        {
-            this->graphicsPipelineCreateInfo.pColorBlendState = &this->colorBlendState;
-            return this->colorBlendState;
-        }
-
-        VkPipelineDynamicStateCreateInfo& UseDynamicState()
-        {
-            this->graphicsPipelineCreateInfo.pDynamicState = &this->dynamicState;
-            return this->dynamicState;
-        }
-
-        void AddDynamicState(VkDynamicState value)
-        {
-            if (!this->dynamicStateValues.contains(value))
-                this->dynamicStateValues.push_back(value);
-
-            this->dynamicState.pDynamicStates = this->dynamicStateValues.data();
-            this->dynamicState.dynamicStateCount = static_cast<uint32_t>(this->dynamicStateValues.size());
-
-            this->graphicsPipelineCreateInfo.pDynamicState = &this->dynamicState;
-        }
-
-        VkPipelineShaderStageCreateInfo& AddShaderStage()
-        {
-            this->stages.push_back();
-            auto& stage = this->stages.back();
-
-            stage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-
-            this->graphicsPipelineCreateInfo.pStages = this->stages.data();
-            this->graphicsPipelineCreateInfo.stageCount = static_cast<uint32_t>(this->stages.size());
-
-            return stage;
-        }
-
-        VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo;
-
-        VkPipelineVertexInputStateCreateInfo vertexInputState;
-        VkPipelineInputAssemblyStateCreateInfo inputAssemblyState;
-        VkPipelineTessellationStateCreateInfo tessellationState;
-        VkPipelineViewportStateCreateInfo viewportState;
-        VkPipelineRasterizationStateCreateInfo rasterizationState;
-        VkPipelineMultisampleStateCreateInfo multisampleState;
-        VkPipelineDepthStencilStateCreateInfo depthStencilState;
-        VkPipelineColorBlendStateCreateInfo colorBlendState;
-        VkPipelineDynamicStateCreateInfo dynamicState;
-
-        StaticVector<VkDynamicState, 16> dynamicStateValues;
-        StaticVector<VkPipelineShaderStageCreateInfo, (size_t)VulkanShaderType::COUNT> stages;
-        VkSampleMask multisampleMask; //For multisampleState.pSampleMask
-
-        VkPipelineColorBlendAttachmentState defaultBlendAttachmentState;
     };
 
 } }

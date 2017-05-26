@@ -16,11 +16,11 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
+#include "finjin/common/RequestedValue.hpp"
 #include "finjin/common/WindowsUtilities.hpp"
 #include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include "D3D12Includes.hpp"
 #include "D3D12GpuDescription.hpp"
-#include "D3D12GpuID.hpp"
 #include "D3D12InputFormat.hpp"
 
 
@@ -32,7 +32,7 @@
             (resource)->SetName(_tempWide.c_str()); \
         }
 #else
-    #define FINJIN_D3D12_SET_RESOURCE_NAME
+    #define FINJIN_D3D12_SET_RESOURCE_NAME(resource, name)
 #endif
 
 //The error message should not include a trailing period. Example: "This is an error message"
@@ -53,6 +53,9 @@ namespace Finjin { namespace Engine {
     class D3D12Utilities
     {
     public:
+        static bool GetBestColorFormat(RequestedValue<DXGI_FORMAT>& colorFormat, const D3D12_FEATURE_DATA_FORMAT_SUPPORT* formatSupportByFormat, size_t formatCount);
+        static bool GetBestDepthStencilFormat(RequestedValue<DXGI_FORMAT>& depthStencilFormat, bool stencilRequired, const D3D12_FEATURE_DATA_FORMAT_SUPPORT* formatSupportByFormat, size_t formatCount);
+
         static D3D_SHADER_MODEL ParseShaderModel(const Utf8String& s, Error& error);
         static ValueOrError<void> ShaderModelToString(Utf8String& result, D3D_SHADER_MODEL model);
 

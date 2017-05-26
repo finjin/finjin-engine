@@ -30,7 +30,8 @@ ApplicationSettings::ApplicationSettings() :
     vsync(true),
     useAccelerometer(true),
     useSystemBackButton(true),
-    updateWhenNotFocused(false)
+    updateWhenNotFocused(false),
+    checkSystemMemoryFree(true)
 {
 }
 

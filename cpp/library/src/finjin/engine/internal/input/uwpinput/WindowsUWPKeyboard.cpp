@@ -47,13 +47,13 @@ bool WindowsUWPKeyboard::Create(size_t index)
     Utf8String keyName;
 
     this->state.buttons.resize(KeyboardConstants::MAX_BUTTON_COUNT);
-    for (size_t i = 0; i < this->state.buttons.size(); i++)
+    for (size_t buttonIndex = 0; buttonIndex < this->state.buttons.size(); buttonIndex++)
     {
         auto inputSemantic = InputComponentSemantic::NONE;
 
         try
         {
-            auto virtualKey = (Windows::System::VirtualKey)i;
+            auto virtualKey = (Windows::System::VirtualKey)buttonIndex;
 
             switch (virtualKey)
             {
@@ -73,9 +73,9 @@ bool WindowsUWPKeyboard::Create(size_t index)
             keyName.clear();
         }
 
-        this->state.buttons[i]
-            .SetIndex(i)
-            .SetCode(i)
+        this->state.buttons[buttonIndex]
+            .SetIndex(buttonIndex)
+            .SetCode(buttonIndex)
             .SetDisplayName(keyName)
             .SetSemantic(inputSemantic)
             .SetProcessing(InputButtonProcessing::EVENT_DRIVEN)

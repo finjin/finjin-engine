@@ -23,12 +23,59 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
+
+//MetalShaderLibrary
+MetalShaderLibrary::MetalShaderLibrary()
+{
+    this->dispatchData = nullptr;
+    this->metalLibrary = nullptr;
+}
+
+void MetalShaderLibrary::Create(id<MTLDevice> device, const AssetReference& shaderFileAssetReference, AssetClassFileReader& assetClassFileReader, ByteBuffer& readBuffer, Allocator* allocator, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    auto readResult = assetClassFileReader.ReadAsset(readBuffer, shaderFileAssetReference);
+    if (readResult != FileOperationResult::SUCCESS)
+    {
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to reader shader library '%1%'.", shaderFileAssetReference.ToUriString()));
+        return;
+    }
+
+    if (!this->fileBytes.Create(readBuffer.size(), allocator))
+    {
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate shader buffer for '%1%'.", shaderFileAssetReference.ToUriString()));
+        return;
+    }
+
+    FINJIN_COPY_MEMORY(this->fileBytes.data(), readBuffer.data(), readBuffer.size());
+
+    {
+        NSError* nserror = nullptr;
+        this->dispatchData = dispatch_data_create(this->fileBytes.data(), this->fileBytes.size(), nullptr, ^(){});
+        this->metalLibrary = [device newLibraryWithData:this->dispatchData error:&nserror];
+        if (this->metalLibrary == nullptr)
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create Metal shader library for '%1%': %2%", shaderFileAssetReference.ToUriString(), nserror.localizedDescription.UTF8String));
+            return;
+        }
+    }
+}
+
+void MetalShaderLibrary::Destroy()
+{
+    this->dispatchData = nullptr;
+    this->metalLibrary = nullptr;
+    this->fileBytes.Destroy();
+}
+
+//MetalShader
 MetalShader::MetalShader(Allocator* allocator) : functionName(allocator)
 {
     this->metalFunction = nullptr;
 }
 
-void MetalShader::Create(Allocator* allocator, const Utf8String& functionName, id<MTLLibrary> shaderLibrary, Error& error)
+void MetalShader::Create(id<MTLLibrary> shaderLibrary, const Utf8String& functionName, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 

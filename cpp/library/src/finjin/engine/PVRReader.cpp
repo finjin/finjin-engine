@@ -447,7 +447,7 @@ Utf8String PVRReader::GetReadHeaderResultString(ReadHeaderResult result) const
         case ReadHeaderResult::FAILED_TO_READ_METADATA_TEXTURE_ORIENTATION: return "Failed to read metadata texture orientation.";
         case ReadHeaderResult::FAILED_TO_READ_METADATA_BORDER_SIZE: return "Failed to read metadata border size.";
         case ReadHeaderResult::IMAGE_BYTE_SWAPPING_REQUIRED: return "Image byte swapping required.";
-        default: return Utf8String::Empty();
+        default: return Utf8String::GetEmpty();
     }
 }
 

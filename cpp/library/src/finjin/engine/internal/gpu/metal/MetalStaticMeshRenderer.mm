@@ -163,30 +163,11 @@ void MetalStaticMeshRenderer::Create(Settings&& settings, Error& error)
     }
 
     {
-        auto readResult = this->settings.contextImpl->shaderAssetClassFileReader.ReadAsset(this->settings.contextImpl->readBuffer, this->settings.pipelineShaderFileReference);
-        if (readResult != FileOperationResult::SUCCESS)
+        this->shaderLibrary.Create(this->settings.contextImpl->device, this->settings.pipelineShaderFileReference, this->settings.contextImpl->shaderAssetClassFileReader, this->settings.contextImpl->readBuffer, this->settings.contextImpl->GetAllocator(), error);
+        if (error)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to reader shader library '%1%'.", this->settings.pipelineShaderFileReference.ToUriString()));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create Metal shader library for '%1%'.", this->settings.pipelineShaderFileReference.ToUriString()));
             return;
-        }
-
-        if (!this->shaderFileBytes.Create(this->settings.contextImpl->readBuffer.size(), this->settings.contextImpl->GetAllocator()))
-        {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate shader buffer for '%1%'.", this->settings.pipelineShaderFileReference.ToUriString()));
-            return;
-        }
-
-        FINJIN_COPY_MEMORY(this->shaderFileBytes.data(), this->settings.contextImpl->readBuffer.data(), this->settings.contextImpl->readBuffer.size());
-
-        {
-            NSError* nserror = nullptr;
-            this->shaderLibraryDispatchData = dispatch_data_create(this->shaderFileBytes.data(), this->shaderFileBytes.size(), nullptr, ^(){});
-            this->shaderLibrary = [this->settings.contextImpl->device newLibraryWithData:this->shaderLibraryDispatchData error:&nserror];
-            if (this->shaderLibrary == nullptr)
-            {
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create shader library for '%1%': %2%", this->settings.pipelineShaderFileReference.ToUriString(), nserror.localizedDescription.UTF8String));
-                return;
-            }
         }
 
         for (auto& pipelineState : this->settings.graphicsPipelineStates)
@@ -196,7 +177,7 @@ void MetalStaticMeshRenderer::Create(Settings&& settings, Error& error)
                 auto& functionName = pipelineState.shaderFunctionNames[shaderType];
                 if (!functionName.empty())
                 {
-                    this->settings.contextImpl->CreateShader(static_cast<MetalShaderType>(shaderType), functionName, this->shaderLibrary, error);
+                    this->settings.contextImpl->CreateShader(static_cast<MetalShaderType>(shaderType), functionName, this->shaderLibrary.metalLibrary, error);
                     if (error)
                     {
                         FINJIN_SET_ERROR_NO_MESSAGE(error);
@@ -314,9 +295,9 @@ void MetalStaticMeshRenderer::Create(Settings&& settings, Error& error)
     }
 
     //Build frame resources
-    for (auto& frame : this->settings.contextImpl->frameBuffers)
+    for (auto& frameStage : this->settings.contextImpl->frameStages)
     {
-        auto& staticMeshRendererFrameState = frame.staticMeshRendererFrameState;
+        auto& staticMeshRendererFrameState = frameStage.staticMeshRendererFrameState;
 
         //Uniform buffers
         {
@@ -331,7 +312,7 @@ void MetalStaticMeshRenderer::Create(Settings&& settings, Error& error)
                 staticMeshRendererFrameState.uniformBuffers[i].Create(this->settings.contextImpl->device, this->settings.contextImpl->deviceDescription, *this->knownUniformBufferDescriptions[i], instanceCounts[i], error);
                 if (error)
                 {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create known uniform buffer '%1%' for frame '%2%'.", i, frame.index));
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create known uniform buffer '%1%' for frame stage '%2%'.", i, frameStage.index));
                     return;
                 }
             }
@@ -383,7 +364,7 @@ void MetalStaticMeshRenderer::UpdatePassAndMaterialConstants(MetalStaticMeshRend
 {
     //Pass
     {
-        auto windowBounds = this->settings.contextImpl->renderingPixelBounds;
+        auto windowBounds = this->settings.contextImpl->windowPixelBounds;
 
         auto clientWidth = RoundToFloat(windowBounds.GetClientWidth());
         auto clientHeight = RoundToFloat(windowBounds.GetClientHeight());
@@ -688,12 +669,12 @@ void MetalStaticMeshRenderer::RenderQueued(MetalStaticMeshRendererFrameState& fr
         //auto objectBufferResource = frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::OBJECT].resource;
 
         //Pass buffer
-        [renderCommandEncoder setVertexBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::PASS].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::Buffer::PASS];
-        [renderCommandEncoder setFragmentBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::PASS].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::Buffer::PASS];
+        [renderCommandEncoder setVertexBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::PASS].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::PASS];
+        [renderCommandEncoder setFragmentBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::PASS].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::PASS];
 
         //Object buffer
-        [renderCommandEncoder setVertexBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::OBJECT].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::Buffer::OBJECT];
-        [renderCommandEncoder setFragmentBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::OBJECT].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::Buffer::OBJECT];
+        [renderCommandEncoder setVertexBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::OBJECT].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::OBJECT];
+        [renderCommandEncoder setFragmentBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::OBJECT].resource offset:0 atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::OBJECT];
 
         for (auto& pipelineStateSlot : renderTargetState.pipelineStateSlots)
         {
@@ -716,8 +697,8 @@ void MetalStaticMeshRenderer::RenderQueued(MetalStaticMeshRendererFrameState& fr
                     auto bufferDescription = this->knownUniformBufferDescriptions[MetalStaticMeshRendererKnownUniformBuffer::OBJECT];
                     auto offset = static_cast<NSUInteger>(item->gpuBufferIndex * bufferDescription->paddedTotalSize);
 
-                    [renderCommandEncoder setVertexBufferOffset:offset atIndex:MetalStaticMeshRenderKnownBindings::Buffer::OBJECT];
-                    [renderCommandEncoder setFragmentBufferOffset:offset atIndex:MetalStaticMeshRenderKnownBindings::Buffer::OBJECT];
+                    [renderCommandEncoder setVertexBufferOffset:offset atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::OBJECT];
+                    [renderCommandEncoder setFragmentBufferOffset:offset atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::OBJECT];
                 }
 
                 //Material buffer
@@ -725,13 +706,13 @@ void MetalStaticMeshRenderer::RenderQueued(MetalStaticMeshRendererFrameState& fr
                     auto bufferDescription = this->knownUniformBufferDescriptions[MetalStaticMeshRendererKnownUniformBuffer::MATERIAL];
                     auto offset = static_cast<NSUInteger>(metalMaterial->gpuBufferIndex * bufferDescription->paddedTotalSize);
 
-                    [renderCommandEncoder setVertexBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::MATERIAL].resource offset:offset atIndex:MetalStaticMeshRenderKnownBindings::Buffer::MATERIAL];
-                    [renderCommandEncoder setFragmentBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::MATERIAL].resource offset:offset atIndex:MetalStaticMeshRenderKnownBindings::Buffer::MATERIAL];
+                    [renderCommandEncoder setVertexBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::MATERIAL].resource offset:offset atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::MATERIAL];
+                    [renderCommandEncoder setFragmentBuffer:frameState.uniformBuffers[MetalStaticMeshRendererKnownUniformBuffer::MATERIAL].resource offset:offset atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::MATERIAL];
                 }
 
                 //Light buffers
                 {
-                    NSUInteger bindingIndex = MetalStaticMeshRenderKnownBindings::Buffer::LIGHT_BASE;
+                    NSUInteger bindingIndex = MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::LIGHT_BASE;
 
                     auto bufferDescription = this->knownUniformBufferDescriptions[MetalStaticMeshRendererKnownUniformBuffer::LIGHT];
 
@@ -750,12 +731,12 @@ void MetalStaticMeshRenderer::RenderQueued(MetalStaticMeshRendererFrameState& fr
                 {
                     auto vertexBufferView = metalSubmesh.GetVertexBufferView();
 
-                    [renderCommandEncoder setVertexBuffer:vertexBufferView.buffer offset:0 atIndex:MetalStaticMeshRenderKnownBindings::Buffer::VERTEX];
+                    [renderCommandEncoder setVertexBuffer:vertexBufferView.buffer offset:0 atIndex:MetalStaticMeshRenderKnownBindings::VertexAndFragmentStageBuffer::VERTEX];
                 }
 
                 //Sampler
                 {
-                    auto defaultSampler = this->settings.contextImpl->textureResources.defaultSampler;
+                    auto defaultSampler = this->settings.contextImpl->commonResources.defaultSampler;
 
                     [renderCommandEncoder setVertexSamplerState:defaultSampler atIndex:MetalStaticMeshRenderKnownBindings::Sampler::DEFAULT_SAMPLER];
                     [renderCommandEncoder setFragmentSamplerState:defaultSampler atIndex:MetalStaticMeshRenderKnownBindings::Sampler::DEFAULT_SAMPLER];

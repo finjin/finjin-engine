@@ -28,7 +28,7 @@ namespace Finjin { namespace Engine {
 
     struct D3D12GpuContextSettings : GpuContextCommonSettings
     {
-        D3D12GpuContextSettings(Allocator* allocator);
+        D3D12GpuContextSettings(Allocator* initialAllocator);
 
         bool useSoftwareGpu;
 

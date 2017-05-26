@@ -16,8 +16,8 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/DynamicVector.hpp"
-#include "finjin/common/StaticVector.hpp"
-#include "VulkanStaticMeshRendererFrameState.hpp"
+#include "finjin/common/Error.hpp"
+#include "VulkanQueueFamilyIndexes.hpp"
 #include "VulkanRenderTarget.hpp"
 
 
@@ -32,30 +32,50 @@ namespace Finjin { namespace Engine {
     class VulkanFrameBuffer
     {
     public:
+        struct GraphicsCommandBuffer
+        {
+            GraphicsCommandBuffer()
+            {
+                this->waitForFence = false;
+                this->fence = VK_NULL_HANDLE;
+                this->commandBuffer = VK_NULL_HANDLE;
+            }
+
+            bool waitForFence;
+            VkFence fence;
+            VkCommandBuffer commandBuffer;
+        };
+
+    public:
         VulkanFrameBuffer();
 
         void SetIndex(size_t index);
 
-        VkCommandBuffer NewGraphicsCommandBuffer();
-        VkCommandBuffer GetCurrentGraphicsCommandBuffer();
+        void CreateCommandBuffers(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks, const VulkanQueueFamilyIndexes& queueFamilyIndexes, size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error);
+        void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
+        void DestroyScreenSizeDependentResources(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
+
+        GraphicsCommandBuffer* NewGraphicsCommandBuffer(VulkanDeviceFunctions& vk, Error& error);
+        GraphicsCommandBuffer* GetCurrentGraphicsCommandBuffer();
+        void SubmitCommandBuffers(VulkanDeviceFunctions& vk, VkQueue queue, VkSemaphore waitSemaphore, VkSemaphore signalSemaphore, Error& error);
+        void WaitForCommandBuffers(VulkanDeviceFunctions& vk);
         void ResetCommandBuffers();
 
-        void ResetFences(VulkanGpuContextImpl* contextImpl);
+        void WaitForNotInUse();
 
     public:
         size_t index;
-        VulkanRenderTarget renderTarget;
-        VkFramebuffer frameBuffer;
+        std::atomic<size_t> commandBufferWaitIndex;
+        std::atomic<size_t> commandBufferCommitIndex;
 
-        VkFence renderingCompleteFence;
+        VulkanRenderTarget renderTarget;
 
         VkSemaphore renderingCompleteSemaphore;
 
         VkCommandPool graphicsCommandPool;
-        DynamicVector<VkCommandBuffer> graphicsCommandBuffers;
-        DynamicVector<VkCommandBuffer> commandBuffersToExecute;
-
-        VulkanStaticMeshRendererFrameState staticMeshRendererFrameState;
+        DynamicVector<GraphicsCommandBuffer> freeGraphicsCommandBuffers;
+        DynamicVector<GraphicsCommandBuffer*> graphicsCommandBuffersToExecute;
+        DynamicVector<VkCommandBuffer> plainCommandBuffers;
     };
 
 } }

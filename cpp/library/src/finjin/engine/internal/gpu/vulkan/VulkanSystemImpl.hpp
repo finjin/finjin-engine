@@ -68,7 +68,7 @@ namespace Finjin { namespace Engine {
 
         StaticVector<VkPhysicalDevice, EngineConstants::MAX_GPU_ADAPTERS> physicalDevices;
 
-        StaticVector<VulkanGpuContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+        StaticVector<VulkanGpuContext*, EngineConstants::MAX_WINDOWS> contexts;
     };
 
 } }

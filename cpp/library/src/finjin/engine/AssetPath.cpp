@@ -287,10 +287,10 @@ AssetPath& AssetPath::operator = (const AssetPath& other)
     this->fullName = other.fullName;
 
     //Copy all the components manually, taking care to update the pointers to reference this->fullName
-    for (size_t i = 0; i < this->components.size(); i++)
+    for (size_t componentIndex = 0; componentIndex < this->components.size(); componentIndex++)
     {
-        auto& component = this->components[i];
-        auto& otherComponent = other.components[i];
+        auto& component = this->components[componentIndex];
+        auto& otherComponent = other.components[componentIndex];
 
         if (!otherComponent.value.empty())
             component.value.assign(this->fullName.begin() + (otherComponent.value.begin() - other.fullName.begin()), otherComponent.value.length());

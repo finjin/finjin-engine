@@ -40,7 +40,7 @@ namespace Finjin { namespace Engine {
 
         struct Settings : InputContextCommonSettings
         {
-            Settings(Allocator* allocator) : InputContextCommonSettings(allocator)
+            Settings(Allocator* initialAllocator) : InputContextCommonSettings(initialAllocator)
             {
             }
         };
@@ -165,22 +165,22 @@ namespace Finjin { namespace Engine {
             if (AnySet(filter.deviceClasses & InputDeviceClass::GAME_CONTROLLER))
             {
                 auto gameControllerCount = GetGameControllerCount();
-                for (size_t i = 0; i < gameControllerCount; i++)
-                    changed.CheckGameController(GetGameController(i), i, filter);
+                for (size_t gameControllerIndex = 0; gameControllerIndex < gameControllerCount; gameControllerIndex++)
+                    changed.CheckGameController(GetGameController(gameControllerIndex), gameControllerIndex, filter);
             }
 
             if (AnySet(filter.deviceClasses & InputDeviceClass::KEYBOARD))
             {
                 auto keyboardCount = GetKeyboardCount();
-                for (size_t i = 0; i < keyboardCount; i++)
-                    changed.CheckKeyboard(GetKeyboard(i), i, filter);
+                for (size_t keyboardIndex = 0; keyboardIndex < keyboardCount; keyboardIndex++)
+                    changed.CheckKeyboard(GetKeyboard(keyboardIndex), keyboardIndex, filter);
             }
 
             if (AnySet(filter.deviceClasses & InputDeviceClass::MOUSE))
             {
                 auto mouseCount = GetMouseCount();
-                for (size_t i = 0; i < mouseCount; i++)
-                    changed.CheckMouse(GetMouse(i), i, filter);
+                for (size_t mouseIndex = 0; mouseIndex < mouseCount; mouseIndex++)
+                    changed.CheckMouse(GetMouse(mouseIndex), mouseIndex, filter);
             }
         }
 

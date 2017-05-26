@@ -37,4 +37,16 @@ MetalFrameStage::MetalFrameStage()
     this->renderTarget = nullptr;
 }
 
+void MetalFrameStage::SetIndex(size_t index)
+{
+    this->index = index;
+
+    this->staticMeshRendererFrameState.index = index;
+}
+
+void MetalFrameStage::Destroy()
+{
+    this->staticMeshRendererFrameState.Destroy();
+}
+
 #endif

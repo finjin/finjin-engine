@@ -23,13 +23,13 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct MacOSInputSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
     MacOSInputSystem::Settings settings;
 
-    StaticVector<MacOSInputContext*, EngineConstants::MAX_WINDOWS> contexts; //The actual objects
+    StaticVector<MacOSInputContext*, EngineConstants::MAX_WINDOWS> contexts;
 };
 
 

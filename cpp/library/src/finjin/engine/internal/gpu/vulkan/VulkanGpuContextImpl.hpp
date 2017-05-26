@@ -15,17 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/Chrono.hpp"
-#include "finjin/common/Error.hpp"
-#include "finjin/common/FiberSpinLock.hpp"
-#include "finjin/common/OperationStatus.hpp"
-#include "finjin/common/SimpleSpinLockMutex.hpp"
-#include "finjin/common/StaticVector.hpp"
-#include "finjin/engine/Camera.hpp"
-#include "finjin/engine/GpuContextCommonSettings.hpp"
-#include "finjin/engine/OSWindowEventListener.hpp"
-#include "finjin/engine/WindowSize.hpp"
+#include "finjin/engine/GpuContextCommonImpl.hpp"
 #include "VulkanFrameBuffer.hpp"
 #include "VulkanFrameStage.hpp"
 #include "VulkanGpuContextSettings.hpp"
@@ -37,8 +27,10 @@
 #include "VulkanQueueFamilyIndexes.hpp"
 #include "VulkanResources.hpp"
 #include "VulkanShaderType.hpp"
+#include "VulkanSimpleWork.hpp"
 #include "VulkanStaticMeshRenderer.hpp"
 #include "VulkanSurfaceFormats.hpp"
+#include "VulkanSwapChainFrameBuffer.hpp"
 #include "VulkanTexture.hpp"
 
 
@@ -49,7 +41,7 @@ namespace Finjin { namespace Engine {
 
     class VulkanSystem;
 
-    class VulkanGpuContextImpl : public AllocatedClass, public OSWindowEventListener
+    class VulkanGpuContextImpl : public AllocatedClass, public GpuContextCommonImpl, public OSWindowEventListener
     {
     public:
         VulkanGpuContextImpl(Allocator* allocator);
@@ -62,14 +54,9 @@ namespace Finjin { namespace Engine {
         void CreateRenderers(Error& error);
 
         VulkanFrameStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
-        void FinishBackFrameBufferRender(VulkanFrameStage& frameStage, bool continueRendering, bool modifyingRenderTarget, size_t presentSyncIntervalOverride, Error& error);
-        VulkanRenderTarget* GetRenderTarget(VulkanFrameStage& frameStage, const Utf8String& name);
-        void StartGraphicsCommandList(VulkanFrameStage& frameStage, Error& error);
-        void FinishGraphicsCommandList(VulkanFrameStage& frameStage, Error& error);
+        void PresentFrameStage(VulkanFrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error);
 
         void Execute(VulkanFrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
-
-        VulkanFrameBuffer& GetFrameBuffer(size_t index);
 
         void FlushGpu();
 
@@ -92,37 +79,28 @@ namespace Finjin { namespace Engine {
         bool ResolveMaterialMaps(FinjinMaterial& material);
 
     private:
-        VkPhysicalDevice GetPhysicalDevice();
-        VkDevice GetDevice();
-        VkAllocationCallbacks* GetAllocationCallbacks();
-        VkQueue GetGraphicsQueue();
+        void* CreateMaterial(VkCommandBuffer commandBuffer, FinjinMaterial* material, Error& error);
 
-        void CreateSwapChain(VkCommandBuffer theGraphicsCommandBuffer, Error& error);
-        void CreateDepthBuffer(VkCommandBuffer theGraphicsCommandBuffer, Error& error);
+        void UploadTexture(VkCommandBuffer commandBuffer, FinjinTexture* texture);
+        void UploadMesh(VkCommandBuffer commandBuffer, FinjinMesh* mesh, Error& error);
 
-        void GetPrimaryQueues(Error& error);
-
-        void DestroyImageView(VkImageView& view, VkImage& image, VkDeviceMemory& mem);
-        void DestroyImageView(VkImageView& view, VkImage& image);
-        void DestroyImageView(VkImageView& view);
-        void DestroySwapChain(VkSwapchainKHR& swapChain);
-
+        VulkanRenderTarget* GetRenderTarget(VulkanFrameStage& frameStage, const Utf8String& name);
+        void StartGraphicsCommands(VulkanFrameStage& frameStage, Error& error);
+        void FinishGraphicsCommands(VulkanFrameStage& frameStage, Error& error);
         void StartRenderTarget(VulkanFrameStage& frameStage, VulkanRenderTarget* renderTarget, StaticVector<VulkanRenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES>& dependentRenderTargets, Error& error);
         void FinishRenderTarget(VulkanFrameStage& frameStage, Error& error);
 
-        void UploadTexture(VkCommandBuffer commandBuffer, FinjinTexture* texture);
+        VulkanFrameBuffer& GetFrameBuffer(size_t index);
 
-        void* CreateMaterial(VkCommandBuffer commandBuffer, FinjinMaterial* material, Error& error);
+        void CreateSwapChain(Error& error);
 
-        void UploadMesh(VkCommandBuffer commandBuffer, FinjinMesh* mesh, Error& error);
+        void UpdatedCachedWindowSize();
 
-        void UpdateCachedFrameBufferSize();
+        void CreateSwapChainFrameBufferObjects(Error& error);
+        void CreateNonSwapChainFrameBufferObjects(Error& error);
 
     public:
         VulkanGpuContextSettings settings;
-
-        AssetClassFileReader settingsAssetClassFileReader;
-        AssetClassFileReader shaderAssetClassFileReader;
 
         struct InternalSettings
         {
@@ -148,6 +126,14 @@ namespace Finjin { namespace Engine {
         VulkanGpuDescription physicalDeviceDescription;
         VkPhysicalDevice physicalDevice;
 
+        VkViewport windowViewport;
+        VkRect2D windowScissorRect;
+
+        VkViewport renderViewport;
+        VkRect2D renderScissorRect;
+
+        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(GpuMaterialMapIndexToConstantBufferElements<VulkanMaterial::MapIndex>, VulkanMaterial::MapIndex::COUNT) materialMapTypeToElements;
+
         VkSurfaceKHR surface;
         VkSurfaceCapabilitiesKHR surfaceCapabilities;
 
@@ -159,76 +145,24 @@ namespace Finjin { namespace Engine {
         VulkanSurfaceFormats surfaceFormats;
 
         VkSwapchainKHR swapChain;
-        VkSemaphore presentPossibleSemaphore;
+        StaticVector<VulkanSwapChainFrameBuffer, VulkanSwapChainFrameBuffer::MAX_SWAP_CHAIN_IMAGES> swapChainFrameBuffers;
 
-        VkRenderPass renderPass;
+        VkRenderPass sceneRenderPass;
+        VkRenderPass toFullScreenQuadRenderPass;
 
-        struct TempWork
-        {
-            TempWork()
-            {
-                this->commandPool = VK_NULL_HANDLE;
-                this->commandBuffer = VK_NULL_HANDLE;
-                this->fence = VK_NULL_HANDLE;
-            }
+        VkSemaphore presentCompleteSemaphore;
 
-            VkCommandPool commandPool;
-            VkCommandBuffer commandBuffer;
-            VkFence fence;
-        };
-        TempWork tempGraphicsWork;
+        VulkanSimpleWork tempGraphicsWork;
 
-        WindowBounds renderingPixelBounds;
-
-        ByteBuffer readBuffer;
-
-        struct MaterialMapTypeToGpuElements
-        {
-            MaterialMapTypeToGpuElements() {}
-            MaterialMapTypeToGpuElements(VulkanMaterial::MapIndex gpuMaterialMapIndex, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID, ShaderFeatureFlag gpuMaterialMapFlag)
-            {
-                this->gpuMaterialMapIndex = gpuMaterialMapIndex;
-                this->gpuBufferTextureIndexElementID = gpuBufferTextureIndexElementID;
-                this->gpuBufferAmountElementID = GpuStructuredAndConstantBufferStructMetadata::ElementID::NONE;
-                this->gpuMaterialMapFlag = gpuMaterialMapFlag;
-            }
-            MaterialMapTypeToGpuElements(VulkanMaterial::MapIndex gpuMaterialMapIndex, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID, GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferAmountElementID, ShaderFeatureFlag gpuMaterialMapFlag)
-            {
-                this->gpuMaterialMapIndex = gpuMaterialMapIndex;
-                this->gpuBufferTextureIndexElementID = gpuBufferTextureIndexElementID;
-                this->gpuBufferAmountElementID = gpuBufferAmountElementID;
-                this->gpuMaterialMapFlag = gpuMaterialMapFlag;
-            }
-
-            VulkanMaterial::MapIndex gpuMaterialMapIndex; //Index into VulkanMaterial maps
-            GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferTextureIndexElementID; //ElementID (index) into shader constant or structured buffer for 'texture index'
-            GpuStructuredAndConstantBufferStructMetadata::ElementID gpuBufferAmountElementID; //ElementID (index) into shader constant or structured buffer for 'amount'
-            ShaderFeatureFlag gpuMaterialMapFlag; //Single flag identifying map's shader usage
-        };
-
-        FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(MaterialMapTypeToGpuElements, VulkanMaterial::MapIndex::COUNT) materialMapTypeToGpuElements;
-
-        size_t sequenceIndex;
-
-        size_t nextFrameBufferIndex;
-
-        StaticVector<VulkanFrameBuffer, EngineConstants::MAX_FRAME_BUFFERS> frameBuffers;
-        StaticVector<VulkanFrameStage, EngineConstants::MAX_FRAME_STAGES> frameStages;
-
-        VulkanTextureResources textureResources;
-
-        Camera camera;
-        MathVector4 clearColor;
-
-        VulkanRenderTarget depth;
-
+        VulkanCommonResources commonResources;
         VulkanAssetResources assetResources;
-
-        UsableDynamicVector<VulkanLight> lights;
 
         VulkanStaticMeshRenderer staticMeshRenderer;
 
-        FiberSpinLock createLock;
+        VulkanRenderTarget depthStencilRenderTarget;
+
+        StaticVector<VulkanFrameBuffer, EngineConstants::MAX_FRAME_BUFFERS> frameBuffers;
+        StaticVector<VulkanFrameStage, EngineConstants::MAX_FRAME_STAGES> frameStages;
     };
 
 } }

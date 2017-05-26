@@ -25,7 +25,7 @@ namespace Finjin { namespace Engine {
 
     struct InputSystemCommonSettings
     {
-        InputSystemCommonSettings()
+        InputSystemCommonSettings(Allocator* initialAllocator)
         {
             this->allocator = nullptr;
         }

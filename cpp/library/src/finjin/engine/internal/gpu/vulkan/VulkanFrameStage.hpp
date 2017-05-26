@@ -19,6 +19,7 @@
 #include "VulkanIncludes.hpp"
 #include "VulkanRenderTarget.hpp"
 #include "VulkanTexture.hpp"
+#include "VulkanStaticMeshRendererFrameState.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -31,6 +32,10 @@ namespace Finjin { namespace Engine {
     public:
         VulkanFrameStage();
 
+        void SetIndex(size_t index);
+
+        void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
+
     public:
         size_t index;
         uint32_t frameBufferIndex;
@@ -42,6 +47,8 @@ namespace Finjin { namespace Engine {
 
         VulkanRenderTarget* renderTarget;
         StaticVector<VulkanRenderTarget*, EngineConstants::MAX_RENDER_TARGET_DEPENDENCIES> dependentRenderTargets;
+
+        VulkanStaticMeshRendererFrameState staticMeshRendererFrameState;
     };
 
 } }

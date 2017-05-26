@@ -41,7 +41,7 @@ namespace Finjin { namespace Engine {
 
     struct MetalStaticMeshRenderKnownBindings
     {
-        struct Buffer
+        struct VertexAndFragmentStageBuffer
         {
             enum
             {
@@ -130,9 +130,24 @@ namespace Finjin { namespace Engine {
         DynamicUnorderedMap<size_t, PipelineStateSlot, MapPairConstructNone<size_t, PipelineStateSlot>, PassthroughHash> pipelineStateSlots;
     };
 
-    struct MetalStaticMeshRendererFrameState
+    class MetalStaticMeshRendererFrameState
     {
-        //An instance of this struct goes into MetalFrameBuffer
+    public:
+        MetalStaticMeshRendererFrameState()
+        {
+            this->index = 0;
+        }
+
+        void Destroy()
+        {
+            for (auto& buffer : this->uniformBuffers)
+                buffer.Destroy();
+
+            this->opaqueMaterials.Destroy();
+            this->lights.Destroy();
+        }
+
+    public:
         size_t index;
 
         EnumArray<MetalStaticMeshRendererKnownUniformBuffer, MetalStaticMeshRendererKnownUniformBuffer::COUNT, MetalGpuRenderingUniformBuffer> uniformBuffers;

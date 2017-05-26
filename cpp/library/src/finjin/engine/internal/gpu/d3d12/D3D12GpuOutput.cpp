@@ -61,19 +61,19 @@ bool D3D12GpuOutput::FindBestDisplayMode(D3D12DisplayMode& result, const D3D12Di
     //Try to find a width/height/format match
     {
         const DXGI_MODE_DESC* widthHeightFormatMatch = nullptr;
-        for (size_t i = 0; i < this->displayModes.size(); i++)
+        for (size_t displayModeIndex = 0; displayModeIndex < this->displayModes.size(); displayModeIndex++)
         {
-            const auto& displayMode = this->displayModes[i];
+            const auto& displayMode = this->displayModes[displayModeIndex];
 
             if (displayMode.Width == desired.width && displayMode.Height == desired.height && displayMode.Format == desired.format)
             {
                 if (widthHeightFormatMatch != nullptr)
                 {
                     if (Difference(displayMode.RefreshRate, desired.refresh) < Difference(widthHeightFormatMatch->RefreshRate, desired.refresh))
-                        widthHeightFormatMatch = &this->displayModes[i];
+                        widthHeightFormatMatch = &this->displayModes[displayModeIndex];
                 }
                 else
-                    widthHeightFormatMatch = &this->displayModes[i];
+                    widthHeightFormatMatch = &this->displayModes[displayModeIndex];
             }
         }
         if (widthHeightFormatMatch != nullptr)
@@ -86,9 +86,9 @@ bool D3D12GpuOutput::FindBestDisplayMode(D3D12DisplayMode& result, const D3D12Di
     //Try to find a format match
     {
         const DXGI_MODE_DESC* formatMatch = nullptr;
-        for (size_t i = 0; i < this->displayModes.size(); i++)
+        for (size_t displayModeIndex = 0; displayModeIndex < this->displayModes.size(); displayModeIndex++)
         {
-            const auto& displayMode = this->displayModes[i];
+            const auto& displayMode = this->displayModes[displayModeIndex];
 
             if (displayMode.Format == desired.format)
             {
@@ -98,11 +98,11 @@ bool D3D12GpuOutput::FindBestDisplayMode(D3D12DisplayMode& result, const D3D12Di
                     if (ResolutionDifference(displayMode, desired) <= ResolutionDifference(*formatMatch, desired) &&
                         Difference(displayMode.RefreshRate, desired.refresh) <= Difference(formatMatch->RefreshRate, desired.refresh))
                     {
-                        formatMatch = &this->displayModes[i];
+                        formatMatch = &this->displayModes[displayModeIndex];
                     }
                 }
                 else
-                    formatMatch = &this->displayModes[i];
+                    formatMatch = &this->displayModes[displayModeIndex];
             }
         }
         if (formatMatch != nullptr)

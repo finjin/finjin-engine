@@ -26,7 +26,7 @@ namespace Finjin { namespace Engine {
 
     struct GpuSystemCommonSettings
     {
-        GpuSystemCommonSettings()
+        GpuSystemCommonSettings(Allocator* initialAllocator) : applicationName(initialAllocator)
         {
             this->allocator = nullptr;
         }

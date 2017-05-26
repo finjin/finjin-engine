@@ -297,7 +297,7 @@ const Utf8String& LinuxInputContext::GetDeviceProductDescriptor(InputDeviceClass
         default: break;
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 const Utf8String& LinuxInputContext::GetDeviceInstanceDescriptor(InputDeviceClass deviceClass, size_t index) const
@@ -310,7 +310,7 @@ const Utf8String& LinuxInputContext::GetDeviceInstanceDescriptor(InputDeviceClas
         default: break;
     }
 
-    return Utf8String::Empty();
+    return Utf8String::GetEmpty();
 }
 
 bool LinuxInputContext::IsDeviceConnected(InputDeviceClass deviceClass, size_t index) const

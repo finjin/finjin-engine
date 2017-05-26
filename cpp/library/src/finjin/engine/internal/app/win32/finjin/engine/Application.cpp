@@ -99,7 +99,7 @@ static const char* GetWindowsInternalVersion()
     else if (IsWindowsVersion(6, 1))
         return "6.1";
     else
-        return Utf8String::Empty().c_str();
+        return Utf8String::GetEmpty().c_str();
 }
 
 
@@ -109,7 +109,7 @@ void Application::InitializeGlobals(Error& error)
     FINJIN_ERROR_METHOD_START(error);
 
     //Set up root file system
-    GetFileSystem(ApplicationFileSystem::READ_APPLICATION_ASSETS).AddDirectory(this->standardPaths.applicationBundleDirectory.path, error);
+    GetFileSystem(ApplicationFileSystem::READ_APPLICATION_ASSETS).AddDirectory(this->standardPaths[WhichStandardPath::APPLICATION_BUNDLE_DIRECTORY].path, error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to add application assets to file system.");

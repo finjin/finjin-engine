@@ -100,8 +100,28 @@ namespace Finjin { namespace Engine {
         D3D12Mesh* waitingToBeResidentMeshesHead;
     };
 
-    struct D3D12TextureResources
+    struct D3D12CommonResources
     {
+        D3D12CommonResources(Allocator* allocator)
+        {
+        }
+
+        void Destroy()
+        {
+            this->fullScreenShaderRootSignature = nullptr;
+            this->fullScreenShaderGraphicsPipelineState = nullptr;
+            for (auto& buffer : this->fullScreenShaderFileBytes)
+                buffer.Destroy();
+
+            this->srvTextureDescHeap.Destroy();
+        }
+
+        UsableDynamicVector<D3D12Light> lights;
+
+        Microsoft::WRL::ComPtr<ID3D12RootSignature> fullScreenShaderRootSignature;
+        Microsoft::WRL::ComPtr<ID3D12PipelineState> fullScreenShaderGraphicsPipelineState;
+        std::array<ByteBuffer, 2> fullScreenShaderFileBytes; //0 = vertex shader, 1 = pixel shader
+
         D3D12DescriptorHeap srvTextureDescHeap;
     };
 

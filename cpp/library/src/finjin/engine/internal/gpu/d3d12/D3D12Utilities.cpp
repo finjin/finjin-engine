@@ -22,7 +22,64 @@
 using namespace Finjin::Engine;
 
 
+//Local functions---------------------------------------------------------------
+static bool IsSupportedColorFormat(DXGI_FORMAT colorFormat, const D3D12_FEATURE_DATA_FORMAT_SUPPORT* formatSupportByFormat, size_t formatCount)
+{
+    assert(colorFormat < formatCount);
+
+    if (colorFormat < formatCount)
+    {
+        auto& formatSupport = formatSupportByFormat[colorFormat];
+        return formatSupport.Support1 != D3D12_FORMAT_SUPPORT1_NONE;
+    }
+
+    return false;
+}
+
+static bool IsSupportedDepthStencilFormat(DXGI_FORMAT depthStencilFormat, const D3D12_FEATURE_DATA_FORMAT_SUPPORT* formatSupportByFormat, size_t formatCount)
+{
+    assert(depthStencilFormat < formatCount);
+
+    if (depthStencilFormat < formatCount)
+    {
+        auto& formatSupport = formatSupportByFormat[depthStencilFormat];
+        return formatSupport.Support1 != D3D12_FORMAT_SUPPORT1_NONE;
+    }
+
+    return false;
+}
+
+
 //Implementation----------------------------------------------------------------
+bool D3D12Utilities::GetBestColorFormat(RequestedValue<DXGI_FORMAT>& colorFormat, const D3D12_FEATURE_DATA_FORMAT_SUPPORT* formatSupportByFormat, size_t formatCount)
+{
+    colorFormat.actual = DXGI_FORMAT_UNKNOWN;
+
+    if (colorFormat.requested == DXGI_FORMAT_UNKNOWN || !IsSupportedColorFormat(colorFormat.requested, formatSupportByFormat, formatCount))
+        colorFormat.actual = DXGI_FORMAT_R8G8B8A8_UNORM;
+    else
+        colorFormat.actual = colorFormat.requested;
+
+    return colorFormat.actual != DXGI_FORMAT_UNKNOWN;
+}
+
+bool D3D12Utilities::GetBestDepthStencilFormat(RequestedValue<DXGI_FORMAT>& depthStencilFormat, bool stencilRequired, const D3D12_FEATURE_DATA_FORMAT_SUPPORT* formatSupportByFormat, size_t formatCount)
+{
+    depthStencilFormat.actual = DXGI_FORMAT_UNKNOWN;
+
+    if (depthStencilFormat.requested == DXGI_FORMAT_UNKNOWN || !IsSupportedColorFormat(depthStencilFormat.requested, formatSupportByFormat, formatCount))
+    {
+        if (stencilRequired)
+            depthStencilFormat.actual = DXGI_FORMAT_D32_FLOAT_S8X24_UINT; //DXGI_FORMAT_D24_UNORM_S8_UINT
+        else
+            depthStencilFormat.actual = DXGI_FORMAT_D32_FLOAT; //DXGI_FORMAT_D16_UNORM
+    }
+    else
+        depthStencilFormat.actual = depthStencilFormat.requested;
+
+    return depthStencilFormat.actual != DXGI_FORMAT_UNKNOWN;
+}
+
 D3D_SHADER_MODEL D3D12Utilities::ParseShaderModel(const Utf8String& s, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
@@ -59,7 +116,7 @@ D3D_FEATURE_LEVEL D3D12Utilities::ParseFeatureLevel(const Utf8String& s, Error& 
     size_t dotFoundAt = s.find('.');
     if (dotFoundAt != Utf8String::npos)
     {
-        Utf8String left, right;
+        Utf8StringView left, right;
         s.substr(left, 0, dotFoundAt);
         s.substr(right, dotFoundAt + 1);
 

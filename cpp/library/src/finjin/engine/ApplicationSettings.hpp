@@ -46,6 +46,7 @@ namespace Finjin { namespace Engine {
         Setting<bool> useAccelerometer;
         Setting<bool> useSystemBackButton;
         Setting<bool> updateWhenNotFocused;
+        Setting<bool> checkSystemMemoryFree;
     };
 
 } }
