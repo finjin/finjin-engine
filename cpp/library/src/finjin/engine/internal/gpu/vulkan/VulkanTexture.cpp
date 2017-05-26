@@ -247,7 +247,7 @@ void VulkanTexture::CreateFromKTX
     {
         if (maxDimension == 0 || (width <= maxDimension && height <= maxDimension))
         {
-            std::cout << "KTX image width: " << width << ", height: " << height << std::endl;
+            //std::cout << "KTX image width: " << width << ", height: " << height << std::endl;
         }
         return true;
     }, error);

@@ -151,6 +151,7 @@ void D3D12FrameBuffer::WaitForNotInUse()
 {
     while (!this->graphicsCommandListsToExecute.empty())
     {
+        //Spin
     }
 }
 

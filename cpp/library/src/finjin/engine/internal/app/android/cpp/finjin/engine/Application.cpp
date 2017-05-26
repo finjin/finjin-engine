@@ -465,11 +465,11 @@ static int32_t OnAndroidApplicationInputCommand(android_app* androidApp, AInputE
     return inputSystem.HandleApplicationInputEvent(event);
 }
 
-static Utf8String GetAndroidInternalVersion()
+static void GetAndroidInternalVersion(Utf8String& result)
 {
     char osVersion[PROP_VALUE_MAX + 1];
     int osVersionLength = __system_property_get("ro.build.version.release", osVersion);
-    return osVersion;
+    result = osVersion;
 }
 
 
@@ -527,7 +527,7 @@ void Application::InitializeGlobals(Error& error)
 
     //Some other properties
     this->operatingSystemInternalName = "android";
-    this->operatingSystemInternalVersion = GetAndroidInternalVersion();
+    GetAndroidInternalVersion(this->operatingSystemInternalVersion);
     if (AndroidUtilities::IsAndroidTV(androidApp))
     {
         this->hasClipboard = false;

@@ -263,6 +263,7 @@ void VulkanFrameBuffer::WaitForNotInUse()
 {
     while (!this->graphicsCommandBuffersToExecute.empty())
     {
+        //Spin
     }
 }
 
