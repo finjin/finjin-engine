@@ -270,18 +270,24 @@ size_t MetalUtilities::GetBitsPerPixel(MTLPixelFormat format)
         case MTLPixelFormatBGRG422: return 8;
 
         //Depth
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
         case MTLPixelFormatDepth16Unorm: return 16;
+    #endif
         case MTLPixelFormatDepth32Float: return 32;
 
         //Stencil
         case MTLPixelFormatStencil8: return 8;
 
         //Depth Stencil
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
         case MTLPixelFormatDepth24Unorm_Stencil8: return 32;
+    #endif
         case MTLPixelFormatDepth32Float_Stencil8: return 40;
 
         case MTLPixelFormatX32_Stencil8: return 40;
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS
         case MTLPixelFormatX24_Stencil8: return 32;
+    #endif
 
         default: return 0;
     }

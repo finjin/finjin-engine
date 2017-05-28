@@ -1246,7 +1246,7 @@ void VulkanGpuContextImpl::PresentFrameStage(VulkanFrameStage& frameStage, Rende
                 bufferImageCopy.imageExtent.height = this->renderTargetSize[1];
                 bufferImageCopy.imageExtent.depth = 1;
                 this->vk.CmdCopyImageToBuffer(commandBuffer, frameBuffer.renderTarget.colorOutputs[0].image, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, frameBuffer.screenCaptureBuffer.buffer, 1, &bufferImageCopy);
-                
+
                 frameBuffer.screenCaptureSize = this->renderTargetSize;
             }
             frameBuffer.screenCaptureRequested = false;
