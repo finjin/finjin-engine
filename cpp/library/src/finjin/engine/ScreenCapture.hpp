@@ -57,10 +57,16 @@ namespace Finjin { namespace Engine {
 
     struct ScreenCapture
     {
-        ScreenCapture()
-        {
-            FINJIN_ZERO_ITEM(*this);
-        }
+        ScreenCapture();
+        
+        bool IsBGRPixelFormat() const;
+        bool IsSRGBPixelFormat() const;
+        
+        bool IsIntPixelFormat() const;
+        bool IsFloatPixelFormat() const;
+        
+        uint32_t GetChannelCount() const;
+        uint32_t GetBytesPerChannel() const;
 
         void* image;
         ScreenCapturePixelFormat pixelFormat;
