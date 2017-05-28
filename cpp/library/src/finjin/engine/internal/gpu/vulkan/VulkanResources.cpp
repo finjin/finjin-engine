@@ -22,6 +22,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
+
+//VulkanAssetResources
 VulkanAssetResources::VulkanAssetResources()
 {
     this->waitingToBeResidentTexturesHead = nullptr;
@@ -56,113 +58,89 @@ void VulkanAssetResources::Destroy(VulkanDeviceFunctions& vk, VkAllocationCallba
     this->waitingToBeResidentMeshesHead = nullptr;
 }
 
-void VulkanAssetResources::ValidateTextureForCreation(const Utf8String& name, Error& error)
+//VulkanCommonResources
+VulkanCommonResources::VulkanCommonResources(Allocator* allocator)
 {
-    FINJIN_ERROR_METHOD_START(error);
+    //Vulkan clip space has inverted Y and half Z
+    this->clipInvertMatrix <<
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, -1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.5f, 0.0f,
+        0.0f, 0.0f, 0.5f, 1.0f
+        ;
 
-    if (this->texturesByNameHash.full())
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. Texture lookup is full.", name));
-        return;
-    }
-    if (this->texturesByNameHash.contains(name.GetHash()))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. The name already exists.", name));
-        return;
-    }
+    this->pipelineCache = VK_NULL_HANDLE;
+
+    this->defaultSampler = VK_NULL_HANDLE;
+
+    for (auto& shader : this->fullScreenShaders)
+        shader.name.Create(allocator);
+
+    this->texturesDescriptorSetLayout = VK_NULL_HANDLE;
+    this->textureDescriptorPool = VK_NULL_HANDLE;
+    this->textureDescriptorSet = VK_NULL_HANDLE;
+
+    this->fullScreenQuadDescriptorSetLayout = VK_NULL_HANDLE;
+    this->fullScreenQuadDescriptorPool = VK_NULL_HANDLE;
+    this->fullScreenQuadDescriptorSet = VK_NULL_HANDLE;
+    this->fullScreenQuadPipelineLayout = VK_NULL_HANDLE;
+    this->fullScreenQuadPipeline = VK_NULL_HANDLE;
 }
 
-VulkanTexture* VulkanAssetResources::GetTextureByName(const Utf8String& name)
+void VulkanCommonResources::Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks)
 {
-    auto foundAt = this->texturesByNameHash.find(name.GetHash());
-    if (foundAt != this->texturesByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
-}
-
-void VulkanAssetResources::ValidateMeshForCreation(const Utf8String& name, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    if (this->meshesByNameHash.full())
+    if (this->fullScreenQuadDescriptorPool != VK_NULL_HANDLE)
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. Mesh lookup is full.", name));
-        return;
-    }
-    if (this->meshesByNameHash.contains(name.GetHash()))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. The name already exists.", name));
-        return;
-    }
-}
-
-VulkanMesh* VulkanAssetResources::GetMeshByName(const Utf8String& name)
-{
-    auto foundAt = this->meshesByNameHash.find(name.GetHash());
-    if (foundAt != this->meshesByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
-}
-
-void VulkanAssetResources::ValidateMaterialForCreation(const Utf8String& name, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    if (this->materialsByNameHash.full())
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. Material lookup is full.", name));
-        return;
-    }
-    if (this->materialsByNameHash.contains(name.GetHash()))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. The name already exists.", name));
-        return;
-    }
-}
-
-VulkanMaterial* VulkanAssetResources::GetMaterialByName(const Utf8String& name)
-{
-    auto foundAt = this->materialsByNameHash.find(name.GetHash());
-    if (foundAt != this->materialsByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
-}
-
-bool VulkanAssetResources::ValidateShaderForCreation(VulkanShaderType shaderType, const Utf8String& name, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
-
-    if (shadersByNameHash.full())
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create shader '%1%'. Shader lookup is full.", name));
-        return false;
+        vk.DestroyDescriptorPool(vk.device, this->fullScreenQuadDescriptorPool, allocationCallbacks);
+        this->fullScreenQuadDescriptorPool = VK_NULL_HANDLE;
+        this->fullScreenQuadDescriptorSet = VK_NULL_HANDLE; //Freed with pool
     }
 
-    //Encountering a duplicate shader isn't an error condition
-    if (shadersByNameHash.contains(name.GetHash()))
-        return false;
+    if (this->fullScreenQuadPipeline != VK_NULL_HANDLE)
+    {
+        vk.DestroyPipeline(vk.device, this->fullScreenQuadPipeline, allocationCallbacks);
+        this->fullScreenQuadPipeline = VK_NULL_HANDLE;
+    }
 
-    return true;
-}
+    if (this->fullScreenQuadPipelineLayout != VK_NULL_HANDLE)
+    {
+        vk.DestroyPipelineLayout(vk.device, this->fullScreenQuadPipelineLayout, allocationCallbacks);
+        this->fullScreenQuadPipelineLayout = VK_NULL_HANDLE;
+    }
 
-VulkanShader* VulkanAssetResources::GetShaderByName(VulkanShaderType shaderType, const Utf8String& name)
-{
-    auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
+    if (this->texturesDescriptorSetLayout != VK_NULL_HANDLE)
+    {
+        vk.DestroyDescriptorSetLayout(vk.device, this->texturesDescriptorSetLayout, allocationCallbacks);
+        this->texturesDescriptorSetLayout = VK_NULL_HANDLE;
+    }
 
-    auto foundAt = shadersByNameHash.find(name.GetHash());
-    if (foundAt != shadersByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
-}
+    if (this->textureDescriptorPool != VK_NULL_HANDLE)
+    {
+        vk.DestroyDescriptorPool(vk.device, this->textureDescriptorPool, allocationCallbacks);
+        this->textureDescriptorPool = VK_NULL_HANDLE;
+        this->textureDescriptorSet = VK_NULL_HANDLE; //Freed with pool
+    }
 
-VulkanInputFormat* VulkanAssetResources::GetInputFormatByTypeName(const Utf8String& name)
-{
-    auto foundAt = this->inputFormatsByNameHash.find(name.GetHash());
-    if (foundAt != this->inputFormatsByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
+    if (this->fullScreenQuadDescriptorSetLayout != VK_NULL_HANDLE)
+    {
+        vk.DestroyDescriptorSetLayout(vk.device, this->fullScreenQuadDescriptorSetLayout, allocationCallbacks);
+        this->fullScreenQuadDescriptorSetLayout = VK_NULL_HANDLE;
+    }
+
+    for (auto& shader : this->fullScreenShaders)
+        shader.Destroy(vk, allocationCallbacks);
+
+    if (this->defaultSampler != VK_NULL_HANDLE)
+    {
+        vk.DestroySampler(vk.device, this->defaultSampler, allocationCallbacks);
+        this->defaultSampler = VK_NULL_HANDLE;
+    }
+
+    if (this->pipelineCache != VK_NULL_HANDLE)
+    {
+        vk.DestroyPipelineCache(vk.device, this->pipelineCache, allocationCallbacks);
+        this->pipelineCache = VK_NULL_HANDLE;
+    }
 }
 
 #endif

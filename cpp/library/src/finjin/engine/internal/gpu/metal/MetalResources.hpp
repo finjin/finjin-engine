@@ -42,19 +42,135 @@ namespace Finjin { namespace Engine {
 
         void Destroy();
 
-        void ValidateTextureForCreation(const Utf8String& name, Error& error);
-        MetalTexture* GetTextureByName(const Utf8String& name);
+        template <typename T>
+        void ValidateTextureForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+            
+            if (this->texturesByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. Texture lookup is full.", name));
+                return;
+            }
+            
+            Utf8StringHash hash;
+            if (this->texturesByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. The name already exists.", name));
+                return;
+            }
+        }
+        
+        template <typename T>
+        MetalTexture* GetTextureByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->texturesByNameHash.find(hash(name));
+            if (foundAt != this->texturesByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
-        void ValidateMeshForCreation(const Utf8String& name, Error& error);
-        MetalMesh* GetMeshByName(const Utf8String& name);
+        template <typename T>
+        void ValidateMeshForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+            
+            if (this->meshesByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. Mesh lookup is full.", name));
+                return;
+            }
+            
+            Utf8StringHash hash;
+            if (this->meshesByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. The name already exists.", name));
+                return;
+            }
+        }
+        
+        template <typename T>
+        MetalMesh* GetMeshByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->meshesByNameHash.find(hash(name));
+            if (foundAt != this->meshesByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
-        void ValidateMaterialForCreation(const Utf8String& name, Error& error);
-        MetalMaterial* GetMaterialByName(const Utf8String& name);
+        template <typename T>
+        void ValidateMaterialForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+            
+            if (this->materialsByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. Material lookup is full.", name));
+                return;
+            }
+            
+            Utf8StringHash hash;
+            if (this->materialsByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. The name already exists.", name));
+                return;
+            }
+        }
+        
+        template <typename T>
+        MetalMaterial* GetMaterialByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->materialsByNameHash.find(hash(name));
+            if (foundAt != this->materialsByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
-        bool ValidateShaderForCreation(MetalShaderType shaderType, const Utf8String& name, Error& error);
-        MetalShader* GetShaderByName(MetalShaderType shaderType, const Utf8String& name);
-
-        MetalInputFormat* GetInputFormatByTypeName(const Utf8String& name);
+        template <typename T>
+        bool ValidateShaderForCreation(MetalShaderType shaderType, const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+            
+            auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
+            
+            if (shadersByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create shader '%1%'. Shader lookup is full.", name));
+                return false;
+            }
+            
+            //Encountering a duplicate shader isn't an error condition
+            Utf8StringHash hash;
+            if (shadersByNameHash.contains(hash(name)))
+                return false;
+            
+            return true;
+        }
+        
+        template <typename T>
+        MetalShader* GetShaderByName(MetalShaderType shaderType, const T& name)
+        {
+            auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
+            
+            Utf8StringHash hash;
+            auto foundAt = shadersByNameHash.find(hash(name));
+            if (foundAt != shadersByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
+        
+        template <typename T>
+        MetalInputFormat* GetInputFormatByTypeName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->inputFormatsByNameHash.find(hash(name));
+            if (foundAt != this->inputFormatsByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
     public:
         DynamicUnorderedMap<size_t, MetalInputFormat, MapPairConstructNone<size_t, MetalInputFormat>, PassthroughHash> inputFormatsByNameHash;
@@ -102,69 +218,10 @@ namespace Finjin { namespace Engine {
         enum { DEFAULT_BUFFER_INDEX = 0 };
 
     public:
-        MetalFullScreenQuadMesh()
-        {
-            this->vertexDescriptor = nullptr;
-            this->vertexBuffer = nullptr;
-            this->vertexCount = 0;
-        }
+        MetalFullScreenQuadMesh();
 
-        void Create(id<MTLDevice> device, Error& error)
-        {
-            FINJIN_ERROR_METHOD_START(error);
-
-            this->vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
-            if (this->vertexDescriptor == nullptr)
-            {
-                FINJIN_SET_ERROR(error, "Failed to allocate vertex descriptor.");
-                return;
-            }
-
-            auto layout = this->vertexDescriptor.layouts[0];
-            layout.stride = 0;
-            layout.stepFunction = MTLVertexStepFunctionPerVertex;
-            layout.stepRate = 1;
-
-            {
-                auto metalAttribute = this->vertexDescriptor.attributes[0];
-                metalAttribute.offset = layout.stride;
-                metalAttribute.bufferIndex = DEFAULT_BUFFER_INDEX;
-                metalAttribute.format = MTLVertexFormatFloat3;
-
-                layout.stride += sizeof(float) * 3;
-            }
-
-            {
-                auto metalAttribute = this->vertexDescriptor.attributes[1];
-                metalAttribute.offset = layout.stride;
-                metalAttribute.bufferIndex = DEFAULT_BUFFER_INDEX;
-                metalAttribute.format = MTLVertexFormatFloat2;
-
-                layout.stride += sizeof(float) * 2;
-            }
-
-            this->vertexCount = 4;
-            this->primitiveType = MTLPrimitiveTypeTriangleStrip;
-
-            const float vertices[] =
-            {
-                -1,  1, 0,  0, 0, //Upper left
-                1,  1, 0,  1, 0, //Upper right
-                -1, -1, 0,  0, 1, //Lower left
-                1, -1, 0,  1, 1  //Lowwer right
-            };
-
-            auto vertexBufferByteSize = layout.stride * this->vertexCount;
-
-            this->vertexBuffer = [device newBufferWithBytes:vertices length:vertexBufferByteSize options:MTLResourceCPUCacheModeDefaultCache];
-        }
-
-        void Destroy()
-        {
-            this->vertexDescriptor = nullptr;
-            this->vertexBuffer = nullptr;
-            this->vertexCount = 0;
-        }
+        void Create(id<MTLDevice> device, Error& error);
+        void Destroy();
 
         MTLVertexDescriptor* vertexDescriptor;
         id<MTLBuffer> vertexBuffer;
@@ -175,21 +232,9 @@ namespace Finjin { namespace Engine {
     class MetalCommonResources
     {
     public:
-        MetalCommonResources(Allocator* allocator) : fullScreenQuadShaders(allocator)
-        {
-        }
+        MetalCommonResources(Allocator* allocator);
 
-        void Destroy()
-        {
-            this->fullScreenQuadGraphicsPipelineState = nullptr;
-            this->fullScreenQuadGraphicsPipelineStateDesc = nullptr;
-            this->fullScreenQuadMesh.Destroy();
-            this->fullScreenQuadShaders.Destroy();
-            this->commonShaderLibrary.Destroy();
-
-            this->defaultSamplerDescriptor = nullptr;
-            this->defaultSampler = nullptr;
-        }
+        void Destroy();
 
     public:
         UsableDynamicVector<MetalLight> lights;

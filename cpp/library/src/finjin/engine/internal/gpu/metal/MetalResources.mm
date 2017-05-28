@@ -22,6 +22,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
+
+//MetalAssetResources
 MetalAssetResources::MetalAssetResources()
 {
 }
@@ -47,113 +49,86 @@ void MetalAssetResources::Destroy()
     this->meshesByNameHash.Destroy();
 }
 
-void MetalAssetResources::ValidateTextureForCreation(const Utf8String& name, Error& error)
+//MetalFullScreenQuadMesh
+MetalFullScreenQuadMesh::MetalFullScreenQuadMesh()
+{
+    this->vertexDescriptor = nullptr;
+    this->vertexBuffer = nullptr;
+    this->vertexCount = 0;
+}
+
+void MetalFullScreenQuadMesh::Create(id<MTLDevice> device, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-
-    if (this->texturesByNameHash.full())
+    
+    this->vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
+    if (this->vertexDescriptor == nullptr)
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. Texture lookup is full.", name));
+        FINJIN_SET_ERROR(error, "Failed to allocate vertex descriptor.");
         return;
     }
-    if (this->texturesByNameHash.contains(name.GetHash()))
+    
+    auto layout = this->vertexDescriptor.layouts[0];
+    layout.stride = 0;
+    layout.stepFunction = MTLVertexStepFunctionPerVertex;
+    layout.stepRate = 1;
+    
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. The name already exists.", name));
-        return;
+        auto metalAttribute = this->vertexDescriptor.attributes[0];
+        metalAttribute.offset = layout.stride;
+        metalAttribute.bufferIndex = DEFAULT_BUFFER_INDEX;
+        metalAttribute.format = MTLVertexFormatFloat3;
+        
+        layout.stride += sizeof(float) * 3;
     }
-}
-
-MetalTexture* MetalAssetResources::GetTextureByName(const Utf8String& name)
-{
-    auto foundAt = this->texturesByNameHash.find(name.GetHash());
-    if (foundAt != this->texturesByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
-}
-
-void MetalAssetResources::ValidateMeshForCreation(const Utf8String& name, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    if (this->meshesByNameHash.full())
+    
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. Mesh lookup is full.", name));
-        return;
+        auto metalAttribute = this->vertexDescriptor.attributes[1];
+        metalAttribute.offset = layout.stride;
+        metalAttribute.bufferIndex = DEFAULT_BUFFER_INDEX;
+        metalAttribute.format = MTLVertexFormatFloat2;
+        
+        layout.stride += sizeof(float) * 2;
     }
-    if (this->meshesByNameHash.contains(name.GetHash()))
+    
+    this->vertexCount = 4;
+    this->primitiveType = MTLPrimitiveTypeTriangleStrip;
+    
+    const float vertices[] =
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. The name already exists.", name));
-        return;
-    }
+        -1,  1, 0,  0, 0, //Upper left
+         1,  1, 0,  1, 0, //Upper right
+        -1, -1, 0,  0, 1, //Lower left
+         1, -1, 0,  1, 1  //Lowwer right
+    };
+    
+    auto vertexBufferByteSize = layout.stride * this->vertexCount;
+    
+    this->vertexBuffer = [device newBufferWithBytes:vertices length:vertexBufferByteSize options:MTLResourceCPUCacheModeDefaultCache];
 }
 
-MetalMesh* MetalAssetResources::GetMeshByName(const Utf8String& name)
+void MetalFullScreenQuadMesh::Destroy()
 {
-    auto foundAt = this->meshesByNameHash.find(name.GetHash());
-    if (foundAt != this->meshesByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
+    this->vertexDescriptor = nullptr;
+    this->vertexBuffer = nullptr;
+    this->vertexCount = 0;
 }
 
-void MetalAssetResources::ValidateMaterialForCreation(const Utf8String& name, Error& error)
+//MetalCommonResources
+MetalCommonResources::MetalCommonResources(Allocator* allocator) : fullScreenQuadShaders(allocator)
 {
-    FINJIN_ERROR_METHOD_START(error);
-
-    if (this->materialsByNameHash.full())
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. Material lookup is full.", name));
-        return;
-    }
-    if (this->materialsByNameHash.contains(name.GetHash()))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. The name already exists.", name));
-        return;
-    }
 }
 
-MetalMaterial* MetalAssetResources::GetMaterialByName(const Utf8String& name)
+void MetalCommonResources::Destroy()
 {
-    auto foundAt = this->materialsByNameHash.find(name.GetHash());
-    if (foundAt != this->materialsByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
-}
-
-bool MetalAssetResources::ValidateShaderForCreation(MetalShaderType shaderType, const Utf8String& name, Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-
-    auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
-
-    if (shadersByNameHash.full())
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create shader '%1%'. Shader lookup is full.", name));
-        return false;
-    }
-
-    //Encountering a duplicate shader isn't an error condition
-    if (shadersByNameHash.contains(name.GetHash()))
-        return false;
-
-    return true;
-}
-
-MetalShader* MetalAssetResources::GetShaderByName(MetalShaderType shaderType, const Utf8String& name)
-{
-    auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
-
-    auto foundAt = shadersByNameHash.find(name.GetHash());
-    if (foundAt != shadersByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
-}
-
-MetalInputFormat* MetalAssetResources::GetInputFormatByTypeName(const Utf8String& name)
-{
-    auto foundAt = this->inputFormatsByNameHash.find(name.GetHash());
-    if (foundAt != this->inputFormatsByNameHash.end())
-        return &foundAt->second;
-    return nullptr;
+    this->fullScreenQuadGraphicsPipelineState = nullptr;
+    this->fullScreenQuadGraphicsPipelineStateDesc = nullptr;
+    this->fullScreenQuadMesh.Destroy();
+    this->fullScreenQuadShaders.Destroy();
+    this->commonShaderLibrary.Destroy();
+    
+    this->defaultSamplerDescriptor = nullptr;
+    this->defaultSampler = nullptr;
 }
 
 #endif

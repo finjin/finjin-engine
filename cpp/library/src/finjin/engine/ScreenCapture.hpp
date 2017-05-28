@@ -16,10 +16,13 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/EnumBitwise.hpp"
+#include "finjin/common/Path.hpp"
 
 
 //Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
+
+    using namespace Finjin::Common;
 
     enum class ScreenCaptureFrequency
     {
@@ -55,6 +58,18 @@ namespace Finjin { namespace Engine {
         BGRA16_FLOAT
     };
 
+    struct ScreenCaptureWriteSettings
+    {
+        ScreenCaptureWriteSettings();
+
+        const ScreenCaptureWriteSettings& GetDefault();
+
+        bool writeUnsupportedFormatAsRaw; //Indicates whether unsupported formats should fall back to being written as to a 'raw' file
+        bool forceRaw; //Forces data to always be written to a 'raw' file
+        ByteBuffer* tempBuffer; //Optional buffer to use when encoding intermediate data. If not large enough, writing will fail
+        Allocator* tempBufferAllocator; //Optional allocator to use when creating a new temp buffer (when tempBuffer is null)
+    };
+
     struct ScreenCapture
     {
         ScreenCapture();
@@ -67,7 +82,23 @@ namespace Finjin { namespace Engine {
         
         uint32_t GetChannelCount() const;
         uint32_t GetBytesPerChannel() const;
+        uint32_t GetBytesPerPixel() const;
 
+        enum class WriteResult
+        {
+            SUCCESS,
+            UNSUPPORTED_PIXEL_FORMAT,
+            FAILED_TO_APPEND_EXTENSION,
+            FAILED_TO_ALLOCATE_ENCODING_BUFFER,
+            FAILED_TO_ENCODE_TO_BUFFER,
+            FAILED_TO_OPEN_OUTPUT_FILE,
+            FAILED_TO_WRITE_ALL_DATA
+        };
+
+        WriteResult WriteToRawFile(Path& filePath) const;
+        WriteResult WriteToFile(Path& filePath, const ScreenCaptureWriteSettings& settings) const;
+        Utf8String GetWriteResultString(WriteResult result) const;
+        
         void* image;
         ScreenCapturePixelFormat pixelFormat;
         uint32_t rowStride;

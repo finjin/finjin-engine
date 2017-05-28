@@ -43,19 +43,135 @@ namespace Finjin { namespace Engine {
 
         void Destroy();
 
-        void ValidateTextureForCreation(const Utf8String& name, Error& error);
-        D3D12Texture* GetTextureByName(const Utf8String& name);
+        template <typename T>
+        void ValidateTextureForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
 
-        void ValidateMeshForCreation(const Utf8String& name, Error& error);
-        D3D12Mesh* GetMeshByName(const Utf8String& name);
+            if (this->texturesByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. Texture lookup is full.", name));
+                return;
+            }
 
-        void ValidateMaterialForCreation(const Utf8String& name, Error& error);
-        D3D12Material* GetMaterialByName(const Utf8String& name);
+            Utf8StringHash hash;
+            if (this->texturesByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. The name already exists.", name));
+                return;
+            }
+        }
 
-        bool ValidateShaderForCreation(D3D12ShaderType shaderType, const Utf8String& name, Error& error);
-        D3D12Shader* GetShaderByName(D3D12ShaderType shaderType, const Utf8String& name);
+        template <typename T>
+        D3D12Texture* GetTextureByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->texturesByNameHash.find(hash(name));
+            if (foundAt != this->texturesByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
-        D3D12InputFormat* GetInputFormatByTypeName(const Utf8String& name);
+        template <typename T>
+        void ValidateMeshForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
+            if (this->meshesByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. Mesh lookup is full.", name));
+                return;
+            }
+
+            Utf8StringHash hash;
+            if (this->meshesByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. The name already exists.", name));
+                return;
+            }
+        }
+
+        template <typename T>
+        D3D12Mesh* GetMeshByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->meshesByNameHash.find(hash(name));
+            if (foundAt != this->meshesByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
+
+        template <typename T>
+        void ValidateMaterialForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
+            if (this->materialsByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. Material lookup is full.", name));
+                return;
+            }
+
+            Utf8StringHash hash;
+            if (this->materialsByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. The name already exists.", name));
+                return;
+            }
+        }
+
+        template <typename T>
+        D3D12Material* GetMaterialByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->materialsByNameHash.find(hash(name));
+            if (foundAt != this->materialsByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
+
+        template <typename T>
+        bool ValidateShaderForCreation(D3D12ShaderType shaderType, const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
+            auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
+
+            if (shadersByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create shader '%1%'. Shader lookup is full.", name));
+                return false;
+            }
+
+            //Encountering a duplicate shader isn't an error condition
+            Utf8StringHash hash;
+            if (shadersByNameHash.contains(hash(name)))
+                return false;
+
+            return true;
+        }
+
+        template <typename T>
+        D3D12Shader* GetShaderByName(D3D12ShaderType shaderType, const T& name)
+        {
+            auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
+
+            Utf8StringHash hash;
+            auto foundAt = shadersByNameHash.find(hash(name));
+            if (foundAt != shadersByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
+
+        template <typename T>
+        D3D12InputFormat* GetInputFormatByTypeName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->inputFormatsByNameHash.find(hash(name));
+            if (foundAt != this->inputFormatsByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
     public:
         DynamicUnorderedMap<size_t, D3D12InputFormat, MapPairConstructNone<size_t, D3D12InputFormat>, PassthroughHash> inputFormatsByNameHash;
@@ -102,19 +218,9 @@ namespace Finjin { namespace Engine {
 
     struct D3D12CommonResources
     {
-        D3D12CommonResources(Allocator* allocator)
-        {
-        }
+        D3D12CommonResources(Allocator* allocator);
 
-        void Destroy()
-        {
-            this->fullScreenShaderRootSignature = nullptr;
-            this->fullScreenShaderGraphicsPipelineState = nullptr;
-            for (auto& buffer : this->fullScreenShaderFileBytes)
-                buffer.Destroy();
-
-            this->srvTextureDescHeap.Destroy();
-        }
+        void Destroy();
 
         UsableDynamicVector<D3D12Light> lights;
 

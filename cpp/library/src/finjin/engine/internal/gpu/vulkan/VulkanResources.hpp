@@ -42,19 +42,135 @@ namespace Finjin { namespace Engine {
 
         void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
 
-        void ValidateTextureForCreation(const Utf8String& name, Error& error);
-        VulkanTexture* GetTextureByName(const Utf8String& name);
+        template <typename T>
+        void ValidateTextureForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
 
-        void ValidateMeshForCreation(const Utf8String& name, Error& error);
-        VulkanMesh* GetMeshByName(const Utf8String& name);
+            if (this->texturesByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. Texture lookup is full.", name));
+                return;
+            }
 
-        void ValidateMaterialForCreation(const Utf8String& name, Error& error);
-        VulkanMaterial* GetMaterialByName(const Utf8String& name);
+            Utf8StringHash hash;
+            if (this->texturesByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. The name already exists.", name));
+                return;
+            }
+        }
 
-        bool ValidateShaderForCreation(VulkanShaderType shaderType, const Utf8String& name, Error& error);
-        VulkanShader* GetShaderByName(VulkanShaderType shaderType, const Utf8String& name);
+        template <typename T>
+        VulkanTexture* GetTextureByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->texturesByNameHash.find(hash(name));
+            if (foundAt != this->texturesByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
-        VulkanInputFormat* GetInputFormatByTypeName(const Utf8String& name);
+        template <typename T>
+        void ValidateMeshForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
+            if (this->meshesByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. Mesh lookup is full.", name));
+                return;
+            }
+
+            Utf8StringHash hash;
+            if (this->meshesByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. The name already exists.", name));
+                return;
+            }
+        }
+
+        template <typename T>
+        VulkanMesh* GetMeshByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->meshesByNameHash.find(hash(name));
+            if (foundAt != this->meshesByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
+
+        template <typename T>
+        void ValidateMaterialForCreation(const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
+            if (this->materialsByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. Material lookup is full.", name));
+                return;
+            }
+
+            Utf8StringHash hash;
+            if (this->materialsByNameHash.contains(hash(name)))
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. The name already exists.", name));
+                return;
+            }
+        }
+
+        template <typename T>
+        VulkanMaterial* GetMaterialByName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->materialsByNameHash.find(hash(name));
+            if (foundAt != this->materialsByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
+
+        template <typename T>
+        bool ValidateShaderForCreation(VulkanShaderType shaderType, const T& name, Error& error)
+        {
+            FINJIN_ERROR_METHOD_START(error);
+
+            auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
+
+            if (shadersByNameHash.full())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create shader '%1%'. Shader lookup is full.", name));
+                return false;
+            }
+
+            //Encountering a duplicate shader isn't an error condition
+            Utf8StringHash hash;
+            if (shadersByNameHash.contains(hash(name)))
+                return false;
+
+            return true;
+        }
+
+        template <typename T>
+        VulkanShader* GetShaderByName(VulkanShaderType shaderType, const T& name)
+        {
+            auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
+
+            Utf8StringHash hash;
+            auto foundAt = shadersByNameHash.find(hash(name));
+            if (foundAt != shadersByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
+
+        template <typename T>
+        VulkanInputFormat* GetInputFormatByTypeName(const T& name)
+        {
+            Utf8StringHash hash;
+            auto foundAt = this->inputFormatsByNameHash.find(hash(name));
+            if (foundAt != this->inputFormatsByNameHash.end())
+                return &foundAt->second;
+            return nullptr;
+        }
 
     public:
         DynamicUnorderedMap<size_t, VulkanInputFormat, MapPairConstructNone<size_t, VulkanInputFormat>, PassthroughHash> inputFormatsByNameHash;
@@ -101,89 +217,9 @@ namespace Finjin { namespace Engine {
 
     struct VulkanCommonResources
     {
-        VulkanCommonResources(Allocator* allocator)
-        {
-            //Vulkan clip space has inverted Y and half Z
-            this->clipInvertMatrix <<
-                1.0f, 0.0f, 0.0f, 0.0f,
-                0.0f, -1.0f, 0.0f, 0.0f,
-                0.0f, 0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f, 1.0f
-                ;
+        VulkanCommonResources(Allocator* allocator);
 
-            this->pipelineCache = VK_NULL_HANDLE;
-
-            this->defaultSampler = VK_NULL_HANDLE;
-
-            for (auto& shader : this->fullScreenShaders)
-                shader.name.Create(allocator);
-
-            this->texturesDescriptorSetLayout = VK_NULL_HANDLE;
-            this->textureDescriptorPool = VK_NULL_HANDLE;
-            this->textureDescriptorSet = VK_NULL_HANDLE;
-
-            this->fullScreenQuadDescriptorSetLayout = VK_NULL_HANDLE;
-            this->fullScreenQuadDescriptorPool = VK_NULL_HANDLE;
-            this->fullScreenQuadDescriptorSet = VK_NULL_HANDLE;
-            this->fullScreenQuadPipelineLayout = VK_NULL_HANDLE;
-            this->fullScreenQuadPipeline = VK_NULL_HANDLE;
-        }
-
-        void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks)
-        {
-            if (this->fullScreenQuadDescriptorPool != VK_NULL_HANDLE)
-            {
-                vk.DestroyDescriptorPool(vk.device, this->fullScreenQuadDescriptorPool, allocationCallbacks);
-                this->fullScreenQuadDescriptorPool = VK_NULL_HANDLE;
-                this->fullScreenQuadDescriptorSet = VK_NULL_HANDLE; //Freed with pool
-            }
-
-            if (this->fullScreenQuadPipeline != VK_NULL_HANDLE)
-            {
-                vk.DestroyPipeline(vk.device, this->fullScreenQuadPipeline, allocationCallbacks);
-                this->fullScreenQuadPipeline = VK_NULL_HANDLE;
-            }
-
-            if (this->fullScreenQuadPipelineLayout != VK_NULL_HANDLE)
-            {
-                vk.DestroyPipelineLayout(vk.device, this->fullScreenQuadPipelineLayout, allocationCallbacks);
-                this->fullScreenQuadPipelineLayout = VK_NULL_HANDLE;
-            }
-
-            if (this->texturesDescriptorSetLayout != VK_NULL_HANDLE)
-            {
-                vk.DestroyDescriptorSetLayout(vk.device, this->texturesDescriptorSetLayout, allocationCallbacks);
-                this->texturesDescriptorSetLayout = VK_NULL_HANDLE;
-            }
-
-            if (this->textureDescriptorPool != VK_NULL_HANDLE)
-            {
-                vk.DestroyDescriptorPool(vk.device, this->textureDescriptorPool, allocationCallbacks);
-                this->textureDescriptorPool = VK_NULL_HANDLE;
-                this->textureDescriptorSet = VK_NULL_HANDLE; //Freed with pool
-            }
-
-            if (this->fullScreenQuadDescriptorSetLayout != VK_NULL_HANDLE)
-            {
-                vk.DestroyDescriptorSetLayout(vk.device, this->fullScreenQuadDescriptorSetLayout, allocationCallbacks);
-                this->fullScreenQuadDescriptorSetLayout = VK_NULL_HANDLE;
-            }
-
-            for (auto& shader : this->fullScreenShaders)
-                shader.Destroy(vk, allocationCallbacks);
-
-            if (this->defaultSampler != VK_NULL_HANDLE)
-            {
-                vk.DestroySampler(vk.device, this->defaultSampler, allocationCallbacks);
-                this->defaultSampler = VK_NULL_HANDLE;
-            }
-
-            if (this->pipelineCache != VK_NULL_HANDLE)
-            {
-                vk.DestroyPipelineCache(vk.device, this->pipelineCache, allocationCallbacks);
-                this->pipelineCache = VK_NULL_HANDLE;
-            }
-        }
+        void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
 
         MathMatrix4 clipInvertMatrix;
 
