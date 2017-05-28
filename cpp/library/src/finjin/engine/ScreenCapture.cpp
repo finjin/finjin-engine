@@ -30,7 +30,7 @@ ScreenCaptureWriteSettings::ScreenCaptureWriteSettings()
     this->writeUnsupportedFormatAsRaw = false;
     this->forceRaw = false;
     this->tempBuffer = nullptr;
-    this->newBufferAllocator = FINJIN_ALLOCATOR_NULL;
+    this->tempBufferAllocator = FINJIN_ALLOCATOR_NULL;
 }
 
 const ScreenCaptureWriteSettings& ScreenCaptureWriteSettings::GetDefault()
