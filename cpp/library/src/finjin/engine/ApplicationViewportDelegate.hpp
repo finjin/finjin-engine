@@ -17,6 +17,9 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Chrono.hpp"
+#include "finjin/common/DomainInformation.hpp"
+#include "finjin/common/StandardPaths.hpp"
+#include "finjin/common/UserInformation.hpp"
 #include "finjin/engine/AssetClass.hpp"
 #include "finjin/engine/AssetReadQueue.hpp"
 #include "finjin/engine/FinjinSceneReader.hpp"

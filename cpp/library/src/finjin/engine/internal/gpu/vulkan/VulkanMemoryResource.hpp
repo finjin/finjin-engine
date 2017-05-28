@@ -37,7 +37,7 @@ namespace Finjin { namespace Engine {
             VkMemoryPropertyFlags memoryPropertyFlags,
             void* data,
             VkDeviceSize size,
-            VulkanGpuDescription& physicalDeviceDescription,
+            const VulkanGpuDescription& physicalDeviceDescription,
             Error& error
             );
         void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);

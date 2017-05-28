@@ -51,6 +51,9 @@ namespace Finjin { namespace Engine {
         size_t GetExternalAssetFileExtensions(StaticVector<Utf8String, EngineConstants::MAX_EXTERNAL_ASSET_FILE_EXTENSIONS>& extensions, AssetClass assetClass, Error& error);
         AssetCreationCapability GetAssetCreationCapabilities(AssetClass assetClass) const;
 
+        ScreenCaptureCapability GetScreenCaptureCapabilities() const;
+        ScreenCaptureResult GetScreenCapture(ScreenCapture& screenCapture, JobPipelineStage& frameStage);
+
         bool ToggleFullScreenExclusive(Error& error);
         bool StartResizeTargets(bool minimized, Error& error);
         void FinishResizeTargets(Error& error);

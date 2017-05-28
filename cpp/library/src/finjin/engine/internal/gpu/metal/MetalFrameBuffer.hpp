@@ -32,9 +32,11 @@ namespace Finjin { namespace Engine {
 
         void SetIndex(size_t index);
 
-        void Destroy();
-
         void CreateCommandBuffers(size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error);
+        void CreateScreenCaptureBuffer(id<MTLDevice> device, size_t byteCount, bool isScreenSizeDependent, Error& error);
+
+        void Destroy();
+        void DestroyScreenSizeDependentResources();
 
         id<MTLCommandBuffer> NewGraphicsCommandBuffer();
         id<MTLCommandBuffer> GetCurrentGraphicsCommandBuffer();
@@ -48,8 +50,8 @@ namespace Finjin { namespace Engine {
 
     public:
         size_t index;
-        std::atomic<size_t> commandBufferWaitIndex;
-        std::atomic<size_t> commandBufferCommitIndex;
+        std::atomic_size_t commandBufferWaitIndex;
+        std::atomic_size_t commandBufferCommitIndex;
 
         MetalRenderTarget renderTarget;
 
@@ -57,6 +59,11 @@ namespace Finjin { namespace Engine {
 
         DynamicVector<id<MTLCommandBuffer> > freeCommandBuffers;
         DynamicVector<id<MTLCommandBuffer> > commandBuffersToExecute;
+
+        id<MTLBuffer> screenCaptureBuffer;
+        std::array<uint32_t, 2> screenCaptureSize;
+        bool screenCaptureRequested;
+        bool isScreenCaptureScreenSizeDependent;
     };
 
 } }

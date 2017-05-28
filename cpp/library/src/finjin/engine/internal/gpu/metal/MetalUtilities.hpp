@@ -46,6 +46,8 @@ namespace Finjin { namespace Engine {
 
         static bool GetBestDepthStencilFormat(RequestedValue<uint32_t>& depthStencilFormat, bool stencilRequired, MetalFeatureSet::Capabilities& caps);
         static bool GetBestDepthStencilFormat(RequestedValue<MTLPixelFormat>& depthStencilFormat, bool stencilRequired, MetalFeatureSet::Capabilities& caps);
+
+        static size_t GetBitsPerPixel(MTLPixelFormat format);
     };
 
 } }

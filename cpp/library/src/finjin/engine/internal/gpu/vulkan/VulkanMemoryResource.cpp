@@ -41,7 +41,7 @@ void VulkanMemoryResource::CreateBuffer
     VkMemoryPropertyFlags memoryPropertyFlags,
     void* data,
     VkDeviceSize size,
-    VulkanGpuDescription& physicalDeviceDescription,
+    const VulkanGpuDescription& physicalDeviceDescription,
     Error& error
     )
 {

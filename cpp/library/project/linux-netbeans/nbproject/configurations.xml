@@ -701,6 +701,8 @@
           <itemPath>../../src/finjin/engine/OSWindowEventListener.hpp</itemPath>
           <itemPath>../../src/finjin/engine/PerFrameObjectAllocator.hpp</itemPath>
           <itemPath>../../src/finjin/engine/ResourcePoolDescription.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/ScreenCapture.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/ScreenCapture.hpp</itemPath>
           <itemPath>../../src/finjin/engine/WindowBounds.cpp</itemPath>
           <itemPath>../../src/finjin/engine/WindowBounds.hpp</itemPath>
           <itemPath>../../src/finjin/engine/WindowSize.cpp</itemPath>
@@ -1411,6 +1413,16 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/ResourcePoolDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ScreenCapture.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ScreenCapture.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5203,6 +5215,16 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/ResourcePoolDescription.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ScreenCapture.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/ScreenCapture.hpp"
             ex="false"
             tool="3"
             flavor2="0">

@@ -52,6 +52,8 @@ namespace Finjin { namespace Engine {
         void SetIndex(size_t index);
 
         void CreateCommandBuffers(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks, const VulkanQueueFamilyIndexes& queueFamilyIndexes, size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error);
+        void CreateScreenCaptureBuffer(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks, const VulkanGpuDescription& physicalDeviceDescription, size_t byteCount, bool isScreenSizeDependent, Error& error);
+
         void Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
         void DestroyScreenSizeDependentResources(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
 
@@ -65,8 +67,8 @@ namespace Finjin { namespace Engine {
 
     public:
         size_t index;
-        std::atomic<size_t> commandBufferWaitIndex;
-        std::atomic<size_t> commandBufferCommitIndex;
+        std::atomic_size_t commandBufferWaitIndex;
+        std::atomic_size_t commandBufferCommitIndex;
 
         VulkanRenderTarget renderTarget;
 
@@ -76,6 +78,11 @@ namespace Finjin { namespace Engine {
         DynamicVector<GraphicsCommandBuffer> freeGraphicsCommandBuffers;
         DynamicVector<GraphicsCommandBuffer*> graphicsCommandBuffersToExecute;
         DynamicVector<VkCommandBuffer> plainCommandBuffers;
+
+        VulkanMemoryResource screenCaptureBuffer;
+        std::array<uint32_t, 2> screenCaptureSize;
+        bool screenCaptureRequested;
+        bool isScreenCaptureScreenSizeDependent;
     };
 
 } }

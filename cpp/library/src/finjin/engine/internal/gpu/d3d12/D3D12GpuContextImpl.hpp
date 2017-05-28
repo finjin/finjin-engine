@@ -72,6 +72,8 @@ namespace Finjin { namespace Engine {
         bool ResolveMaterialRef(FinjinMaterial& material, const AssetReference& assetRef);
         bool ResolveMaterialMaps(FinjinMaterial& material);
 
+        ScreenCaptureResult GetScreenCapture(ScreenCapture& screenCapture, D3D12FrameStage& frameStage);
+
         bool ToggleFullScreenExclusive(Error& error);
         bool StartResizeTargets(bool minimized, Error& error);
         void FinishResizeTargets(Error& error);
@@ -144,6 +146,9 @@ namespace Finjin { namespace Engine {
         HANDLE fenceEventHandle;
         Microsoft::WRL::ComPtr<ID3D12Fence> fence;
         std::atomic<uint64_t> fenceValue;
+
+        size_t frameBufferScreenCaptureColorFormatBytesPerPixel;
+        ScreenCapturePixelFormat frameBufferScreenCapturePixelFormat;
 
         D3D12CommonResources commonResources;
         D3D12AssetResources assetResources;

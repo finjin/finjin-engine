@@ -59,7 +59,9 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
             this->isFullScreenExclusive = true;
         }
         else if (arg == "-vsync")
+        {
             this->vsync = true;
+        }
         else if (arg =="-window-width" && argIndex < argsProcessor.GetCount() - 1)
         {
             uint32_t width;
@@ -115,6 +117,14 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
             this->fullScreenHeight = static_cast<OSWindowDimension>(height);
 
             argIndex++;
+        }
+        else if (arg == "-update-when-not-focused")
+        {
+            this->updateWhenNotFocused = true;
+        }
+        else if (arg == "-no-check-system-memory-free")
+        {
+            this->checkSystemMemoryFree = false;
         }
     }
 }

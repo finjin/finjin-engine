@@ -215,6 +215,16 @@ void MetalGpuContext::PresentFrameStage(JobPipelineStage& frameStage, RenderStat
         FINJIN_SET_ERROR_NO_MESSAGE(error);
 }
 
+ScreenCaptureResult MetalGpuContext::GetScreenCapture(ScreenCapture& screenCapture, JobPipelineStage& frameStage)
+{
+    return impl->GetScreenCapture(screenCapture, frameStage);
+}
+
+ScreenCaptureCapability MetalGpuContext::GetScreenCaptureCapabilities() const
+{
+    return ScreenCaptureCapability::GPU_INTERNAL;
+}
+
 void MetalGpuContext::FlushGpu()
 {
     impl->FlushGpu();

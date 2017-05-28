@@ -99,13 +99,12 @@ bool MetalUtilities::GetBestColorFormat(RequestedValue<MTLPixelFormat>& colorFor
 
     StaticVector<MTLPixelFormat, 10> formats;
 
-    if (colorFormat.requested == MTLPixelFormatInvalid)
+    if (colorFormat.requested != MTLPixelFormatInvalid)
         formats.push_back(static_cast<MTLPixelFormat>(colorFormat.requested));
 
     formats.push_back(MTLPixelFormatBGRA8Unorm);
     formats.push_back(MTLPixelFormatBGRA8Unorm_sRGB);
-    formats.push_back(MTLPixelFormatRGBA8Unorm);
-    formats.push_back(MTLPixelFormatRGBA8Unorm_sRGB);
+    formats.push_back(MTLPixelFormatRGBA16Float);
 
     //Get first supported format
     for (auto format : formats)
@@ -173,6 +172,119 @@ bool MetalUtilities::GetBestDepthStencilFormat(RequestedValue<MTLPixelFormat>& d
     }
 
     return depthStencilFormat.actual != MTLPixelFormatInvalid;
+}
+
+size_t MetalUtilities::GetBitsPerPixel(MTLPixelFormat format)
+{
+    switch (format)
+    {
+        //Normal 8 bit formats
+        case MTLPixelFormatA8Unorm:
+        case MTLPixelFormatR8Unorm:
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_IOS
+        case MTLPixelFormatR8Unorm_sRGB:
+    #endif
+
+        case MTLPixelFormatR8Snorm:
+        case MTLPixelFormatR8Uint:
+        case MTLPixelFormatR8Sint: return 8;
+
+        //Normal 16 bit formats
+        case MTLPixelFormatR16Unorm:
+        case MTLPixelFormatR16Snorm:
+        case MTLPixelFormatR16Uint:
+        case MTLPixelFormatR16Sint:
+        case MTLPixelFormatR16Float:
+
+        case MTLPixelFormatRG8Unorm:
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_IOS
+        case MTLPixelFormatRG8Unorm_sRGB:
+    #endif
+        case MTLPixelFormatRG8Snorm:
+        case MTLPixelFormatRG8Uint:
+        case MTLPixelFormatRG8Sint: return 16;
+
+        //Packed 16 bit formats
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_IOS
+        case MTLPixelFormatB5G6R5Unorm:
+        case MTLPixelFormatA1BGR5Unorm:
+        case MTLPixelFormatABGR4Unorm:
+        case MTLPixelFormatBGR5A1Unorm: return 16;
+    #endif
+
+        //Normal 32 bit formats
+        case MTLPixelFormatR32Uint:
+        case MTLPixelFormatR32Sint:
+        case MTLPixelFormatR32Float:
+
+        case MTLPixelFormatRG16Unorm:
+        case MTLPixelFormatRG16Snorm:
+        case MTLPixelFormatRG16Uint:
+        case MTLPixelFormatRG16Sint:
+        case MTLPixelFormatRG16Float:
+
+        case MTLPixelFormatRGBA8Unorm:
+        case MTLPixelFormatRGBA8Unorm_sRGB:
+        case MTLPixelFormatRGBA8Snorm:
+        case MTLPixelFormatRGBA8Uint:
+        case MTLPixelFormatRGBA8Sint:
+
+        case MTLPixelFormatBGRA8Unorm:
+        case MTLPixelFormatBGRA8Unorm_sRGB: return 32;
+
+        //Packed 32 bit formats
+        case MTLPixelFormatRGB10A2Unorm:
+        case MTLPixelFormatRGB10A2Uint:
+
+        case MTLPixelFormatRG11B10Float:
+        case MTLPixelFormatRGB9E5Float: return 32;
+
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_IOS
+        case MTLPixelFormatBGR10_XR:
+        case MTLPixelFormatBGR10_XR_sRGB: return 32;
+    #endif
+
+        //Normal 64 bit formats
+        case MTLPixelFormatRG32Uint:
+        case MTLPixelFormatRG32Sint:
+        case MTLPixelFormatRG32Float:
+
+        case MTLPixelFormatRGBA16Unorm:
+        case MTLPixelFormatRGBA16Snorm:
+        case MTLPixelFormatRGBA16Uint:
+        case MTLPixelFormatRGBA16Sint:
+        case MTLPixelFormatRGBA16Float: return 64;
+
+    #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_IOS
+        case MTLPixelFormatBGRA10_XR:
+        case MTLPixelFormatBGRA10_XR_sRGB: return 64;
+    #endif
+
+        //Normal 128 bit formats
+        case MTLPixelFormatRGBA32Uint:
+        case MTLPixelFormatRGBA32Sint:
+        case MTLPixelFormatRGBA32Float: return 128;
+
+        //Compressed formats
+        case MTLPixelFormatGBGR422: return 8;
+        case MTLPixelFormatBGRG422: return 8;
+
+        //Depth
+        case MTLPixelFormatDepth16Unorm: return 16;
+        case MTLPixelFormatDepth32Float: return 32;
+
+        //Stencil
+        case MTLPixelFormatStencil8: return 8;
+
+        //Depth Stencil
+        case MTLPixelFormatDepth24Unorm_Stencil8: return 32;
+        case MTLPixelFormatDepth32Float_Stencil8: return 40;
+
+        case MTLPixelFormatX32_Stencil8: return 40;
+        case MTLPixelFormatX24_Stencil8: return 32;
+
+        default: return 0;
+    }
 }
 
 #endif

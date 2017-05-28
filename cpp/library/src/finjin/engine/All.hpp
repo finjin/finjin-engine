@@ -74,6 +74,7 @@
 #include "PlatformCapabilities.hpp"
 #include "PointerType.hpp"
 #include "ResourcePoolDescription.hpp"
+#include "ScreenCapture.hpp"
 #include "ShaderFeatureFlag.hpp"
 #include "ShaderFeatures.hpp"
 #include "SoundContextCommonSettings.hpp"

@@ -259,6 +259,7 @@
 		65A8A4481ED5534C00791962 /* GpuContextCommonImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A8A4471ED5534C00791962 /* GpuContextCommonImpl.cpp */; };
 		65C860051D90F3DD00348F9E /* MemorySettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65C860011D90F3DD00348F9E /* MemorySettings.cpp */; };
 		65CCE9081E6214F30028F91B /* AssetClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65CCE9071E6214F30028F91B /* AssetClass.cpp */; };
+		65D15B161ED8E384003B0959 /* ScreenCapture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D15B141ED8E384003B0959 /* ScreenCapture.cpp */; };
 		65F309131ECC09190089D82D /* DetourAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F3090C1ECC09190089D82D /* DetourAlloc.cpp */; };
 		65F309141ECC09190089D82D /* DetourAssert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F3090D1ECC09190089D82D /* DetourAssert.cpp */; };
 		65F309151ECC09190089D82D /* DetourCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F3090E1ECC09190089D82D /* DetourCommon.cpp */; };
@@ -971,6 +972,8 @@
 		65CCE9071E6214F30028F91B /* AssetClass.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetClass.cpp; path = ../../src/finjin/engine/AssetClass.cpp; sourceTree = SOURCE_ROOT; };
 		65CCE90D1E625A230028F91B /* CameraState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CameraState.hpp; path = ../../src/finjin/engine/CameraState.hpp; sourceTree = SOURCE_ROOT; };
 		65CCE90E1E625A230028F91B /* LightState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LightState.hpp; path = ../../src/finjin/engine/LightState.hpp; sourceTree = SOURCE_ROOT; };
+		65D15B141ED8E384003B0959 /* ScreenCapture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ScreenCapture.cpp; path = ../../src/finjin/engine/ScreenCapture.cpp; sourceTree = SOURCE_ROOT; };
+		65D15B151ED8E384003B0959 /* ScreenCapture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ScreenCapture.hpp; path = ../../src/finjin/engine/ScreenCapture.hpp; sourceTree = SOURCE_ROOT; };
 		65D24D431EBBCEA90035D5C4 /* FinjinMain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FinjinMain.hpp; path = ../../src/finjin/engine/internal/app/macos/finjin/engine/FinjinMain.hpp; sourceTree = SOURCE_ROOT; };
 		65F3090C1ECC09190089D82D /* DetourAlloc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DetourAlloc.cpp; path = "/Users/derek/finjin-3rd-party/cpp/recastnavigation/Detour/Source/DetourAlloc.cpp"; sourceTree = "<absolute>"; };
 		65F3090D1ECC09190089D82D /* DetourAssert.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DetourAssert.cpp; path = "/Users/derek/finjin-3rd-party/cpp/recastnavigation/Detour/Source/DetourAssert.cpp"; sourceTree = "<absolute>"; };
@@ -1361,6 +1364,8 @@
 				6512828E1D0B60C60041C324 /* OSWindowEventListener.hpp */,
 				65F7C1D91EB4A7E40084EC43 /* PerFrameObjectAllocator.hpp */,
 				650FA33B1D361E1200535D8D /* ResourcePoolDescription.hpp */,
+				65D15B141ED8E384003B0959 /* ScreenCapture.cpp */,
+				65D15B151ED8E384003B0959 /* ScreenCapture.hpp */,
 				65F7C19C1EB432FE0084EC43 /* TextureDimension.cpp */,
 				65F7C19D1EB432FE0084EC43 /* TextureDimension.hpp */,
 				651288621D137C930041C324 /* WindowBounds.cpp */,
@@ -2363,6 +2368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65D15B161ED8E384003B0959 /* ScreenCapture.cpp in Sources */,
 				65A8A4481ED5534C00791962 /* GpuContextCommonImpl.cpp in Sources */,
 				657359941ECFFBD1009FA3E6 /* imgui_draw.cpp in Sources */,
 				657359961ECFFBD1009FA3E6 /* imgui.cpp in Sources */,

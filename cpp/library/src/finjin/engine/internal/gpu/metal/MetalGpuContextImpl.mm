@@ -206,9 +206,10 @@ MetalGpuContextImpl::MetalGpuContextImpl(Allocator* allocator) :
 {
     this->device = nullptr;
 
-    this->metalSystem = nullptr;
+    this->frameBufferScreenCaptureColorFormatBytesPerPixel = 0;
+    this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::NONE;
 
-    this->device = nullptr;
+    this->metalSystem = nullptr;
 
     FINJIN_ZERO_ITEM(this->renderViewport);
     FINJIN_ZERO_ITEM(this->renderScissorRect);
@@ -298,6 +299,14 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
         FINJIN_SET_ERROR(error, "Failed to determine supported color format.");
         return;
     }
+    this->frameBufferScreenCaptureColorFormatBytesPerPixel = MetalUtilities::GetBitsPerPixel(static_cast<MTLPixelFormat>(this->settings.colorFormat.actual)) / 8;
+    switch (static_cast<MTLPixelFormat>(this->settings.colorFormat.actual))
+    {
+        case MTLPixelFormatBGRA8Unorm: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::BGRA8_UNORM; break;
+        case MTLPixelFormatBGRA8Unorm_sRGB: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::BGRA8_UNORM_SRGB; break;
+        case MTLPixelFormatRGBA16Float: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::RGBA16_FLOAT; break;
+        default: assert(0); this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::NONE; break;
+    }
 
     //Determine depth/stencil format
     if (!MetalUtilities::GetBestDepthStencilFormat(this->settings.depthStencilFormat, this->settings.stencilRequired, this->deviceDescription.featureSet.capabilities))
@@ -314,6 +323,8 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
     //Determine some settings-------------------------------------------
     UpdatedCachedWindowSize();
     auto maxRenderTargetSize = this->settings.renderTargetSize.EvaluateMax(nullptr, &this->windowPixelBounds);
+
+    this->settings.screenCaptureFrequency.actual = this->settings.screenCaptureFrequency.requested;
 
     this->settings.frameBufferCount.actual = this->settings.frameBufferCount.requested;
     this->frameBuffers.resize(this->settings.frameBufferCount.actual);
@@ -334,11 +345,24 @@ void MetalGpuContextImpl::CreateDevice(Error& error)
 
         if (this->settings.renderTargetSize.GetType() == GpuRenderTargetSizeType::EXPLICIT_SIZE)
         {
+            //Create color buffer
             frameBuffer.renderTarget.CreateColor(this->device, maxRenderTargetSize[0], maxRenderTargetSize[1], static_cast<MTLPixelFormat>(this->settings.colorFormat.actual), false, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
                 return;
+            }
+
+            //Create screen capture buffer
+            if (this->settings.screenCaptureFrequency.actual != ScreenCaptureFrequency::NEVER)
+            {
+                auto byteCount = this->frameBufferScreenCaptureColorFormatBytesPerPixel * maxRenderTargetSize[0] * maxRenderTargetSize[1];
+                frameBuffer.CreateScreenCaptureBuffer(this->device, byteCount, false, error);
+                if (error)
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create screen capture buffer for frame buffer %1%.", frameBufferIndex));
+                    return;
+                }
             }
         }
     }
@@ -684,6 +708,28 @@ void MetalGpuContextImpl::PresentFrameStage(MetalFrameStage& frameStage, RenderS
         [renderCommandEncoder endEncoding];
         renderCommandEncoder = nullptr;
 
+        if ((this->settings.screenCaptureFrequency.actual == ScreenCaptureFrequency::EVERY_FRAME ||
+            (this->settings.screenCaptureFrequency.actual == ScreenCaptureFrequency::ON_REQUEST && frameBuffer.screenCaptureRequested)) &&
+            frameBuffer.screenCaptureBuffer != nullptr)
+        {
+            auto blitCommandEncoder = [commandBuffer blitCommandEncoder];
+
+            [blitCommandEncoder copyFromTexture:frameBuffer.renderTarget.colorOutputs[0].GetTexture()
+                sourceSlice:0
+                sourceLevel:0
+                sourceOrigin:MTLOriginMake(0, 0, 0)
+                sourceSize:MTLSizeMake(this->renderTargetSize[0], this->renderTargetSize[1], 1)
+                toBuffer:frameBuffer.screenCaptureBuffer
+                destinationOffset:0
+                destinationBytesPerRow:(this->renderTargetSize[0] * static_cast<uint32_t>(this->frameBufferScreenCaptureColorFormatBytesPerPixel))
+                destinationBytesPerImage:(this->renderTargetSize[0] * this->renderTargetSize[1] * static_cast<uint32_t>(this->frameBufferScreenCaptureColorFormatBytesPerPixel))];
+
+            frameBuffer.screenCaptureSize = this->renderTargetSize;
+
+            [blitCommandEncoder endEncoding];
+        }
+        frameBuffer.screenCaptureRequested = false;
+
         //Encode the "present" command
         [commandBuffer presentDrawable:drawable];
 
@@ -878,6 +924,28 @@ void MetalGpuContextImpl::Execute(MetalFrameStage& frameStage, GpuEvents& events
 
                 break;
             }
+            case GpuCommand::Type::CAPTURE_SCREEN:
+            {
+                auto& command = static_cast<CaptureScreenGpuCommand&>(baseCommand);
+
+                auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+                frameBuffer.screenCaptureRequested = true;
+
+                if (command.eventInfo.HasEventID())
+                {
+                    if (!events.push_back())
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to record 'capture screen' GPU event.");
+                        return;
+                    }
+
+                    auto& event = events.back();
+                    event.type = GpuEvent::Type::CAPTURE_SCREEN_REQUESTED;
+                    event.eventInfo = command.eventInfo;
+                }
+
+                break;
+            }
             default: break;
         }
     }
@@ -902,16 +970,29 @@ void MetalGpuContextImpl::CreateScreenSizeDependentResources(Error& error)
     {
         auto maxRenderTargetSize = this->settings.renderTargetSize.EvaluateMax(nullptr, &this->windowPixelBounds);
 
-        //Create color buffers
+        //Create frame buffer objects
         for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
         {
             auto& frameBuffer = this->frameBuffers[frameBufferIndex];
 
+            //Create color buffer
             frameBuffer.renderTarget.CreateColor(this->device, maxRenderTargetSize[0], maxRenderTargetSize[1], static_cast<MTLPixelFormat>(this->settings.colorFormat.actual), true, error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
                 return;
+            }
+
+            //Create screen capture buffer
+            if (this->settings.screenCaptureFrequency.actual != ScreenCaptureFrequency::NEVER)
+            {
+                auto byteCount = this->frameBufferScreenCaptureColorFormatBytesPerPixel * maxRenderTargetSize[0] * maxRenderTargetSize[1];
+                frameBuffer.CreateScreenCaptureBuffer(this->device, byteCount, true, error);
+                if (error)
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create screen capture buffer for frame buffer %1%.", frameBufferIndex));
+                    return;
+                }
             }
         }
 
@@ -931,7 +1012,7 @@ void MetalGpuContextImpl::CreateScreenSizeDependentResources(Error& error)
 void MetalGpuContextImpl::DestroyScreenSizeDependentResources(bool resizing)
 {
     for (auto& frameBuffer : this->frameBuffers)
-        frameBuffer.renderTarget.DestroyScreenSizeDependentResources();
+        frameBuffer.DestroyScreenSizeDependentResources();
 
     this->depthStencilRenderTarget.DestroyScreenSizeDependentResources();
 }
@@ -1298,6 +1379,27 @@ bool MetalGpuContextImpl::ResolveMaterialMaps(FinjinMaterial& material)
     }
 
     return metalMaterial->isFullyResolved;
+}
+
+ScreenCaptureResult MetalGpuContextImpl::GetScreenCapture(ScreenCapture& screenCapture, MetalFrameStage& frameStage)
+{
+    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    if (frameBuffer.screenCaptureSize[0] > 0 && frameBuffer.screenCaptureSize[1] > 0 &&
+        this->frameBufferScreenCapturePixelFormat != ScreenCapturePixelFormat::NONE)
+    {
+        screenCapture.image = frameBuffer.screenCaptureBuffer.contents;
+        screenCapture.pixelFormat = this->frameBufferScreenCapturePixelFormat;
+        screenCapture.rowStride = frameBuffer.screenCaptureSize[0] * static_cast<uint32_t>(this->frameBufferScreenCaptureColorFormatBytesPerPixel);
+        screenCapture.width = frameBuffer.screenCaptureSize[0];
+        screenCapture.height = frameBuffer.screenCaptureSize[1];
+
+        frameBuffer.screenCaptureSize[0] = frameBuffer.screenCaptureSize[1] = 0;
+
+        return ScreenCaptureResult::SUCCESS;
+    }
+
+    return ScreenCaptureResult::NOT_AVAILABLE;
 }
 
 MetalRenderTarget* MetalGpuContextImpl::GetRenderTarget(MetalFrameStage& frameStage, const Utf8String& name)

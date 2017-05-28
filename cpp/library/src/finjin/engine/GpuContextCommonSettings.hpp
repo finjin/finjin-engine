@@ -26,6 +26,7 @@
 #include "finjin/engine/GpuRenderTargetSize.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
 #include "finjin/engine/ResourcePoolDescription.hpp"
+#include "finjin/engine/ScreenCapture.hpp"
 #include <boost/thread/null_mutex.hpp>
 
 
@@ -49,7 +50,9 @@ namespace Finjin { namespace Engine {
             SET_CLEAR_COLOR_FINISHED,
             SET_CAMERA_FINISHED,
 
-            RENDER_ENTITY_FINISHED
+            RENDER_ENTITY_FINISHED,
+
+            CAPTURE_SCREEN_REQUESTED
         };
 
         GpuEvent()
@@ -103,7 +106,9 @@ namespace Finjin { namespace Engine {
             SET_CLEAR_COLOR,
             SET_CAMERA,
 
-            RENDER_ENTITY
+            RENDER_ENTITY,
+
+            CAPTURE_SCREEN
         };
 
         GpuCommand()
@@ -238,6 +243,14 @@ namespace Finjin { namespace Engine {
         GpuCommandLights sortedLights;
         MathVector4 ambientLight;
         RenderShaderFeatureFlags shaderFeatureFlags;
+    };
+
+    struct CaptureScreenGpuCommand : public GpuCommand
+    {
+        CaptureScreenGpuCommand()
+        {
+            this->type = Type::CAPTURE_SCREEN;
+        }
     };
 
     class GpuCommands : public PerFrameObjectAllocator<GpuCommand, boost::null_mutex>
@@ -434,6 +447,19 @@ namespace Finjin { namespace Engine {
 
             return true;
         }
+
+        bool CaptureScreen(const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
+        {
+            auto command = NewObject<CaptureScreenGpuCommand>(FINJIN_CALLER_ARGUMENTS);
+            if (command == nullptr)
+                return false;
+
+            command->eventInfo = eventInfo;
+
+            this->commands.push_back(command);
+
+            return true;
+        }
     };
 
     enum class GpuSwapChainPresentMode
@@ -504,6 +530,7 @@ namespace Finjin { namespace Engine {
         GpuSwapChainPresentMode presentMode; //The default is sufficient
         RequestedValue<int> multisampleCount; //Usually 1, 2, 4, 8
         RequestedValue<int> multisampleQuality; //Usually 0
+        RequestedValue<ScreenCaptureFrequency> screenCaptureFrequency; //How often to capture the screen/frame buffer, if possible. By default, never
     };
 
     template <typename Result, typename Descriptions, typename GpuID>

@@ -115,6 +115,16 @@ AssetCreationCapability VulkanGpuContext::GetAssetCreationCapabilities(AssetClas
     }
 }
 
+ScreenCaptureCapability VulkanGpuContext::GetScreenCaptureCapabilities() const
+{
+    return ScreenCaptureCapability::GPU_INTERNAL;
+}
+
+ScreenCaptureResult VulkanGpuContext::GetScreenCapture(ScreenCapture& screenCapture, JobPipelineStage& frameStage)
+{
+    return impl->GetScreenCapture(screenCapture, frameStage);
+}
+
 bool VulkanGpuContext::ToggleFullScreenExclusive(Error& error)
 {
     return false;

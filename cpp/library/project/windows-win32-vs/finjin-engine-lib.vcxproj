@@ -24,6 +24,7 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSimpleWork.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSwapChainFrameBuffer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ScreenCapture.hpp" />
     <ClInclude Include="C:\finjin-3rd-party\cpp\bullet\src\btBulletCollisionCommon.h" />
     <ClInclude Include="C:\finjin-3rd-party\cpp\bullet\src\btBulletDynamicsCommon.h" />
     <ClInclude Include="C:\finjin-3rd-party\cpp\bullet\src\Bullet3Collision\BroadPhaseCollision\b3BroadphaseCallback.h" />
@@ -533,6 +534,7 @@
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSimpleWork.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSwapChainFrameBuffer.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\ScreenCapture.cpp" />
     <ClCompile Include="C:\finjin-3rd-party\cpp\bullet\src\Bullet3Collision\BroadPhaseCollision\b3DynamicBvh.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Vulkan-Win32-Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Vulkan-Win32-Debug|x64'">NotUsing</PrecompiledHeader>

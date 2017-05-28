@@ -645,12 +645,12 @@ void Application::Initialize(Error& error)
     this->assetFileSelector.Set(AssetPathComponent::VR_SYSTEM, VRSystem::GetSystemInternalName());
 #endif
 
-    for (size_t assetClassIndex = 0; assetClassIndex < (size_t)AssetClass::COUNT; assetClassIndex++)
+    for (size_t assetClass = 0; assetClass < (size_t)AssetClass::COUNT; assetClass++)
     {
-        this->assetClassFileReaders[assetClassIndex].Create(this->assetFileReader, this->assetFileSelector, static_cast<AssetClass>(assetClassIndex), GetAllocator(), error);
+        this->assetClassFileReaders[assetClass].Create(this->assetFileReader, this->assetFileSelector, static_cast<AssetClass>(assetClass), GetAllocator(), error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create asset class reader for asset class '%1%'.", AssetClassUtilities::ToString(assetClassIndex)));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create asset class reader for asset class '%1%'.", AssetClassUtilities::ToString(assetClass)));
             return;
         }
     }

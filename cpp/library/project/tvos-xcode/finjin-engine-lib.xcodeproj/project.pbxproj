@@ -244,6 +244,8 @@
 		65A315911EC7CD7D0068F9BC /* btThreads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A3156A1EC7CD7D0068F9BC /* btThreads.cpp */; };
 		65A315951EC7CD7D0068F9BC /* btVector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A3156E1EC7CD7D0068F9BC /* btVector3.cpp */; };
 		65CCE90C1E6216740028F91B /* AssetClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65CCE90B1E6216740028F91B /* AssetClass.cpp */; };
+		65D15B1E1ED8E406003B0959 /* ScreenCapture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D15B1C1ED8E406003B0959 /* ScreenCapture.cpp */; };
+		65D15B1F1ED8E406003B0959 /* ScreenCapture.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 65D15B1D1ED8E406003B0959 /* ScreenCapture.hpp */; };
 		65F309781ECC0D8F0089D82D /* Recast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F3096D1ECC0D8E0089D82D /* Recast.cpp */; };
 		65F309791ECC0D8F0089D82D /* RecastAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F3096E1ECC0D8E0089D82D /* RecastAlloc.cpp */; };
 		65F3097A1ECC0D8F0089D82D /* RecastArea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65F3096F1ECC0D8E0089D82D /* RecastArea.cpp */; };
@@ -937,6 +939,8 @@
 		65CCE90B1E6216740028F91B /* AssetClass.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetClass.cpp; path = ../../src/finjin/engine/AssetClass.cpp; sourceTree = SOURCE_ROOT; };
 		65CCE9131E625A800028F91B /* CameraState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CameraState.hpp; path = ../../src/finjin/engine/CameraState.hpp; sourceTree = SOURCE_ROOT; };
 		65CCE9141E625A800028F91B /* LightState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LightState.hpp; path = ../../src/finjin/engine/LightState.hpp; sourceTree = SOURCE_ROOT; };
+		65D15B1C1ED8E406003B0959 /* ScreenCapture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ScreenCapture.cpp; path = ../../src/finjin/engine/ScreenCapture.cpp; sourceTree = SOURCE_ROOT; };
+		65D15B1D1ED8E406003B0959 /* ScreenCapture.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ScreenCapture.hpp; path = ../../src/finjin/engine/ScreenCapture.hpp; sourceTree = SOURCE_ROOT; };
 		65D24D461EBBD08F0035D5C4 /* FinjinMain.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FinjinMain.hpp; path = ../../src/finjin/engine/internal/app/ios/finjin/engine/FinjinMain.hpp; sourceTree = SOURCE_ROOT; };
 		65F3096D1ECC0D8E0089D82D /* Recast.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Recast.cpp; path = "/Users/derek/finjin-3rd-party/cpp/recastnavigation/Recast/Source/Recast.cpp"; sourceTree = "<absolute>"; };
 		65F3096E1ECC0D8E0089D82D /* RecastAlloc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RecastAlloc.cpp; path = "/Users/derek/finjin-3rd-party/cpp/recastnavigation/Recast/Source/RecastAlloc.cpp"; sourceTree = "<absolute>"; };
@@ -1262,6 +1266,8 @@
 				651285311D0B818E0041C324 /* OSWindowEventListener.hpp */,
 				6508AFF81E358A4000EB826E /* PerFrameObjectAllocator.hpp */,
 				650FA34B1D36210400535D8D /* ResourcePoolDescription.hpp */,
+				65D15B1C1ED8E406003B0959 /* ScreenCapture.cpp */,
+				65D15B1D1ED8E406003B0959 /* ScreenCapture.hpp */,
 				6512886A1D137CFB0041C324 /* WindowBounds.cpp */,
 				6512886B1D137CFB0041C324 /* WindowBounds.hpp */,
 				650FA4671D5BBB4900535D8D /* WindowSize.cpp */,
@@ -2320,6 +2326,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65D15B1E1ED8E406003B0959 /* ScreenCapture.cpp in Sources */,
+				65D15B1F1ED8E406003B0959 /* ScreenCapture.hpp in Sources */,
 				657359CD1ED3CD12009FA3E6 /* GpuContextCommonImpl.cpp in Sources */,
 				657359B51ECFFCA6009FA3E6 /* imgui_draw.cpp in Sources */,
 				657359B71ECFFCA6009FA3E6 /* imgui.cpp in Sources */,

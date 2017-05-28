@@ -25,7 +25,11 @@ using namespace Finjin::Engine;
 GpuContextCommonSettings::GpuContextCommonSettings(Allocator* initialAllocator) :
     initialAssetFileSelector(initialAllocator),
     contextSettingsFileNames(initialAllocator),
-    staticMeshRendererSettingsFileNames(initialAllocator)
+    staticMeshRendererSettingsFileNames(initialAllocator),
+    frameBufferCount(2),
+    multisampleCount(1),
+    multisampleQuality(0),
+    screenCaptureFrequency(ScreenCaptureFrequency::NEVER)
 {
     this->applicationHandle = nullptr;
     this->osWindow = nullptr;
@@ -43,18 +47,12 @@ GpuContextCommonSettings::GpuContextCommonSettings(Allocator* initialAllocator) 
     this->maxMeshes = 100;
     this->maxLights = 100;
 
-    this->frameBufferCount.requested = 2;
-    this->frameBufferCount.actual = 0;
     this->jobProcessingPipelineSize = 0;
     this->presentSyncInterval = 1;
-    this->maxGpuCommandListsPerStage = 3;
+    this->maxGpuCommandListsPerStage = 10;
     this->maxDepthValue = 1.0f;
     this->renderingScale = 1;
     this->presentMode = GpuSwapChainPresentMode::ADAPTIVE_VSYNC;
-    this->multisampleCount.requested = 1;
-    this->multisampleCount.actual = 1;
-    this->multisampleQuality.requested = 0;
-    this->multisampleQuality.actual = 0;
 }
 
 size_t GpuContextCommonSettings::CalculateJobPipelineSize(size_t actualFrameCount)

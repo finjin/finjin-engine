@@ -1720,6 +1720,9 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSwapChainFrameBuffer.hpp">
       <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ScreenCapture.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12GpuContext.cpp">
@@ -2741,6 +2744,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSwapChainFrameBuffer.cpp">
       <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ScreenCapture.cpp">
+      <Filter>Source Files\common\utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

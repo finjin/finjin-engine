@@ -72,6 +72,9 @@ namespace Finjin { namespace Engine {
             Microsoft::WRL::ComPtr<ID3D12Resource>& uploadBuffer,
             Error& error
             );
+
+        static UINT GetBitsPerPixel(DXGI_FORMAT format);
+
     };
 
 } }

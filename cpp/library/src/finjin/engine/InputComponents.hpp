@@ -19,6 +19,7 @@
 #include "finjin/common/Distance.hpp"
 #include "finjin/common/Math.hpp"
 #include "finjin/common/Setting.hpp"
+#include "finjin/common/StaticUnorderedMap.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/Utf8String.hpp"
 #include "finjin/engine/InputConstants.hpp"
@@ -49,9 +50,15 @@ namespace Finjin { namespace Engine {
     {
         enum { COUNT = 9 }; //Number of values
 
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(PovDirection, COUNT)& GetLookup();
+
         static const char* ToString(PovDirection povDirection);
-        static PovDirection Parse(const Utf8String& povDirection);
-        static PovDirection Parse(const Utf8StringView& povDirection);
+
+        template <typename T>
+        static PovDirection Parse(const T& deviceComponent)
+        {
+            return GetLookup().GetOrDefault(deviceComponent, PovDirection::CENTERED);
+        }
     };
 
     /** Device classes. These can be bitwise OR'ed together */
@@ -73,6 +80,8 @@ namespace Finjin { namespace Engine {
     struct InputDeviceClassUtilities
     {
         enum { COUNT = 8 }; //Number of values
+
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceClass, InputDeviceClassUtilities::COUNT)& GetLookup();
 
         static size_t ToIndex(InputDeviceClass deviceClass);
 
@@ -135,9 +144,15 @@ namespace Finjin { namespace Engine {
         static bool IsAccelerometer(InputDeviceComponent type);
         static bool IsHeadset(InputDeviceComponent type);
 
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceComponent, InputDeviceComponent::COUNT)& GetLookup();
+
         static const char* ToString(InputDeviceComponent deviceComponent);
-        static InputDeviceComponent Parse(const Utf8String& deviceComponent);
-        static InputDeviceComponent Parse(const Utf8StringView& deviceComponent);
+
+        template <typename T>
+        static InputDeviceComponent Parse(const T& deviceComponent)
+        {
+            return GetLookup().GetOrDefault(deviceComponent, InputDeviceComponent::NONE);
+        }
 
         /** Gets the device class stored in the device type flags */
         static InputDeviceClass GetDeviceClass(InputDeviceComponent deviceComponent);
@@ -232,9 +247,15 @@ namespace Finjin { namespace Engine {
     {
         enum { COUNT = 57 }; //Number of values InputComponentSemantic
 
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputComponentSemantic, COUNT)& GetLookup();
+
         static const char* ToString(InputComponentSemantic semantic);
-        static InputComponentSemantic Parse(const Utf8String& semantic);
-        static InputComponentSemantic Parse(const Utf8StringView& semantic);
+
+        template <typename T>
+        static InputComponentSemantic Parse(const T& semantic)
+        {
+            return GetLookup().GetOrDefault(semantic, InputComponentSemantic::NONE);
+        }
 
         static int GetMoveLookToggleDirection(InputComponentSemantic semantic);
     };
@@ -252,9 +273,15 @@ namespace Finjin { namespace Engine {
     {
         enum { COUNT = 3 }; //Number of values in InputDeviceSemantic
 
+        static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceSemantic, COUNT)& GetLookup();
+
         static const char* ToString(InputDeviceSemantic semantic);
-        static InputDeviceSemantic Parse(const Utf8String& semantic);
-        static InputDeviceSemantic Parse(const Utf8StringView& semantic);
+
+        template <typename T>
+        static InputDeviceSemantic Parse(const T& semantic)
+        {
+            return GetLookup().GetOrDefault(semantic, InputDeviceSemantic::NONE);
+        }
     };
 
     enum class InputAxisProcessing : uint32_t

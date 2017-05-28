@@ -39,11 +39,11 @@ struct ApplicationViewport::Impl : public AllocatedClass
     AssetPathSelector applicationAssetFileSelectorWithSubsystems;
     EnumArray<AssetClass, AssetClass::COUNT, AssetClassFileReader> assetClassFileReaders;
 
-    InputContext* inputContext;
-    SoundContext* soundContext;
-    GpuContext* gpuContext;
+    std::unique_ptr<InputContext> inputContext;
+    std::unique_ptr<SoundContext> soundContext;
+    std::unique_ptr<GpuContext> gpuContext;
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
-    VRContext* vrContext;
+    std::unique_ptr<VRContext> vrContext;
 #endif
 
     bool isMain;
@@ -64,8 +64,8 @@ struct ApplicationViewport::Impl : public AllocatedClass
 
     size_t jobProcessingPipelineSize; //See ApplicationViewportDescription::jobProcessingPipelineSize
     size_t renderTickCount; //Used to trigger when the rendering starts. When this value is >= jobProcessingPipelineSize, rendering starts
-    std::atomic<size_t> jobPipelineStageUpdateIndex; //Index where update jobs will added
-    std::atomic<size_t> jobPipelineStageRenderIndex; //Index where render jobs will be completed. This will lag jobPipelineStageUpdateIndex by jobProcessingPipelineSize-1 steps
+    std::atomic_size_t jobPipelineStageUpdateIndex; //Index where update jobs will added
+    std::atomic_size_t jobPipelineStageRenderIndex; //Index where render jobs will be completed. This will lag jobPipelineStageUpdateIndex by jobProcessingPipelineSize-1 steps
     struct Stage
     {
         Stage()
@@ -92,13 +92,6 @@ ApplicationViewport::ApplicationViewport(Allocator* allocator) :
 
 void ApplicationViewport::Init()
 {
-    impl->inputContext = nullptr;
-    impl->soundContext = nullptr;
-    impl->gpuContext = nullptr;
-#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
-    impl->vrContext = nullptr;
-#endif
-
     impl->isMain = false;
     impl->windowResized = false;
     impl->toggleFullScreenRequested = false;
@@ -196,72 +189,72 @@ bool ApplicationViewport::HasFocus() const
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
 VRContext* ApplicationViewport::DetachVRContext()
 {
-    auto result = impl->vrContext;
+    auto result = impl->vrContext.release();
     impl->vrContext = nullptr;
     return result;
 }
 
 VRContext* ApplicationViewport::GetVRContext()
 {
-    return impl->vrContext;
+    return impl->vrContext.get();
 }
 
 void ApplicationViewport::SetVRContext(std::unique_ptr<VRContext>&& context)
 {
-    impl->vrContext = context.release();
+    impl->vrContext = std::move(context);
 }
 
 #endif
 
 InputContext* ApplicationViewport::DetachInputContext()
 {
-    auto result = impl->inputContext;
+    auto result = impl->inputContext.release();
     impl->inputContext = nullptr;
     return result;
 }
 
 InputContext* ApplicationViewport::GetInputContext()
 {
-    return impl->inputContext;
+    return impl->inputContext.get();
 }
 
 void ApplicationViewport::SetInputContext(std::unique_ptr<InputContext>&& context)
 {
-    impl->inputContext = context.release();
+    impl->inputContext = std::move(context);
 }
 
 SoundContext* ApplicationViewport::DetachSoundContext()
 {
-    auto result = impl->soundContext;
+    auto result = impl->soundContext.release();
     impl->soundContext = nullptr;
     return result;
 }
 
 SoundContext* ApplicationViewport::GetSoundContext()
 {
-    return impl->soundContext;
+    return impl->soundContext.get();
 }
 
 void ApplicationViewport::SetSoundContext(std::unique_ptr<SoundContext>&& context)
 {
-    impl->soundContext = context.release();
+    impl->soundContext = std::move(context);
 }
 
 GpuContext* ApplicationViewport::DetachGpuContext()
 {
-    auto result = impl->gpuContext;
+    auto result = impl->gpuContext.release();
     impl->gpuContext = nullptr;
     return result;
 }
 
 GpuContext* ApplicationViewport::GetGpuContext()
 {
-    return impl->gpuContext;
+    return impl->gpuContext.get();
 }
 
 void ApplicationViewport::SetGpuContext(std::unique_ptr<GpuContext>&& context)
 {
-    impl->gpuContext = context.release();
+    impl->gpuContext = std::move(context);
 }
 
 void ApplicationViewport::CreateAssetClassFileReaders(AssetFileReader& assetFileReader, const AssetPathSelector& applicationAssetFileSelector, Error& error)
@@ -289,12 +282,12 @@ void ApplicationViewport::CreateAssetClassFileReaders(AssetFileReader& assetFile
     impl->vrContext->GetSelectorComponents(this->applicationAssetFileSelectorWithSubsystems);
 #endif
 
-    for (size_t assetClassIndex = 0; assetClassIndex < (size_t)AssetClass::COUNT; assetClassIndex++)
+    for (size_t assetClass = 0; assetClass < (size_t)AssetClass::COUNT; assetClass++)
     {
-        impl->assetClassFileReaders[assetClassIndex].Create(assetFileReader, impl->applicationAssetFileSelectorWithSubsystems, static_cast<AssetClass>(assetClassIndex), GetAllocator(), error);
+        impl->assetClassFileReaders[assetClass].Create(assetFileReader, impl->applicationAssetFileSelectorWithSubsystems, static_cast<AssetClass>(assetClass), GetAllocator(), error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create asset class reader for asset class '%1%'.", AssetClassUtilities::ToString(assetClassIndex)));
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create asset class reader for asset class '%1%'.", AssetClassUtilities::ToString(assetClass)));
             return;
         }
     }

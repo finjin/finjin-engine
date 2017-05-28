@@ -44,9 +44,11 @@ namespace Finjin { namespace Engine {
 
         void SetIndex(size_t index);
 
-        void Destroy();
-
         void CreateCommandLists(ID3D12Device* device, size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error);
+        void CreateScreenCaptureBuffer(ID3D12Device* device, size_t byteCount, bool isScreenSizeDependent, Error& error);
+
+        void Destroy();
+        void DestroyScreenSizeDependentResources();
 
         GraphicsCommandList* NewGraphicsCommandList();
         GraphicsCommandList* GetCurrentGraphicsCommandList();
@@ -58,8 +60,8 @@ namespace Finjin { namespace Engine {
 
     public:
         size_t index;
-        std::atomic<size_t> commandListWaitIndex;
-        std::atomic<size_t> commandListCommitIndex;
+        std::atomic_size_t commandListWaitIndex;
+        std::atomic_size_t commandListCommitIndex;
 
         D3D12RenderTarget renderTarget;
 
@@ -67,6 +69,12 @@ namespace Finjin { namespace Engine {
         DynamicVector<GraphicsCommandList> freeGraphicsCommandLists;
         DynamicVector<GraphicsCommandList*> graphicsCommandListsToExecute;
         DynamicVector<ID3D12GraphicsCommandList*> plainGraphicsCommandLists;
+
+        Microsoft::WRL::ComPtr<ID3D12Resource> screenCaptureBuffer;
+        void* screenCaptureBufferBytes;
+        std::array<uint32_t, 2> screenCaptureSize;
+        bool screenCaptureRequested;
+        bool isScreenCaptureScreenSizeDependent;
     };
 
 } }

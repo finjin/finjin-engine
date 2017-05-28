@@ -1575,6 +1575,10 @@
     <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonImpl.hpp">
       <Filter>Source Files\common\gpu</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\ScreenCapture.hpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\internal\input\uwpinput\WindowsUWPInputDevice.cpp">
@@ -2467,6 +2471,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\GpuContextCommonImpl.cpp">
       <Filter>Source Files\common\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ScreenCapture.cpp">
+      <Filter>Source Files\common\utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

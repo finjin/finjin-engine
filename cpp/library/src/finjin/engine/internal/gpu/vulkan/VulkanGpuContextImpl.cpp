@@ -235,6 +235,9 @@ VulkanGpuContextImpl::VulkanGpuContextImpl(Allocator* allocator) :
     this->toFullScreenQuadRenderPass = VK_NULL_HANDLE;
 
     this->presentCompleteSemaphore = VK_NULL_HANDLE;
+
+    this->frameBufferScreenCaptureColorFormatBytesPerPixel = 0;
+    this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::NONE;
 }
 
 void VulkanGpuContextImpl::Create(const VulkanGpuContextSettings& settings, Error& error)
@@ -433,6 +436,16 @@ void VulkanGpuContextImpl::CreateDevice(Error& error)
         FINJIN_SET_ERROR(error, "Failed to determine supported color format and color space.");
         return;
     }
+    switch (this->settings.colorFormat.actual)
+    {
+        case VK_FORMAT_R8G8B8A8_UNORM: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::RGBA8_UNORM; this->frameBufferScreenCaptureColorFormatBytesPerPixel = 4; break;
+        case VK_FORMAT_R8G8B8A8_SRGB: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::RGBA8_UNORM_SRGB; this->frameBufferScreenCaptureColorFormatBytesPerPixel = 4; break;
+        case VK_FORMAT_B8G8R8A8_UNORM: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::BGRA8_UNORM; this->frameBufferScreenCaptureColorFormatBytesPerPixel = 4; break;
+        case VK_FORMAT_B8G8R8A8_SRGB: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::BGRA8_UNORM_SRGB; this->frameBufferScreenCaptureColorFormatBytesPerPixel = 4; break;
+        case VK_FORMAT_R16G16B16A16_SFLOAT: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::RGBA16_FLOAT; this->frameBufferScreenCaptureColorFormatBytesPerPixel = 8; break;
+        default: assert(0); this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::NONE; break;
+    }
+    this->settings.screenCaptureFrequency.actual = this->settings.screenCaptureFrequency.requested;
 
     //Determine depth/stencil format-------------------------
     if (!VulkanUtilities::GetBestDepthStencilFormat(this->settings.depthStencilFormat, this->settings.stencilRequired, this->vulkanSystem->GetImpl()->vk, this->physicalDevice))
@@ -525,28 +538,36 @@ void VulkanGpuContextImpl::CreateDevice(Error& error)
 
         if (this->settings.renderTargetSize.GetType() == GpuRenderTargetSizeType::EXPLICIT_SIZE)
         {
-            for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
+            //Create color buffer
+            frameBuffer.renderTarget.CreateColor
+                (
+                this->physicalDevice,
+                this->physicalDeviceDescription,
+                this->vulkanSystem->GetImpl()->vk,
+                this->vk,
+                this->settings.deviceAllocationCallbacks,
+                this->tempGraphicsWork.commandBuffer,
+                maxRenderTargetSize[0],
+                maxRenderTargetSize[1],
+                this->settings.colorFormat.actual,
+                this->settings.multisampleCount.actual,
+                false,
+                error
+                );
+            if (error)
             {
-                auto& frameBuffer = this->frameBuffers[frameBufferIndex];
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
+                return;
+            }
 
-                frameBuffer.renderTarget.CreateColor
-                    (
-                    this->physicalDevice,
-                    this->physicalDeviceDescription,
-                    this->vulkanSystem->GetImpl()->vk,
-                    this->vk,
-                    this->settings.deviceAllocationCallbacks,
-                    this->tempGraphicsWork.commandBuffer,
-                    maxRenderTargetSize[0],
-                    maxRenderTargetSize[1],
-                    this->settings.colorFormat.actual,
-                    this->settings.multisampleCount.actual,
-                    false,
-                    error
-                    );
+            //Create screen capture buffer
+            if (this->settings.screenCaptureFrequency.actual != ScreenCaptureFrequency::NEVER)
+            {
+                auto byteCount = maxRenderTargetSize[0] * maxRenderTargetSize[1] * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+                frameBuffer.CreateScreenCaptureBuffer(this->vk, this->settings.deviceAllocationCallbacks, this->physicalDeviceDescription, byteCount, false, error);
                 if (error)
                 {
-                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create screen capture buffer for frame buffer %1%.", frameBufferIndex));
                     return;
                 }
             }
@@ -1210,6 +1231,26 @@ void VulkanGpuContextImpl::PresentFrameStage(VulkanFrameStage& frameStage, Rende
 
             this->vk.CmdEndRenderPass(commandBuffer);
 
+            if ((this->settings.screenCaptureFrequency.actual == ScreenCaptureFrequency::EVERY_FRAME ||
+                (this->settings.screenCaptureFrequency.actual == ScreenCaptureFrequency::ON_REQUEST && frameBuffer.screenCaptureRequested)) &&
+                frameBuffer.screenCaptureBuffer.mappedMemory != nullptr)
+            {
+                VkBufferImageCopy bufferImageCopy = {};
+                bufferImageCopy.bufferRowLength = 0;// this->renderTargetSize[0] * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+                bufferImageCopy.bufferImageHeight = 0;// this->renderTargetSize[1];
+                bufferImageCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+                bufferImageCopy.imageSubresource.baseArrayLayer = 0;
+                bufferImageCopy.imageSubresource.layerCount = 1;
+                bufferImageCopy.imageSubresource.mipLevel = 0;
+                bufferImageCopy.imageExtent.width = this->renderTargetSize[0];
+                bufferImageCopy.imageExtent.height = this->renderTargetSize[1];
+                bufferImageCopy.imageExtent.depth = 1;
+                this->vk.CmdCopyImageToBuffer(commandBuffer, frameBuffer.renderTarget.colorOutputs[0].image, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, frameBuffer.screenCaptureBuffer.buffer, 1, &bufferImageCopy);
+                
+                frameBuffer.screenCaptureSize = this->renderTargetSize;
+            }
+            frameBuffer.screenCaptureRequested = false;
+
             auto result = this->vk.EndCommandBuffer(commandBuffer);
             if (FINJIN_CHECK_VKRESULT_FAILED(result))
             {
@@ -1522,6 +1563,28 @@ void VulkanGpuContextImpl::Execute(VulkanFrameStage& frameStage, GpuEvents& even
 
                 break;
             }
+            case GpuCommand::Type::CAPTURE_SCREEN:
+            {
+                auto& command = static_cast<CaptureScreenGpuCommand&>(baseCommand);
+
+                auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+                frameBuffer.screenCaptureRequested = true;
+
+                if (command.eventInfo.HasEventID())
+                {
+                    if (!events.push_back())
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to record 'capture screen' GPU event.");
+                        return;
+                    }
+
+                    auto& event = events.back();
+                    event.type = GpuEvent::Type::CAPTURE_SCREEN_REQUESTED;
+                    event.eventInfo = command.eventInfo;
+                }
+
+                break;
+            }
         }
     }
 }
@@ -1555,11 +1618,11 @@ void VulkanGpuContextImpl::CreateScreenSizeDependentResources(Error& error)
             return;
         }
 
-        //Color buffers
         for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
         {
             auto& frameBuffer = this->frameBuffers[frameBufferIndex];
 
+            //Color buffer
             frameBuffer.renderTarget.CreateColor
                 (
                 this->physicalDevice,
@@ -1579,6 +1642,18 @@ void VulkanGpuContextImpl::CreateScreenSizeDependentResources(Error& error)
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
                 return;
+            }
+
+            //Screen capture buffer
+            if (this->settings.screenCaptureFrequency.actual != ScreenCaptureFrequency::NEVER)
+            {
+                auto byteCount = maxRenderTargetSize[0] * maxRenderTargetSize[1] * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+                frameBuffer.CreateScreenCaptureBuffer(this->vk, this->settings.deviceAllocationCallbacks, this->physicalDeviceDescription, byteCount, true, error);
+                if (error)
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create screen capture buffer for frame buffer %1%.", frameBufferIndex));
+                    return;
+                }
             }
         }
 
@@ -2218,6 +2293,27 @@ bool VulkanGpuContextImpl::ResolveMaterialMaps(FinjinMaterial& material)
     }
 
     return vulkanMaterial->isFullyResolved;
+}
+
+ScreenCaptureResult VulkanGpuContextImpl::GetScreenCapture(ScreenCapture& screenCapture, VulkanFrameStage& frameStage)
+{
+    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    if (frameBuffer.screenCaptureSize[0] > 0 && frameBuffer.screenCaptureSize[1] > 0 &&
+        this->frameBufferScreenCapturePixelFormat != ScreenCapturePixelFormat::NONE)
+    {
+        screenCapture.image = frameBuffer.screenCaptureBuffer.mappedMemory;
+        screenCapture.pixelFormat = this->frameBufferScreenCapturePixelFormat;
+        screenCapture.rowStride = frameBuffer.screenCaptureSize[0] * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+        screenCapture.width = frameBuffer.screenCaptureSize[0];
+        screenCapture.height = frameBuffer.screenCaptureSize[1];
+
+        frameBuffer.screenCaptureSize[0] = frameBuffer.screenCaptureSize[1] = 0;
+
+        return ScreenCaptureResult::SUCCESS;
+    }
+
+    return ScreenCaptureResult::NOT_AVAILABLE;
 }
 
 void* VulkanGpuContextImpl::CreateMaterial(VkCommandBuffer commandBuffer, FinjinMaterial* material, Error& error)

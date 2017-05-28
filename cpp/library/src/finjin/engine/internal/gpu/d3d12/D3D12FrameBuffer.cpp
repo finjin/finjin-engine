@@ -25,6 +25,11 @@ using namespace Finjin::Engine;
 D3D12FrameBuffer::D3D12FrameBuffer()
 {
     this->index = 0;
+
+    this->screenCaptureBufferBytes = nullptr;
+    this->screenCaptureSize[0] = this->screenCaptureSize[1] = 0;
+    this->screenCaptureRequested = false;
+    this->isScreenCaptureScreenSizeDependent = false;
 }
 
 void D3D12FrameBuffer::SetIndex(size_t index)
@@ -32,10 +37,6 @@ void D3D12FrameBuffer::SetIndex(size_t index)
     this->index = index;
     this->commandListWaitIndex = 0;
     this->commandListCommitIndex = 0;
-}
-
-void D3D12FrameBuffer::Destroy()
-{
 }
 
 void D3D12FrameBuffer::CreateCommandLists(ID3D12Device* device, size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error)
@@ -79,6 +80,65 @@ void D3D12FrameBuffer::CreateCommandLists(ID3D12Device* device, size_t maxGpuCom
         FINJIN_SET_ERROR(error, "Failed to create frame buffer plain graphics command lists collection.");
         return;
     }
+}
+
+void D3D12FrameBuffer::CreateScreenCaptureBuffer(ID3D12Device* device, size_t byteCount, bool isScreenSizeDependent, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    this->isScreenCaptureScreenSizeDependent = isScreenSizeDependent;
+
+    auto result = device->CreateCommittedResource
+        (
+        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_READBACK),
+        D3D12_HEAP_FLAG_NONE,
+        &CD3DX12_RESOURCE_DESC::Buffer(static_cast<UINT>(byteCount)),
+        D3D12_RESOURCE_STATE_COPY_DEST,
+        nullptr,
+        IID_PPV_ARGS(&this->screenCaptureBuffer)
+        );
+    if (FINJIN_CHECK_HRESULT_FAILED(result))
+    {
+        FINJIN_SET_ERROR(error, "Failed to create buffer.");
+        return;
+    }
+
+    result = this->screenCaptureBuffer->Map(0, nullptr, &this->screenCaptureBufferBytes);
+    if (FINJIN_CHECK_HRESULT_FAILED(result))
+    {
+        FINJIN_SET_ERROR(error, "Failed to create buffer.");
+        return;
+    }
+}
+
+void D3D12FrameBuffer::Destroy()
+{
+    if (this->screenCaptureBufferBytes != nullptr)
+    {
+        this->screenCaptureBuffer->Unmap(0, nullptr);
+        this->screenCaptureBufferBytes = nullptr;
+
+        this->screenCaptureBuffer = nullptr;
+    }
+
+    this->renderTarget.Destroy();
+}
+
+void D3D12FrameBuffer::DestroyScreenSizeDependentResources()
+{
+    if (this->isScreenCaptureScreenSizeDependent)
+    {
+        if (this->screenCaptureBufferBytes != nullptr)
+        {
+            this->screenCaptureBuffer->Unmap(0, nullptr);
+            this->screenCaptureBufferBytes = nullptr;
+        }
+
+        this->screenCaptureBuffer = nullptr;
+        this->screenCaptureSize[0] = this->screenCaptureSize[1] = 0;
+    }
+
+    this->renderTarget.DestroyScreenSizeDependentResources();
 }
 
 D3D12FrameBuffer::GraphicsCommandList* D3D12FrameBuffer::NewGraphicsCommandList()

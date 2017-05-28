@@ -210,6 +210,9 @@ D3D12GpuContextImpl::D3D12GpuContextImpl(Allocator* allocator) :
 
     this->fenceEventHandle = nullptr;
     this->fenceValue = 0;
+
+    this->frameBufferScreenCaptureColorFormatBytesPerPixel = 0;
+    this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::NONE;
 }
 
 void D3D12GpuContextImpl::Create(const D3D12GpuContextSettings& settings, Error& error)
@@ -368,6 +371,16 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
         FINJIN_SET_ERROR(error, "Failed to determine supported color format.");
         return;
     }
+    this->frameBufferScreenCaptureColorFormatBytesPerPixel = D3D12Utilities::GetBitsPerPixel(this->settings.colorFormat.actual) / 8;
+    switch (this->settings.colorFormat.actual)
+    {
+        case DXGI_FORMAT_R8G8B8A8_UNORM: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::RGBA8_UNORM; break;
+        case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::RGBA8_UNORM_SRGB; break;
+        case DXGI_FORMAT_B8G8R8A8_UNORM: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::BGRA8_UNORM; break;
+        case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::BGRA8_UNORM_SRGB; break;
+        case DXGI_FORMAT_R16G16B16A16_FLOAT: this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::RGBA16_FLOAT; break;
+        default: assert(0); this->frameBufferScreenCapturePixelFormat = ScreenCapturePixelFormat::NONE; break;
+    }
 
     if (!D3D12Utilities::GetBestDepthStencilFormat(this->settings.depthStencilFormat, this->settings.stencilRequired, this->formatSupportByFormat.data(), this->formatSupportByFormat.size()))
     {
@@ -403,6 +416,8 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
     //Determine some settings-------------------------------------------
     UpdatedCachedWindowSize();
     auto maxRenderTargetSize = this->settings.renderTargetSize.EvaluateMax(nullptr, &this->windowPixelBounds);
+
+    this->settings.screenCaptureFrequency.actual = this->settings.screenCaptureFrequency.requested;
 
     this->settings.frameBufferCount.actual = this->settings.frameBufferCount.requested;
     this->settings.jobProcessingPipelineSize = GpuContextCommonSettings::CalculateJobPipelineSize(this->settings.frameBufferCount.actual);
@@ -477,6 +492,7 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
 
         if (this->settings.renderTargetSize.GetType() == GpuRenderTargetSizeType::EXPLICIT_SIZE)
         {
+            //Create color buffer
             frameBuffer.renderTarget.CreateColor(this->device.Get(), maxRenderTargetSize[0], maxRenderTargetSize[1], this->settings.colorFormat.actual, this->settings.multisampleCount.actual, this->settings.multisampleQuality.actual, false, error);
             if (error)
             {
@@ -489,6 +505,18 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
             output.srvDescHeapIndex = CalculateOffscreenRenderTargetSRVIndex(this->frameBuffers.size(), frameBuffer.index, 0);
             this->device->CreateRenderTargetView(output.Get(), nullptr, this->rtvDescHeap.GetCpuHeapStart(output.rtvDescHeapIndex));
             this->device->CreateShaderResourceView(output.Get(), nullptr, this->commonResources.srvTextureDescHeap.GetCpuHeapStart(output.srvDescHeapIndex));
+
+            //Create screen capture buffer
+            if (this->settings.screenCaptureFrequency.actual != ScreenCaptureFrequency::NEVER)
+            {
+                auto byteCount = AlignSizeUp(maxRenderTargetSize[0], D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * maxRenderTargetSize[1] * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+                frameBuffer.CreateScreenCaptureBuffer(this->device.Get(), byteCount, false, error);
+                if (error)
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create screen capture buffer for frame buffer %1%.", frameBufferIndex));
+                    return;
+                }
+            }
         }
     }
 
@@ -917,6 +945,32 @@ void D3D12GpuContextImpl::PresentFrameStage(D3D12FrameStage& frameStage, RenderS
 
         commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(swapChainBuffer.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
+        if ((this->settings.screenCaptureFrequency.actual == ScreenCaptureFrequency::EVERY_FRAME ||
+            (this->settings.screenCaptureFrequency.actual == ScreenCaptureFrequency::ON_REQUEST && frameBuffer.screenCaptureRequested)) &&
+            frameBuffer.screenCaptureBuffer != nullptr)
+        {
+            commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(frameBuffer.renderTarget.colorOutputs[0].Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_SOURCE));
+
+            CD3DX12_TEXTURE_COPY_LOCATION sourceLocation(frameBuffer.renderTarget.colorOutputs[0].Get(), 0);
+            CD3DX12_BOX sourceBox(0, 0, this->renderTargetSize[0], this->renderTargetSize[1]);
+
+            D3D12_PLACED_SUBRESOURCE_FOOTPRINT destinationFootprint;
+            destinationFootprint.Offset = 0;
+            destinationFootprint.Footprint.Width = this->renderTargetSize[0];
+            destinationFootprint.Footprint.Height = this->renderTargetSize[1];
+            destinationFootprint.Footprint.Depth = 1;
+            destinationFootprint.Footprint.Format = this->settings.colorFormat.actual;
+            destinationFootprint.Footprint.RowPitch = AlignSizeUp(this->renderTargetSize[0], D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+            CD3DX12_TEXTURE_COPY_LOCATION destinationLocation(frameBuffer.screenCaptureBuffer.Get(), destinationFootprint);
+
+            commandList->CopyTextureRegion(&destinationLocation, 0, 0, 0, &sourceLocation, &sourceBox);
+
+            commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(frameBuffer.renderTarget.colorOutputs[0].Get(), D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
+            frameBuffer.screenCaptureSize = this->renderTargetSize;
+        }
+        frameBuffer.screenCaptureRequested = false;
+
         if (FINJIN_CHECK_HRESULT_FAILED(commandList->Close()))
         {
             frameBuffer.ResetCommandLists();
@@ -1219,6 +1273,28 @@ void D3D12GpuContextImpl::Execute(D3D12FrameStage& frameStage, GpuEvents& events
 
                 break;
             }
+            case GpuCommand::Type::CAPTURE_SCREEN:
+            {
+                auto& command = static_cast<CaptureScreenGpuCommand&>(baseCommand);
+
+                auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+                frameBuffer.screenCaptureRequested = true;
+
+                if (command.eventInfo.HasEventID())
+                {
+                    if (!events.push_back())
+                    {
+                        FINJIN_SET_ERROR(error, "Failed to record 'capture screen' GPU event.");
+                        return;
+                    }
+
+                    auto& event = events.back();
+                    event.type = GpuEvent::Type::CAPTURE_SCREEN_REQUESTED;
+                    event.eventInfo = command.eventInfo;
+                }
+
+                break;
+            }
         }
     }
 }
@@ -1256,11 +1332,11 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
     {
         auto maxRenderTargetSize = this->settings.renderTargetSize.EvaluateMax(nullptr, &this->windowPixelBounds);
 
-        //Color buffers
         for (size_t frameBufferIndex = 0; frameBufferIndex < this->frameBuffers.size(); frameBufferIndex++)
         {
             auto& frameBuffer = this->frameBuffers[frameBufferIndex];
 
+            //Color buffer
             frameBuffer.renderTarget.CreateColor(this->device.Get(), maxRenderTargetSize[0], maxRenderTargetSize[1], this->settings.colorFormat.actual, this->settings.multisampleCount.actual, this->settings.multisampleQuality.actual, true, error);
             if (error)
             {
@@ -1273,6 +1349,18 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
             output.srvDescHeapIndex = CalculateOffscreenRenderTargetSRVIndex(this->frameBuffers.size(), frameBuffer.index, 0);
             this->device->CreateRenderTargetView(output.Get(), nullptr, this->rtvDescHeap.GetCpuHeapStart(output.rtvDescHeapIndex));
             this->device->CreateShaderResourceView(output.Get(), nullptr, this->commonResources.srvTextureDescHeap.GetCpuHeapStart(output.srvDescHeapIndex));
+
+            //Screen capture buffer
+            if (this->settings.screenCaptureFrequency.actual != ScreenCaptureFrequency::NEVER)
+            {
+                auto byteCount = AlignSizeUp(maxRenderTargetSize[0], D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * maxRenderTargetSize[1] * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+                frameBuffer.CreateScreenCaptureBuffer(this->device.Get(), byteCount, true, error);
+                if (error)
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create screen capture buffer for frame buffer %1%.", frameBufferIndex));
+                    return;
+                }
+            }
         }
 
         //Depth buffer
@@ -1294,7 +1382,7 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
 void D3D12GpuContextImpl::DestroyScreenSizeDependentResources(bool resizing)
 {
     for (auto& frameBuffer : this->frameBuffers)
-        frameBuffer.renderTarget.DestroyScreenSizeDependentResources();
+        frameBuffer.DestroyScreenSizeDependentResources();
 
     this->depthStencilRenderTarget.DestroyScreenSizeDependentResources();
 }
@@ -1846,6 +1934,27 @@ bool D3D12GpuContextImpl::ResolveMaterialMaps(FinjinMaterial& material)
     return d3d12Material->isFullyResolved;
 }
 
+ScreenCaptureResult D3D12GpuContextImpl::GetScreenCapture(ScreenCapture& screenCapture, D3D12FrameStage& frameStage)
+{
+    auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
+
+    if (frameBuffer.screenCaptureSize[0] > 0 && frameBuffer.screenCaptureSize[1] > 0 &&
+        this->frameBufferScreenCapturePixelFormat != ScreenCapturePixelFormat::NONE)
+    {
+        screenCapture.image = frameBuffer.screenCaptureBufferBytes;
+        screenCapture.pixelFormat = this->frameBufferScreenCapturePixelFormat;
+        screenCapture.rowStride = AlignSizeUp(frameBuffer.screenCaptureSize[0], D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * this->frameBufferScreenCaptureColorFormatBytesPerPixel;
+        screenCapture.width = frameBuffer.screenCaptureSize[0];
+        screenCapture.height = frameBuffer.screenCaptureSize[1];
+
+        frameBuffer.screenCaptureSize[0] = frameBuffer.screenCaptureSize[1] = 0;
+
+        return ScreenCaptureResult::SUCCESS;
+    }
+
+    return ScreenCaptureResult::NOT_AVAILABLE;
+}
+
 bool D3D12GpuContextImpl::ToggleFullScreenExclusive(Error& error)
 {
     FINJIN_DEBUG_LOG_INFO("D3D12GpuContextImpl::ToggleFullScreenExclusive");
@@ -2208,7 +2317,6 @@ void D3D12GpuContextImpl::FinishRenderTarget(D3D12FrameStage& frameStage, Error&
         }
     }
     {
-        D3D12_RESOURCE_STATES stateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
         for (size_t i = 0; i < renderTarget->colorOutputs.size(); i++)
         {
             if (barriers.push_back(CD3DX12_RESOURCE_BARRIER::Transition(renderTarget->colorOutputs[i].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE)).HasErrorOrValue(false))

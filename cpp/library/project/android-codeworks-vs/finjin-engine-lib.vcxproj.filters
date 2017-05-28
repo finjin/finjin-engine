@@ -1080,6 +1080,9 @@
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSwapChainFrameBuffer.cpp">
       <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\ScreenCapture.cpp">
+      <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp">
@@ -2455,6 +2458,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSwapChainFrameBuffer.hpp">
       <Filter>Source Files\internal\gpu\vulkan\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\ScreenCapture.hpp">
+      <Filter>Source Files\common\utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

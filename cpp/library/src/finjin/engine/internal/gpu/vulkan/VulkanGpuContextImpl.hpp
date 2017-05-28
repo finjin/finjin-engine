@@ -78,6 +78,8 @@ namespace Finjin { namespace Engine {
         bool ResolveMaterialRef(FinjinMaterial& material, const AssetReference& assetRef);
         bool ResolveMaterialMaps(FinjinMaterial& material);
 
+        ScreenCaptureResult GetScreenCapture(ScreenCapture& screenCapture, VulkanFrameStage& frameStage);
+
     private:
         void* CreateMaterial(VkCommandBuffer commandBuffer, FinjinMaterial* material, Error& error);
 
@@ -151,6 +153,9 @@ namespace Finjin { namespace Engine {
         VkRenderPass toFullScreenQuadRenderPass;
 
         VkSemaphore presentCompleteSemaphore;
+
+        size_t frameBufferScreenCaptureColorFormatBytesPerPixel;
+        ScreenCapturePixelFormat frameBufferScreenCapturePixelFormat;
 
         VulkanSimpleWork tempGraphicsWork;
 

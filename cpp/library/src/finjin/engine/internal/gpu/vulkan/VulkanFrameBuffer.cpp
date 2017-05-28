@@ -33,6 +33,10 @@ VulkanFrameBuffer::VulkanFrameBuffer()
     this->renderingCompleteSemaphore = VK_NULL_HANDLE;
 
     this->graphicsCommandPool = VK_NULL_HANDLE;
+
+    this->screenCaptureSize[0] = this->screenCaptureSize[1] = 0;
+    this->screenCaptureRequested = false;
+    this->isScreenCaptureScreenSizeDependent = false;
 }
 
 void VulkanFrameBuffer::SetIndex(size_t index)
@@ -114,6 +118,27 @@ void VulkanFrameBuffer::CreateCommandBuffers(VulkanDeviceFunctions& vk, VkAlloca
     }
 }
 
+void VulkanFrameBuffer::CreateScreenCaptureBuffer(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks, const VulkanGpuDescription& physicalDeviceDescription, size_t byteCount, bool isScreenSizeDependent, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    this->isScreenCaptureScreenSizeDependent = isScreenSizeDependent;
+
+    this->screenCaptureBuffer.CreateBuffer(vk, allocationCallbacks, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, nullptr, byteCount, physicalDeviceDescription, error);
+    if (error)
+    {
+        FINJIN_SET_ERROR(error, "Failed to create screen capture buffer.");
+        return;
+    }
+
+    auto result = this->screenCaptureBuffer.Map(vk);
+    if (FINJIN_CHECK_VKRESULT_FAILED(result))
+    {
+        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to map screen capture buffer. Vulkan result: %1%", VulkanResult::ToString(result)));
+        return;
+    }
+}
+
 void VulkanFrameBuffer::Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks)
 {
     this->renderTarget.Destroy(vk, allocationCallbacks);
@@ -141,10 +166,19 @@ void VulkanFrameBuffer::Destroy(VulkanDeviceFunctions& vk, VkAllocationCallbacks
         vk.DestroyCommandPool(vk.device, this->graphicsCommandPool, allocationCallbacks);
         this->graphicsCommandPool = VK_NULL_HANDLE;
     }
+
+    this->screenCaptureBuffer.Destroy(vk, allocationCallbacks);
 }
 
 void VulkanFrameBuffer::DestroyScreenSizeDependentResources(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks)
 {
+    if (this->isScreenCaptureScreenSizeDependent)
+    {
+        this->screenCaptureBuffer.Destroy(vk, allocationCallbacks);
+
+        this->screenCaptureSize[0] = this->screenCaptureSize[1] = 0;
+    }
+
     this->renderTarget.DestroyScreenSizeDependentResources(vk, allocationCallbacks);
 }
 

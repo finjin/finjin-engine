@@ -67,6 +67,8 @@ namespace Finjin { namespace Engine {
         bool ResolveMaterialRef(FinjinMaterial& material, const AssetReference& assetRef);
         bool ResolveMaterialMaps(FinjinMaterial& material);
 
+        ScreenCaptureResult GetScreenCapture(ScreenCapture& screenCapture, MetalFrameStage& frameStage);
+
     private:
         MetalRenderTarget* GetRenderTarget(MetalFrameStage& frameStage, const Utf8String& name);
         void StartGraphicsCommands(MetalFrameStage& frameStage, Error& error);
@@ -110,6 +112,9 @@ namespace Finjin { namespace Engine {
         MTLScissorRect renderScissorRect;
 
         id<MTLDevice> device;
+
+        size_t frameBufferScreenCaptureColorFormatBytesPerPixel;
+        ScreenCapturePixelFormat frameBufferScreenCapturePixelFormat;
 
         MetalCommonResources commonResources;
         MetalAssetResources assetResources;

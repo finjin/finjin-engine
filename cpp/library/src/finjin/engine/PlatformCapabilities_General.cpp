@@ -46,6 +46,7 @@ PlatformCapabilities::PlatformCapabilities()
     this->isSoundCapable = true;
     this->layoutDirection = LayoutDirection::LEFT_TO_RIGHT;
     this->memoryArchitecture = MemoryArchitecture::SEGMENTED;
+    this->screenCaptureCapability = ScreenCaptureCapability::NONE;
 }
 
 PlatformCapabilities::~PlatformCapabilities()

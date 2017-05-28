@@ -29,23 +29,16 @@ MetalFrameBuffer::MetalFrameBuffer()
     this->commandBufferCommitIndex = 0;
 
     this->commandQueue = nullptr;
+
+    this->screenCaptureBuffer = nullptr;
+    this->screenCaptureSize[0] = this->screenCaptureSize[1] = 0;
+    this->screenCaptureRequested = false;
+    this->isScreenCaptureScreenSizeDependent = false;
 }
 
 void MetalFrameBuffer::SetIndex(size_t index)
 {
     this->index = index;
-}
-
-void MetalFrameBuffer::Destroy()
-{
-    ResetCommandBuffers();
-
-    this->freeCommandBuffers.Destroy();
-    this->commandBuffersToExecute.Destroy();
-
-    this->renderTarget.Destroy();
-
-    this->commandQueue = nullptr;
 }
 
 void MetalFrameBuffer::CreateCommandBuffers(size_t maxGpuCommandListsPerStage, Allocator* allocator, Error& error)
@@ -62,6 +55,46 @@ void MetalFrameBuffer::CreateCommandBuffers(size_t maxGpuCommandListsPerStage, A
     {
         FINJIN_SET_ERROR(error, "Failed to create execute command buffers collection.");
         return;
+    }
+}
+
+void MetalFrameBuffer::CreateScreenCaptureBuffer(id<MTLDevice> device, size_t byteCount, bool isScreenSizeDependent, Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    this->isScreenCaptureScreenSizeDependent = isScreenSizeDependent;
+
+    this->screenCaptureBuffer = [device newBufferWithLength:static_cast<NSUInteger>(byteCount) options:MTLResourceStorageModeShared];
+    if (this->screenCaptureBuffer == nullptr)
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate buffer.");
+        return;
+    }
+}
+
+void MetalFrameBuffer::Destroy()
+{
+    ResetCommandBuffers();
+
+    this->freeCommandBuffers.Destroy();
+    this->commandBuffersToExecute.Destroy();
+
+    this->renderTarget.Destroy();
+
+    this->commandQueue = nullptr;
+
+    this->screenCaptureBuffer = nullptr;
+    this->screenCaptureSize[0] = this->screenCaptureSize[1] = 0;
+}
+
+void MetalFrameBuffer::DestroyScreenSizeDependentResources()
+{
+    this->renderTarget.DestroyScreenSizeDependentResources();
+
+    if (this->isScreenCaptureScreenSizeDependent)
+    {
+        this->screenCaptureBuffer = nullptr;
+        this->screenCaptureSize[0] = this->screenCaptureSize[1] = 0;
     }
 }
 

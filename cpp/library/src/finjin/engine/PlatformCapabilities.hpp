@@ -22,6 +22,7 @@
 #include "finjin/common/Version.hpp"
 #include "finjin/engine/ApplicationNameFormat.hpp"
 #include "finjin/engine/DisplayInfo.hpp"
+#include "finjin/engine/ScreenCapture.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -79,6 +80,7 @@ namespace Finjin { namespace Engine {
         bool isSoundCapable; //true by default. Indicates whether sound can be used
         LayoutDirection layoutDirection;
         MemoryArchitecture memoryArchitecture;
+        ScreenCaptureCapability screenCaptureCapability; //ScreenCaptureCapability::NONE by default. Will be ScreenCaptureCapability::NONE or ScreenCaptureCapability::SYSTEM
 
         Utf8String lang;
         Utf8String country;

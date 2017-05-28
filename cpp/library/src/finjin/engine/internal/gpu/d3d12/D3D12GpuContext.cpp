@@ -116,6 +116,16 @@ AssetCreationCapability D3D12GpuContext::GetAssetCreationCapabilities(AssetClass
     }
 }
 
+ScreenCaptureCapability D3D12GpuContext::GetScreenCaptureCapabilities() const
+{
+    return ScreenCaptureCapability::GPU_INTERNAL;
+}
+
+ScreenCaptureResult D3D12GpuContext::GetScreenCapture(ScreenCapture& screenCapture, JobPipelineStage& frameStage)
+{
+    return impl->GetScreenCapture(screenCapture, frameStage);
+}
+
 bool D3D12GpuContext::ToggleFullScreenExclusive(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
