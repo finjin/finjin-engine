@@ -85,7 +85,7 @@ bool VulkanSurfaceFormats::GetBestColorFormatAndSpace(RequestedValue<VkFormat>& 
     }
     else
     {
-        surfaceFormatFoundAt = FindFormat(colorFormat.requested);
+        surfaceFormatFoundAt = FindFormat(colorFormat.requested != VK_FORMAT_UNDEFINED ? colorFormat.requested : defaultColorFormat);
         if (surfaceFormatFoundAt != end())
         {
             //Requested color format is valid

@@ -237,7 +237,7 @@ namespace Finjin { namespace Engine {
                         break;
                     }
 
-                    case InputDeviceComponent::HEADSET_LOCATOR:
+                    case InputDeviceComponent::LOCATOR:
                     {
                         if (mapping.inputSource.deviceIndex < GetExternalHeadsetCount())
                             inputBindings.ProcessHeadsetLocatorBinding(mapping, *GetExternalHeadset(mapping.inputSource.deviceIndex), actions, elapsedTimeSeconds);

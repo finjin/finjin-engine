@@ -114,6 +114,7 @@ void VulkanRenderTarget::CreateColor
     VkFormat colorFormat,
     size_t multisampleCount,
     bool isScreenSizeDependent,
+    size_t outputCount,
     Error& error
     )
 {
@@ -121,7 +122,7 @@ void VulkanRenderTarget::CreateColor
 
     for (auto& colorOutput : this->colorOutputs)
         colorOutput.Destroy(vk, allocationCallbacks);
-    this->colorOutputs.resize(1);
+    this->colorOutputs.resize(outputCount);
 
     VulkanImageCreateInfo imageCreateInfo;
 
@@ -147,54 +148,59 @@ void VulkanRenderTarget::CreateColor
     imageCreateInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
     //Create
-    auto result = vk.CreateImage(vk.device, &imageCreateInfo, allocationCallbacks, &this->colorOutputs[0].image);
-    if (FINJIN_CHECK_VKRESULT_FAILED(result))
+    for (size_t outputIndex = 0; outputIndex < this->colorOutputs.size(); outputIndex++)
     {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color image. Vulkan result: %1%", VulkanResult::ToString(result)));
-        return;
+        auto& colorOutput = this->colorOutputs[outputIndex];
+
+        auto result = vk.CreateImage(vk.device, &imageCreateInfo, allocationCallbacks, &colorOutput.image);
+        if (FINJIN_CHECK_VKRESULT_FAILED(result))
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color image. Vulkan result: %1%", VulkanResult::ToString(result)));
+            return;
+        }
+
+        //Allocate memory for the image----------------------------------
+        VkMemoryRequirements memReqs;
+        vk.GetImageMemoryRequirements(vk.device, colorOutput.image, &memReqs);
+
+        //Use the memory properties to determine the type of memory required
+        VulkanMemoryAllocateInfo memAllocInfo;
+        memAllocInfo.allocationSize = memReqs.size;
+        if (!physicalDeviceDescription.GetMemoryTypeIndexFromProperties(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memAllocInfo.memoryTypeIndex))
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to determine color memory type. Vulkan result: %1%", VulkanResult::ToString(result)));
+            return;
+        }
+
+        result = vk.AllocateMemory(vk.device, &memAllocInfo, allocationCallbacks, &colorOutput.mem);
+        if (FINJIN_CHECK_VKRESULT_FAILED(result))
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate color memory. Vulkan result: %1%", VulkanResult::ToString(result)));
+            return;
+        }
+
+        //Bind image memory------------------------------------
+        result = vk.BindImageMemory(vk.device, colorOutput.image, colorOutput.mem, 0);
+        if (FINJIN_CHECK_VKRESULT_FAILED(result))
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to bind color memory. Vulkan result: %1%", VulkanResult::ToString(result)));
+            return;
+        }
+
+        //Create color image view------------------------------
+        VkImageAspectFlagBits colorImageAspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        VulkanImageViewCreateInfo imageViewInfo(colorOutput.image, colorFormat, colorImageAspectMask);
+        VulkanUtilities::SetImageLayout(vk, graphicsCommandBuffer, colorOutput.image, imageViewInfo.subresourceRange.aspectMask, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+        result = vk.CreateImageView(vk.device, &imageViewInfo, allocationCallbacks, &colorOutput.view);
+        if (FINJIN_CHECK_VKRESULT_FAILED(result))
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color image view. Vulkan result: %1%", VulkanResult::ToString(result)));
+            return;
+        }
+
+        colorOutput.isScreenSizeDependent = isScreenSizeDependent;
     }
-
-    //Allocate memory for the image----------------------------------
-    VkMemoryRequirements memReqs;
-    vk.GetImageMemoryRequirements(vk.device, this->colorOutputs[0].image, &memReqs);
-
-    //Use the memory properties to determine the type of memory required
-    VulkanMemoryAllocateInfo memAllocInfo;
-    memAllocInfo.allocationSize = memReqs.size;
-    if (!physicalDeviceDescription.GetMemoryTypeIndexFromProperties(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memAllocInfo.memoryTypeIndex))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to determine color memory type. Vulkan result: %1%", VulkanResult::ToString(result)));
-        return;
-    }
-
-    result = vk.AllocateMemory(vk.device, &memAllocInfo, allocationCallbacks, &this->colorOutputs[0].mem);
-    if (FINJIN_CHECK_VKRESULT_FAILED(result))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to allocate color memory. Vulkan result: %1%", VulkanResult::ToString(result)));
-        return;
-    }
-
-    //Bind image memory------------------------------------
-    result = vk.BindImageMemory(vk.device, this->colorOutputs[0].image, this->colorOutputs[0].mem, 0);
-    if (FINJIN_CHECK_VKRESULT_FAILED(result))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to bind color memory. Vulkan result: %1%", VulkanResult::ToString(result)));
-        return;
-    }
-
-    //Create color image view------------------------------
-    VkImageAspectFlagBits colorImageAspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    VulkanImageViewCreateInfo imageViewInfo(this->colorOutputs[0].image, colorFormat, colorImageAspectMask);
-    VulkanUtilities::SetImageLayout(vk, graphicsCommandBuffer, this->colorOutputs[0].image, imageViewInfo.subresourceRange.aspectMask, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-    result = vk.CreateImageView(vk.device, &imageViewInfo, allocationCallbacks, &this->colorOutputs[0].view);
-    if (FINJIN_CHECK_VKRESULT_FAILED(result))
-    {
-        FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color image view. Vulkan result: %1%", VulkanResult::ToString(result)));
-        return;
-    }
-
-    this->colorOutputs[0].isScreenSizeDependent = isScreenSizeDependent;
 }
 
 void VulkanRenderTarget::CreateDepthStencil
@@ -295,6 +301,7 @@ void VulkanRenderTarget::CreateFrameBuffer(VulkanDeviceFunctions& vk, VkAllocati
 {
     FINJIN_ERROR_METHOD_START(error);
 
+    //Note: This needs to be modified to accomodate multiple color outputs
     //The pAttachments member is const, but in this case it's safe to modify it
     const_cast<VkImageView&>(frameBufferCreateInfo.pAttachments[colorViewIndex]) = this->colorOutputs[0].view;
 

@@ -34,6 +34,10 @@ namespace Finjin { namespace Engine {
 
         void ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
 
+        bool IsVRRequested() const { return true; }
+        bool IsVRRequired() const { return this->vrRequired; }
+        bool StartInVR() const { return this->startInVR; }
+
     public:
         Setting<Path> additionalReadApplicationAssetsDirectory; //Additional directory for ApplicationFileSystem::READ_APPLICATION_ASSETS
         Setting<OSWindowDimension> windowWidth;
@@ -43,10 +47,13 @@ namespace Finjin { namespace Engine {
         Setting<bool> isFullScreen;
         Setting<bool> isFullScreenExclusive;
         Setting<bool> vsync;
-        Setting<bool> useAccelerometer;
-        Setting<bool> useSystemBackButton;
-        Setting<bool> updateWhenNotFocused;
+        Setting<bool> useAccelerometer; //This probably doesn't need to be a setting
+        Setting<bool> useSystemBackButton; //This probably doesn't need to be a setting
+        Setting<bool> updateWhenNotFocused; //This probably doesn't need to be a setting
         Setting<bool> checkSystemMemoryFree;
+        Setting<bool> vrRequired;
+        Setting<bool> startInVR;
+        Setting<bool> mirrorVR;
     };
 
 } }

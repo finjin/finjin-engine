@@ -75,7 +75,9 @@
 #define FINJIN_TARGET_VR_SYSTEM_OPENVR 1
 
 #if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_WINDOWS_WIN32
-    #define FINJIN_TARGET_VR_SYSTEM FINJIN_TARGET_VR_SYSTEM_NONE //FINJIN_TARGET_VR_SYSTEM_OPENVR
+    //Disabled for now since OpenVR seems to run very poorly on D3D12 on my computer, and
+    //the NVidia Vulkan driver has a bug that only supports color formats that OpenVR can't use (OpenVR generates an error)
+    #define FINJIN_TARGET_VR_SYSTEM FINJIN_TARGET_VR_SYSTEM_NONE //FINJIN_TARGET_VR_SYSTEM_OPENVR //Set to FINJIN_TARGET_VR_SYSTEM_NONE to remove dependency on OpenVR runtime
 #else
     #define FINJIN_TARGET_VR_SYSTEM FINJIN_TARGET_VR_SYSTEM_NONE
 #endif

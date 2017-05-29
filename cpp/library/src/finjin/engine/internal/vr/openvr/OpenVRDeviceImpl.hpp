@@ -17,6 +17,8 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
+#include "finjin/common/StaticVector.hpp"
+#include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include "finjin/engine/InputComponents.hpp"
 #include <openvr.h>
 
@@ -79,6 +81,8 @@ namespace Finjin { namespace Engine {
         //vr::k_EButton_Max buttons
         //vr::k_unControllerStateAxisCount * 2 axes (each VR axis has 2 components)
         InputDeviceState<InputButton, InputAxis, InputPov, vr::k_EButton_Max, vr::k_unControllerStateAxisCount * 2> gameControllerState; //The 'isConnected' and 'connectionChanged' members are used for all devices, not just controllers
+
+        StaticVector<GpuInputFormatStruct::Element, 3> renderModelVertexElements;
     };
 
 } }

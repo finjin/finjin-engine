@@ -32,6 +32,7 @@ namespace Finjin { namespace Engine {
         ~Camera();
 
         const MathVector3& GetPosition() const;
+        void SetPosition(const MathVector3& value);
         void SetPosition(float x, float y, float z);
 
         const MathVector3& GetRight() const;
@@ -40,7 +41,8 @@ namespace Finjin { namespace Engine {
 
         void Set(const CameraState& cameraState);
 
-        void SetBases(const float* right, const float* up, const float* forward);
+        void SetOrientation(const float* right, const float* up, const float* forward);
+        void SetOrientationFromColumns(const MathMatrix3& orientationMatrix);
 
         float GetNearZ() const;
         void SetNearZ(float value);

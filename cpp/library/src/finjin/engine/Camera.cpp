@@ -52,6 +52,13 @@ const MathVector3& Camera::GetPosition() const
     return this->position;
 }
 
+void Camera::SetPosition(const MathVector3& value)
+{
+    this->position = value;
+
+    this->isViewDirty = true;
+}
+
 void Camera::SetPosition(float x, float y, float z)
 {
     this->position = MathVector3(x, y, z);
@@ -68,16 +75,25 @@ void Camera::Set(const CameraState& cameraState)
 
     this->position = MathVector3(position(0), position(1), position(2));
 
-    SetBases(right.data(), up.data(), forward.data());
+    SetOrientation(right.data(), up.data(), forward.data());
 
     SetLens(cameraState.fovY, this->aspect, cameraState.range[0], cameraState.range[1]);
 }
 
-void Camera::SetBases(const float* right, const float* up, const float* forward)
+void Camera::SetOrientation(const float* right, const float* up, const float* forward)
 {
     this->right = MathVector3(right[0], right[1], right[2]);
     this->up = MathVector3(up[0], up[1], up[2]);
     this->look = MathVector3(forward[0], forward[1], forward[2]);
+
+    this->isViewDirty = true;
+}
+
+void Camera::SetOrientationFromColumns(const MathMatrix3& orientationMatrix)
+{
+    this->right = orientationMatrix.col(0);
+    this->up = orientationMatrix.col(1);
+    this->look = orientationMatrix.col(2);
 
     this->isViewDirty = true;
 }

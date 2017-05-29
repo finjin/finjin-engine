@@ -46,6 +46,8 @@ namespace Finjin { namespace Engine {
 
             LOOK,
 
+            LOCATOR,
+
             SELECT_OBJECT,
             DESELECT_OBJECT,
 
@@ -119,6 +121,8 @@ namespace Finjin { namespace Engine {
          */
         MathVector2 look;
 
+        InputBindingValue::Locator lookHeadset;
+
         bool usedKeyboard;
         bool usedMouse;
         bool usedGameController;
@@ -157,6 +161,8 @@ namespace Finjin { namespace Engine {
             LOOK_DOWN,
             LOOK_LEFT,
             LOOK_RIGHT,
+
+            LOCATOR, //A look and an absolute position
 
             SET_DOLLY_MODE,
             SET_PAN_OR_ORBIT_MODE,

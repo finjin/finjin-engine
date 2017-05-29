@@ -28,6 +28,9 @@
 #include "D3D12System.hpp"
 #include "D3D12SystemImpl.hpp"
 #include "D3D12Utilities.hpp"
+#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+    #include "finjin/engine/VRContext.hpp"
+#endif
 
 using namespace Finjin::Engine;
 
@@ -37,6 +40,14 @@ using namespace Finjin::Engine;
 
 
 //Local functions---------------------------------------------------------------
+static size_t GetBufferCountForFrameDestination(GpuFrameDestination frameDestination)
+{
+    if (AnySet(frameDestination & GpuFrameDestination::VR_CONTEXT))
+        return 2;
+    else
+        return 1;
+}
+
 static size_t CalculateOffscreenRenderTargetRTVIndex(size_t swapChainFrameBufferCount, size_t frameBufferIndex, size_t renderTargetIndex)
 {
     return
@@ -493,7 +504,7 @@ void D3D12GpuContextImpl::CreateDevice(Error& error)
         if (this->settings.renderTargetSize.GetType() == GpuRenderTargetSizeType::EXPLICIT_SIZE)
         {
             //Create color buffer
-            frameBuffer.renderTarget.CreateColor(this->device.Get(), maxRenderTargetSize[0], maxRenderTargetSize[1], this->settings.colorFormat.actual, this->settings.multisampleCount.actual, this->settings.multisampleQuality.actual, false, error);
+            frameBuffer.renderTarget.CreateColor(this->device.Get(), maxRenderTargetSize[0], maxRenderTargetSize[1], this->settings.colorFormat.actual, this->settings.multisampleCount.actual, this->settings.multisampleQuality.actual, false, GetBufferCountForFrameDestination(this->settings.frameDestination), error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
@@ -983,14 +994,44 @@ void D3D12GpuContextImpl::PresentFrameStage(D3D12FrameStage& frameStage, RenderS
         EmitFenceValue();
         frameBuffer.WaitForCommandLists(this->fence.Get());
 
-        auto presentSyncInterval = static_cast<UINT>(presentSyncIntervalOverride != (size_t)-1 ? presentSyncIntervalOverride : this->settings.presentSyncInterval);
-        auto result = this->swapChain->Present(presentSyncInterval, 0);
-        frameBuffer.ResetCommandLists();
-        if (FINJIN_CHECK_HRESULT_FAILED(result))
+    #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+        if (AnySet(this->settings.frameDestination & GpuFrameDestination::VR_CONTEXT) && this->settings.vrContext != nullptr)
         {
-            FINJIN_SET_ERROR(error, "Failed to present swap chain buffer.");
-            return;
+            auto vrContext = static_cast<VRContext*>(this->settings.vrContext);
+
+            MathMatrix4 vrHeadsetViewMatrix;
+            vrContext->GetHeadsetViewRenderMatrix(vrHeadsetViewMatrix);
         }
+
+        if (AnySet(this->settings.frameDestination & GpuFrameDestination::VR_CONTEXT) && this->settings.vrContext != nullptr)
+        {
+            auto vrContext = static_cast<VRContext*>(this->settings.vrContext);
+            vrContext->SubmitEyeTextures(this, &frameBuffer);
+        }
+    #endif
+
+        if (AnySet(this->settings.frameDestination & GpuFrameDestination::SWAP_CHAIN))
+        {
+            auto presentSyncInterval = static_cast<UINT>(presentSyncIntervalOverride != (size_t)-1 ? presentSyncIntervalOverride : this->settings.presentSyncInterval);
+            auto result = this->swapChain->Present(presentSyncInterval, 0);
+            if (FINJIN_CHECK_HRESULT_FAILED(result))
+            {
+                frameBuffer.ResetCommandLists();
+
+                FINJIN_SET_ERROR(error, "Failed to present swap chain buffer.");
+                return;
+            }
+        }
+
+    #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+        if (AnySet(this->settings.frameDestination & GpuFrameDestination::VR_CONTEXT) && this->settings.vrContext != nullptr)
+        {
+            auto vrContext = static_cast<VRContext*>(this->settings.vrContext);
+            vrContext->OnPresentFinish();
+        }
+    #endif
+        
+        frameBuffer.ResetCommandLists();
     }
     else
     {
@@ -1337,7 +1378,7 @@ void D3D12GpuContextImpl::CreateScreenSizeDependentResources(Error& error)
             auto& frameBuffer = this->frameBuffers[frameBufferIndex];
 
             //Color buffer
-            frameBuffer.renderTarget.CreateColor(this->device.Get(), maxRenderTargetSize[0], maxRenderTargetSize[1], this->settings.colorFormat.actual, this->settings.multisampleCount.actual, this->settings.multisampleQuality.actual, true, error);
+            frameBuffer.renderTarget.CreateColor(this->device.Get(), maxRenderTargetSize[0], maxRenderTargetSize[1], this->settings.colorFormat.actual, this->settings.multisampleCount.actual, this->settings.multisampleQuality.actual, true, GetBufferCountForFrameDestination(this->settings.frameDestination), error);
             if (error)
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color render target for frame buffer %1%.", frameBufferIndex));
@@ -2260,7 +2301,7 @@ void D3D12GpuContextImpl::StartRenderTarget(D3D12FrameStage& frameStage, D3D12Re
     //Set render targets----------------------
     auto rtvHandle = this->rtvDescHeap.GetCpuHeapStart(renderTarget->colorOutputs[0].rtvDescHeapIndex);
     auto dsvHandle = this->dsvDescHeap.GetCpuHeapStart(this->depthStencilRenderTarget.depthStencilResource.dsvDescHeapIndex);
-    commandList->OMSetRenderTargets(static_cast<UINT>(renderTarget->colorOutputs.size()), &rtvHandle, FALSE, this->depthStencilRenderTarget.HasDepthStencil() ? &dsvHandle : nullptr);
+    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, this->depthStencilRenderTarget.HasDepthStencil() ? &dsvHandle : nullptr);
 
     //Clear render target and depth stencil----------------------
     D3D12_VIEWPORT* viewports = nullptr;

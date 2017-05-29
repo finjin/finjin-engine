@@ -204,7 +204,7 @@ InputSource InputSource::FromAccelerometerAbsoluteAxis(size_t axisIndex, int dir
 InputSource InputSource::FromHeadsetLocator(size_t locatorIndex)
 {
     InputSource source;
-    source.deviceComponent = InputDeviceComponent::HEADSET_LOCATOR;
+    source.deviceComponent = InputDeviceComponent::LOCATOR;
     source.locatorIndex = locatorIndex;
     source.deviceIndex = DEFAULT_DEVICE_INDEX;
     return source;
@@ -271,7 +271,7 @@ Utf8String InputSource::ToString() const
         case InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS: return Utf8StringFormatter::Format("Device: Accelerometer (relative), Axis index: %1%, Direction: %2%", this->axisIndex, this->direction);
         case InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS: return Utf8StringFormatter::Format("Device: Accelerometer (absolute), Axis index: %1%, Direction: %2%", this->axisIndex, this->direction);
 
-        case InputDeviceComponent::HEADSET_LOCATOR: return Utf8StringFormatter::Format("Device: Headset %1%: Locator", this->deviceIndex);
+        case InputDeviceComponent::LOCATOR: return Utf8StringFormatter::Format("Device: Headset %1%: Locator", this->deviceIndex);
 
         default: return "Device: None"; break;
     }

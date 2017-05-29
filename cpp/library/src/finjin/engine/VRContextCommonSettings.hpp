@@ -17,6 +17,7 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/engine/AssetFileReader.hpp"
 #include "finjin/engine/ContextEventInfo.hpp"
+#include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
 #include <boost/thread/null_mutex.hpp>
 
@@ -108,26 +109,61 @@ namespace Finjin { namespace Engine {
 
     struct VRDeviceRenderModelPointer
     {
+        enum class PrimitiveType
+        {
+            TRIANGLE_LIST
+        };
+
+        enum class IndexType
+        {
+            UINT16,
+            UINT32
+        };
+
+        enum class TexturePixelFormat
+        {
+            RGBA8_UNORM
+        };
+
         VRDeviceRenderModelPointer()
         {
-            this->vertex_positionNormalTex = nullptr;
+            this->vertexData = nullptr;
             this->vertexCount = 0;
 
+            this->vertexElements = nullptr;
+            this->vertexElementCount = 0;
+
             this->indexData = nullptr;
-            this->triangleCount = 0;
+            this->indexType = IndexType::UINT16;
+            
+            this->primitiveType = PrimitiveType::TRIANGLE_LIST;
+            this->primitiveCount = 0;
 
             this->textureWidth = this->textureHeight = 0;
-            this->rgbaTextureData = nullptr;
-        }
+            this->textureImage = nullptr;
+            this->texturePixelFormat = TexturePixelFormat::RGBA8_UNORM;
 
-        const void* vertex_positionNormalTex;
+            this->textureID = 0;
+        }
+        
+        const void* vertexData; //Most likely position/normal/uv
         uint32_t vertexCount;
 
-        const uint16_t* indexData;
-        uint32_t triangleCount; //Index count is 3 * TriangleCount
+        GpuInputFormatStruct::Element* vertexElements;
+        size_t vertexElementCount;
+        
+        const void* indexData; //Contains 3 * primitiveCount elements for primitiveType = PrimitiveType::TRIANGLE_LIST
+        IndexType indexType;
+        
+        PrimitiveType primitiveType;
+        uint32_t primitiveCount;
 
-        uint16_t textureWidth, textureHeight;
-        const uint8_t* rgbaTextureData;
+        uint32_t textureWidth;
+        uint32_t textureHeight;
+        const void* textureImage;
+        TexturePixelFormat texturePixelFormat;
+
+        uint32_t textureID;
     };
 
     struct VRContextCommonSettings

@@ -130,7 +130,7 @@ namespace Finjin { namespace Engine {
         ACCELEROMETER_RELATIVE_AXIS,
         ACCELEROMETER_ABSOLUTE_AXIS,
 
-        HEADSET_LOCATOR,
+        LOCATOR,
 
         COUNT
     };
@@ -499,9 +499,9 @@ namespace Finjin { namespace Engine {
 
         void Reset(bool isConstructing = false);
 
-        void GetOrientationMatrix33(float* result);
-        void GetPositionVector3(float* result, DistanceUnitType distanceUnitType);
-        void GetVelocityVector3(float* result, DistanceUnitType distanceUnitType);
+        void GetOrientationMatrix33(MathMatrix3& result) const;
+        void GetPositionVector3(MathVector3& result, DistanceUnitType distanceUnitType) const;
+        void GetVelocityVector3(MathVector3& result, DistanceUnitType distanceUnitType) const;
 
         size_t GetIndex() const;
         InputLocator& SetIndex(size_t index);

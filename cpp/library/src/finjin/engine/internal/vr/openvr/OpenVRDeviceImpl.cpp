@@ -51,6 +51,19 @@ OpenVRDeviceImpl::OpenVRDeviceImpl()
     this->deviceIndex = vr::k_unTrackedDeviceIndex_Hmd;
     this->isNewConnection = false;
 
+    size_t gpuPaddedOffset = 0;
+        
+    assert(this->renderModelVertexElements.max_size() >= 3 && "Elements collection must be able to store 3 or more elements.");
+
+    this->renderModelVertexElements.push_back(GpuInputFormatStruct::Element(GpuInputFormatStruct::ElementID::POSITION, NumericStructElementType::FLOAT3, gpuPaddedOffset));
+    gpuPaddedOffset += this->renderModelVertexElements.back().sizeInBytes;
+    
+    this->renderModelVertexElements.push_back(GpuInputFormatStruct::Element(GpuInputFormatStruct::ElementID::NORMAL, NumericStructElementType::FLOAT2, gpuPaddedOffset));
+    gpuPaddedOffset += this->renderModelVertexElements.back().sizeInBytes;
+    
+    this->renderModelVertexElements.push_back(GpuInputFormatStruct::Element(GpuInputFormatStruct::ElementID::TEX_COORD_0, NumericStructElementType::FLOAT2, gpuPaddedOffset));
+    gpuPaddedOffset += this->renderModelVertexElements.back().sizeInBytes;
+    
     Reset(true);
 }
 
@@ -113,6 +126,10 @@ bool OpenVRDeviceImpl::GetInfo(vr::IVRSystem* ivrSystem)
             this->productID = ivrSystem->GetInt32TrackedDeviceProperty(this->deviceIndex, vr::Prop_EdidProductID_Int32);
             this->cameraToHeadTransform = ivrSystem->GetMatrix34TrackedDeviceProperty(this->deviceIndex, vr::Prop_CameraToHeadTransform_Matrix34);
             this->onDesktop = ivrSystem->GetBoolTrackedDeviceProperty(this->deviceIndex, vr::Prop_IsOnDesktop_Bool);
+
+            this->locators.resize(1);
+            auto& locator = this->locators[0];
+            locator.SetIndex(0).SetDisplayName("Locator").SetSemantic(InputComponentSemantic::LOCATOR);
 
             break;
         }

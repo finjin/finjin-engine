@@ -3482,7 +3482,7 @@ typedef struct VkSwapchainCreateInfoKHR {
     const uint32_t*                  pQueueFamilyIndices;
     VkSurfaceTransformFlagBitsKHR    preTransform;
     VkCompositeAlphaFlagBitsKHR      compositeAlpha;
-    VkPresentModeKHR                 presentMode;
+    VkPresentModeKHR                 swapChainPresentMode;
     VkBool32                         clipped;
     VkSwapchainKHR                   oldSwapchain;
 } VkSwapchainCreateInfoKHR;

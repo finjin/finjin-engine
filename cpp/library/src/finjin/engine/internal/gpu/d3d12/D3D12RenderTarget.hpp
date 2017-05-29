@@ -31,7 +31,7 @@ namespace Finjin { namespace Engine {
     public:
         D3D12RenderTarget();
 
-        void CreateColor(ID3D12Device* device, UINT width, UINT height, DXGI_FORMAT colorFormat, UINT multisampleCount, UINT multisampleQuality, bool isScreenSizeDependent, Error& error);
+        void CreateColor(ID3D12Device* device, UINT width, UINT height, DXGI_FORMAT colorFormat, UINT multisampleCount, UINT multisampleQuality, bool isScreenSizeDependent, size_t outputCount, Error& error);
         void CreateDepthStencil(ID3D12Device* device, UINT width, UINT height, DXGI_FORMAT depthStencilFormat, float maxDepth, UINT multisampleCount, UINT multisampleQuality, bool isScreenSizeDependent, Error& error);
 
         void Destroy();
@@ -54,6 +54,8 @@ namespace Finjin { namespace Engine {
             size_t dsvDescHeapIndex;
             size_t srvDescHeapIndex;
             bool isScreenSizeDependent;
+
+            uint32_t nodeMask; //Node where this resource resides. Usually 0
         };
         StaticVector<Resource, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> colorOutputs;
 

@@ -20,6 +20,7 @@
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Distance.hpp"
 #include "finjin/common/EnumBitwise.hpp"
+#include "finjin/common/Math.hpp"
 #include "finjin/common/Path.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/common/VirtualFileSystem.hpp"
@@ -191,8 +192,8 @@ namespace Finjin { namespace Engine {
             switch (type)
             {
                 case Type::SCALAR: this->scalar = *value; break;
-                case Type::VECTOR_3: FINJIN_COPY_MEMORY(this->vect3, value, sizeof(float) * 3); break;
-                case Type::MATRIX_33: FINJIN_COPY_MEMORY(this->matrix33, value, sizeof(float) * 3 * 3); break;
+                case Type::VECTOR_3: FINJIN_COPY_MEMORY(this->vect3.data(), value, sizeof(float) * 3); break;
+                case Type::MATRIX_33: FINJIN_COPY_MEMORY(this->matrix33.data(), value, sizeof(float) * 3 * 3); break;
                 default: break;
             }
 
@@ -201,18 +202,16 @@ namespace Finjin { namespace Engine {
 
         struct Locator
         {
-            float orientation[3 * 3];
-            float position[3];
-            float velocity[3];
+            MathMatrix3 orientation;
+            MathVector3 position;
+            MathVector3 velocity;
         };
 
-        union
-        {
-            float scalar;
-            float vect3[3];
-            float matrix33[3 * 3];
-            Locator locator;
-        };
+        //Normally these would go into a union but this causes problems on GCC
+        Locator locator;
+        MathMatrix3 matrix33;
+        MathVector3 vect3;
+        float scalar;
 
         Type type = Type::SCALAR;
     };
@@ -1118,7 +1117,7 @@ namespace Finjin { namespace Engine {
             {
                 switch (binding.inputSource.deviceComponent)
                 {
-                    case InputDeviceComponent::HEADSET_LOCATOR:
+                    case InputDeviceComponent::LOCATOR:
                     {
                         for (size_t locatorIndex = 0; locatorIndex < device->GetLocatorCount(); locatorIndex++)
                         {
@@ -1372,7 +1371,7 @@ namespace Finjin { namespace Engine {
             locator->GetPositionVector3(amount.locator.position, DistanceUnitType::METERS);
             locator->GetVelocityVector3(amount.locator.velocity, DistanceUnitType::METERS);
 
-            _ProcessInputAction(actions, binding.action, InputDeviceComponent::HEADSET_LOCATOR, InputTriggerFlag::PRESSED | InputTriggerFlag::HOLDING, amount, elapsedTimeSeconds);
+            _ProcessInputAction(actions, binding.action, InputDeviceComponent::LOCATOR, InputTriggerFlag::PRESSED | InputTriggerFlag::HOLDING, amount, elapsedTimeSeconds);
         }
 
         template <typename TouchScreen>

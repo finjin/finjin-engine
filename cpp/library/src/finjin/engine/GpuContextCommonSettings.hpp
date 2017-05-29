@@ -16,6 +16,7 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/ByteBuffer.hpp"
+#include "finjin/common/EnumBitwise.hpp"
 #include "finjin/common/NumericStruct.hpp"
 #include "finjin/common/RequestedValue.hpp"
 #include "finjin/engine/AssetClassFileReader.hpp"
@@ -462,6 +463,13 @@ namespace Finjin { namespace Engine {
         }
     };
 
+    enum class GpuFrameDestination
+    {
+        SWAP_CHAIN = 1 << 0,
+        VR_CONTEXT = 1 << 1
+    };
+    FINJIN_ENUM_BITWISE_OPERATIONS(GpuFrameDestination)
+
     enum class GpuSwapChainPresentMode
     {
         FULL_VSYNC,
@@ -500,6 +508,8 @@ namespace Finjin { namespace Engine {
 
         void* applicationHandle;
         OSWindow* osWindow;
+        GpuFrameDestination frameDestination; //The default is sufficient
+        void* vrContext; //Must be set if frameDestination has GpuFrameDestination::VR_CONTEXT flag
         GpuRenderTargetSize renderTargetSize;
         AssetFileReader* assetFileReader;
         AssetPathSelector initialAssetFileSelector;
@@ -526,8 +536,8 @@ namespace Finjin { namespace Engine {
         size_t presentSyncInterval; //Will be set by the GpuContext during initialization
         size_t maxGpuCommandListsPerStage; //Maximum number of D3D/Vulkan/Metal command lists. The default is sufficient
         float maxDepthValue; //The default is sufficient
-        double renderingScale; //The default is sufficient
-        GpuSwapChainPresentMode presentMode; //The default is sufficient
+        double renderingScale; //The default is sufficient                
+        GpuSwapChainPresentMode swapChainPresentMode; //The default is sufficient
         RequestedValue<int> multisampleCount; //Usually 1, 2, 4, 8
         RequestedValue<int> multisampleQuality; //Usually 0
         RequestedValue<ScreenCaptureFrequency> screenCaptureFrequency; //How often to capture the screen/frame buffer, if possible. By default, never

@@ -63,7 +63,7 @@ namespace Finjin { namespace Engine {
 
     public:
     #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
-        VRContext* vrContext;
+        VRContext* vrContext; //May be null
     #endif
         InputContext* inputContext;
         SoundContext* soundContext;

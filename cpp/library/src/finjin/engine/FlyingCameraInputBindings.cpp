@@ -209,6 +209,13 @@ void FlyingCameraInputBindings::ProcessInputAction
             break;
         }
 
+        case LOCATOR:
+        {
+            outputEvents.Add(FlyingCameraEvents::LOCATOR);
+            outputEvents.lookHeadset = amount.locator;
+            break;
+        }
+
         case SELECT_OBJECT:
         {
             outputEvents.Add(FlyingCameraEvents::SELECT_OBJECT);
@@ -294,6 +301,8 @@ const FlyingCameraInputBindings::InputActionInfo* FlyingCameraInputBindings::Get
         InputActionInfo("look-down", LOOK_DOWN),
         InputActionInfo("look-left", LOOK_LEFT),
         InputActionInfo("look-right", LOOK_RIGHT),
+
+        InputActionInfo("locator", LOCATOR),
 
         InputActionInfo("set-dolly-mode", SET_DOLLY_MODE),
         InputActionInfo("set-pan-or-orbit-mode", SET_PAN_OR_ORBIT_MODE),

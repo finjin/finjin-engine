@@ -72,6 +72,8 @@ namespace Finjin { namespace Engine {
 
         void FlushGpu();
 
+        D3D12GpuContextImpl* GetImpl();
+
     private:
         std::unique_ptr<D3D12GpuContextImpl> impl;
     };

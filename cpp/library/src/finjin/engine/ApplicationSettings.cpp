@@ -31,7 +31,10 @@ ApplicationSettings::ApplicationSettings() :
     useAccelerometer(true),
     useSystemBackButton(true),
     updateWhenNotFocused(false),
-    checkSystemMemoryFree(true)
+    checkSystemMemoryFree(true),
+    vrRequired(false),
+    startInVR(false),
+    mirrorVR(true) //false does not work yet
 {
 }
 
@@ -49,18 +52,24 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
 
             argIndex++;
         }
-        else if (arg == "-full-screen")
+        else if (arg == "-full-screen" && argIndex < argsProcessor.GetCount() - 1)
+        {
+            this->isFullScreen = Convert::ToBool(argsProcessor[argIndex + 1]);
+
+            argIndex++;
+        }
+        if (arg == "-full-screen-exclusive" && argIndex < argsProcessor.GetCount() - 1)
         {
             this->isFullScreen = true;
+            this->isFullScreenExclusive = Convert::ToBool(argsProcessor[argIndex + 1]);
+
+            argIndex++;
         }
-        if (arg == "-full-screen-exclusive")
+        else if (arg == "-vsync" && argIndex < argsProcessor.GetCount() - 1)
         {
-            this->isFullScreen = true;
-            this->isFullScreenExclusive = true;
-        }
-        else if (arg == "-vsync")
-        {
-            this->vsync = true;
+            this->vsync = Convert::ToBool(argsProcessor[argIndex + 1]);;
+
+            argIndex++;
         }
         else if (arg =="-window-width" && argIndex < argsProcessor.GetCount() - 1)
         {
@@ -118,13 +127,35 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
 
             argIndex++;
         }
-        else if (arg == "-update-when-not-focused")
+        else if (arg == "-update-when-not-focused" && argIndex < argsProcessor.GetCount() - 1)
         {
-            this->updateWhenNotFocused = true;
+            this->updateWhenNotFocused = Convert::ToBool(argsProcessor[argIndex + 1]);
+
+            argIndex++;
         }
-        else if (arg == "-no-check-system-memory-free")
+        else if (arg == "-no-check-system-memory-free" && argIndex < argsProcessor.GetCount() - 1)
         {
-            this->checkSystemMemoryFree = false;
+            this->checkSystemMemoryFree = Convert::ToBool(argsProcessor[argIndex + 1]);
+
+            argIndex++;
+        }
+        else if (arg == "-vr-required" && argIndex < argsProcessor.GetCount() - 1)
+        {
+            this->vrRequired = Convert::ToBool(argsProcessor[argIndex + 1]);
+
+            argIndex++;
+        }
+        else if (arg == "-start-in-vr" && argIndex < argsProcessor.GetCount() - 1)
+        {
+            this->startInVR = Convert::ToBool(argsProcessor[argIndex + 1]);
+            
+            argIndex++;
+        }
+        else if (arg == "-mirror-vr" && argIndex < argsProcessor.GetCount() - 1)
+        {
+            this->mirrorVR = Convert::ToBool(argsProcessor[argIndex + 1]);
+
+            argIndex++;
         }
     }
 }

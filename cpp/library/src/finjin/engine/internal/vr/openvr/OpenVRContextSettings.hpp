@@ -26,6 +26,16 @@ namespace Finjin { namespace Engine {
 
     class OpenVRContext;
 
+    enum class VRContextInitializationStatus
+    {
+        NONE,
+        NO_HMD_FOUND,
+        RUNTIME_NOT_INITIALIZED,
+        CANCELED_BY_USER,
+        ANOTHER_APP_LAUNCHING,
+        INITIALIZED
+    };
+
     struct OpenVRContextSettings : VRContextCommonSettings
     {
         OpenVRContextSettings(Allocator* initialAllocator);

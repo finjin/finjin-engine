@@ -115,7 +115,7 @@ bool InputDeviceComponentUtilities::IsAccelerometer(InputDeviceComponent type)
 bool InputDeviceComponentUtilities::IsHeadset(InputDeviceComponent type)
 {
     return
-        type == InputDeviceComponent::HEADSET_LOCATOR
+        type == InputDeviceComponent::LOCATOR
         ;
 }
 
@@ -190,7 +190,7 @@ const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceComponent, InputDevi
         "accelerometer-relative-axis", InputDeviceComponent::ACCELEROMETER_RELATIVE_AXIS,
         "accelerometer-absolute-axis", InputDeviceComponent::ACCELEROMETER_ABSOLUTE_AXIS,
 
-        "headset-locator", InputDeviceComponent::HEADSET_LOCATOR
+        "locator", InputDeviceComponent::LOCATOR
         );
 
     return lookup;
@@ -247,7 +247,7 @@ InputDeviceClass InputDeviceComponentUtilities::GetDeviceClass(InputDeviceCompon
             return InputDeviceClass::ACCELEROMETER;
         }
 
-        case InputDeviceComponent::HEADSET_LOCATOR:
+        case InputDeviceComponent::LOCATOR:
         {
             return InputDeviceClass::HEADSET;
         }
@@ -299,7 +299,7 @@ InputDeviceComponentClass InputDeviceComponentUtilities::GetDeviceComponentClass
         }
 
         case InputDeviceComponent::GAME_CONTROLLER_LOCATOR:
-        case InputDeviceComponent::HEADSET_LOCATOR:
+        case InputDeviceComponent::LOCATOR:
         {
             return InputDeviceComponentClass::LOCATOR;
         }
@@ -1190,21 +1190,19 @@ void InputLocator::Reset(bool isConstructing)
     this->velocity.SetMeters(MathVector3::Zero());
 }
 
-void InputLocator::GetOrientationMatrix33(float* result)
-{
-    GetMatrixAsArray(result, this->orientationMatrix);
+void InputLocator::GetOrientationMatrix33(MathMatrix3& result) const
+{    
+    result = this->orientationMatrix;
 }
 
-void InputLocator::GetPositionVector3(float* result, DistanceUnitType distanceUnitType)
+void InputLocator::GetPositionVector3(MathVector3& result, DistanceUnitType distanceUnitType) const
 {
-    auto positionMeters = this->position.ToUnit(distanceUnitType);
-    GetVectorAsArray(result, positionMeters);
+    result = this->position.ToUnit(distanceUnitType);
 }
 
-void InputLocator::GetVelocityVector3(float* result, DistanceUnitType distanceUnitType)
+void InputLocator::GetVelocityVector3(MathVector3& result, DistanceUnitType distanceUnitType) const
 {
-    auto velocityMeters = this->velocity.ToUnit(distanceUnitType);
-    GetVectorAsArray(result, velocityMeters);
+    result = this->velocity.ToUnit(distanceUnitType);
 }
 
 size_t InputLocator::GetIndex() const

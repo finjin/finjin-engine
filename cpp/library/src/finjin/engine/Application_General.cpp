@@ -501,8 +501,8 @@ void Application::Initialize(Error& error)
     this->standardPaths.ForEachUserPath([&](const StandardPath& standardPath, Error& error)
     {
         FINJIN_ERROR_METHOD_START(error);
-        if (!standardPath.isSystemCreated)
-            standardPath.path.CreateDirectories();
+        
+        standardPath.CreateDirectories();
 
         this->fileSystems[ApplicationFileSystem::READ_USER_DATA].AddDirectory(standardPath.path, error);
         if (error)
@@ -523,8 +523,8 @@ void Application::Initialize(Error& error)
     if (!this->standardPaths[WhichStandardPath::USER_APPLICATION_SETTINGS_DIRECTORY].path.empty())
     {
         auto& standardPath = this->standardPaths[WhichStandardPath::USER_APPLICATION_SETTINGS_DIRECTORY];
-        if (!standardPath.isSystemCreated)
-            standardPath.path.CreateDirectories();
+        
+        standardPath.CreateDirectories();
 
         this->fileSystems[ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA].AddDirectory(standardPath.path, error);
         if (error)
@@ -538,8 +538,8 @@ void Application::Initialize(Error& error)
     if (!this->standardPaths[WhichStandardPath::USER_APPLICATION_TEMPORARY_DIRECTORY].path.empty())
     {
         auto& standardPath = this->standardPaths[WhichStandardPath::USER_APPLICATION_TEMPORARY_DIRECTORY];
-        if (!standardPath.isSystemCreated)
-            standardPath.path.CreateDirectories();
+        
+        standardPath.CreateDirectories();
 
         //Add to read user/application cache file system
         this->fileSystems[ApplicationFileSystem::READ_WRITE_USER_APPLICATION_CACHE_DATA].AddDirectory(standardPath.path, error);
@@ -554,8 +554,8 @@ void Application::Initialize(Error& error)
     if (!this->standardPaths[WhichStandardPath::APPLICATION_SETTINGS_DIRECTORY].path.empty())
     {
         auto& standardPath = this->standardPaths[WhichStandardPath::APPLICATION_SETTINGS_DIRECTORY];
-        if (!standardPath.isSystemCreated)
-            standardPath.path.CreateDirectories();
+        
+        standardPath.CreateDirectories();
 
         //Add to asset file system
         this->fileSystems[ApplicationFileSystem::READ_APPLICATION_ASSETS].AddDirectory(standardPath.path, error);
@@ -1284,38 +1284,17 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         appViewport->SetInputContext(std::move(inputContext));
     }
 
-    //Sound
-    if (appViewport->IsMain())
-    {
-        this->soundContextSettings.osWindow = appViewport->GetOSWindow();
-        std::unique_ptr<SoundContext> soundContext(this->soundSystem.CreateContext(this->soundContextSettings, error));
-        this->soundContextSettings.osWindow = nullptr;
-        if (error)
-        {
-            FINJIN_SET_ERROR(error, "Failed to initialize sound system for application viewport.");
-            return;
-        }
-        appViewport->SetSoundContext(std::move(soundContext));
-    }
-
-    //GPU
-    {
-        this->gpuContextSettings.osWindow = appViewport->GetOSWindow();
-        this->gpuContextSettings.gpuID = viewportDescription.gpuID;
-        this->gpuContextSettings.frameBufferCount.requested = Limited(viewportDescription.requestedFrameBufferCount, (size_t)EngineConstants::MIN_FRAME_BUFFERS, (size_t)EngineConstants::MAX_FRAME_BUFFERS);
-        std::unique_ptr<GpuContext> gpuContext(this->gpuSystem.CreateContext(this->gpuContextSettings, error));
-        this->gpuContextSettings.osWindow = nullptr;
-        if (error)
-        {
-            FINJIN_SET_ERROR(error, "Failed to initialize GPU device for application viewport.");
-            return;
-        }
-        appViewport->SetGpuContext(std::move(gpuContext));
-    }
-
-    //VR
+    //VR        
+    auto isVRInitialized = false;
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
-    if (appViewport->IsMain())
+    if (this->applicationDelegate->GetApplicationSettings().IsVRRequired() && !this->vrSystem.IsAvailable())
+    {
+        FINJIN_SET_ERROR(error, "VR is requred by the application settings but is unavailable. Try installing the necessary drivers and turning on the hardware.");
+        return;
+    }
+#endif
+#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+    if (appViewport->IsMain() && this->applicationDelegate->GetApplicationSettings().IsVRRequested())
     {
         this->vrContextSettings.addDeviceHandler = [this, appViewport](VRContext* vrContext, size_t vrDeviceIndex)
         {
@@ -1331,7 +1310,8 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
 
                     FINJIN_DECLARE_ERROR(error);
                     appViewport->GetInputContext()->AddExternalGameController(foundUnused, true, error);
-                    FINJIN_DEBUG_LOG_ERROR("Failed to add external VR game controller: %1%", error.GetLastNonEmptyErrorMessage());
+                    if (error)
+                        FINJIN_DEBUG_LOG_ERROR("Failed to add external VR game controller: %1%", error.GetLastNonEmptyErrorMessage());
                 }
             }
             else if (deviceClass == InputDeviceClass::HEADSET)
@@ -1345,7 +1325,8 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
 
                     FINJIN_DECLARE_ERROR(error);
                     appViewport->GetInputContext()->AddExternalHeadset(foundUnused, true, error);
-                    FINJIN_DEBUG_LOG_ERROR("Failed to add external VR headset: %1%", error.GetLastNonEmptyErrorMessage());
+                    if (error)
+                        FINJIN_DEBUG_LOG_ERROR("Failed to add external VR headset: %1%", error.GetLastNonEmptyErrorMessage());
                 }
             }
         };
@@ -1392,10 +1373,60 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
             FINJIN_SET_ERROR(error, "Failed to initialize VR system for application viewport.");
             return;
         }
+        isVRInitialized = vrContext->GetInitializationStatus() == VRContextInitializationStatus::INITIALIZED;
+        if (this->applicationDelegate->GetApplicationSettings().IsVRRequired() && !isVRInitialized)
+        {
+            this->vrSystem.DestroyContext(vrContext.release());
+            FINJIN_SET_ERROR(error, "VR is requred by the application settings but failed to initialize. Ensure the hardware is turned on and recognized by the system.");
+            return;
+        }
         appViewport->SetVRContext(std::move(vrContext));
     }
 #endif
+    
+    //Sound
+    if (appViewport->IsMain())
+    {
+        this->soundContextSettings.osWindow = appViewport->GetOSWindow();
+        std::unique_ptr<SoundContext> soundContext(this->soundSystem.CreateContext(this->soundContextSettings, error));
+        this->soundContextSettings.osWindow = nullptr;
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to initialize sound system for application viewport.");
+            return;
+        }
+        appViewport->SetSoundContext(std::move(soundContext));
+    }
 
+    //GPU
+    {
+        this->gpuContextSettings.osWindow = appViewport->GetOSWindow();
+        this->gpuContextSettings.gpuID = viewportDescription.gpuID;
+    #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+        this->gpuContextSettings.vrContext = appViewport->GetVRContext(); //Needs to be set for a possible mode change later
+    #endif
+        if (isVRInitialized && this->applicationDelegate->GetApplicationSettings().StartInVR())
+        {            
+        #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE            
+            auto preferredDimensions = appViewport->GetVRContext()->GetPreferredRenderTargetDimensions();            
+            if (this->applicationDelegate->GetApplicationSettings().mirrorVR)
+                this->gpuContextSettings.frameDestination |= GpuFrameDestination::VR_CONTEXT;
+            else
+                this->gpuContextSettings.frameDestination = GpuFrameDestination::VR_CONTEXT;
+            this->gpuContextSettings.renderTargetSize.SetExplicit(preferredDimensions[0], preferredDimensions[1]);
+        #endif            
+        }
+        this->gpuContextSettings.frameBufferCount.requested = Limited(viewportDescription.requestedFrameBufferCount, (size_t)EngineConstants::MIN_FRAME_BUFFERS, (size_t)EngineConstants::MAX_FRAME_BUFFERS);
+        std::unique_ptr<GpuContext> gpuContext(this->gpuSystem.CreateContext(this->gpuContextSettings, error));
+        this->gpuContextSettings.osWindow = nullptr;
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to initialize GPU device for application viewport.");
+            return;
+        }
+        appViewport->SetGpuContext(std::move(gpuContext));
+    }
+    
     appViewport->CreateAssetClassFileReaders(this->assetFileReader, this->assetFileSelector, error);
     if (error)
     {

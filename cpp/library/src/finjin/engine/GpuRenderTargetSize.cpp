@@ -39,6 +39,13 @@ void GpuRenderTargetSize::SetType(GpuRenderTargetSizeType value)
     this->sizeType = value;
 }
 
+void GpuRenderTargetSize::SetExplicit(double width, double height)
+{
+    this->sizeType = GpuRenderTargetSizeType::EXPLICIT_SIZE;
+    this->explicitWidth = width;
+    this->explicitHeight = height;
+}
+
 double GpuRenderTargetSize::GetMinScale() const
 {
     return this->minScale;

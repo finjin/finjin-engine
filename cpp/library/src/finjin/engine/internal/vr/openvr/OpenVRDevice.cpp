@@ -140,17 +140,21 @@ VRDeviceRenderModelPointer OpenVRDevice::GetRenderModel()
 
     if (impl->renderModel != nullptr)
     {
-        result.vertex_positionNormalTex = impl->renderModel->rVertexData;
+        result.vertexData = impl->renderModel->rVertexData;
         result.vertexCount = impl->renderModel->unVertexCount;
 
+        result.vertexElements = impl->renderModelVertexElements.data();
+        result.vertexElementCount = impl->renderModelVertexElements.size();
+                
         result.indexData = impl->renderModel->rIndexData;
-        result.triangleCount = impl->renderModel->unTriangleCount;
+        
+        result.primitiveCount = impl->renderModel->unTriangleCount;
 
         if (impl->renderModelTexture != nullptr)
         {
             result.textureWidth = impl->renderModelTexture->unWidth;
             result.textureHeight = impl->renderModelTexture->unHeight;
-            result.rgbaTextureData = impl->renderModelTexture->rubTextureMapData;
+            result.textureImage = impl->renderModelTexture->rubTextureMapData;
         }
     }
 

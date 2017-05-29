@@ -28,6 +28,9 @@
 #include "VulkanSystem.hpp"
 #include "VulkanSystemImpl.hpp"
 #include "VulkanUtilities.hpp"
+#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+    #include "finjin/engine/VRContext.hpp"
+#endif
 
 using namespace Finjin::Engine;
 
@@ -71,6 +74,16 @@ enum class FullScreenQuadBindingIndex
 
     COUNT
 };
+
+
+//Local functions---------------------------------------------------------------
+static size_t GetBufferCountForFrameDestination(GpuFrameDestination frameDestination)
+{
+    if (AnySet(frameDestination & GpuFrameDestination::VR_CONTEXT))
+        return 2;
+    else
+        return 1;
+}
 
 
 //Implementation----------------------------------------------------------------
@@ -552,6 +565,7 @@ void VulkanGpuContextImpl::CreateDevice(Error& error)
                 this->settings.colorFormat.actual,
                 this->settings.multisampleCount.actual,
                 false,
+                GetBufferCountForFrameDestination(this->settings.frameDestination),
                 error
                 );
             if (error)
@@ -1268,6 +1282,22 @@ void VulkanGpuContextImpl::PresentFrameStage(VulkanFrameStage& frameStage, Rende
             }
         }
 
+    #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+        if (AnySet(this->settings.frameDestination & GpuFrameDestination::VR_CONTEXT) && this->settings.vrContext != nullptr)
+        {
+            auto vrContext = static_cast<VRContext*>(this->settings.vrContext);
+
+            MathMatrix4 vrHeadsetViewMatrix;
+            vrContext->GetHeadsetViewRenderMatrix(vrHeadsetViewMatrix);
+        }
+
+        if (AnySet(this->settings.frameDestination & GpuFrameDestination::VR_CONTEXT) && this->settings.vrContext != nullptr)
+        {
+            auto vrContext = static_cast<VRContext*>(this->settings.vrContext);
+            vrContext->SubmitEyeTextures(this, &frameBuffer);
+        }
+    #endif
+
         VulkanPresentInfoKHR presentInfo;
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = &this->swapChain;
@@ -1276,12 +1306,23 @@ void VulkanGpuContextImpl::PresentFrameStage(VulkanFrameStage& frameStage, Rende
         presentInfo.pImageIndices = &swapChainFrameBufferIndex;
 
         result = this->vk.QueuePresentKHR(this->primaryQueues.present, &presentInfo);
-        frameBuffer.ResetCommandBuffers();
         if (FINJIN_CHECK_VKRESULT_FAILED(result))
         {
+            frameBuffer.ResetCommandBuffers();
+
             FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to present back buffer. Vulkan result: %1%", VulkanResult::ToString(result)));
             return;
         }
+
+    #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+        if (AnySet(this->settings.frameDestination & GpuFrameDestination::VR_CONTEXT) && this->settings.vrContext != nullptr)
+        {
+            auto vrContext = static_cast<VRContext*>(this->settings.vrContext);
+            vrContext->OnPresentFinish();
+        }
+    #endif
+
+        frameBuffer.ResetCommandBuffers();
     }
     else
     {
@@ -1636,6 +1677,7 @@ void VulkanGpuContextImpl::CreateScreenSizeDependentResources(Error& error)
                 this->settings.colorFormat.actual,
                 this->settings.multisampleCount.actual,
                 true,
+                GetBufferCountForFrameDestination(this->settings.frameDestination),
                 error
                 );
             if (error)
@@ -2560,7 +2602,7 @@ void VulkanGpuContextImpl::CreateSwapChain(Error& error)
         }
     }
     swapChainInfo.imageArrayLayers = 1;
-    swapChainInfo.presentMode = this->presentModes.GetBest(this->settings.presentMode);
+    swapChainInfo.swapChainPresentMode = this->presentModes.GetBest(this->settings.swapChainPresentMode);
     swapChainInfo.oldSwapchain = oldSwapChain;
     swapChainInfo.clipped = VK_TRUE;
     swapChainInfo.imageColorSpace = this->settings.colorSpace.actual;

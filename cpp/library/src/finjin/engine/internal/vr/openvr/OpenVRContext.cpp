@@ -20,11 +20,23 @@
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/DynamicVector.hpp"
+#include "finjin/common/Math.hpp"
 #include "finjin/common/StaticVector.hpp"
-#include "finjin/engine/GeometryGenerator.hpp"
 #include "finjin/engine/InputComponents.hpp"
 #include "OpenVRDeviceImpl.hpp"
 #include "OpenVRSystem.hpp"
+
+#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
+    #include "finjin/engine/internal/gpu/d3d12/D3D12FrameBuffer.hpp"
+    #include "finjin/engine/internal/gpu/d3d12/D3D12GpuContext.hpp"
+    #include "finjin/engine/internal/gpu/d3d12/D3D12GpuContextImpl.hpp"
+#elif FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_VULKAN
+    #include "finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.hpp"
+    #include "finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp"
+    #include "finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.hpp"
+    #include "finjin/engine/internal/gpu/vulkan/VulkanSystem.hpp"
+    #include "finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.hpp"
+#endif
 
 using namespace Finjin::Engine;
 
@@ -33,17 +45,106 @@ using namespace Finjin::Engine;
 #define HAPTIC_PULSE_LENGTH_MICROSECONDS 3000
 
 
+//Local functions---------------------------------------------------------------
+static void GetBounds(vr::VRTextureBounds_t& leftBounds, vr::VRTextureBounds_t& rightBounds, size_t textureCount)
+{
+    if (textureCount == 1)
+    {
+        //Each eye takes up a half of the texture
+        leftBounds.uMin = 0;
+        leftBounds.uMax = .5f;
+        leftBounds.vMin = 0;
+        leftBounds.vMax = 1;
+
+        rightBounds.uMin = .5f;
+        rightBounds.uMax = 1.0f;
+        rightBounds.vMin = 0;
+        rightBounds.vMax = 1;
+    }
+    else
+    {
+        //Each eye has its own texture
+        leftBounds.uMin = 0;
+        leftBounds.uMax = 1;
+        leftBounds.vMin = 0;
+        leftBounds.vMax = 1;
+
+        rightBounds = leftBounds;
+    }
+}
+
+template <typename T>
+static void GetPoseOrientationMatrix(T& m, const vr::TrackedDevicePose_t& pose)
+{
+    m(0, 0) = pose.mDeviceToAbsoluteTracking.m[0][0];
+    m(0, 1) = pose.mDeviceToAbsoluteTracking.m[0][1];
+    m(0, 2) = pose.mDeviceToAbsoluteTracking.m[0][2];
+    
+    m(1, 0) = pose.mDeviceToAbsoluteTracking.m[1][0];
+    m(1, 1) = pose.mDeviceToAbsoluteTracking.m[1][1];
+    m(1, 2) = pose.mDeviceToAbsoluteTracking.m[1][2];
+    
+    m(2, 0) = pose.mDeviceToAbsoluteTracking.m[2][0];
+    m(2, 1) = pose.mDeviceToAbsoluteTracking.m[2][1];
+    m(2, 2) = pose.mDeviceToAbsoluteTracking.m[2][2];
+}
+
+static void GetPoseMatrix4(MathMatrix4& m, const vr::TrackedDevicePose_t& pose)
+{
+    m.setIdentity();
+    GetPoseOrientationMatrix(m, pose);
+
+    auto translation = MathAffineTransform(MathTranslation(pose.mDeviceToAbsoluteTracking.m[0][3], pose.mDeviceToAbsoluteTracking.m[1][3], pose.mDeviceToAbsoluteTracking.m[2][3]));
+
+    m = (translation * m).matrix();
+}
+
+static void GetInversePoseMatrix4(MathMatrix4& m, const vr::TrackedDevicePose_t& pose)
+{
+    MathMatrix4 worldMatrix;
+    GetPoseMatrix4(worldMatrix, pose);
+    m = worldMatrix.inverse();
+}
+
+static void GetLocatorFromTrackingPose(InputLocator& locator, const vr::TrackedDevicePose_t& pose)
+{
+    GetPoseOrientationMatrix(locator.orientationMatrix, pose);
+    
+    MathVector3 position(pose.mDeviceToAbsoluteTracking.m[0][3], pose.mDeviceToAbsoluteTracking.m[1][3], pose.mDeviceToAbsoluteTracking.m[2][3]);
+    locator.position.SetMeters(position);
+
+    MathVector3 velocity(pose.vVelocity.v[0], pose.vVelocity.v[1], pose.vVelocity.v[2]);
+    locator.velocity.SetMeters(velocity);    
+}
+
+static VRContextInitializationStatus RecoverableVRErrorToInitializationStatus(vr::HmdError vrError)
+{
+    switch (vrError)
+    {
+        case vr::VRInitError_Init_HmdNotFound: return VRContextInitializationStatus::NO_HMD_FOUND;
+        case vr::VRInitError_Init_NotInitialized: return VRContextInitializationStatus::RUNTIME_NOT_INITIALIZED;
+        case vr::VRInitError_Init_InitCanceledByUser: return VRContextInitializationStatus::CANCELED_BY_USER;
+        case vr::VRInitError_Init_AnotherAppLaunching: return VRContextInitializationStatus::ANOTHER_APP_LAUNCHING;
+    }
+
+    return VRContextInitializationStatus::NONE;
+}
+
+static bool IsRecoverableVRError(vr::HmdError vrError)
+{
+    return RecoverableVRErrorToInitializationStatus(vrError) != VRContextInitializationStatus::NONE;
+}
+
+
 //Local types-------------------------------------------------------------------
 struct OpenVRContext::Impl : public AllocatedClass
 {
-    using Vector2 = GeometryGenerator::Vector2;
-
     struct DistortionVertex
     {
-        Vector2 position;
-        Vector2 texCoordRed;
-        Vector2 texCoordGreen;
-        Vector2 texCoordBlue;
+        MathVector2 position;
+        MathVector2 texCoordRed;
+        MathVector2 texCoordGreen;
+        MathVector2 texCoordBlue;
     };
 
     struct DistortionMesh
@@ -59,6 +160,51 @@ struct OpenVRContext::Impl : public AllocatedClass
         this->hasRuntime = false;
 
         this->ivrSystem = nullptr;
+
+        this->initializationStatus = VRContextInitializationStatus::NONE;
+    }
+
+    void FinishInitialization(Error& error)
+    {
+        FINJIN_ERROR_METHOD_START(error);
+
+        if (!vr::VRCompositor())
+        {
+            FINJIN_SET_ERROR(error, "Failed to create compositor.");
+            return;
+        }
+
+        CreateDistortionMesh(error);
+        if (error)
+        {
+            FINJIN_SET_ERROR(error, "Failed to create distortion mesh.");
+            return;
+        }
+
+        //Handle already connected devices
+        for (vr::TrackedDeviceIndex_t deviceIndex = 0; deviceIndex < vr::k_unMaxTrackedDeviceCount; deviceIndex++)
+        {
+            auto& device = this->devices[deviceIndex];
+            auto deviceImpl = device.GetImpl();
+
+            //Set device index
+            deviceImpl->deviceIndex = deviceIndex;
+
+            //Get device initial state
+            if (this->ivrSystem->GetControllerState(deviceIndex, &deviceImpl->controllerState, sizeof(deviceImpl->controllerState)))
+            {
+                GetDeviceInfo(device);
+                if (device.IsConnected() && this->settings.addDeviceHandler != nullptr)
+                    this->settings.addDeviceHandler(this->context, deviceIndex);
+            }
+        }
+
+        this->initializationStatus = VRContextInitializationStatus::INITIALIZED;
+    }
+
+    bool IsInitializationFinished()
+    {
+        return this->initializationStatus == VRContextInitializationStatus::INITIALIZED;
     }
 
     bool HasFocus()
@@ -77,18 +223,12 @@ struct OpenVRContext::Impl : public AllocatedClass
             this->ivrSystem->ReleaseInputFocus();
     }
 
-    void SubmitToCompositor()
-    {
-        //vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture);
-        //vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture);
-    }
-
     std::array<uint32_t, 2> GetPreferredRenderTargetDimensions()
     {
-        uint32_t width = 0, height = 0;
+        std::array<uint32_t, 2> result;
         if (this->ivrSystem != nullptr)
-            this->ivrSystem->GetRecommendedRenderTargetSize(&width, &height);
-        return { width, height };
+            this->ivrSystem->GetRecommendedRenderTargetSize(&result[0], &result[1]);
+        return result;
     }
 
     bool IsRenderModelLoading(const Utf8String& name) const
@@ -119,7 +259,7 @@ struct OpenVRContext::Impl : public AllocatedClass
         {
             vr::RenderModel_t* renderModel = nullptr;
 
-            vr::EVRRenderModelError vrError = vr::VRRenderModels()->LoadRenderModel_Async(modelName.c_str(), &renderModel);
+            auto vrError = vr::VRRenderModels()->LoadRenderModel_Async(modelName.c_str(), &renderModel);
             if (vrError == vr::VRRenderModelError_None)
                 this->loadedRenderModels.push_back(RenderModelInfo(modelName, renderModel));
             else if (vrError == vr::VRRenderModelError_Loading)
@@ -299,8 +439,10 @@ struct OpenVRContext::Impl : public AllocatedClass
         this->ivrSystem->TriggerHapticPulse(deviceImpl->deviceIndex, 0, HAPTIC_PULSE_LENGTH_MICROSECONDS);
     }
 
-    void InitializeDistortionMesh()
+    void CreateDistortionMesh(Error& error)
     {
+        FINJIN_ERROR_METHOD_START(error);
+
         uint16_t lensGridSegmentCountHorz = 43;
         uint16_t lensGridSegmentCountVert = 43;
 
@@ -310,7 +452,11 @@ struct OpenVRContext::Impl : public AllocatedClass
         float u, v = 0;
 
         auto& verts = this->distortionMesh.verts;
-        verts.Create(lensGridSegmentCountVert * lensGridSegmentCountHorz * 2, GetAllocator());
+        if (!verts.CreateEmpty(lensGridSegmentCountVert * lensGridSegmentCountHorz * 2, GetAllocator()))
+        {
+            FINJIN_SET_ERROR(error, "Failed to allocate vertices.");
+            return;
+        }
 
         DistortionVertex vert;
 
@@ -323,13 +469,18 @@ struct OpenVRContext::Impl : public AllocatedClass
                 u = x * w;
                 v = 1 - y * h;
 
-                vert.position = Vector2(xOffset + u, -1 + 2 * y*h);
+                vert.position = MathVector2(xOffset + u, -1 + 2 * y*h);
 
-                vr::DistortionCoordinates_t dc0 = this->ivrSystem->ComputeDistortion(vr::Eye_Left, u, v);
+                vr::DistortionCoordinates_t dc0;
+                if (!this->ivrSystem->ComputeDistortion(vr::Eye_Left, u, v, &dc0))
+                {
+                    FINJIN_SET_ERROR(error, "Failed to compute distortion coordinates for left eye.");
+                    return;
+                }
 
-                vert.texCoordRed = Vector2(dc0.rfRed[0], 1 - dc0.rfRed[1]);
-                vert.texCoordGreen = Vector2(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
-                vert.texCoordBlue = Vector2(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
+                vert.texCoordRed = MathVector2(dc0.rfRed[0], 1 - dc0.rfRed[1]);
+                vert.texCoordGreen = MathVector2(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
+                vert.texCoordBlue = MathVector2(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
 
                 verts.push_back(vert);
             }
@@ -344,20 +495,29 @@ struct OpenVRContext::Impl : public AllocatedClass
                 u = x * w;
                 v = 1 - y * h;
 
-                vert.position = Vector2(xOffset + u, -1 + 2 * y*h);
+                vert.position = MathVector2(xOffset + u, -1 + 2 * y*h);
 
-                vr::DistortionCoordinates_t dc0 = this->ivrSystem->ComputeDistortion(vr::Eye_Right, u, v);
+                vr::DistortionCoordinates_t dc0;
+                if (!this->ivrSystem->ComputeDistortion(vr::Eye_Right, u, v, &dc0))
+                {
+                    FINJIN_SET_ERROR(error, "Failed to compute distortion coordinates for right eye.");
+                    return;
+                }
 
-                vert.texCoordRed = Vector2(dc0.rfRed[0], 1 - dc0.rfRed[1]);
-                vert.texCoordGreen = Vector2(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
-                vert.texCoordBlue = Vector2(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
+                vert.texCoordRed = MathVector2(dc0.rfRed[0], 1 - dc0.rfRed[1]);
+                vert.texCoordGreen = MathVector2(dc0.rfGreen[0], 1 - dc0.rfGreen[1]);
+                vert.texCoordBlue = MathVector2(dc0.rfBlue[0], 1 - dc0.rfBlue[1]);
 
                 verts.push_back(vert);
             }
         }
 
         auto& indices = this->distortionMesh.indices;
-        indices.Create((lensGridSegmentCountVert - 1) * (lensGridSegmentCountHorz - 1) * 6 * 2, GetAllocator());
+        if (!indices.CreateEmpty((lensGridSegmentCountVert - 1) * (lensGridSegmentCountHorz - 1) * 6 * 2, GetAllocator()))
+        {
+            FINJIN_SET_ERROR(error, "Failed to allocate indices.");
+            return;
+        }
 
         uint16_t a, b, c, d;
 
@@ -412,8 +572,7 @@ struct OpenVRContext::Impl : public AllocatedClass
 
     vr::IVRSystem* ivrSystem;
 
-    vr::Texture_t vrLeftEyeTexture; //{ (void*)leftEyeDesc.m_nResolveTextureId, vr::API_DirectX, vr::ColorSpace_Gamma };
-    vr::Texture_t vrRightEyeTexture; //{ (void*)rightEyeDesc.m_nResolveTextureId, vr::API_DirectX, vr::ColorSpace_Gamma };
+    VRContextInitializationStatus initializationStatus;
 
     std::array<OpenVRDevice, vr::k_unMaxTrackedDeviceCount> devices;
     std::array<vr::TrackedDevicePose_t, vr::k_unMaxTrackedDeviceCount> deviceRenderPoseStates; //One for each device. Check bPoseIsValid before using
@@ -481,7 +640,6 @@ void OpenVRContext::Create(const Settings& settings, Error& error)
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
-    //Copy settings
     impl->settings = settings;
 
     //Detect runtime
@@ -498,32 +656,24 @@ void OpenVRContext::Create(const Settings& settings, Error& error)
         return;
     }
 
-    //Initialize
+    //Initialize    
     auto vrError = vr::VRInitError_None;
     impl->ivrSystem = vr::VR_Init(&vrError, vr::VRApplication_Scene);
-    if (vrError != vr::VRInitError_None)
+    if (IsRecoverableVRError(vrError))
+        impl->initializationStatus = RecoverableVRErrorToInitializationStatus(vrError);
+    else if (vrError != vr::VRInitError_None)
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize VR runtime: '%1%'", vr::VR_GetVRInitErrorAsEnglishDescription(vrError)));
         return;
     }
 
-    impl->InitializeDistortionMesh();
-
-    //Handle already connected devices
-    for (vr::TrackedDeviceIndex_t deviceIndex = 0; deviceIndex < vr::k_unMaxTrackedDeviceCount; deviceIndex++)
+    if (vrError == vr::VRInitError_None)
     {
-        auto& device = impl->devices[deviceIndex];
-        auto deviceImpl = device.GetImpl();
-
-        //Set device index
-        deviceImpl->deviceIndex = deviceIndex;
-
-        //Get device initial state
-        if (impl->ivrSystem->GetControllerState(deviceIndex, &deviceImpl->controllerState))
+        impl->FinishInitialization(error);
+        if (error)
         {
-            impl->GetDeviceInfo(device);
-            if (device.IsConnected() && impl->settings.addDeviceHandler != nullptr)
-                impl->settings.addDeviceHandler(this, deviceIndex);
+            FINJIN_SET_ERROR(error, "Failed to finish initialization.");
+            return;
         }
     }
 }
@@ -550,17 +700,52 @@ const OpenVRContext::Settings& OpenVRContext::GetSettings() const
     return impl->settings;
 }
 
-void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
+VRContextInitializationStatus OpenVRContext::GetInitializationStatus() const
 {
-    //Initialize if necessary
-    if (impl->ivrSystem == nullptr && impl->hasRuntime && vr::VR_IsHmdPresent())
+    return impl->initializationStatus;
+}
+
+VRContextInitializationStatus OpenVRContext::TryInitialization(Error& error)
+{
+    FINJIN_ERROR_METHOD_START(error);
+
+    if (!impl->IsInitializationFinished())
     {
         auto vrError = vr::VRInitError_None;
         impl->ivrSystem = vr::VR_Init(&vrError, vr::VRApplication_Scene);
+        if (IsRecoverableVRError(vrError))
+            impl->initializationStatus = RecoverableVRErrorToInitializationStatus(vrError);
+        else if (vrError != vr::VRInitError_None)
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to initialize VR runtime: '%1%'", vr::VR_GetVRInitErrorAsEnglishDescription(vrError)));
+            return impl->initializationStatus;
+        }
+
         if (vrError == vr::VRInitError_None)
-            return;
+        {
+            impl->FinishInitialization(error);
+            if (error)
+            {
+                FINJIN_SET_ERROR(error, "Failed to finish initialization.");
+                return impl->initializationStatus;
+            }
+        }
     }
-    if (impl->ivrSystem == nullptr)
+
+    return impl->initializationStatus;
+}
+
+std::array<uint32_t, 2> OpenVRContext::GetPreferredRenderTargetDimensions()
+{
+    std::array<uint32_t, 2> result{ 0, 0 };
+    if (impl->IsInitializationFinished())
+        result = impl->GetPreferredRenderTargetDimensions();
+    return result;
+}
+
+void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
+{
+    if (!impl->IsInitializationFinished())
         return;
 
     //Clear previously changed state
@@ -668,49 +853,50 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
 
         if (device.IsConnected())
         {
-            if (deviceImpl->vrDeviceClass == vr::TrackedDeviceClass_Controller)
+            switch (deviceImpl->vrDeviceClass)
             {
-                impl->ivrSystem->GetControllerStateWithPose(vr::TrackingUniverseStanding, deviceIndex, &deviceImpl->controllerState, &deviceImpl->controllerPoseState);
-
-                for (int axisIndex = 0; axisIndex < vr::k_unControllerStateAxisCount; axisIndex++)
+                case vr::TrackedDeviceClass_HMD:
                 {
-                    deviceImpl->gameControllerState.axes[axisIndex * 2].Update(deviceImpl->controllerState.rAxis[axisIndex].x);
-                    deviceImpl->gameControllerState.axes[axisIndex * 2 + 1].Update(deviceImpl->controllerState.rAxis[axisIndex].y);
+                    impl->ivrSystem->GetControllerStateWithPose(vr::TrackingUniverseStanding, deviceIndex, &deviceImpl->controllerState, sizeof(deviceImpl->controllerState), &deviceImpl->controllerPoseState);
+
+                    if (deviceImpl->controllerPoseState.bPoseIsValid && !deviceImpl->locators.empty())
+                    {
+                        auto& locator = deviceImpl->locators[0];
+
+                        GetLocatorFromTrackingPose(locator, deviceImpl->controllerPoseState);
+                    }
+
+                    break;
                 }
-
-                for (int buttonIndex = 0; buttonIndex < vr::k_EButton_Max; buttonIndex++)
+                case vr::TrackedDeviceClass_Controller:
                 {
-                    deviceImpl->gameControllerState.buttons[buttonIndex].Update((deviceImpl->controllerState.ulButtonPressed & 1ull << buttonIndex) != 0);
-                }
+                    impl->ivrSystem->GetControllerStateWithPose(vr::TrackingUniverseStanding, deviceIndex, &deviceImpl->controllerState, sizeof(deviceImpl->controllerState), &deviceImpl->controllerPoseState);
 
-                if (deviceImpl->controllerPoseState.bPoseIsValid && !deviceImpl->locators.empty())
-                {
-                    auto& locator = deviceImpl->locators[0];
+                    for (int axisIndex = 0; axisIndex < vr::k_unControllerStateAxisCount; axisIndex++)
+                    {
+                        deviceImpl->gameControllerState.axes[axisIndex * 2].Update(deviceImpl->controllerState.rAxis[axisIndex].x);
+                        deviceImpl->gameControllerState.axes[axisIndex * 2 + 1].Update(deviceImpl->controllerState.rAxis[axisIndex].y);
+                    }
 
-                    locator.orientationMatrix(0, 0) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[0][0];
-                    locator.orientationMatrix(0, 1) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[1][0];
-                    locator.orientationMatrix(0, 2) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[2][0];
+                    for (int buttonIndex = 0; buttonIndex < vr::k_EButton_Max; buttonIndex++)
+                    {
+                        deviceImpl->gameControllerState.buttons[buttonIndex].Update((deviceImpl->controllerState.ulButtonPressed & 1ull << buttonIndex) != 0);
+                    }
 
-                    locator.orientationMatrix(1, 0) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[0][1];
-                    locator.orientationMatrix(1, 1) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[1][1];
-                    locator.orientationMatrix(1, 2) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[2][1];
+                    if (deviceImpl->controllerPoseState.bPoseIsValid && !deviceImpl->locators.empty())
+                    {
+                        auto& locator = deviceImpl->locators[0];
 
-                    locator.orientationMatrix(2, 0) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[0][2];
-                    locator.orientationMatrix(2, 1) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[1][2];
-                    locator.orientationMatrix(2, 2) = deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[2][2];
+                        GetLocatorFromTrackingPose(locator, deviceImpl->controllerPoseState);
+                    }
 
-                    MathVector3 position(deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[0][3], deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[1][3], deviceImpl->controllerPoseState.mDeviceToAbsoluteTracking.m[2][3]);
-                    locator.position.SetMeters(position);
+                    if (deviceImpl->forceFeedback.IsActive())
+                    {
+                        impl->SetForces(deviceImpl);
 
-                    MathVector3 velocity(deviceImpl->controllerPoseState.vVelocity.v[0], deviceImpl->controllerPoseState.vVelocity.v[1], deviceImpl->controllerPoseState.vVelocity.v[2]);
-                    locator.velocity.SetMeters(velocity);
-                }
-
-                if (deviceImpl->forceFeedback.IsActive())
-                {
-                    impl->SetForces(deviceImpl);
-
-                    deviceImpl->forceFeedback.Update(elapsedTime);
+                        deviceImpl->forceFeedback.Update(elapsedTime);
+                    }
+                    break;
                 }
             }
 
@@ -723,10 +909,95 @@ void OpenVRContext::UpdateInputDevices(SimpleTimeDelta elapsedTime)
     impl->UpdateAsyncResources();
 }
 
-void OpenVRContext::UpdateCompositor()
+void OpenVRContext::GetHeadsetViewRenderMatrix(MathMatrix4& viewMatrix)
 {
-    //Uncomment this once the compositor is actually being used (when OpenVR properly supports D3D12 and/or Vulkan)
-    //vr::VRCompositor()->WaitGetPoses(impl->deviceRenderPoseStates.data(), impl->deviceRenderPoseStates.size(), nullptr, 0);
+    auto vrError = vr::VRCompositor()->WaitGetPoses(impl->deviceRenderPoseStates.data(), impl->deviceRenderPoseStates.size(), nullptr, 0);
+    assert(vrError == vr::VRCompositorError_None);
+
+    auto& pose = impl->deviceRenderPoseStates[vr::k_unTrackedDeviceIndex_Hmd];
+    if (pose.bPoseIsValid)
+    {
+        GetInversePoseMatrix4(viewMatrix, pose);
+    }
+    else
+    {
+        viewMatrix.setIdentity();
+        assert(0);
+    }
+}
+
+void OpenVRContext::SubmitEyeTextures(void* gpuContextImpl, void* gpuFrameBuffer)
+{
+    vr::Texture_t leftEyeTexture, rightEyeTexture;
+    
+    vr::VRTextureBounds_t leftBounds, rightBounds;
+        
+#if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
+    auto d3d12GpuContextImpl = static_cast<D3D12GpuContextImpl*>(gpuContextImpl);
+    auto d3d12FrameBuffer = static_cast<D3D12FrameBuffer*>(gpuFrameBuffer);
+
+    vr::D3D12TextureData_t d3d12LeftEyeTexture;    
+    d3d12LeftEyeTexture.m_pCommandQueue = d3d12GpuContextImpl->graphicsCommandQueue.Get();
+    d3d12LeftEyeTexture.m_pResource = d3d12FrameBuffer->renderTarget.colorOutputs[0].resource.Get();    
+    d3d12LeftEyeTexture.m_nNodeMask = d3d12FrameBuffer->renderTarget.colorOutputs[0].nodeMask;
+
+    auto d3d12RightEyeTexture = d3d12LeftEyeTexture;
+    if (d3d12FrameBuffer->renderTarget.colorOutputs.size() > 1)
+    {
+        d3d12RightEyeTexture.m_pResource = d3d12FrameBuffer->renderTarget.colorOutputs[1].resource.Get();
+        d3d12RightEyeTexture.m_nNodeMask = d3d12FrameBuffer->renderTarget.colorOutputs[1].nodeMask;
+    }
+    
+    leftEyeTexture.eType = vr::TextureType_DirectX12;
+    leftEyeTexture.handle = &d3d12LeftEyeTexture;
+    leftEyeTexture.eColorSpace = vr::ColorSpace_Auto;
+    
+    rightEyeTexture = leftEyeTexture;
+    rightEyeTexture.handle = &d3d12RightEyeTexture;
+
+    GetBounds(leftBounds, rightBounds, d3d12FrameBuffer->renderTarget.colorOutputs.size());
+#elif FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_VULKAN
+    auto vulkanGpuContextImpl = static_cast<VulkanGpuContextImpl*>(gpuContextImpl);
+    auto vulkanGpuSystem = vulkanGpuContextImpl->vulkanSystem;
+    auto vulkanGpuSystemImpl = vulkanGpuSystem->GetImpl();
+    auto vulkanFrameBuffer = static_cast<VulkanFrameBuffer*>(gpuFrameBuffer);
+
+    vr::VRVulkanTextureData_t vulkanLeftEyeTexture;
+    vulkanLeftEyeTexture.m_nImage = reinterpret_cast<uint64_t>(vulkanFrameBuffer->renderTarget.colorOutputs[0].image);
+    vulkanLeftEyeTexture.m_pDevice = vulkanGpuContextImpl->vk.device;
+    vulkanLeftEyeTexture.m_pPhysicalDevice = vulkanGpuContextImpl->physicalDevice;
+    vulkanLeftEyeTexture.m_pInstance = vulkanGpuSystemImpl->vk.instance;
+    vulkanLeftEyeTexture.m_pQueue = vulkanGpuContextImpl->primaryQueues.graphics;
+    vulkanLeftEyeTexture.m_nQueueFamilyIndex = vulkanGpuContextImpl->queueFamilyIndexes.graphics;
+    vulkanLeftEyeTexture.m_nWidth = vulkanGpuContextImpl->renderTargetSize[0];
+    vulkanLeftEyeTexture.m_nHeight = vulkanGpuContextImpl->renderTargetSize[1];
+    vulkanLeftEyeTexture.m_nFormat = vulkanGpuContextImpl->settings.colorFormat.actual;
+    vulkanLeftEyeTexture.m_nSampleCount = vulkanGpuContextImpl->settings.multisampleCount.actual;
+
+    auto vulkanRightEyeTexture = vulkanLeftEyeTexture;
+    if (vulkanFrameBuffer->renderTarget.colorOutputs.size() > 1)
+        vulkanRightEyeTexture.m_nImage = reinterpret_cast<uint64_t>(vulkanFrameBuffer->renderTarget.colorOutputs[1].image);
+
+    leftEyeTexture.eType = vr::TextureType_Vulkan;
+    leftEyeTexture.handle = &vulkanLeftEyeTexture;
+    leftEyeTexture.eColorSpace = vr::ColorSpace_Auto;
+
+    rightEyeTexture = leftEyeTexture;
+    rightEyeTexture.handle = &vulkanRightEyeTexture;
+
+    GetBounds(leftBounds, rightBounds, vulkanFrameBuffer->renderTarget.colorOutputs.size());
+#endif
+    
+    auto submitFlags = vr::Submit_Default; //Submit_LensDistortionAlreadyApplied; //For the future
+    auto vrError = vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture, &leftBounds, submitFlags);
+    assert(vrError == vr::VRCompositorError_None);
+    vrError = vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture, &rightBounds, submitFlags);
+    assert(vrError == vr::VRCompositorError_None);
+}
+
+void OpenVRContext::OnPresentFinish()
+{
+    vr::VRCompositor()->PostPresentHandoff();
 }
 
 void OpenVRContext::Execute(VREvents& events, VRCommands& commands, Error& error)

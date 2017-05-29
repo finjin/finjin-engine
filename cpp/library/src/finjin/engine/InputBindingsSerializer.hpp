@@ -453,7 +453,7 @@ namespace Finjin { namespace Engine {
                     break;
                 }
 
-                case InputDeviceComponent::HEADSET_LOCATOR:
+                case InputDeviceComponent::LOCATOR:
                 {
                     break;
                 }
@@ -776,7 +776,7 @@ namespace Finjin { namespace Engine {
                     break;
                 }
 
-                case InputDeviceComponent::HEADSET_LOCATOR:
+                case InputDeviceComponent::LOCATOR:
                 {
                     WriteDeviceIndex(writer, inputSource);
 

@@ -18,6 +18,7 @@
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
+#include "finjin/common/Math.hpp"
 #include "finjin/common/OperationStatus.hpp"
 #include "OpenVRContextSettings.hpp"
 #include "OpenVRDevice.hpp"
@@ -45,9 +46,17 @@ namespace Finjin { namespace Engine {
 
         const Settings& GetSettings() const;
 
-        void UpdateInputDevices(SimpleTimeDelta elapsedTime);
-        void UpdateCompositor();
+        VRContextInitializationStatus GetInitializationStatus() const;
+        VRContextInitializationStatus TryInitialization(Error& error);
+        
+        std::array<uint32_t, 2> GetPreferredRenderTargetDimensions();
 
+        void UpdateInputDevices(SimpleTimeDelta elapsedTime);
+        
+        void GetHeadsetViewRenderMatrix(MathMatrix4& viewMatrix);
+        void SubmitEyeTextures(void* gpuContextImpl, void* gpuFrameBuffer);
+        void OnPresentFinish();
+        
         void Execute(VREvents& events, VRCommands& commands, Error& error);
 
         size_t GetDeviceCount() const;

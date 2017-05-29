@@ -31,6 +31,7 @@ D3D12RenderTarget::Resource::Resource()
     this->dsvDescHeapIndex = (size_t)-1;
     this->srvDescHeapIndex = (size_t)-1;
     this->isScreenSizeDependent = false;
+    this->nodeMask = 0;
 }
 
 void D3D12RenderTarget::Resource::Destroy()
@@ -40,6 +41,7 @@ void D3D12RenderTarget::Resource::Destroy()
     this->dsvDescHeapIndex = (size_t)-1;
     this->srvDescHeapIndex = (size_t)-1;
     this->isScreenSizeDependent = false;
+    this->nodeMask = 0;
 }
 
 void D3D12RenderTarget::Resource::DestroyScreenSizeDependentResources()
@@ -67,6 +69,7 @@ void D3D12RenderTarget::CreateColor
     UINT multisampleCount,
     UINT multisampleQuality,
     bool isScreenSizeDependent,
+    size_t outputCount,
     Error& error
     )
 {
@@ -74,7 +77,7 @@ void D3D12RenderTarget::CreateColor
 
     for (auto& colorOutput : this->colorOutputs)
         colorOutput.Destroy();
-    this->colorOutputs.resize(1);
+    this->colorOutputs.resize(outputCount);
 
     D3D12_HEAP_PROPERTIES heapProperties = {};
     heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
@@ -96,25 +99,29 @@ void D3D12RenderTarget::CreateColor
     colorBufferDesc.SampleDesc.Quality = multisampleQuality;
     colorBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
     colorBufferDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+    colorBufferDesc.MipLevels = 1;
 
-    auto result = device->CreateCommittedResource
-        (
-        &heapProperties,
-        D3D12_HEAP_FLAG_NONE,
-        &colorBufferDesc,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-        &colorClearValue,
-        IID_PPV_ARGS(&this->colorOutputs[0].resource)
-        );
-    if (FINJIN_CHECK_HRESULT_FAILED(result))
+    for (size_t outputIndex = 0; outputIndex < this->colorOutputs.size(); outputIndex++)
     {
-        this->colorOutputs.clear();
+        auto& output = this->colorOutputs[outputIndex];
 
-        FINJIN_SET_ERROR(error, "Failed to create color resource.");
-        return;
+        auto result = device->CreateCommittedResource
+            (
+            &heapProperties,
+            D3D12_HEAP_FLAG_NONE,
+            &colorBufferDesc,
+            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+            &colorClearValue,
+            IID_PPV_ARGS(&output.resource)
+            );
+        if (FINJIN_CHECK_HRESULT_FAILED(result))
+        {
+            FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create color resource '%1%'.", outputIndex));
+            return;
+        }
+
+        output.isScreenSizeDependent = isScreenSizeDependent;
     }
-
-    this->colorOutputs[0].isScreenSizeDependent = isScreenSizeDependent;
 }
 
 void D3D12RenderTarget::CreateDepthStencil

@@ -38,6 +38,8 @@ namespace Finjin { namespace Engine {
         void Create(const Settings& settings, Error& error);
         void Destroy();
 
+        bool IsAvailable();
+
         OpenVRContext* CreateContext(const OpenVRContext::Settings& settings, Error& error);
         void DestroyContext(OpenVRContext* context);
 

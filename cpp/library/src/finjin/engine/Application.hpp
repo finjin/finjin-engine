@@ -272,6 +272,14 @@ namespace Finjin { namespace Engine {
         SoundContext::Settings soundContextSettings;
         SoundSystem::Settings soundSystemSettings;
         SoundSystem soundSystem;
+        
+    #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+        VRContext::Settings vrContextSettings;
+        VRSystem::Settings vrSystemSettings;
+        VRSystem vrSystem;
+        UsableStaticVector<VRGameControllerForInputSystem, GameControllerConstants::MAX_GAME_CONTROLLERS> vrGameControllersForInputSystem;
+        UsableStaticVector<VRHeadsetForInputSystem, HeadsetConstants::MAX_HEADSETS> vrHeadsetsForInputSystem;
+    #endif
 
         //PhysicsContext::Settings physicsContextSettings;
         //PhysicsSystem::Settings physicsSystemSettings;
@@ -280,14 +288,6 @@ namespace Finjin { namespace Engine {
         //PathfindingContext::Settings pathfindingContextSettings;
         //PathfindingSystem::Settings pathfindingSystemSettings;
         //PathfindingSystem pathfindingSystem;
-
-    #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
-        VRContext::Settings vrContextSettings;
-        VRSystem::Settings vrSystemSettings;
-        VRSystem vrSystem;
-        UsableStaticVector<VRGameControllerForInputSystem, GameControllerConstants::MAX_GAME_CONTROLLERS> vrGameControllersForInputSystem;
-        UsableStaticVector<VRHeadsetForInputSystem, HeadsetConstants::MAX_HEADSETS> vrHeadsetsForInputSystem;
-    #endif
 
         ApplicationViewportsController appViewportsController;
         Utf8String workingWindowInternalName;

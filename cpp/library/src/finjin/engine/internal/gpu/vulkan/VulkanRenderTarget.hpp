@@ -47,6 +47,7 @@ namespace Finjin { namespace Engine {
             VkFormat colorFormat,
             size_t multisampleCount,
             bool isScreenSizeDependent,
+            size_t outputCount,
             Error& error
             );
 

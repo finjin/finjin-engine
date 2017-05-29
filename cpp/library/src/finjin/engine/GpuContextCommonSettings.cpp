@@ -33,6 +33,8 @@ GpuContextCommonSettings::GpuContextCommonSettings(Allocator* initialAllocator) 
 {
     this->applicationHandle = nullptr;
     this->osWindow = nullptr;
+    this->frameDestination = GpuFrameDestination::SWAP_CHAIN;
+    this->vrContext = nullptr;
     this->assetFileReader = nullptr;
     this->availableAssetTextureFormats = GpuAssetTextureFormats::NONE;
 
@@ -51,8 +53,8 @@ GpuContextCommonSettings::GpuContextCommonSettings(Allocator* initialAllocator) 
     this->presentSyncInterval = 1;
     this->maxGpuCommandListsPerStage = 10;
     this->maxDepthValue = 1.0f;
-    this->renderingScale = 1;
-    this->presentMode = GpuSwapChainPresentMode::ADAPTIVE_VSYNC;
+    this->renderingScale = 1;    
+    this->swapChainPresentMode = GpuSwapChainPresentMode::ADAPTIVE_VSYNC;
 }
 
 size_t GpuContextCommonSettings::CalculateJobPipelineSize(size_t actualFrameCount)

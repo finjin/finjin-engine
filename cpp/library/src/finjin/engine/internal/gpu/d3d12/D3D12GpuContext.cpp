@@ -238,4 +238,9 @@ void D3D12GpuContext::FlushGpu()
     impl->FlushGpu();
 }
 
+D3D12GpuContextImpl* D3D12GpuContext::GetImpl()
+{
+    return impl.get();
+}
+
 #endif

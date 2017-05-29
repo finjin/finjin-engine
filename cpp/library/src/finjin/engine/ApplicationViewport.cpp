@@ -278,8 +278,8 @@ void ApplicationViewport::CreateAssetClassFileReaders(AssetFileReader& assetFile
     impl->inputContext->GetSelectorComponents(impl->applicationAssetFileSelectorWithSubsystems);
 
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
-    assert(impl->vrContext!= nullptr);
-    impl->vrContext->GetSelectorComponents(this->applicationAssetFileSelectorWithSubsystems);
+    if (impl->vrContext != nullptr)
+        impl->vrContext->GetSelectorComponents(impl->applicationAssetFileSelectorWithSubsystems);
 #endif
 
     for (size_t assetClass = 0; assetClass < (size_t)AssetClass::COUNT; assetClass++)

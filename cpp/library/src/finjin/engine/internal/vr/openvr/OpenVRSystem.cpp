@@ -18,15 +18,16 @@
 
 #include "OpenVRSystem.hpp"
 #include "OpenVRSystemSettings.hpp"
+#include <openvr.h>
 
 using namespace Finjin::Engine;
 
 
 //Local types-------------------------------------------------------------------
-struct OpenVRSystem::Impl
+struct OpenVRSystem::Impl : public AllocatedClass
 {
 public:
-    Impl()
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
     {
     }
 
@@ -44,7 +45,7 @@ const Utf8String& OpenVRSystem::GetSystemInternalName()
     return value;
 }
 
-OpenVRSystem::OpenVRSystem() : impl(new Impl)
+OpenVRSystem::OpenVRSystem()
 {
 }
 
@@ -55,6 +56,16 @@ OpenVRSystem::~OpenVRSystem()
 void OpenVRSystem::Create(const Settings& settings, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
+
+    assert(settings.allocator != nullptr);
+    if (settings.allocator == nullptr)
+    {
+        FINJIN_SET_ERROR(error, "No allocator was specified.");
+        return;
+    }
+
+    impl.reset(AllocatedClass::New<Impl>(settings.allocator, FINJIN_CALLER_ARGUMENTS));
+    FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
     impl->settings = settings;
 }
@@ -73,6 +84,11 @@ void OpenVRSystem::Destroy()
     impl->contexts.clear();
 
     impl.reset();
+}
+
+bool OpenVRSystem::IsAvailable()
+{
+    return vr::VR_IsHmdPresent() && vr::VR_IsRuntimeInstalled();
 }
 
 OpenVRContext* OpenVRSystem::CreateContext(const OpenVRContext::Settings& settings, Error& error)

@@ -488,6 +488,7 @@ size_t Win32InputContext::GetDeviceCount(InputDeviceClass deviceClass) const
         case InputDeviceClass::KEYBOARD: return GetKeyboardCount();
         case InputDeviceClass::MOUSE: return GetMouseCount();
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerCount();
+        case InputDeviceClass::HEADSET: return GetExternalHeadsetCount();
     }
 
     return 0;
@@ -500,6 +501,7 @@ const Utf8String& Win32InputContext::GetDeviceProductDescriptor(InputDeviceClass
         case InputDeviceClass::KEYBOARD: return GetKeyboardProductDescriptor(index);
         case InputDeviceClass::MOUSE: return GetMouseProductDescriptor(index);
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerProductDescriptor(index);
+        case InputDeviceClass::HEADSET: return impl->externalHeadsets[index]->GetProductDescriptor();
     }
 
     return Utf8String::GetEmpty();
@@ -512,6 +514,7 @@ const Utf8String& Win32InputContext::GetDeviceInstanceDescriptor(InputDeviceClas
         case InputDeviceClass::KEYBOARD: return GetKeyboardInstanceDescriptor(index);
         case InputDeviceClass::MOUSE: return GetMouseInstanceDescriptor(index);
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerInstanceDescriptor(index);
+        case InputDeviceClass::HEADSET: return impl->externalHeadsets[index]->GetInstanceDescriptor();
     }
 
     return Utf8String::GetEmpty();
@@ -524,6 +527,7 @@ InputDeviceSemantic Win32InputContext::GetDeviceSemantic(InputDeviceClass device
         case InputDeviceClass::KEYBOARD: return GetKeyboardSemantic(index);
         case InputDeviceClass::MOUSE: return GetMouseSemantic(index);
         case InputDeviceClass::GAME_CONTROLLER: return GetGameControllerSemantic(index);
+        case InputDeviceClass::HEADSET: return impl->externalHeadsets[index]->GetSemantic();
     }
 
     return InputDeviceSemantic::NONE;
@@ -536,6 +540,7 @@ bool Win32InputContext::IsDeviceConnected(InputDeviceClass deviceClass, size_t i
         case InputDeviceClass::KEYBOARD: return IsKeyboardConnected(index);
         case InputDeviceClass::MOUSE: return IsMouseConnected(index);
         case InputDeviceClass::GAME_CONTROLLER: return IsGameControllerConnected(index);
+        case InputDeviceClass::HEADSET: return impl->externalHeadsets[index]->IsConnected();
     }
 
     return false;
@@ -768,21 +773,32 @@ FileOperationResult Win32InputContext::ReadInputBinding(InputDeviceClass deviceC
 {
     impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_DEVICE_TYPE, InputDeviceClassUtilities::ToString(deviceClass));
 
-    if (deviceClass == InputDeviceClass::GAME_CONTROLLER)
+    switch (deviceClass)
     {
-        if (deviceIndex < impl->xinputGameControllers.size())
-            impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, XInputSystem::GetSystemInternalName());
-        else if (deviceIndex < impl->xinputGameControllers.size() + impl->dinputGameControllers.size())
-            impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, DINPUT_SYSTEM_INTERNAL_NAME);
-        else if (deviceIndex < impl->xinputGameControllers.size() + impl->dinputGameControllers.size() + impl->externalGameControllers.size())
+        case InputDeviceClass::KEYBOARD: //Fall through
+        case InputDeviceClass::MOUSE: impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, DINPUT_SYSTEM_INTERNAL_NAME); break;
+        case InputDeviceClass::GAME_CONTROLLER:
         {
-            auto gameController = impl->externalGameControllers[deviceIndex - impl->xinputGameControllers.size() - impl->dinputGameControllers.size()];
-            impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, gameController->GetSystemInternalName());
+            if (deviceIndex < impl->xinputGameControllers.size())
+                impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, XInputSystem::GetSystemInternalName());
+            else if (deviceIndex < impl->xinputGameControllers.size() + impl->dinputGameControllers.size())
+                impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, DINPUT_SYSTEM_INTERNAL_NAME);
+            else if (deviceIndex < impl->xinputGameControllers.size() + impl->dinputGameControllers.size() + impl->externalGameControllers.size())
+            {
+                auto gameController = impl->externalGameControllers[deviceIndex - impl->xinputGameControllers.size() - impl->dinputGameControllers.size()];
+                impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, gameController->GetSystemInternalName());
+            }
+
+            break;
+        }        
+        case InputDeviceClass::HEADSET:
+        {
+            auto headset = impl->externalHeadsets[deviceIndex];
+            impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, headset->GetSystemInternalName());
+            break;
         }
     }
-    else
-        impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_API, DINPUT_SYSTEM_INTERNAL_NAME);
-
+    
     impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_DEVICE_DESCRIPTOR, GetDeviceProductDescriptor(deviceClass, deviceIndex));
 
     return impl->inputBindingsAssetReader.ReadAsset(fileBuffer, configAssetRef);
