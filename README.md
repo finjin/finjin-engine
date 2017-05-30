@@ -27,7 +27,14 @@ configure.cfg             Source code configuration file. Modify this by hand wh
 configure.py              Configuration script. Run this once when you start development for the very first time.
 config/                   Engine/runtime application configuration files.
 cpp/library/              Main source tree.
-  project/                IDE project files for targeting different platforms.
+  project/                IDE project files for targeting various platforms.
+    android-codeworks-vs/ Android-specific project files.
+    ios-xcode/            iOS-specific project files.
+    linux-netbeans/       Linux-specific project files.
+    macos-xcode/          macOS-specific project files.
+    tvos-xcode/           tvOS-specific project files.
+    windows-uwp-vs/       Windows (UWP)-specific project files.  
+    windows-win32-vs/     Windows (Win32)-specific project files.
   src/finjin/engine/      Implementation and include files.
     internal/             Platform-specific implementation.
       app/                Application, platform, and windowing implementation.
