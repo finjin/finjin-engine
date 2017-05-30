@@ -38,7 +38,7 @@ cpp/library/              Main source tree.
         uwp/              Windows (UWP)-specific implementation.
         win32/            Windows (Win32)-specific implementation.
       gpu/                GPU/3D system implementation.
-        d3d12/            Direct3D 12-specific implementation. Used on Windows platforms.
+        d3d12/            Direct3D 12-specific implementation. Used on Windows.
         metal/            Metal-specific implementation. Used on Apple platforms.
         vulkan/           Vulkan-specific implementation. Used on Windows, Linux, and Android.
       input/              Input system implementation.
