@@ -38,9 +38,9 @@ cpp/library/              Main source tree.
         uwp/              Windows (UWP)-specific implementation.
         win32/            Windows (Win32)-specific implementation.
       gpu/                GPU/3D system implementation.
-        d3d12/            Direct3D 12-specific implementation.
-        metal/            Metal-specific implementation.
-        vulkan/           Vulkan-specific implementation.
+        d3d12/            Direct3D 12-specific implementation. Used on Windows platforms.
+        metal/            Metal-specific implementation. Used on Apple platforms.
+        vulkan/           Vulkan-specific implementation. Used on Windows, Linux, and Android.
       input/              Input system implementation.
         androidinput/     Android-specific implementation.
         gcinput/          Apple-specific game controller implementation.
@@ -51,10 +51,10 @@ cpp/library/              Main source tree.
         win32input/       Windows (Win32)-specific implementation.
         xinput/           Windows-specific game controller implementation.
       sound/              Sound system implementation.
-        avaudioengine/    AVAudioEngine-specific implementation.
-        openal/           OpenAL-specific implementation.
-        opensles/         Android OpenSL ES-specific implementation.
-        xaudio2/          XAudio2-specific implementation.
+        avaudioengine/    AVAudioEngine-specific implementation. Used on Apple platforms.
+        openal/           OpenAL-specific implementation. Used on Linux.
+        opensles/         OpenSL ES-specific implementation. Used on Android.
+        xaudio2/          XAudio2-specific implementation. Used on Windows.
       vr/                 Virtual reality system implementation.
         openvr/           OpenVR-specific implementation.
 tools/                    Various utility scripts.
