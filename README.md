@@ -31,9 +31,31 @@ cpp/library/              Main source tree.
   src/finjin/engine/      Implementation and include files.
     internal/             Platform-specific implementation.
       app/                Application, platform, and windowing implementation.
+        android/          Android-specific implementation.
+        ios/              iOS/tvOS-specific implementation.
+        linux/            Linux-specific implementation.
+        macos/            macOS-specific implementation.
+        uwp/              Windows (UWP)-specific implementation.
+        win32/            Windows (Win32)-specific implementation.
       gpu/                GPU/3D system implementation.
+        d3d12/            Direct3D 12-specific implementation.
+        metal/            Metal-specific implementation.
+        vulkan/           Vulkan-specific implementation.
       input/              Input system implementation.
+        androidinput/     Android-specific implementation.
+        gcinput/          Apple-specific game controller implementation.
+        iosinput/         iOS/tvOS-specific implementation.
+        linuxinput/       Linux-specific implementation.
+        macosinput/       macOS-specific implementation.
+        uwpinput/         Windows (UWP)-specific implementation.
+        win32input/       Windows (Win32)-specific implementation.
+        xinput/           Windows-specific game controller implementation.
       sound/              Sound system implementation.
+        avaudioengine/    AVAudioEngine-specific implementation.
+        openal/           OpenAL-specific implementation.
+        opensles/         Android OpenSL ES-specific implementation.
+        xaudio2/          XAudio2-specific implementation.
       vr/                 Virtual reality system implementation.
+        openvr/           OpenVR-specific implementation.
 tools/                    Various utility scripts.
 ```
