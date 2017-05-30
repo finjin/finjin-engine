@@ -22,7 +22,7 @@
 //Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
-    class ApplicationViewportsClosing : public StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_WINDOWS>
+    class ApplicationViewportsClosing : public StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_APPLICATION_VIEWPORTS>
     {
     public:
         ApplicationViewportsClosing() {}
@@ -66,7 +66,7 @@ namespace Finjin { namespace Engine {
         bool anyHasFocus;
         bool anyLostFocus;
 
-        class HadFocus : public StaticVector<bool, EngineConstants::MAX_WINDOWS>
+        class HadFocus : public StaticVector<bool, EngineConstants::MAX_APPLICATION_VIEWPORTS>
         {
         };
         HadFocus hadFocus;
@@ -113,7 +113,7 @@ namespace Finjin { namespace Engine {
         std::unique_ptr<ApplicationViewport>* end() { return this->appViewports.end(); }
 
     private:
-        using ApplicationViewports = StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_WINDOWS>;
+        using ApplicationViewports = StaticVector<std::unique_ptr<ApplicationViewport>, EngineConstants::MAX_APPLICATION_VIEWPORTS>;
         ApplicationViewports appViewports;
     };
 

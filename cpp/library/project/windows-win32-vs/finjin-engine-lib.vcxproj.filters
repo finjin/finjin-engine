@@ -74,12 +74,6 @@
     <Filter Include="Source Files\internal\gpu\d3d12\renderers\static-mesh">
       <UniqueIdentifier>{c49828fb-e064-46bc-855a-2908873016d8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\internal\vr">
-      <UniqueIdentifier>{12b15b59-8876-4d84-b662-faa47c8c649a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\internal\vr\openvr">
-      <UniqueIdentifier>{a3229f0c-82ab-4393-b142-e2648f1a90d5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\common\vr">
       <UniqueIdentifier>{6e8184d3-c098-4ac6-9482-890d9b1be613}</UniqueIdentifier>
     </Filter>
@@ -196,6 +190,12 @@
     </Filter>
     <Filter Include="Source Files\3rd-party\imgui">
       <UniqueIdentifier>{d811cc07-4df6-4672-a8a2-d2d354cda24f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\vr">
+      <UniqueIdentifier>{12b15b59-8876-4d84-b662-faa47c8c649a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\internal\vr\openvr">
+      <UniqueIdentifier>{a3229f0c-82ab-4393-b142-e2648f1a90d5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1722,6 +1722,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\ScreenCapture.hpp">
       <Filter>Source Files\common\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\RenderStatus.hpp">
+      <Filter>Source Files\common\gpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

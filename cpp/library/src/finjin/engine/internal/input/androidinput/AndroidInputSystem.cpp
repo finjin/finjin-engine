@@ -30,7 +30,7 @@ struct AndroidInputSystem::Impl : public AllocatedClass
 
     AndroidInputSystem::Settings settings;
 
-    StaticVector<AndroidInputContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<AndroidInputContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

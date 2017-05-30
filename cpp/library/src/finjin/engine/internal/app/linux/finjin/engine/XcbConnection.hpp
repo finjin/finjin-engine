@@ -112,7 +112,7 @@ namespace Finjin { namespace Engine {
         xcb_atom_t TEXT_PLAIN;
         xcb_atom_t TEXT_URI_LIST;
 
-        using WindowPointerLookup = StaticUnorderedMap<xcb_window_t, XcbWindow*, EngineConstants::MAX_WINDOWS, EngineConstants::MAX_WINDOWS * 2 + 1>;
+        using WindowPointerLookup = StaticUnorderedMap<xcb_window_t, XcbWindow*, EngineConstants::MAX_APPLICATION_VIEWPORTS, EngineConstants::MAX_APPLICATION_VIEWPORTS * 2 + 1>;
         WindowPointerLookup windowLookup; //Pointers to created windows
     };
 

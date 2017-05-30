@@ -28,7 +28,7 @@ struct LinuxInputSystem::Impl : public AllocatedClass
 
     LinuxInputSystem::Settings settings;
 
-    StaticVector<LinuxInputContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<LinuxInputContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

@@ -29,7 +29,7 @@ struct MacOSInputSystem::Impl : public AllocatedClass
 
     MacOSInputSystem::Settings settings;
 
-    StaticVector<MacOSInputContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<MacOSInputContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

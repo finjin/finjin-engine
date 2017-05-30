@@ -132,7 +132,7 @@ void ApplicationViewportsController::GetAllViewports(ApplicationViewportsClosing
 void ApplicationViewportsController::GetViewportsClosing(ApplicationViewportsClosing& closing)
 {
     //See if any window has requested the application exit
-    bool exitApplication = false;
+    auto exitApplication = false;
     for (size_t viewportIndex = 0; viewportIndex < this->appViewports.size(); viewportIndex++)
     {
         if (this->appViewports[viewportIndex]->ExitApplicationRequested())

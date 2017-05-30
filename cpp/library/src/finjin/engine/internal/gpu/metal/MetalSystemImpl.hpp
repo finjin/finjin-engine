@@ -45,7 +45,7 @@ namespace Finjin { namespace Engine {
         MetalHardwareGpuDescriptions deviceDescriptions;
         MetalSoftwareGpuDescriptions softwareDeviceDescriptions;
 
-        StaticVector<MetalGpuContext*, EngineConstants::MAX_WINDOWS> contexts;
+        StaticVector<MetalGpuContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
     };
 
 } }

@@ -80,6 +80,7 @@
 		65430DD41DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCE1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp */; };
 		65430E6A1DF9AF5D00588409 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E671DF9AF5D00588409 /* Asset.cpp */; };
 		65430E6B1DF9AF5D00588409 /* AssetReference.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E681DF9AF5D00588409 /* AssetReference.cpp */; };
+		654C061E1EDCFAB3005A4556 /* RenderStatus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 654C061D1EDCFAB3005A4556 /* RenderStatus.hpp */; };
 		655881E01EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */; };
 		655881E61EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */; };
 		655AA7501EB80E8C00C9F22E /* MetalPipelineState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655AA74E1EB80E8C00C9F22E /* MetalPipelineState.mm */; };
@@ -495,6 +496,7 @@
 		65430E671DF9AF5D00588409 /* Asset.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Asset.cpp; path = ../../src/finjin/engine/Asset.cpp; sourceTree = SOURCE_ROOT; };
 		65430E681DF9AF5D00588409 /* AssetReference.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetReference.cpp; path = ../../src/finjin/engine/AssetReference.cpp; sourceTree = SOURCE_ROOT; };
 		65430E691DF9AF5D00588409 /* AssetReference.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetReference.hpp; path = ../../src/finjin/engine/AssetReference.hpp; sourceTree = SOURCE_ROOT; };
+		654C061D1EDCFAB3005A4556 /* RenderStatus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RenderStatus.hpp; path = ../../src/finjin/engine/RenderStatus.hpp; sourceTree = SOURCE_ROOT; };
 		6552804D1E39EDB00057B5A4 /* MetalRenderTarget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MetalRenderTarget.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalRenderTarget.hpp; sourceTree = SOURCE_ROOT; };
 		655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundBufferImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBufferImpl.mm; sourceTree = SOURCE_ROOT; };
 		655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundSourceImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSourceImpl.mm; sourceTree = SOURCE_ROOT; };
@@ -1438,6 +1440,7 @@
 				6573595B1ECEADC2009FA3E6 /* GpuRenderTargetSize.cpp */,
 				6573595C1ECEADC2009FA3E6 /* GpuRenderTargetSize.hpp */,
 				650FA3541D37379200535D8D /* GpuSystemCommonSettings.hpp */,
+				654C061D1EDCFAB3005A4556 /* RenderStatus.hpp */,
 				657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */,
 				657AA1631E420EE8004ADA22 /* ShaderFeatures.hpp */,
 				657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */,
@@ -2309,6 +2312,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				654C061E1EDCFAB3005A4556 /* RenderStatus.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

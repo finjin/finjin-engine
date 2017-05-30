@@ -224,7 +224,7 @@ void D3D12GpuContext::FinishFrameStage(JobPipelineStage& frameStage)
     impl->UpdateResourceGpuResidencyStatus();
 }
 
-void D3D12GpuContext::PresentFrameStage(JobPipelineStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
+void D3D12GpuContext::PresentFrameStage(JobPipelineStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 

@@ -56,7 +56,7 @@ namespace Finjin { namespace Engine {
 
         Microsoft::WRL::ComPtr<IDXGIFactory4> dxgiFactory;
 
-        StaticVector<D3D12GpuContext*, EngineConstants::MAX_WINDOWS> contexts;
+        StaticVector<D3D12GpuContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
     };
 
 } }

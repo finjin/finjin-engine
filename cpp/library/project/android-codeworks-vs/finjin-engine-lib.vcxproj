@@ -1111,6 +1111,7 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSimpleWork.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSwapChainFrameBuffer.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\RenderStatus.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ScreenCapture.hpp" />
     <ClInclude Include="C:\finjin-3rd-party\cpp\bullet\src\btBulletCollisionCommon.h" />
     <ClInclude Include="C:\finjin-3rd-party\cpp\bullet\src\btBulletDynamicsCommon.h" />

@@ -478,6 +478,7 @@
 		65430E5B1DF9AE0A00588409 /* Asset.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Asset.cpp; path = ../../src/finjin/engine/Asset.cpp; sourceTree = SOURCE_ROOT; };
 		65430E5C1DF9AE0A00588409 /* AssetReference.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssetReference.cpp; path = ../../src/finjin/engine/AssetReference.cpp; sourceTree = SOURCE_ROOT; };
 		65430E5D1DF9AE0A00588409 /* AssetReference.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetReference.hpp; path = ../../src/finjin/engine/AssetReference.hpp; sourceTree = SOURCE_ROOT; };
+		654C061F1EDCFADD005A4556 /* RenderStatus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RenderStatus.hpp; path = ../../src/finjin/engine/RenderStatus.hpp; sourceTree = SOURCE_ROOT; };
 		655881E11EBED37D0071C1BF /* AVAudioEngineSoundBufferImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundBufferImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBufferImpl.mm; sourceTree = SOURCE_ROOT; };
 		655881E71EBED63C0071C1BF /* AVAudioEngineSoundSourceImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundSourceImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSourceImpl.mm; sourceTree = SOURCE_ROOT; };
 		655AA7521EB8154300C9F22E /* MetalPipelineState.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MetalPipelineState.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalPipelineState.hpp; sourceTree = SOURCE_ROOT; };
@@ -1400,6 +1401,7 @@
 				6573595F1ECEAE93009FA3E6 /* GpuRenderTargetSize.cpp */,
 				657359601ECEAE93009FA3E6 /* GpuRenderTargetSize.hpp */,
 				650FA3641D37381A00535D8D /* GpuSystemCommonSettings.hpp */,
+				654C061F1EDCFADD005A4556 /* RenderStatus.hpp */,
 				657AA15A1E420E7E004ADA22 /* ShaderFeatures.cpp */,
 				657AA15B1E420E7E004ADA22 /* ShaderFeatures.hpp */,
 				657AA1741E44AB26004ADA22 /* ShaderFeatureFlag.cpp */,

@@ -68,7 +68,7 @@ namespace Finjin { namespace Engine {
         JobPipelineStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
         void Execute(JobPipelineStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
         void FinishFrameStage(JobPipelineStage& frameStage);
-        void PresentFrameStage(JobPipelineStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error);
+        void PresentFrameStage(JobPipelineStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error);
 
         void FlushGpu();
 

@@ -27,6 +27,7 @@
 #include "finjin/engine/Camera.hpp"
 #include "finjin/engine/GenericGpuNumericStructs.hpp"
 #include "finjin/engine/OSWindowEventListener.hpp"
+#include "finjin/engine/RenderStatus.hpp"
 #include "finjin/engine/ShaderFeatureFlag.hpp"
 #include "finjin/engine/WindowSize.hpp"
 

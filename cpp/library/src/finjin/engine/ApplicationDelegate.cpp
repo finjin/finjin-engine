@@ -33,7 +33,7 @@ ApplicationDelegate::~ApplicationDelegate()
 size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSystem, FileSystemEntryType findTypes) const
 {
     //Note that the FileSystemEntryType::FILE type will likely never be present since the
-    //engine currently only NEEDS to keep track of directories in order to function correctly.
+    //engine currently only needs to keep track of directories in order to function correctly.
 
     size_t count = 0;
 
@@ -47,7 +47,7 @@ size_t ApplicationDelegate::GetMaxFileSystemEntries(ApplicationFileSystem fileSy
     }
     else
     {
-        //Probably not necessary for a real application
+        //Probably not necessary for a real application but provide some values anyway
         if (AnySet(findTypes & FileSystemEntryType::DIRECTORY))
             count += 10;
         if (AnySet(findTypes & FileSystemEntryType::FILE))

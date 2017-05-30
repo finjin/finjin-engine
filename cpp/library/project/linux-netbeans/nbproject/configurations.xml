@@ -1412,6 +1412,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../src/finjin/engine/RenderStatus.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../src/finjin/engine/ResourcePoolDescription.hpp"
             ex="false"
             tool="3"
@@ -5210,6 +5215,11 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/PointerType.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/RenderStatus.hpp"
             ex="false"
             tool="3"
             flavor2="0">

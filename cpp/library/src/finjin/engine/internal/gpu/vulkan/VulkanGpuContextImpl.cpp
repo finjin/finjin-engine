@@ -1142,13 +1142,13 @@ VulkanFrameStage& VulkanGpuContextImpl::StartFrameStage(size_t index, SimpleTime
     return frameStage;
 }
 
-void VulkanGpuContextImpl::PresentFrameStage(VulkanFrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
+void VulkanGpuContextImpl::PresentFrameStage(VulkanFrameStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
     auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 
-    if (renderStatus.SuccessRequired())
+    if (renderStatus.IsRenderingRequired())
     {
         //Get swap chain buffer
         uint32_t swapChainFrameBufferIndex;

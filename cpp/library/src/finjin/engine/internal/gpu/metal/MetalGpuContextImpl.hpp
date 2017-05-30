@@ -45,7 +45,7 @@ namespace Finjin { namespace Engine {
         void CreateRenderers(Error& error);
 
         MetalFrameStage& StartFrameStage(size_t index, SimpleTimeDelta elapsedTime, SimpleTimeCounter totalElapsedTime);
-        void PresentFrameStage(MetalFrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error);
+        void PresentFrameStage(MetalFrameStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error);
 
         void Execute(MetalFrameStage& frameStage, GpuEvents& events, GpuCommands& commands, Error& error);
 

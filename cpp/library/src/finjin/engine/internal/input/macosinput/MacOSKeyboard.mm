@@ -134,6 +134,7 @@ bool MacOSKeyboard::Create(MacOSInputContext* context, size_t index)
                 auto status = UCKeyTranslate(keyboardLayout, virtualKey, kUCKeyActionDown, 0, keyboardType, kUCKeyTranslateNoDeadKeysMask, &deadKeyState, maxKeyNameCount, &actualKeyNameLength, keyNameUnicode);
                 if (status == noErr && actualKeyNameLength > 0)
                 {
+                    //Make the key uppercase since that's what it looks like on the Apple keyboards
                     auto nsKeyName = [[NSString stringWithCharacters:keyNameUnicode length:(NSInteger)actualKeyNameLength] uppercaseString];
                     keyName = nsKeyName.UTF8String;
                 }

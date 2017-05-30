@@ -88,7 +88,7 @@ void OpenVRSystem::Destroy()
 
 bool OpenVRSystem::IsAvailable()
 {
-    return vr::VR_IsHmdPresent() && vr::VR_IsRuntimeInstalled();
+    return vr::VR_IsHmdPresent();
 }
 
 OpenVRContext* OpenVRSystem::CreateContext(const OpenVRContext::Settings& settings, Error& error)

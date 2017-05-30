@@ -84,10 +84,10 @@ namespace Finjin { namespace Engine {
         void ApplyFullScreenToggle(bool needsExclusiveToggle, Error& error);
 
         void OnTick(JobSystem& jobSystem, Error& error);
-        void FinishWork(RenderStatus renderStatus);
+        void FinishWork(const RenderStatus& renderStatus);
 
         int Update(JobSystem& jobSystem, Error& error);
-        void FinishFrame(RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error);
+        void FinishFrame(const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error);
 
         virtual bool StartResizeTargets(Error& error);
         virtual void FinishResizeTargets(Error& error);

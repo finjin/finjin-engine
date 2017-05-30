@@ -30,7 +30,7 @@ struct OpenALSystem::Impl : public AllocatedClass
 
     OpenALSystem::Settings settings;
 
-    StaticVector<OpenALContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<OpenALContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 
     OpenALAdapterDescriptions adapterDescriptions;
     Utf8String defaultDeviceSpecifier;

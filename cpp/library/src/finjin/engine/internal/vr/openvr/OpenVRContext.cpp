@@ -32,7 +32,6 @@
     #include "finjin/engine/internal/gpu/d3d12/D3D12GpuContextImpl.hpp"
 #elif FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_VULKAN
     #include "finjin/engine/internal/gpu/vulkan/VulkanFrameBuffer.hpp"
-    #include "finjin/engine/internal/gpu/vulkan/VulkanGpuContext.hpp"
     #include "finjin/engine/internal/gpu/vulkan/VulkanGpuContextImpl.hpp"
     #include "finjin/engine/internal/gpu/vulkan/VulkanSystem.hpp"
     #include "finjin/engine/internal/gpu/vulkan/VulkanSystemImpl.hpp"

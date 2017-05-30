@@ -315,9 +315,8 @@ void Application::OnSystemMessage(const ApplicationSystemMessage& message, Error
         }
         case ApplicationSystemMessage::PAUSE:
         {
-            RenderStatus renderStatus(true, false);
             for (auto& appViewport : this->appViewportsController)
-                appViewport->FinishWork(renderStatus);
+                appViewport->FinishWork(RenderStatus::GetRenderingRequired());
             this->jobSystem.Stop();
             break;
         }
@@ -372,23 +371,18 @@ void Application::Tick(Error& error)
         //Update each viewport
         for (auto& appViewport : this->appViewportsController)
         {
-            if (appViewport->GetOSWindow()->HasWindowHandle())
+            appViewport->OnTick(jobSystem, error);
+            if (error)
             {
-                appViewport->GetOSWindow()->Tick();
-
-                appViewport->OnTick(jobSystem, error);
-                if (error)
-                {
-                    FINJIN_SET_ERROR(error, "Failed to update application viewport.");
-                    return;
-                }
+                FINJIN_SET_ERROR(error, "Failed to update application viewport.");
+                return;
             }
         }
 
         //Handle viewports that are in the process of being closed
-        ApplicationViewportsClosing closingWindows;
-        this->appViewportsController.GetViewportsClosing(closingWindows);
-        for (auto& appViewport : closingWindows)
+        ApplicationViewportsClosing closingAppViewports;
+        this->appViewportsController.GetViewportsClosing(closingAppViewports);
+        for (auto& appViewport : closingAppViewports)
         {
             HandleApplicationViewportEndOfLife(appViewport.get(), true);
             appViewport.reset();
@@ -1098,9 +1092,9 @@ void Application::Destroy()
     this->assetReadQueue.Destroy();
     this->fileSystemOperationQueue.Destroy();
 
-    ApplicationViewportsClosing closingWindows;
-    this->appViewportsController.GetAllViewports(closingWindows);
-    for (auto& appViewport : closingWindows)
+    ApplicationViewportsClosing closingAppViewports;
+    this->appViewportsController.GetAllViewports(closingAppViewports);
+    for (auto& appViewport : closingAppViewports)
     {
         HandleApplicationViewportEndOfLife(appViewport.get(), true);
         appViewport.reset();
@@ -1220,9 +1214,8 @@ void Application::HandleApplicationViewportLostFocus(ApplicationViewport* appVie
         //Have to assume that Windows is going to forcibly remove the full screen exclusive state of at least one window
         //So to be safe, let all windows finish their scheduled work and then toggle out of full screen exclusive
 
-        RenderStatus renderStatus(false, false);
         for (auto& otherAppViewport : this->appViewportsController)
-            otherAppViewport->FinishWork(renderStatus);
+            otherAppViewport->FinishWork(RenderStatus::GetFinishing());
 
         this->appViewportsController.RequestFullScreenToggle();
     }
@@ -1564,7 +1557,7 @@ void Application::HandleApplicationViewportEndOfLife(ApplicationViewport* appVie
 {
     //Let the application delegate perform application specific logic on the window
     //At a minimum it should let any async work finish
-    appViewport->FinishWork(RenderStatus(false, false));
+    appViewport->FinishWork(RenderStatus::GetFinishing());
     appViewport->GetDelegate()->OnApplicationViewportClosing(appViewport);
 
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE

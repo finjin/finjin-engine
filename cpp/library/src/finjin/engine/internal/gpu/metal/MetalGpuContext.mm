@@ -206,7 +206,7 @@ void MetalGpuContext::FinishFrameStage(JobPipelineStage& frameStage)
     //std::cout << "VulkanGpuContext::FinishFrameStage()" << std::endl;
 }
 
-void MetalGpuContext::PresentFrameStage(JobPipelineStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
+void MetalGpuContext::PresentFrameStage(JobPipelineStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 

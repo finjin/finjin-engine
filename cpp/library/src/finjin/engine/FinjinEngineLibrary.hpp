@@ -93,8 +93,8 @@ namespace Finjin { namespace Engine {
 
     struct EngineConstants
     {
-        enum { MAX_WINDOWS = 16 };
-        enum { MAX_DISPLAYS = MAX_WINDOWS };
+        enum { MAX_APPLICATION_VIEWPORTS = 16 };
+        enum { MAX_DISPLAYS = MAX_APPLICATION_VIEWPORTS };
         enum { MAX_GPU_ADAPTERS = 5 };
         enum { MAX_SOUND_ADAPTERS = 5 };
 
@@ -112,9 +112,9 @@ namespace Finjin { namespace Engine {
         enum { MAX_CONTEXT_SETTINGS_FILES = 8 }; //The maximum number of settings files that can be configured for a subsystem (gpu, input, sound, VR) context
 
         enum { DEFAULT_CONFIGURATION_BUFFER_SIZE = 50000 }; //Buffer size for reading configuration files
-        enum { DEFAULT_ASSET_BUFFER_SIZE = 10000000 }; //Buffer size for reading asset files
+        enum { DEFAULT_ASSET_BUFFER_SIZE = 10000000 }; //Buffer size for reading asset files that need to be fully loaded in memory before processing
         enum { DEFAULT_SOUND_CONTEXT_READ_BUFFER_SIZE = 10000000 }; //Buffer size for reading sound context resources (config files, sound files, etc)
-        enum { DEFAULT_GPU_CONTEXT_READ_BUFFER_SIZE = 10000000 }; //Buffer size for reading gpu context resources (config files, textures, meshes, etc)
+        enum { DEFAULT_GPU_CONTEXT_READ_BUFFER_SIZE = 10000000 }; //Buffer size for reading gpu context resources (config files, textures, meshes, shaders, etc)
 
         enum { MAX_MATCHING_ASSET_NAMES = 128 }; //Maximum number of files or subdirectories that can potentially match an AssetPathSelector
 
@@ -125,32 +125,9 @@ namespace Finjin { namespace Engine {
         enum { MAX_RENDER_TARGET_VIEWPORTS = 4 }; //Maximum number of viewports and scissor rectangles within a render target
         enum { MAX_RENDER_TARGET_OUTPUTS = 8 }; //Maximum number of outputs a render target can have. The actual "true" maximum may depend on the 3D subsystem
         enum { MAX_RENDER_TARGET_DEPENDENCIES = 4 }; //Maximum number of other render targets a render target can depend on
-        enum { MAX_RENDER_TARGET_BARRIERS = MAX_RENDER_TARGET_OUTPUTS + MAX_RENDER_TARGET_DEPENDENCIES * MAX_RENDER_TARGET_OUTPUTS };
+        enum { MAX_RENDER_TARGET_BARRIERS = MAX_RENDER_TARGET_DEPENDENCIES * (1 + MAX_RENDER_TARGET_OUTPUTS) }; //Self + other render target outputs
 
         enum { MAX_LIGHTS_PER_OBJECT = 4 }; //A limit of 4 allows 4 indices to be packed into a shader uint4
-    };
-
-    struct RenderStatus
-    {
-        RenderStatus()
-        {
-            this->continueRendering = false;
-            this->modifyingRenderTarget = false;
-        }
-
-        RenderStatus(bool c, bool m)
-        {
-            this->continueRendering = c;
-            this->modifyingRenderTarget = m;
-        }
-
-        bool SuccessRequired() const
-        {
-            return this->continueRendering && !this->modifyingRenderTarget;
-        }
-
-        bool continueRendering;
-        bool modifyingRenderTarget;
     };
 
 } }

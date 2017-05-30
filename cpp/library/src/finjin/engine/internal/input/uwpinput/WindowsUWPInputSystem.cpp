@@ -29,7 +29,7 @@ struct WindowsUWPInputSystem::Impl : public AllocatedClass
 
     WindowsUWPInputSystem::Settings settings;
 
-    StaticVector<WindowsUWPInputContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<WindowsUWPInputContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

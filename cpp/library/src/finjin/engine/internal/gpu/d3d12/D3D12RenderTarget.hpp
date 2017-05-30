@@ -55,7 +55,7 @@ namespace Finjin { namespace Engine {
             size_t srvDescHeapIndex;
             bool isScreenSizeDependent;
 
-            uint32_t nodeMask; //Node where this resource resides. Usually 0
+            uint32_t nodeMask;
         };
         StaticVector<Resource, EngineConstants::MAX_RENDER_TARGET_OUTPUTS> colorOutputs;
 

@@ -29,7 +29,7 @@ struct XAudio2System::Impl : public AllocatedClass
 
     XAudio2System::Settings settings;
 
-    StaticVector<XAudio2Context*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<XAudio2Context*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

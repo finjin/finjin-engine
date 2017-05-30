@@ -28,7 +28,7 @@ struct IOSInputSystem::Impl : public AllocatedClass
 
     IOSInputSystem::Settings settings;
 
-    StaticVector<IOSInputContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<IOSInputContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

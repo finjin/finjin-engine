@@ -75,7 +75,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/8ec51d02/MemorySettings.o \
 	${OBJECTDIR}/_ext/8ec51d02/PVRReader.o \
 	${OBJECTDIR}/_ext/8ec51d02/PlatformCapabilities_General.o \
-	${OBJECTDIR}/_ext/8ec51d02/Screenshot.o \
+	${OBJECTDIR}/_ext/8ec51d02/ScreenCapture.o \
 	${OBJECTDIR}/_ext/8ec51d02/ShaderFeatureFlag.o \
 	${OBJECTDIR}/_ext/8ec51d02/ShaderFeatures.o \
 	${OBJECTDIR}/_ext/8ec51d02/SoundContextCommonSettings.o \
@@ -564,10 +564,10 @@ ${OBJECTDIR}/_ext/8ec51d02/PlatformCapabilities_General.o: ../../src/finjin/engi
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/8ec51d02/PlatformCapabilities_General.o ../../src/finjin/engine/PlatformCapabilities_General.cpp
 
-${OBJECTDIR}/_ext/8ec51d02/Screenshot.o: ../../src/finjin/engine/ScreenCapture.cpp 
+${OBJECTDIR}/_ext/8ec51d02/ScreenCapture.o: ../../src/finjin/engine/ScreenCapture.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/8ec51d02
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/8ec51d02/Screenshot.o ../../src/finjin/engine/ScreenCapture.cpp
+	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/8ec51d02/ScreenCapture.o ../../src/finjin/engine/ScreenCapture.cpp
 
 ${OBJECTDIR}/_ext/8ec51d02/ShaderFeatureFlag.o: ../../src/finjin/engine/ShaderFeatureFlag.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/8ec51d02

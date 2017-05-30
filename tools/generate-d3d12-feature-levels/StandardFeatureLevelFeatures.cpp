@@ -11,7 +11,7 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[] = 
+static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[] =
 {
     {
         D3D_FEATURE_LEVEL_12_1, Version(12, 1),
@@ -59,7 +59,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         true,
         false,
         true,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_12_0, Version(12),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_5_1, Version(5, 1),
@@ -106,7 +106,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         true,
         false,
         true,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_11_1, Version(11, 1),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_5_1, Version(5, 1),
@@ -153,7 +153,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         true,
         false,
         true,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_11_0, Version(11),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_5_1, Version(5, 1),
@@ -200,7 +200,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         true,
         false,
         true,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_10_1, Version(10, 1),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_4_X, Version(4, -1),
@@ -247,7 +247,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         true,
         false,
         true,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_10_0, Version(10),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_4_0, Version(4, 0),
@@ -294,7 +294,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         true,
         false,
         true,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_9_3, Version(9, 3),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_2_0_LEVEL_9_3, Version(2, 0, 3),
@@ -341,7 +341,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         true,
         true,
         false,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_9_2, Version(9, 2),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_2_0_LEVEL_9_1, Version(2, 0, 1),
@@ -388,7 +388,7 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         false,
         true,
         false,
-    }, 
+    },
     {
         D3D_FEATURE_LEVEL_9_1, Version(9, 1),
         D3D12GpuStandardFeatureLevelFeatures::ShaderModel::MODEL_2_0_LEVEL_9_1, Version(2, 0, 1),
@@ -435,5 +435,5 @@ static const D3D12GpuStandardFeatureLevelFeatures standardFeatureLevelFeatures[]
         false,
         true,
         false,
-    }, 
+    },
 };

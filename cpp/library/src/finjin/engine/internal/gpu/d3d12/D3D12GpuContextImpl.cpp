@@ -884,13 +884,13 @@ D3D12FrameStage& D3D12GpuContextImpl::StartFrameStage(size_t index, SimpleTimeDe
     return frameStage;
 }
 
-void D3D12GpuContextImpl::PresentFrameStage(D3D12FrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
+void D3D12GpuContextImpl::PresentFrameStage(D3D12FrameStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
     auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 
-    if (renderStatus.SuccessRequired())
+    if (renderStatus.IsRenderingRequired())
     {
         //Get swap chain buffer
         Microsoft::WRL::ComPtr<ID3D12Resource> swapChainBuffer;

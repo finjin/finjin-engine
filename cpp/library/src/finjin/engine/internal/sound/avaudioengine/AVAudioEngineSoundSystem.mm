@@ -29,7 +29,7 @@ struct AVAudioEngineSoundSystem::Impl : public AllocatedClass
 
     AVAudioEngineSoundSystem::Settings settings;
 
-    StaticVector<AVAudioEngineSoundContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<AVAudioEngineSoundContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

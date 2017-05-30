@@ -456,10 +456,18 @@ void ApplicationViewport::ApplyFullScreenToggle(bool needsExclusiveToggle, Error
 void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
+    
+    if (!impl->osWindow->HasWindowHandle())
+    {
+        //Window doesn't (yet) have a window handle. Exit early
+        //This is normal behavior on Android
+    }
+    
+    impl->osWindow->Tick();
 
     if (NeedsToModifyRenderTarget())
     {
-        FinishWork(RenderStatus(true, true));
+        FinishWork(RenderStatus::GetModifyingRenderTarget());
 
         ApplyModifyRenderTarget(error);
         if (error)
@@ -485,7 +493,7 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
             //Render previous frame if buffering requirement has been met
             if (++impl->renderTickCount >= impl->jobProcessingPipelineSize)
             {
-                FinishFrame(RenderStatus(true, false), -1, error);
+                FinishFrame(RenderStatus::GetRenderingRequired(), -1, error);
                 if (error)
                 {
                     FINJIN_SET_ERROR(error, "Error while finishing frame.");
@@ -496,7 +504,7 @@ void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
     }
 }
 
-void ApplicationViewport::FinishWork(RenderStatus renderStatus)
+void ApplicationViewport::FinishWork(const RenderStatus& renderStatus)
 {
     if (!impl->stages.empty())
     {
@@ -544,6 +552,7 @@ int ApplicationViewport::Update(JobSystem& jobSystem, Error& error)
         if (error)
         {
             FINJIN_SET_ERROR(error, "Application viewport delegate failed.");
+            //Let Update() finish
         }
 
         stage.hasFrame = updateResult == ApplicationViewportDelegate::UpdateResult::STARTED_FRAME;
@@ -552,7 +561,7 @@ int ApplicationViewport::Update(JobSystem& jobSystem, Error& error)
     return stepCount;
 }
 
-void ApplicationViewport::FinishFrame(RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
+void ApplicationViewport::FinishFrame(const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 

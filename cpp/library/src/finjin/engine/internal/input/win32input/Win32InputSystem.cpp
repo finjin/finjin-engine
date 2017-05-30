@@ -28,7 +28,7 @@ struct Win32InputSystem::Impl : public AllocatedClass
 
     Win32InputSystem::Settings settings;
 
-    StaticVector<Win32InputContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<Win32InputContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 

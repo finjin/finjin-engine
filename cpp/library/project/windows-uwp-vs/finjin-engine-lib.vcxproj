@@ -29,6 +29,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonImpl.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12RootSignatureBuilder.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\RenderStatus.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\ScreenCapture.hpp" />
     <ClInclude Include="C:\finjin-3rd-party\cpp\bullet\src\btBulletCollisionCommon.h" />
     <ClInclude Include="C:\finjin-3rd-party\cpp\bullet\src\btBulletDynamicsCommon.h" />

@@ -26,6 +26,7 @@
 #include "finjin/engine/GpuID.hpp"
 #include "finjin/engine/GpuRenderTargetSize.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
+#include "finjin/engine/RenderStatus.hpp"
 #include "finjin/engine/ResourcePoolDescription.hpp"
 #include "finjin/engine/ScreenCapture.hpp"
 #include <boost/thread/null_mutex.hpp>

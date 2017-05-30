@@ -627,14 +627,14 @@ MetalFrameStage& MetalGpuContextImpl::StartFrameStage(size_t index, SimpleTimeDe
     return frameStage;
 }
 
-void MetalGpuContextImpl::PresentFrameStage(MetalFrameStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
+void MetalGpuContextImpl::PresentFrameStage(MetalFrameStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
     auto& frameBuffer = this->frameBuffers[frameStage.frameBufferIndex];
 
     //Process update
-    if (renderStatus.SuccessRequired())
+    if (renderStatus.IsRenderingRequired())
     {
         //Get next drawable/back buffer
         auto metalLayer = this->settings.osWindow->GetImpl()->GetMetalLayer();

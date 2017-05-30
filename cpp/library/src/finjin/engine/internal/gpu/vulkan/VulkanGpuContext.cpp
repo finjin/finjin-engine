@@ -216,7 +216,7 @@ void VulkanGpuContext::FinishFrameStage(JobPipelineStage& frameStage)
     impl->UpdateResourceGpuResidencyStatus();
 }
 
-void VulkanGpuContext::PresentFrameStage(JobPipelineStage& frameStage, RenderStatus renderStatus, size_t presentSyncIntervalOverride, Error& error)
+void VulkanGpuContext::PresentFrameStage(JobPipelineStage& frameStage, const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 

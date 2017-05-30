@@ -30,7 +30,7 @@ struct OpenSLESSystem::Impl : public AllocatedClass
 
     OpenSLESSystem::Settings settings;
 
-    StaticVector<OpenSLESContext*, EngineConstants::MAX_WINDOWS> contexts;
+    StaticVector<OpenSLESContext*, EngineConstants::MAX_APPLICATION_VIEWPORTS> contexts;
 };
 
 
