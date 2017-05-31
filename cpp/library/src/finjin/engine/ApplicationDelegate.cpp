@@ -160,7 +160,6 @@ ApplicationViewportDelegate* ApplicationDelegate::CreateApplicationViewportDeleg
     return AllocatedClass::New<ApplicationViewportDelegate>(allocator, FINJIN_CALLER_ARGUMENTS);
 }
 
-bool ApplicationDelegate::OnTickApplicationViewports(ApplicationViewportsController& appViewportsController, Error& error)
+void ApplicationDelegate::OnTickApplicationViewports(ApplicationViewportsController& appViewportsController, Error& error)
 {
-    return false;
 }

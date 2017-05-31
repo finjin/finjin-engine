@@ -63,8 +63,7 @@ namespace Finjin { namespace Engine {
      *    On all platforms except Android this will be called after all the viewports have been created in previous step.
      *
      * During runtime:
-     *  -OnTickApplicationViewports() - Called to call Tick() on all the application viewports. 
-     *   If overridden and the override performs the Tick() on the viewports, this should return true.
+     *  -OnTickApplicationViewports() - Called right before Tick() is called on all the application viewports.
      */
     class ApplicationDelegate : public AllocatedClass
     {
@@ -109,7 +108,7 @@ namespace Finjin { namespace Engine {
 
         virtual void OnInitializedApplicationViewportsController(ApplicationViewportsController& appViewportsController) {}
         
-        virtual bool OnTickApplicationViewports(ApplicationViewportsController& appViewportsController, Error& error);
+        virtual void OnTickApplicationViewports(ApplicationViewportsController& appViewportsController, Error& error);
     };
 
 } }

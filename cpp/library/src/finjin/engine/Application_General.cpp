@@ -369,22 +369,19 @@ void Application::Tick(Error& error)
         }
 
         //Update each viewport
-        auto updatedViewports = GetDelegate()->OnTickApplicationViewports(this->appViewportsController, error);
+        GetDelegate()->OnTickApplicationViewports(this->appViewportsController, error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, "Application delegate failed to update application viewports.");
+            FINJIN_SET_ERROR(error, "Application delegate failed to during application viewport tick notification.");
             return;
         }
-        if (!updatedViewports)
+        for (auto& appViewport : this->appViewportsController)
         {
-            for (auto& appViewport : this->appViewportsController)
+            appViewport->OnTick(this->jobSystem, error);
+            if (error)
             {
-                appViewport->OnTick(jobSystem, error);
-                if (error)
-                {
-                    FINJIN_SET_ERROR(error, "Failed to update application viewport.");
-                    return;
-                }
+                FINJIN_SET_ERROR(error, "Failed to update application viewport.");
+                return;
             }
         }
 
