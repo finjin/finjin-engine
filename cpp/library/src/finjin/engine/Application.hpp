@@ -184,7 +184,7 @@ namespace Finjin { namespace Engine {
         void OnSystemMessage(const ApplicationSystemMessage& message, Error& error);
         void Tick(Error& error);
 
-        void Initialize(Error& error);
+        void Create(Error& error);
         void Destroy();
 
         bool MainLoop(Error& error); //Platform-specific

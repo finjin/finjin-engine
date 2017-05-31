@@ -95,8 +95,8 @@ namespace Finjin { namespace Engine {
 
         virtual const ApplicationSettings& GetApplicationSettings() const = 0;
 
-        virtual void OnStart() = 0;
-        virtual void OnStop() = 0;
+        virtual void OnDestroyStart() = 0;
+        virtual void OnDestroyFinish() = 0;
 
         size_t GetApplicationViewportDescriptionCount() const;
         virtual size_t GetRequestedApplicationViewportDescriptionCount() const = 0;

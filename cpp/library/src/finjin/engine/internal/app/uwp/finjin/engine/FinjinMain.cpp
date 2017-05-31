@@ -141,7 +141,7 @@ void ApplicationFrameworkView::Load(Platform::String^ entryPoint)
             return;
         }
 
-        this->app->Initialize(error);
+        this->app->Create(error);
         if (error)
         {
             this->errorOccurred = true;

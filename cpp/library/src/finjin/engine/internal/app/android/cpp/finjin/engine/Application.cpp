@@ -368,7 +368,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
 
             //Call windows controller initialized callback for the first time
             if (windowInitCount == 0)
-                windowedApp->GetDelegate()->OnInitializedApplicationViewportsController(&windowedApp->GetViewportsController());
+                windowedApp->GetDelegate()->OnInitializedApplicationViewportsController(windowedApp->GetViewportsController());
 
             FINJIN_DEBUG_LOG_INFO("OnAndroidApplicationCommand: APP_CMD_INIT_WINDOW: 5");
 

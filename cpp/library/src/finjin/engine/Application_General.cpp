@@ -261,7 +261,7 @@ bool Application::Run(CommandLineArgsProcessor& argsProcessor, Error& error)
     auto commandLineResult = ReadCommandLineSettings(argsProcessor, error);
     if (error)
     {
-        FINJIN_SET_ERROR(error, "Failed to initialize application.");
+        FINJIN_SET_ERROR(error, "Failed to read command line settings.");
         return false;
     }
     if (commandLineResult == ReadCommandLineResult::SHOW_USAGE)
@@ -274,7 +274,7 @@ bool Application::Run(CommandLineArgsProcessor& argsProcessor, Error& error)
     }
 
     //Initialize--------------------------------------------------
-    Initialize(error);
+    Create(error);
     if (error)
     {
         FINJIN_SET_ERROR(error, "Failed to initialize application.");
@@ -401,7 +401,7 @@ void Application::Tick(Error& error)
     }
 }
 
-void Application::Initialize(Error& error)
+void Application::Create(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -1094,12 +1094,13 @@ void Application::Initialize(Error& error)
     }
 
     FINJIN_DEBUG_LOG_INFO("Memory usage at end of application initialization: %1%", MemorySize::ToString(GetBytesUsed()));
-
-    this->applicationDelegate->OnStart();
 }
 
 void Application::Destroy()
 {
+    if (this->applicationDelegate != nullptr)
+        this->applicationDelegate->OnDestroyStart();
+    
     this->assetReadQueue.Destroy();
     this->fileSystemOperationQueue.Destroy();
 
@@ -1110,9 +1111,6 @@ void Application::Destroy()
         HandleApplicationViewportEndOfLife(appViewport.get(), true);
         appViewport.reset();
     }
-
-    if (this->applicationDelegate != nullptr)
-        this->applicationDelegate->OnStop();
 
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     this->vrSystem.Destroy();
@@ -1125,6 +1123,9 @@ void Application::Destroy()
     this->inputSystem.Destroy();
 
     this->jobSystem.Destroy();
+    
+    if (this->applicationDelegate != nullptr)
+        this->applicationDelegate->OnDestroyFinish();
 }
 
 void Application::WindowMoved(OSWindow* osWindow)
@@ -1296,8 +1297,6 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         FINJIN_SET_ERROR(error, "VR is requred by the application settings but is unavailable. Try installing the necessary drivers and turning on the hardware.");
         return;
     }
-#endif
-#if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     if (appViewport->IsMain() && this->applicationDelegate->GetApplicationSettings().IsVRRequested())
     {
         this->vrContextSettings.addDeviceHandler = [this, appViewport](VRContext* vrContext, size_t vrDeviceIndex)
