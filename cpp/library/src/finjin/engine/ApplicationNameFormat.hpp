@@ -21,7 +21,7 @@ namespace Finjin { namespace Engine {
     {
         DISPLAY, //Example: "My Application"
         UPPER_CAMEL_CASE, //Example: "MyApplication"
-        LOWER_CASE, //Example: 'my-application'
+        LOWER_CASE, //Example: "my-application"
         DOTTED_WITH_ORGANIZATION_PREFIX, //Example: "org.myorganization.myapplication"
 
         COUNT
