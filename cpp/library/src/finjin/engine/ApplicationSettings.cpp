@@ -133,7 +133,7 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
 
             argIndex++;
         }
-        else if (arg == "-no-check-system-memory-free" && argIndex < argsProcessor.GetCount() - 1)
+        else if (arg == "-check-system-memory-free" && argIndex < argsProcessor.GetCount() - 1)
         {
             this->checkSystemMemoryFree = Convert::ToBool(argsProcessor[argIndex + 1]);
 

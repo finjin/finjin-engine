@@ -47,9 +47,9 @@ namespace Finjin { namespace Engine {
         Setting<bool> isFullScreen;
         Setting<bool> isFullScreenExclusive;
         Setting<bool> vsync;
-        Setting<bool> useAccelerometer; //This probably doesn't need to be a setting
-        Setting<bool> useSystemBackButton; //This probably doesn't need to be a setting
-        Setting<bool> updateWhenNotFocused; //This probably doesn't need to be a setting
+        Setting<bool> useAccelerometer; //Not read on command line. Typically set in derived settings class, depending on needs of application
+        Setting<bool> useSystemBackButton; //Not read on command line. Typically set in derived settings class, depending on needs of application
+        Setting<bool> updateWhenNotFocused; //Not read on command line. Typically set in derived settings class, depending on needs of application
         Setting<bool> checkSystemMemoryFree;
         Setting<bool> vrRequired;
         Setting<bool> startInVR;

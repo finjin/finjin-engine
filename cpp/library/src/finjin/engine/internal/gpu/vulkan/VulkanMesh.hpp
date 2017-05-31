@@ -17,7 +17,6 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Math.hpp"
-#include "finjin/engine/FinjinSceneAssets.hpp"
 #include "VulkanBufferView.hpp"
 #include "VulkanGpuBuffer.hpp"
 

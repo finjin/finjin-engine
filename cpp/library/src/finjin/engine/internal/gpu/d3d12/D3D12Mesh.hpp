@@ -17,7 +17,6 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Math.hpp"
-#include "finjin/engine/FinjinSceneAssets.hpp"
 #include "D3D12GpuBuffer.hpp"
 #include "D3D12Includes.hpp"
 #include "D3D12Utilities.hpp"

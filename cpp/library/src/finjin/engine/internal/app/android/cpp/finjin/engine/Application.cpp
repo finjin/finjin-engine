@@ -314,8 +314,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
     FINJIN_DECLARE_ERROR(error);
 
     auto windowedApp = reinterpret_cast<Application*>(androidApp->userData);
-    auto applicationDelegate = reinterpret_cast<ApplicationDelegate*>(windowedApp->GetDelegate());
-
+    
     static int windowInitCount = 0;
     static OSWindowSize oldWindowSize(0, 0);
 
@@ -459,8 +458,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
 static int32_t OnAndroidApplicationInputCommand(android_app* androidApp, AInputEvent* event)
 {
     auto windowedApp = reinterpret_cast<Application*>(androidApp->userData);
-    auto applicationDelegate = reinterpret_cast<ApplicationDelegate*>(windowedApp->GetDelegate());
-
+    
     auto& inputSystem = windowedApp->GetInputSystem();
     return inputSystem.HandleApplicationInputEvent(event);
 }
@@ -587,8 +585,7 @@ bool Application::MainLoop(Error& error)
     FINJIN_ERROR_METHOD_START(error);
 
     //Ensure some data has been set---------------------------------------
-    auto applicationDelegate = reinterpret_cast<ApplicationDelegate*>(this->applicationDelegate.get());
-    assert(applicationDelegate->GetApplicationViewportDescriptionCount() == 1);
+    assert(this->applicationDelegate->GetApplicationViewportDescriptionCount() == 1);
 
     //Prepare callbacks-------------------------------------------------------
     auto androidApp = reinterpret_cast<android_app*>(this->applicationHandle);
@@ -611,9 +608,7 @@ bool Application::MainLoop(Error& error)
                 source->process(androidApp, source);
 
             if (this->appViewportsController[0]->GetInputContext() != nullptr)
-            {
                 this->appViewportsController[0]->GetInputContext()->ProcessQueue(ident);
-            }
 
             //Exit main loop if app is no longer running (APP_CMD_DESTROY was received)
             if (!nv_app_status_running(androidApp))
