@@ -372,7 +372,7 @@ void Application::Tick(Error& error)
         GetDelegate()->OnTickApplicationViewports(this->appViewportsController, error);
         if (error)
         {
-            FINJIN_SET_ERROR(error, "Application delegate failed to during application viewport tick notification.");
+            FINJIN_SET_ERROR(error, "Application delegate failed during application viewport tick notification.");
             return;
         }
         for (auto& appViewport : this->appViewportsController)
