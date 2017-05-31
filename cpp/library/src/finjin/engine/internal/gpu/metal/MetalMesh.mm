@@ -80,7 +80,6 @@ GpuInputFormatStruct* MetalMesh::Submesh::GetInputFormat()
 //MetalMesh
 MetalMesh::MetalMesh(Allocator* allocator)
 {
-    this->finjinMesh = nullptr;
 }
 
 void MetalMesh::Destroy()

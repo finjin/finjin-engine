@@ -67,8 +67,6 @@ namespace Finjin { namespace Engine {
         void UpdateResidentOnGpuStatus(VulkanDeviceFunctions& vk, VkAllocationCallbacks* allocationCallbacks);
 
     public:
-        FinjinMesh* finjinMesh;
-
         VulkanGpuBuffer sharedIndexBuffer;
         DynamicVector<VulkanGpuBuffer> sharedVertexBuffers;
 

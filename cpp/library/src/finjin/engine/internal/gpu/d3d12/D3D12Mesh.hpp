@@ -68,8 +68,6 @@ namespace Finjin { namespace Engine {
         void UpdateResidentOnGpuStatus();
 
     public:
-        FinjinMesh* finjinMesh;
-
         D3D12GpuBuffer sharedIndexBuffer;
         DynamicVector<D3D12GpuBuffer> sharedVertexBuffers;
 

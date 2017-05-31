@@ -97,6 +97,19 @@ namespace Finjin { namespace Engine {
                             else if (key == "semantic")
                                 bindingValues.semantic = value;
 
+                            else if (key == "trigger")
+                            {
+                                Split(value, ' ', [&bindingValues](Utf8StringView& triggerValue)
+                                {
+                                    if (triggerValue == "pressed")
+                                        bindingValues.pressed.assign("true");
+                                    else if (triggerValue == "holding")
+                                        bindingValues.holding.assign("true");
+                                    else if (triggerValue == "released")
+                                        bindingValues.released.assign("true");
+                                    return ValueOrError<bool>();
+                                });
+                            }
                             else if (key == "pressed")
                                 bindingValues.pressed = value;
                             else if (key == "holding")
@@ -796,12 +809,18 @@ namespace Finjin { namespace Engine {
 
         static void WriteTriggerCriteria(ConfigDocumentWriter& writer, InputTriggerCriteria triggerCriteria)
         {
-            if (AnySet(triggerCriteria.flags & InputTriggerFlag::PRESSED))
-                writer.WriteKeyAndValue("pressed", "true");
-            if (AnySet(triggerCriteria.flags & InputTriggerFlag::HOLDING))
-                writer.WriteKeyAndValue("holding", "true");
-            if (AnySet(triggerCriteria.flags & InputTriggerFlag::RELEASED))
-                writer.WriteKeyAndValue("released", "true");
+            if (AnySet(triggerCriteria.flags & (InputTriggerFlag::PRESSED | InputTriggerFlag::HOLDING | InputTriggerFlag::RELEASED)))
+            {
+                Utf8String value;
+                if (AnySet(triggerCriteria.flags & InputTriggerFlag::PRESSED))
+                    value += "pressed ";
+                if (AnySet(triggerCriteria.flags & InputTriggerFlag::HOLDING))
+                    value += "holding ";
+                if (AnySet(triggerCriteria.flags & InputTriggerFlag::RELEASED))
+                    value += "released ";
+                value.pop_back(); //Remove last whitespace character
+                writer.WriteKeyAndValue("trigger", value);
+            }
             if (AnySet(triggerCriteria.flags & InputTriggerFlag::POV_WEAK))
                 writer.WriteKeyAndValue("pov-weak", "true");
             if (AnySet(triggerCriteria.flags & InputTriggerFlag::POV_STRONG))

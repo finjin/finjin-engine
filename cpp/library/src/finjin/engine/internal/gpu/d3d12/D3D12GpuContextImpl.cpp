@@ -1842,8 +1842,7 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
     this->assetResources.waitingToBeResidentMeshesHead = &d3d12Mesh;
 
     mesh->gpuMesh = &d3d12Mesh;
-    d3d12Mesh.finjinMesh = mesh;
-
+    
     return &d3d12Mesh;
 }
 

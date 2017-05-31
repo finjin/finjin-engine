@@ -1304,8 +1304,7 @@ void* MetalGpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
     }
 
     mesh->gpuMesh = &metalMesh;
-    metalMesh.finjinMesh = mesh;
-
+    
     return &metalMesh;
 }
 

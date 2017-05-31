@@ -16,7 +16,6 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/Error.hpp"
-#include "finjin/engine/FinjinSceneAssets.hpp"
 #include "MetalBufferView.hpp"
 #include "MetalGpuBuffer.hpp"
 #include "MetalUtilities.hpp"
@@ -63,8 +62,6 @@ namespace Finjin { namespace Engine {
         MetalIndexBufferView GetSharedIndexBufferView() const;
 
     public:
-        FinjinMesh* finjinMesh;
-
         MetalGpuBuffer sharedIndexBuffer;
         DynamicVector<MetalGpuBuffer> sharedVertexBuffers;
 

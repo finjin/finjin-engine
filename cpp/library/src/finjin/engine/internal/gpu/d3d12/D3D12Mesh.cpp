@@ -77,7 +77,6 @@ GpuInputFormatStruct* D3D12Mesh::Submesh::GetInputFormat()
 //D3D12Mesh
 D3D12Mesh::D3D12Mesh(Allocator* allocator)
 {
-    this->finjinMesh = nullptr;
     this->isResidentCountdown = 0;
     this->waitingToBeResidentNext = nullptr;
 }

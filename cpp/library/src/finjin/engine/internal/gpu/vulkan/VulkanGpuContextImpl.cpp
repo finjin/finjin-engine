@@ -2204,8 +2204,7 @@ void* VulkanGpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& er
     this->assetResources.waitingToBeResidentMeshesHead = &vulkanMesh;
 
     mesh->gpuMesh = &vulkanMesh;
-    vulkanMesh.finjinMesh = mesh;
-
+    
     return &vulkanMesh;
 }
 
