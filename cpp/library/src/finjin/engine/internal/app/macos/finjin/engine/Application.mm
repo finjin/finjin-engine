@@ -76,7 +76,7 @@ void Application::CreateSystems(Error& error)
         FINJIN_SET_ERROR(error, "Failed to initialize sound system.");
         return;
     }
-
+    
     //GPU------------------
     this->gpuSystem.Create(this->gpuSystemSettings, error);
     if (error)

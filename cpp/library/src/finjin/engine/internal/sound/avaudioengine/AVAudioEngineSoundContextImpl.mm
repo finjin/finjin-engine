@@ -635,8 +635,8 @@ void AVAudioEngineSoundContextImpl::Initialize(const AVAudioEngineSoundContext::
     }
 
     //Sign up for notifications from the engine if there's a hardware config change
-    nsimpl->configChangeNotificationID = [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioEngineConfigurationChangeNotification object:nullptr queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-
+    nsimpl->configChangeNotificationID = [[NSNotificationCenter defaultCenter] addObserverForName:AVAudioEngineConfigurationChangeNotification object:nullptr queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note)
+    {
         nsimpl->_isConfigChangePending = true;
 
         if (!nsimpl->_isSessionInterrupted)

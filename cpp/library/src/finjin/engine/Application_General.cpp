@@ -369,13 +369,24 @@ void Application::Tick(Error& error)
         }
 
         //Update each viewport
-        for (auto& appViewport : this->appViewportsController)
+        if (GetDelegate()->OnTickApplicationViewports(this->appViewportsController, error))
         {
-            appViewport->OnTick(jobSystem, error);
             if (error)
             {
-                FINJIN_SET_ERROR(error, "Failed to update application viewport.");
+                FINJIN_SET_ERROR(error, "Application delegate failed to update application viewports.");
                 return;
+            }
+        }
+        else
+        {
+            for (auto& appViewport : this->appViewportsController)
+            {
+                appViewport->OnTick(jobSystem, error);
+                if (error)
+                {
+                    FINJIN_SET_ERROR(error, "Failed to update application viewport.");
+                    return;
+                }
             }
         }
 
@@ -1072,7 +1083,7 @@ void Application::Initialize(Error& error)
             return;
         }
 
-        this->applicationDelegate->OnInitializedApplicationViewportsController(&this->appViewportsController);
+        this->applicationDelegate->OnInitializedApplicationViewportsController(this->appViewportsController);
 
         this->jobSystem.Start(true, error);
         if (error)

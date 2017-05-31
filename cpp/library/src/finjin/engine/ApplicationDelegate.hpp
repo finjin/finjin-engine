@@ -44,20 +44,26 @@ namespace Finjin { namespace Engine {
     using namespace Finjin::Common;
 
     /**
-     * General call flow from application:
+     * General order of operations during application initialization:
      * During initialization:
      *  1)ReadCommandLineSettings() - Reads/parses the specified command line arguments.
-     *  2)GetBootFileNameCount() - Gets the name of the boot file. If none is specified, none will be loaded.
-     *    2a)GetBootFileName() - Gets the name of the boot file. If none is specified, none will be loaded.
-     *  3)ReadBootFileItem() - Reads/parses one item that was in the boot file.
-     *  4)OnGpusEnumerated()
-     *  5)GetApplicationViewportDescriptionCount()
-     *    5a)GetApplicationViewportDescription() - Called GetApplicationViewportDescriptionCount() times
-     *    5b)CreateApplicationViewport() - Called GetApplicationViewportDescriptionCount() times
-     *  6)OnInitializedApplicationViewportsController()
+     *  2)GetMaxFileSystemEntries() - Called to get information about the file system in preparation for reading files.
+     *  3)GetBootFileNameCount() - Gets the name of the boot file. If none is specified, none will be loaded.
+     *    3a)GetBootFileName() - Gets the name of the boot file. If none is specified, none will be loaded.
+     *  4)ReadBootFileItem() - Reads/parses one item that was in the boot file.
+     *  5)GetSettingsFileNameCount() - Gets the number of application-specific settings files to read.
+     *    5a)GetSettingsFileName() - Gets the asset reference of the file to read.
+     *    5b)ReadSettings() - Called with the data that was read at the asset reference returned by GetSettingsFileName().
+     *  6)OnSoundDevicesEnumerated() - Depending on platform this may not be called
+     *  7)OnGpusEnumerated() - Depending on platform this may not be called
+     *  8)GetApplicationViewportDescriptionCount()
+     *    8a)GetApplicationViewportDescription() - Called to get an application viewport description.
+     *    8b)CreateApplicationViewport() - Called to create the application viewport.
+     *  9)OnInitializedApplicationViewportsController() - Called when all the application windows have been fully initialized.
+     *    On all platforms except Android this will be called after all the viewports have been created in previous step.
      *
      * During runtime:
-     *  -OnTickWindow() - Called GetApplicationViewportDescriptionCount() times.
+     *  -OnTickApplicationViewports() - Called to call Tick() on all the application windows. If overridden, this should return true.
      */
     class ApplicationDelegate : public AllocatedClass
     {
@@ -77,7 +83,7 @@ namespace Finjin { namespace Engine {
         virtual bool ReadBootFileSection(ConfigDocumentReader& reader, const Utf8StringView& section, Error& error);
         virtual bool ReadBootFileItem(const Utf8StringView& section, const Utf8StringView& key, const Utf8StringView& value, Error& error);
 
-        virtual void OnInitializedMemory(Allocator* allocator, MemorySettings& memoryConfigurationSettings) {}
+        //virtual void OnInitializedMemory(Allocator* allocator, MemorySettings& memoryConfigurationSettings) {}
 
         virtual size_t GetSettingsFileNameCount() const;
         virtual const AssetReference& GetSettingsFileName(size_t index, bool& required) const;
@@ -100,7 +106,9 @@ namespace Finjin { namespace Engine {
         virtual ApplicationViewport* CreateApplicationViewport(Allocator* allocator, size_t index);
         virtual ApplicationViewportDelegate* CreateApplicationViewportDelegate(Allocator* allocator, size_t index);
 
-        virtual void OnInitializedApplicationViewportsController(ApplicationViewportsController* appViewportsController) {}
+        virtual void OnInitializedApplicationViewportsController(ApplicationViewportsController& appViewportsController) {}
+        
+        virtual bool OnTickApplicationViewports(ApplicationViewportsController& appViewportsController, Error& error);
     };
 
 } }
