@@ -167,7 +167,7 @@ void VRGameControllerInputBindings::ProcessInputAction
         case LOCATOR:
         {
             outputEvents.Add(VRGameControllerEvents::LOCATOR);
-            outputEvents.locator = outputEvents.locator;            
+            outputEvents.locator = outputEvents.locator;
             break;
         }
     }

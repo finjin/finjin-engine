@@ -53,7 +53,7 @@ GpuContextCommonSettings::GpuContextCommonSettings(Allocator* initialAllocator) 
     this->presentSyncInterval = 1;
     this->maxGpuCommandListsPerStage = 10;
     this->maxDepthValue = 1.0f;
-    this->renderingScale = 1;    
+    this->renderingScale = 1;
     this->swapChainPresentMode = GpuSwapChainPresentMode::ADAPTIVE_VSYNC;
 }
 

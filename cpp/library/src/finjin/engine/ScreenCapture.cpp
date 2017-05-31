@@ -164,10 +164,10 @@ ScreenCapture::WriteResult ScreenCapture::WriteToFile(Path& filePath, const Scre
 
         pngWriter.SetChannelCount(GetChannelCount());
         pngWriter.SetBytesPerChannel(GetBytesPerChannel());
-        
+
         auto outputBufferSize = this->width * this->height * GetChannelCount() * 2; //Allocate enough for PNG header and temp data
         ByteBuffer* pngOutputBuffer = nullptr;
-        ByteBuffer tempOutputBuffer;        
+        ByteBuffer tempOutputBuffer;
         if (settings.tempBuffer != nullptr)
         {
             if (settings.tempBuffer->resize(outputBufferSize) == outputBufferSize)
@@ -176,13 +176,13 @@ ScreenCapture::WriteResult ScreenCapture::WriteToFile(Path& filePath, const Scre
         else
         {
             if (tempOutputBuffer.Create(outputBufferSize, settings.tempBufferAllocator))
-                pngOutputBuffer = &tempOutputBuffer;                
+                pngOutputBuffer = &tempOutputBuffer;
         }
 
         if (pngOutputBuffer != nullptr)
         {
             auto writeResult = pngWriter.Write(this->image, this->width, this->height, this->rowStride, *pngOutputBuffer);
-            if (writeResult == PNGWriter::WriteResult::SUCCESS)                
+            if (writeResult == PNGWriter::WriteResult::SUCCESS)
             {
                 if (!filePath.append("png").HasError())
                 {

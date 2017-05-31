@@ -46,13 +46,13 @@ namespace Finjin { namespace Engine {
         void ValidateTextureForCreation(const T& name, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (this->texturesByNameHash.full())
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create texture '%1%'. Texture lookup is full.", name));
                 return;
             }
-            
+
             Utf8StringHash hash;
             if (this->texturesByNameHash.contains(hash(name)))
             {
@@ -60,7 +60,7 @@ namespace Finjin { namespace Engine {
                 return;
             }
         }
-        
+
         template <typename T>
         MetalTexture* GetTextureByName(const T& name)
         {
@@ -75,13 +75,13 @@ namespace Finjin { namespace Engine {
         void ValidateMeshForCreation(const T& name, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (this->meshesByNameHash.full())
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create mesh '%1%'. Mesh lookup is full.", name));
                 return;
             }
-            
+
             Utf8StringHash hash;
             if (this->meshesByNameHash.contains(hash(name)))
             {
@@ -89,7 +89,7 @@ namespace Finjin { namespace Engine {
                 return;
             }
         }
-        
+
         template <typename T>
         MetalMesh* GetMeshByName(const T& name)
         {
@@ -104,13 +104,13 @@ namespace Finjin { namespace Engine {
         void ValidateMaterialForCreation(const T& name, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             if (this->materialsByNameHash.full())
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create material '%1%'. Material lookup is full.", name));
                 return;
             }
-            
+
             Utf8StringHash hash;
             if (this->materialsByNameHash.contains(hash(name)))
             {
@@ -118,7 +118,7 @@ namespace Finjin { namespace Engine {
                 return;
             }
         }
-        
+
         template <typename T>
         MetalMaterial* GetMaterialByName(const T& name)
         {
@@ -133,35 +133,35 @@ namespace Finjin { namespace Engine {
         bool ValidateShaderForCreation(MetalShaderType shaderType, const T& name, Error& error)
         {
             FINJIN_ERROR_METHOD_START(error);
-            
+
             auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
-            
+
             if (shadersByNameHash.full())
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Unable to create shader '%1%'. Shader lookup is full.", name));
                 return false;
             }
-            
+
             //Encountering a duplicate shader isn't an error condition
             Utf8StringHash hash;
             if (shadersByNameHash.contains(hash(name)))
                 return false;
-            
+
             return true;
         }
-        
+
         template <typename T>
         MetalShader* GetShaderByName(MetalShaderType shaderType, const T& name)
         {
             auto& shadersByNameHash = this->shadersByShaderTypeAndNameHash[shaderType];
-            
+
             Utf8StringHash hash;
             auto foundAt = shadersByNameHash.find(hash(name));
             if (foundAt != shadersByNameHash.end())
                 return &foundAt->second;
             return nullptr;
         }
-        
+
         template <typename T>
         MetalInputFormat* GetInputFormatByTypeName(const T& name)
         {

@@ -78,11 +78,11 @@ static void GetPoseOrientationMatrix(T& m, const vr::TrackedDevicePose_t& pose)
     m(0, 0) = pose.mDeviceToAbsoluteTracking.m[0][0];
     m(0, 1) = pose.mDeviceToAbsoluteTracking.m[0][1];
     m(0, 2) = pose.mDeviceToAbsoluteTracking.m[0][2];
-    
+
     m(1, 0) = pose.mDeviceToAbsoluteTracking.m[1][0];
     m(1, 1) = pose.mDeviceToAbsoluteTracking.m[1][1];
     m(1, 2) = pose.mDeviceToAbsoluteTracking.m[1][2];
-    
+
     m(2, 0) = pose.mDeviceToAbsoluteTracking.m[2][0];
     m(2, 1) = pose.mDeviceToAbsoluteTracking.m[2][1];
     m(2, 2) = pose.mDeviceToAbsoluteTracking.m[2][2];
@@ -108,12 +108,12 @@ static void GetInversePoseMatrix4(MathMatrix4& m, const vr::TrackedDevicePose_t&
 static void GetLocatorFromTrackingPose(InputLocator& locator, const vr::TrackedDevicePose_t& pose)
 {
     GetPoseOrientationMatrix(locator.orientationMatrix, pose);
-    
+
     MathVector3 position(pose.mDeviceToAbsoluteTracking.m[0][3], pose.mDeviceToAbsoluteTracking.m[1][3], pose.mDeviceToAbsoluteTracking.m[2][3]);
     locator.position.SetMeters(position);
 
     MathVector3 velocity(pose.vVelocity.v[0], pose.vVelocity.v[1], pose.vVelocity.v[2]);
-    locator.velocity.SetMeters(velocity);    
+    locator.velocity.SetMeters(velocity);
 }
 
 static VRContextInitializationStatus RecoverableVRErrorToInitializationStatus(vr::HmdError vrError)
@@ -655,7 +655,7 @@ void OpenVRContext::Create(const Settings& settings, Error& error)
         return;
     }
 
-    //Initialize    
+    //Initialize
     auto vrError = vr::VRInitError_None;
     impl->ivrSystem = vr::VR_Init(&vrError, vr::VRApplication_Scene);
     if (IsRecoverableVRError(vrError))
@@ -928,16 +928,16 @@ void OpenVRContext::GetHeadsetViewRenderMatrix(MathMatrix4& viewMatrix)
 void OpenVRContext::SubmitEyeTextures(void* gpuContextImpl, void* gpuFrameBuffer)
 {
     vr::Texture_t leftEyeTexture, rightEyeTexture;
-    
+
     vr::VRTextureBounds_t leftBounds, rightBounds;
-        
+
 #if FINJIN_TARGET_GPU_SYSTEM == FINJIN_TARGET_GPU_SYSTEM_D3D12
     auto d3d12GpuContextImpl = static_cast<D3D12GpuContextImpl*>(gpuContextImpl);
     auto d3d12FrameBuffer = static_cast<D3D12FrameBuffer*>(gpuFrameBuffer);
 
-    vr::D3D12TextureData_t d3d12LeftEyeTexture;    
+    vr::D3D12TextureData_t d3d12LeftEyeTexture;
     d3d12LeftEyeTexture.m_pCommandQueue = d3d12GpuContextImpl->graphicsCommandQueue.Get();
-    d3d12LeftEyeTexture.m_pResource = d3d12FrameBuffer->renderTarget.colorOutputs[0].resource.Get();    
+    d3d12LeftEyeTexture.m_pResource = d3d12FrameBuffer->renderTarget.colorOutputs[0].resource.Get();
     d3d12LeftEyeTexture.m_nNodeMask = d3d12FrameBuffer->renderTarget.colorOutputs[0].nodeMask;
 
     auto d3d12RightEyeTexture = d3d12LeftEyeTexture;
@@ -946,11 +946,11 @@ void OpenVRContext::SubmitEyeTextures(void* gpuContextImpl, void* gpuFrameBuffer
         d3d12RightEyeTexture.m_pResource = d3d12FrameBuffer->renderTarget.colorOutputs[1].resource.Get();
         d3d12RightEyeTexture.m_nNodeMask = d3d12FrameBuffer->renderTarget.colorOutputs[1].nodeMask;
     }
-    
+
     leftEyeTexture.eType = vr::TextureType_DirectX12;
     leftEyeTexture.handle = &d3d12LeftEyeTexture;
     leftEyeTexture.eColorSpace = vr::ColorSpace_Auto;
-    
+
     rightEyeTexture = leftEyeTexture;
     rightEyeTexture.handle = &d3d12RightEyeTexture;
 
@@ -986,7 +986,7 @@ void OpenVRContext::SubmitEyeTextures(void* gpuContextImpl, void* gpuFrameBuffer
 
     GetBounds(leftBounds, rightBounds, vulkanFrameBuffer->renderTarget.colorOutputs.size());
 #endif
-    
+
     auto submitFlags = vr::Submit_Default; //Submit_LensDistortionAlreadyApplied; //For the future
     auto vrError = vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture, &leftBounds, submitFlags);
     assert(vrError == vr::VRCompositorError_None);

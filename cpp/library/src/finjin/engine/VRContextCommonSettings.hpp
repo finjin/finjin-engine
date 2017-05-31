@@ -135,7 +135,7 @@ namespace Finjin { namespace Engine {
 
             this->indexData = nullptr;
             this->indexType = IndexType::UINT16;
-            
+
             this->primitiveType = PrimitiveType::TRIANGLE_LIST;
             this->primitiveCount = 0;
 
@@ -145,16 +145,16 @@ namespace Finjin { namespace Engine {
 
             this->textureID = 0;
         }
-        
+
         const void* vertexData; //Most likely position/normal/uv
         uint32_t vertexCount;
 
         GpuInputFormatStruct::Element* vertexElements;
         size_t vertexElementCount;
-        
+
         const void* indexData; //Contains 3 * primitiveCount elements for primitiveType = PrimitiveType::TRIANGLE_LIST
         IndexType indexType;
-        
+
         PrimitiveType primitiveType;
         uint32_t primitiveCount;
 

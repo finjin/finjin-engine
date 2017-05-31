@@ -73,13 +73,13 @@ namespace Finjin { namespace Engine {
     struct ScreenCapture
     {
         ScreenCapture();
-        
+
         bool IsBGRPixelFormat() const;
         bool IsSRGBPixelFormat() const;
-        
+
         bool IsIntPixelFormat() const;
         bool IsFloatPixelFormat() const;
-        
+
         uint32_t GetChannelCount() const;
         uint32_t GetBytesPerChannel() const;
         uint32_t GetBytesPerPixel() const;
@@ -98,7 +98,7 @@ namespace Finjin { namespace Engine {
         WriteResult WriteToRawFile(Path& filePath) const;
         WriteResult WriteToFile(Path& filePath, const ScreenCaptureWriteSettings& settings) const;
         Utf8String GetWriteResultString(WriteResult result) const;
-        
+
         void* image;
         ScreenCapturePixelFormat pixelFormat;
         uint32_t rowStride;

@@ -48,15 +48,15 @@ namespace Finjin { namespace Engine {
 
         VRContextInitializationStatus GetInitializationStatus() const;
         VRContextInitializationStatus TryInitialization(Error& error);
-        
+
         std::array<uint32_t, 2> GetPreferredRenderTargetDimensions();
 
         void UpdateInputDevices(SimpleTimeDelta elapsedTime);
-        
+
         void GetHeadsetViewRenderMatrix(MathMatrix4& viewMatrix);
         void SubmitEyeTextures(void* gpuContextImpl, void* gpuFrameBuffer);
         void OnPresentFinish();
-        
+
         void Execute(VREvents& events, VRCommands& commands, Error& error);
 
         size_t GetDeviceCount() const;

@@ -78,7 +78,7 @@ GpuInputFormatStruct* VulkanMesh::Submesh::GetInputFormat()
 
 //VulkanMesh
 VulkanMesh::VulkanMesh(Allocator* allocator)
-{    
+{
     this->isResidentCountdown = 0;
     this->waitingToBeResidentNext = nullptr;
 }

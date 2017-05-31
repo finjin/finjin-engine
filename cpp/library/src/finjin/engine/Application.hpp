@@ -272,7 +272,7 @@ namespace Finjin { namespace Engine {
         SoundContext::Settings soundContextSettings;
         SoundSystem::Settings soundSystemSettings;
         SoundSystem soundSystem;
-        
+
     #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
         VRContext::Settings vrContextSettings;
         VRSystem::Settings vrSystemSettings;

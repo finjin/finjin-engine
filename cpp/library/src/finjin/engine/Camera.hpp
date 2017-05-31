@@ -31,17 +31,17 @@ namespace Finjin { namespace Engine {
         Camera();
         ~Camera();
 
+        CameraProjectionType GetProjectionType() const;
+
         const MathVector3& GetPosition() const;
         void SetPosition(const MathVector3& value);
-        void SetPosition(float x, float y, float z);
 
         const MathVector3& GetRight() const;
         const MathVector3& GetUp() const;
-        const MathVector3& GetLook() const;
+        const MathVector3& GetForward() const;
 
         void Set(const CameraState& cameraState);
 
-        void SetOrientation(const float* right, const float* up, const float* forward);
         void SetOrientationFromColumns(const MathMatrix3& orientationMatrix);
 
         float GetNearZ() const;
@@ -63,7 +63,7 @@ namespace Finjin { namespace Engine {
         float GetFarWindowWidth() const;
         float GetFarWindowHeight() const;
 
-        void SetLens(Angle fovY, float aspect, float nearZ, float farZ);
+        void SetLens(Angle fovY, float aspect, float nearZ, float farZ, float orthoWidth, float orthoHeight, CameraProjectionType projectionType);
 
         void LookAt(const MathVector3& pos, const MathVector3& target, const MathVector3& up);
 
@@ -81,11 +81,13 @@ namespace Finjin { namespace Engine {
         void Update();
 
     private:
+        CameraProjectionType projectionType;
+
         //Coordinate system relative to world space
-        MathVector3 position;
         MathVector3 right;
         MathVector3 up;
-        MathVector3 look;
+        MathVector3 forward;
+        MathVector3 position;
 
         //Cached frustum properties
         float nearZ;
@@ -94,6 +96,7 @@ namespace Finjin { namespace Engine {
         float fovY;
         float nearWindowHeight;
         float farWindowHeight;
+        float orthoSize[2];
 
         bool isViewDirty;
 

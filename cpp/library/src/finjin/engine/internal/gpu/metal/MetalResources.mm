@@ -60,40 +60,40 @@ MetalFullScreenQuadMesh::MetalFullScreenQuadMesh()
 void MetalFullScreenQuadMesh::Create(id<MTLDevice> device, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     this->vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
     if (this->vertexDescriptor == nullptr)
     {
         FINJIN_SET_ERROR(error, "Failed to allocate vertex descriptor.");
         return;
     }
-    
+
     auto layout = this->vertexDescriptor.layouts[0];
     layout.stride = 0;
     layout.stepFunction = MTLVertexStepFunctionPerVertex;
     layout.stepRate = 1;
-    
+
     {
         auto metalAttribute = this->vertexDescriptor.attributes[0];
         metalAttribute.offset = layout.stride;
         metalAttribute.bufferIndex = DEFAULT_BUFFER_INDEX;
         metalAttribute.format = MTLVertexFormatFloat3;
-        
+
         layout.stride += sizeof(float) * 3;
     }
-    
+
     {
         auto metalAttribute = this->vertexDescriptor.attributes[1];
         metalAttribute.offset = layout.stride;
         metalAttribute.bufferIndex = DEFAULT_BUFFER_INDEX;
         metalAttribute.format = MTLVertexFormatFloat2;
-        
+
         layout.stride += sizeof(float) * 2;
     }
-    
+
     this->vertexCount = 4;
     this->primitiveType = MTLPrimitiveTypeTriangleStrip;
-    
+
     const float vertices[] =
     {
         -1,  1, 0,  0, 0, //Upper left
@@ -101,9 +101,9 @@ void MetalFullScreenQuadMesh::Create(id<MTLDevice> device, Error& error)
         -1, -1, 0,  0, 1, //Lower left
          1, -1, 0,  1, 1  //Lowwer right
     };
-    
+
     auto vertexBufferByteSize = layout.stride * this->vertexCount;
-    
+
     this->vertexBuffer = [device newBufferWithBytes:vertices length:vertexBufferByteSize options:MTLResourceCPUCacheModeDefaultCache];
 }
 
@@ -126,7 +126,7 @@ void MetalCommonResources::Destroy()
     this->fullScreenQuadMesh.Destroy();
     this->fullScreenQuadShaders.Destroy();
     this->commonShaderLibrary.Destroy();
-    
+
     this->defaultSamplerDescriptor = nullptr;
     this->defaultSampler = nullptr;
 }

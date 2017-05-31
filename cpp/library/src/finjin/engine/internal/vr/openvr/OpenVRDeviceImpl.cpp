@@ -52,18 +52,18 @@ OpenVRDeviceImpl::OpenVRDeviceImpl()
     this->isNewConnection = false;
 
     size_t gpuPaddedOffset = 0;
-        
+
     assert(this->renderModelVertexElements.max_size() >= 3 && "Elements collection must be able to store 3 or more elements.");
 
     this->renderModelVertexElements.push_back(GpuInputFormatStruct::Element(GpuInputFormatStruct::ElementID::POSITION, NumericStructElementType::FLOAT3, gpuPaddedOffset));
     gpuPaddedOffset += this->renderModelVertexElements.back().sizeInBytes;
-    
+
     this->renderModelVertexElements.push_back(GpuInputFormatStruct::Element(GpuInputFormatStruct::ElementID::NORMAL, NumericStructElementType::FLOAT2, gpuPaddedOffset));
     gpuPaddedOffset += this->renderModelVertexElements.back().sizeInBytes;
-    
+
     this->renderModelVertexElements.push_back(GpuInputFormatStruct::Element(GpuInputFormatStruct::ElementID::TEX_COORD_0, NumericStructElementType::FLOAT2, gpuPaddedOffset));
     gpuPaddedOffset += this->renderModelVertexElements.back().sizeInBytes;
-    
+
     Reset(true);
 }
 

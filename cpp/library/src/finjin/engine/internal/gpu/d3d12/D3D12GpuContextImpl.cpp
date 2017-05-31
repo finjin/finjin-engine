@@ -1030,7 +1030,7 @@ void D3D12GpuContextImpl::PresentFrameStage(D3D12FrameStage& frameStage, const R
             vrContext->OnPresentFinish();
         }
     #endif
-        
+
         frameBuffer.ResetCommandLists();
     }
     else
@@ -1842,7 +1842,7 @@ void* D3D12GpuContextImpl::CreateMeshFromMainThread(FinjinMesh* mesh, Error& err
     this->assetResources.waitingToBeResidentMeshesHead = &d3d12Mesh;
 
     mesh->gpuMesh = &d3d12Mesh;
-    
+
     return &d3d12Mesh;
 }
 

@@ -456,13 +456,13 @@ void ApplicationViewport::ApplyFullScreenToggle(bool needsExclusiveToggle, Error
 void ApplicationViewport::OnTick(JobSystem& jobSystem, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     if (!impl->osWindow->HasWindowHandle())
     {
         //Window doesn't (yet) have a window handle. Exit early
         //This is normal behavior on Android
     }
-    
+
     impl->osWindow->Tick();
 
     if (NeedsToModifyRenderTarget())

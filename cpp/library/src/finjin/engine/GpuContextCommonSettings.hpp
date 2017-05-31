@@ -537,7 +537,7 @@ namespace Finjin { namespace Engine {
         size_t presentSyncInterval; //Will be set by the GpuContext during initialization
         size_t maxGpuCommandListsPerStage; //Maximum number of D3D/Vulkan/Metal command lists. The default is sufficient
         float maxDepthValue; //The default is sufficient
-        double renderingScale; //The default is sufficient                
+        double renderingScale; //The default is sufficient
         GpuSwapChainPresentMode swapChainPresentMode; //The default is sufficient
         RequestedValue<int> multisampleCount; //Usually 1, 2, 4, 8
         RequestedValue<int> multisampleQuality; //Usually 0

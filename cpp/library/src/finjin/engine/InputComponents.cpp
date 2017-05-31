@@ -1191,7 +1191,7 @@ void InputLocator::Reset(bool isConstructing)
 }
 
 void InputLocator::GetOrientationMatrix33(MathMatrix3& result) const
-{    
+{
     result = this->orientationMatrix;
 }
 

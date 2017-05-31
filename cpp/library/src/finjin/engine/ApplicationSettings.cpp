@@ -148,7 +148,7 @@ void ApplicationSettings::ReadCommandLineSettings(CommandLineArgsProcessor& args
         else if (arg == "-start-in-vr" && argIndex < argsProcessor.GetCount() - 1)
         {
             this->startInVR = Convert::ToBool(argsProcessor[argIndex + 1]);
-            
+
             argIndex++;
         }
         else if (arg == "-mirror-vr" && argIndex < argsProcessor.GetCount() - 1)

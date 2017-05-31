@@ -21,10 +21,10 @@ using namespace Finjin::Engine;
 //Implementation----------------------------------------------------------------
 Camera::Camera()
 {
-    this->position = MathVector3(0.0f, 0.0f, 0.0f);
     this->right = MathVector3(1.0f, 0.0f, 0.0f);
     this->up = MathVector3(0.0f, 1.0f, 0.0f);
-    this->look = MathVector3(0.0f, 0.0f, 1.0f);
+    this->forward = MathVector3(0.0f, 0.0f, 1.0f);
+    this->position = MathVector3(0.0f, 0.0f, 0.0f);
 
     this->nearZ = 0.0f;
     this->farZ = 0.0f;
@@ -38,13 +38,18 @@ Camera::Camera()
     this->viewMatrix.setIdentity();
     this->projectionMatrix.setIdentity();
 
-    SetLens(Radians(FINJIN_PI * 0.5f), 1.0f, 1.0f, 500.0f);
+    SetLens(Radians(FINJIN_PI * 0.5f), 1.0f, 1.0f, 500.0f, 100.0f, 100.0f, CameraProjectionType::PERSPECTIVE);
 
-    SetPosition(0, 1, 10);
+    SetPosition(MathVector3(0.0f, 1.0f, 10.0f));
 }
 
 Camera::~Camera()
 {
+}
+
+CameraProjectionType Camera::GetProjectionType() const
+{
+    return this->projectionType;
 }
 
 const MathVector3& Camera::GetPosition() const
@@ -59,41 +64,26 @@ void Camera::SetPosition(const MathVector3& value)
     this->isViewDirty = true;
 }
 
-void Camera::SetPosition(float x, float y, float z)
-{
-    this->position = MathVector3(x, y, z);
-
-    this->isViewDirty = true;
-}
-
 void Camera::Set(const CameraState& cameraState)
 {
-    MathVector4 position = cameraState.worldMatrix * MathVector4(0, 0, 0, 1);
-    MathVector4 right = cameraState.worldMatrix * MathVector4(1, 0, 0, 0);
-    MathVector4 up = cameraState.worldMatrix * MathVector4(0, 0, 1, 0);
-    MathVector4 forward = cameraState.worldMatrix * MathVector4(0, 1, 0, 0);
+    MathVector4 right = cameraState.worldMatrix.col(0);
+    MathVector4 forward = cameraState.worldMatrix.col(1);
+    MathVector4 up = cameraState.worldMatrix.col(2);
+    MathVector4 position = cameraState.worldMatrix.col(3);
 
+    this->right = MathVector3(right(0), right(1), right(2));
+    this->up = MathVector3(up(0), up(1), up(2));
+    this->forward = MathVector3(forward(0), forward(1), forward(2));
     this->position = MathVector3(position(0), position(1), position(2));
 
-    SetOrientation(right.data(), up.data(), forward.data());
-
-    SetLens(cameraState.fovY, this->aspect, cameraState.range[0], cameraState.range[1]);
-}
-
-void Camera::SetOrientation(const float* right, const float* up, const float* forward)
-{
-    this->right = MathVector3(right[0], right[1], right[2]);
-    this->up = MathVector3(up[0], up[1], up[2]);
-    this->look = MathVector3(forward[0], forward[1], forward[2]);
-
-    this->isViewDirty = true;
+    SetLens(cameraState.fovY, this->aspect, cameraState.range[0], cameraState.range[1], cameraState.orthoSize[0], cameraState.orthoSize[1], cameraState.projectionType);
 }
 
 void Camera::SetOrientationFromColumns(const MathMatrix3& orientationMatrix)
 {
     this->right = orientationMatrix.col(0);
     this->up = orientationMatrix.col(1);
-    this->look = orientationMatrix.col(2);
+    this->forward = orientationMatrix.col(2);
 
     this->isViewDirty = true;
 }
@@ -108,9 +98,9 @@ const MathVector3& Camera::GetUp() const
     return this->up;
 }
 
-const MathVector3& Camera::GetLook() const
+const MathVector3& Camera::GetForward() const
 {
-    return this->look;
+    return this->forward;
 }
 
 float Camera::GetNearZ() const
@@ -120,7 +110,7 @@ float Camera::GetNearZ() const
 
 void Camera::SetNearZ(float value)
 {
-    SetLens(Radians(this->fovY), this->aspect, value, this->farZ);
+    SetLens(Radians(this->fovY), this->aspect, value, this->farZ, this->orthoSize[0], this->orthoSize[1], this->projectionType);
 }
 
 float Camera::GetFarZ() const
@@ -130,7 +120,7 @@ float Camera::GetFarZ() const
 
 void Camera::SetFarZ(float value)
 {
-    SetLens(Radians(this->fovY), this->aspect, this->nearZ, value);
+    SetLens(Radians(this->fovY), this->aspect, this->nearZ, value, this->orthoSize[0], this->orthoSize[1], this->projectionType);
 }
 
 float Camera::GetAspect() const
@@ -140,7 +130,7 @@ float Camera::GetAspect() const
 
 void Camera::SetAspect(float value)
 {
-    SetLens(Radians(this->fovY), value, this->nearZ, this->farZ);
+    SetLens(Radians(this->fovY), value, this->nearZ, this->farZ, this->orthoSize[0], this->orthoSize[1], this->projectionType);
 }
 
 Angle Camera::GetFovX() const
@@ -155,7 +145,7 @@ Angle Camera::GetFovY() const
 
 void Camera::SetFovY(Angle angle)
 {
-    SetLens(angle, this->aspect, this->nearZ, this->farZ);
+    SetLens(angle, this->aspect, this->nearZ, this->farZ, this->orthoSize[0], this->orthoSize[1], this->projectionType);
 }
 
 float Camera::GetNearWindowWidth() const
@@ -178,44 +168,57 @@ float Camera::GetFarWindowHeight() const
     return this->farWindowHeight;
 }
 
-void Camera::SetLens(Angle fovY, float aspect, float zn, float zf)
+void Camera::SetLens(Angle fovY, float aspect, float zn, float zf, float orthoWidth, float orthoHeight, CameraProjectionType projectionType)
 {
+    this->projectionType = projectionType;
+
     this->fovY = fovY.ToRadiansValue();
     this->aspect = aspect;
     this->nearZ = zn;
     this->farZ = zf;
 
-    auto halfFovY = this->fovY / 2.0f;
+    this->orthoSize[0] = orthoWidth;
+    this->orthoSize[1] = orthoHeight;
 
-    this->nearWindowHeight = 2.0f * this->nearZ * tanf(halfFovY);
-    this->farWindowHeight = 2.0f * this->farZ * tanf(halfFovY);
+    if (this->projectionType == CameraProjectionType::PERSPECTIVE)
+    {
+        auto halfFovY = this->fovY / 2.0f;
 
-    float sinFov = sinf(halfFovY);
-    float cosFov = cosf(halfFovY);
+        this->nearWindowHeight = 2.0f * this->nearZ * tanf(halfFovY);
+        this->farWindowHeight = 2.0f * this->farZ * tanf(halfFovY);
 
-    float height = cosFov / sinFov;
-    float width = height / this->aspect;
-    float fRange = this->farZ / (this->nearZ - this->farZ);
+        float sinFov = sinf(halfFovY);
+        float cosFov = cosf(halfFovY);
 
-    this->projectionMatrix(0, 0) = width;
-    this->projectionMatrix(0, 1) = 0.0f;
-    this->projectionMatrix(0, 2) = 0.0f;
-    this->projectionMatrix(0, 3) = 0.0f;
+        float height = cosFov / sinFov;
+        float width = height / this->aspect;
 
-    this->projectionMatrix(1, 0) = 0.0f;
-    this->projectionMatrix(1, 1) = height;
-    this->projectionMatrix(1, 2) = 0.0f;
-    this->projectionMatrix(1, 3) = 0.0f;
+        float fRange = this->farZ / (this->nearZ - this->farZ);
 
-    this->projectionMatrix(2, 0) = 0.0f;
-    this->projectionMatrix(2, 1) = 0.0f;
-    this->projectionMatrix(2, 2) = fRange;
-    this->projectionMatrix(2, 3) = -1.0f;
+        this->projectionMatrix(0, 0) = width;
+        this->projectionMatrix(0, 1) = 0.0f;
+        this->projectionMatrix(0, 2) = 0.0f;
+        this->projectionMatrix(0, 3) = 0.0f;
 
-    this->projectionMatrix(3, 0) = 0.0f;
-    this->projectionMatrix(3, 1) = 0.0f;
-    this->projectionMatrix(3, 2) = fRange * this->nearZ;
-    this->projectionMatrix(3, 3) = 0.0f;
+        this->projectionMatrix(1, 0) = 0.0f;
+        this->projectionMatrix(1, 1) = height;
+        this->projectionMatrix(1, 2) = 0.0f;
+        this->projectionMatrix(1, 3) = 0.0f;
+
+        this->projectionMatrix(2, 0) = 0.0f;
+        this->projectionMatrix(2, 1) = 0.0f;
+        this->projectionMatrix(2, 2) = fRange;
+        this->projectionMatrix(2, 3) = -1.0f;
+
+        this->projectionMatrix(3, 0) = 0.0f;
+        this->projectionMatrix(3, 1) = 0.0f;
+        this->projectionMatrix(3, 2) = fRange * this->nearZ;
+        this->projectionMatrix(3, 3) = 0.0f;
+    }
+    else
+    {
+        assert(0 && "Not yet implemented.");
+    }
 }
 
 void Camera::LookAt(const MathVector3& pos, const MathVector3& target, const MathVector3& worldUp)
@@ -225,7 +228,7 @@ void Camera::LookAt(const MathVector3& pos, const MathVector3& target, const Mat
     auto U = L.cross(R);
 
     this->position = pos;
-    this->look = L;
+    this->forward = L;
     this->right = R;
     this->up = U;
 
@@ -259,7 +262,7 @@ void Camera::Pan(float dx, float dy)
 
 void Camera::Walk(float d)
 {
-    this->position += -d * this->look;
+    this->position += -d * this->forward;
 
     this->isViewDirty = true;
 }
@@ -271,7 +274,7 @@ void Camera::Pitch(Angle angle)
     auto m = R.toRotationMatrix();
 
     this->up = m * this->up;
-    this->look = m * this->look;
+    this->forward = m * this->forward;
 
     this->isViewDirty = true;
 }
@@ -284,7 +287,7 @@ void Camera::RotateY(Angle angle)
 
     this->right = m * this->right;
     this->up = m * this->up;
-    this->look = m * this->look;
+    this->forward = m * this->forward;
 
     this->isViewDirty = true;
 }
@@ -295,7 +298,7 @@ void Camera::Update()
     {
         auto R = this->right;
         auto U = this->up;
-        auto L = this->look;
+        auto L = this->forward;
         auto P = this->position;
 
         //Keep camera's axes orthogonal to each other and of unit length
@@ -312,7 +315,7 @@ void Camera::Update()
 
         this->right = R;
         this->up = U;
-        this->look = L;
+        this->forward = L;
 
         this->viewMatrix(0, 0) = this->right(0);
         this->viewMatrix(0, 1) = this->right(1);
@@ -324,9 +327,9 @@ void Camera::Update()
         this->viewMatrix(1, 2) = this->up(2);
         this->viewMatrix(1, 3) = y;
 
-        this->viewMatrix(2, 0) = this->look(0);
-        this->viewMatrix(2, 1) = this->look(1);
-        this->viewMatrix(2, 2) = this->look(2);
+        this->viewMatrix(2, 0) = this->forward(0);
+        this->viewMatrix(2, 1) = this->forward(1);
+        this->viewMatrix(2, 2) = this->forward(2);
         this->viewMatrix(2, 3) = z;
 
         this->viewMatrix(3, 0) = 0.0f;

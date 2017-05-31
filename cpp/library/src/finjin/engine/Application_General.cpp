@@ -495,7 +495,7 @@ void Application::Initialize(Error& error)
     this->standardPaths.ForEachUserPath([&](const StandardPath& standardPath, Error& error)
     {
         FINJIN_ERROR_METHOD_START(error);
-        
+
         standardPath.CreateDirectories();
 
         this->fileSystems[ApplicationFileSystem::READ_USER_DATA].AddDirectory(standardPath.path, error);
@@ -517,7 +517,7 @@ void Application::Initialize(Error& error)
     if (!this->standardPaths[WhichStandardPath::USER_APPLICATION_SETTINGS_DIRECTORY].path.empty())
     {
         auto& standardPath = this->standardPaths[WhichStandardPath::USER_APPLICATION_SETTINGS_DIRECTORY];
-        
+
         standardPath.CreateDirectories();
 
         this->fileSystems[ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA].AddDirectory(standardPath.path, error);
@@ -532,7 +532,7 @@ void Application::Initialize(Error& error)
     if (!this->standardPaths[WhichStandardPath::USER_APPLICATION_TEMPORARY_DIRECTORY].path.empty())
     {
         auto& standardPath = this->standardPaths[WhichStandardPath::USER_APPLICATION_TEMPORARY_DIRECTORY];
-        
+
         standardPath.CreateDirectories();
 
         //Add to read user/application cache file system
@@ -548,7 +548,7 @@ void Application::Initialize(Error& error)
     if (!this->standardPaths[WhichStandardPath::APPLICATION_SETTINGS_DIRECTORY].path.empty())
     {
         auto& standardPath = this->standardPaths[WhichStandardPath::APPLICATION_SETTINGS_DIRECTORY];
-        
+
         standardPath.CreateDirectories();
 
         //Add to asset file system
@@ -1277,7 +1277,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         appViewport->SetInputContext(std::move(inputContext));
     }
 
-    //VR        
+    //VR
     auto isVRInitialized = false;
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     if (this->applicationDelegate->GetApplicationSettings().IsVRRequired() && !this->vrSystem.IsAvailable())
@@ -1376,7 +1376,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         appViewport->SetVRContext(std::move(vrContext));
     }
 #endif
-    
+
     //Sound
     if (appViewport->IsMain())
     {
@@ -1399,15 +1399,15 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         this->gpuContextSettings.vrContext = appViewport->GetVRContext(); //Needs to be set for a possible mode change later
     #endif
         if (isVRInitialized && this->applicationDelegate->GetApplicationSettings().StartInVR())
-        {            
-        #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE            
-            auto preferredDimensions = appViewport->GetVRContext()->GetPreferredRenderTargetDimensions();            
+        {
+        #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
+            auto preferredDimensions = appViewport->GetVRContext()->GetPreferredRenderTargetDimensions();
             if (this->applicationDelegate->GetApplicationSettings().mirrorVR)
                 this->gpuContextSettings.frameDestination |= GpuFrameDestination::VR_CONTEXT;
             else
                 this->gpuContextSettings.frameDestination = GpuFrameDestination::VR_CONTEXT;
             this->gpuContextSettings.renderTargetSize.SetExplicit(preferredDimensions[0], preferredDimensions[1]);
-        #endif            
+        #endif
         }
         this->gpuContextSettings.frameBufferCount.requested = Limited(viewportDescription.requestedFrameBufferCount, (size_t)EngineConstants::MIN_FRAME_BUFFERS, (size_t)EngineConstants::MAX_FRAME_BUFFERS);
         std::unique_ptr<GpuContext> gpuContext(this->gpuSystem.CreateContext(this->gpuContextSettings, error));
@@ -1419,7 +1419,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
         }
         appViewport->SetGpuContext(std::move(gpuContext));
     }
-    
+
     appViewport->CreateAssetClassFileReaders(this->assetFileReader, this->assetFileSelector, error);
     if (error)
     {

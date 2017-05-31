@@ -790,7 +790,7 @@ FileOperationResult Win32InputContext::ReadInputBinding(InputDeviceClass deviceC
             }
 
             break;
-        }        
+        }
         case InputDeviceClass::HEADSET:
         {
             auto headset = impl->externalHeadsets[deviceIndex];
@@ -798,7 +798,7 @@ FileOperationResult Win32InputContext::ReadInputBinding(InputDeviceClass deviceC
             break;
         }
     }
-    
+
     impl->inputBindingsAssetReader.GetSelector().Set(AssetPathComponent::INPUT_DEVICE_DESCRIPTOR, GetDeviceProductDescriptor(deviceClass, deviceIndex));
 
     return impl->inputBindingsAssetReader.ReadAsset(fileBuffer, configAssetRef);

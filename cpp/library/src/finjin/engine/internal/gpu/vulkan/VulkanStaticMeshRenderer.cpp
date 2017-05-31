@@ -746,7 +746,7 @@ void VulkanStaticMeshRenderer::UpdatePassAndMaterialConstants(VulkanStaticMeshRe
         auto clientWidth = RoundToFloat(windowBounds.GetClientWidth());
         auto clientHeight = RoundToFloat(windowBounds.GetClientHeight());
 
-        this->settings.contextImpl->camera.SetLens(this->settings.contextImpl->camera.GetFovY(), clientWidth / clientHeight, this->settings.contextImpl->camera.GetNearZ(), this->settings.contextImpl->camera.GetFarZ());
+        this->settings.contextImpl->camera.SetAspect(clientWidth / clientHeight);
         this->settings.contextImpl->camera.Update();
 
         auto viewMatrix = this->settings.contextImpl->camera.GetViewMatrix();

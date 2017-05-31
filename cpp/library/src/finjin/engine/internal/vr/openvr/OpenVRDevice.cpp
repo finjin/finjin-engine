@@ -145,9 +145,9 @@ VRDeviceRenderModelPointer OpenVRDevice::GetRenderModel()
 
         result.vertexElements = impl->renderModelVertexElements.data();
         result.vertexElementCount = impl->renderModelVertexElements.size();
-                
+
         result.indexData = impl->renderModel->rIndexData;
-        
+
         result.primitiveCount = impl->renderModel->unTriangleCount;
 
         if (impl->renderModelTexture != nullptr)
