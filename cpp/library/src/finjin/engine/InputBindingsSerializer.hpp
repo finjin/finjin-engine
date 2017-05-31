@@ -811,15 +811,15 @@ namespace Finjin { namespace Engine {
         {
             if (AnySet(triggerCriteria.flags & (InputTriggerFlag::PRESSED | InputTriggerFlag::HOLDING | InputTriggerFlag::RELEASED)))
             {
-                Utf8String value;
+                const char* values[3] = {};
+                size_t valueCount = 0;
                 if (AnySet(triggerCriteria.flags & InputTriggerFlag::PRESSED))
-                    value += "pressed ";
+                    values[valueCount++] = "pressed";
                 if (AnySet(triggerCriteria.flags & InputTriggerFlag::HOLDING))
-                    value += "holding ";
+                    values[valueCount++] = "holding";
                 if (AnySet(triggerCriteria.flags & InputTriggerFlag::RELEASED))
-                    value += "released ";
-                value.pop_back(); //Remove last whitespace character
-                writer.WriteKeyAndValue("trigger", value);
+                    values[valueCount++] = "released";
+                writer.WriteKeyAndValues("trigger", values, valueCount, false);
             }
             if (AnySet(triggerCriteria.flags & InputTriggerFlag::POV_WEAK))
                 writer.WriteKeyAndValue("pov-weak", "true");
