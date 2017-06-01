@@ -644,6 +644,7 @@
           <itemPath>../../src/finjin/engine/GpuRenderTargetSize.cpp</itemPath>
           <itemPath>../../src/finjin/engine/GpuRenderTargetSize.hpp</itemPath>
           <itemPath>../../src/finjin/engine/GpuSystemCommonSettings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/RenderStatus.hpp</itemPath>
           <itemPath>../../src/finjin/engine/ShaderFeatureFlag.cpp</itemPath>
           <itemPath>../../src/finjin/engine/ShaderFeatureFlag.hpp</itemPath>
           <itemPath>../../src/finjin/engine/ShaderFeatures.cpp</itemPath>
