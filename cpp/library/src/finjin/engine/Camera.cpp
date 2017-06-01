@@ -308,7 +308,7 @@ void Camera::Update()
         //U, L already ortho-normal, so no need to normalize cross product
         R = U.cross(L);
 
-        //Fill in the view matrix entries.
+        //Fill in the view matrix entries
         auto x = -P.dot(R);
         auto y = -P.dot(U);
         auto z = -P.dot(L);

@@ -31,6 +31,7 @@ ApplicationSettings::ApplicationSettings() :
     useAccelerometer(true),
     useSystemBackButton(true),
     updateWhenNotFocused(false),
+    screenCaptureFrequency(ScreenCaptureFrequency::NEVER),
     checkSystemMemoryFree(true),
     vrRequired(false),
     startInVR(false),

@@ -865,6 +865,7 @@ void Application::Create(Error& error)
             }
         }
         this->gpuContextSettings.presentSyncInterval = this->applicationDelegate->GetApplicationSettings().vsync ? 1 : 0;
+        this->gpuContextSettings.screenCaptureFrequency = this->applicationDelegate->GetApplicationSettings().screenCaptureFrequency;
     }
 
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE

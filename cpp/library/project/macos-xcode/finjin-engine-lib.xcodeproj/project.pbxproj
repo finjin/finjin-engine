@@ -80,7 +80,6 @@
 		65430DD41DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCE1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp */; };
 		65430E6A1DF9AF5D00588409 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E671DF9AF5D00588409 /* Asset.cpp */; };
 		65430E6B1DF9AF5D00588409 /* AssetReference.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E681DF9AF5D00588409 /* AssetReference.cpp */; };
-		654C061E1EDCFAB3005A4556 /* RenderStatus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 654C061D1EDCFAB3005A4556 /* RenderStatus.hpp */; };
 		655881E01EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */; };
 		655881E61EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */; };
 		655AA7501EB80E8C00C9F22E /* MetalPipelineState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655AA74E1EB80E8C00C9F22E /* MetalPipelineState.mm */; };
@@ -2312,7 +2311,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				654C061E1EDCFAB3005A4556 /* RenderStatus.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

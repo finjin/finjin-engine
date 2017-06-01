@@ -19,6 +19,7 @@
 #include "finjin/common/Error.hpp"
 #include "finjin/common/Path.hpp"
 #include "finjin/common/Settings.hpp"
+#include "ScreenCapture.hpp"
 #include "OSWindowDefs.hpp"
 
 
@@ -50,6 +51,7 @@ namespace Finjin { namespace Engine {
         Setting<bool> useAccelerometer; //Not read on command line. Typically set in derived settings class, depending on needs of application
         Setting<bool> useSystemBackButton; //Not read on command line. Typically set in derived settings class, depending on needs of application
         Setting<bool> updateWhenNotFocused; //Not read on command line. Typically set in derived settings class, depending on needs of application
+        Setting<ScreenCaptureFrequency> screenCaptureFrequency; //Not read on command line. Typically set in derived settings class, depending on needs of application
         Setting<bool> checkSystemMemoryFree;
         Setting<bool> vrRequired;
         Setting<bool> startInVR;

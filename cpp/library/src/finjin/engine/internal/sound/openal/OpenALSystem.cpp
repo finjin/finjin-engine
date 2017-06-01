@@ -72,7 +72,21 @@ void OpenALSystem::Create(const Settings& settings, Error& error)
     {
         StaticVector<Utf8String, EngineConstants::MAX_SOUND_ADAPTERS> deviceSpecifiers;
         const ALCchar* deviceSpecifier = alcGetString(0, ALC_DEVICE_SPECIFIER);
-        ParseNullTerminatedStrings(deviceSpecifier, deviceSpecifiers);
+        auto parseResult = ParseNullTerminatedStrings(deviceSpecifier, [&deviceSpecifiers](const char* value)
+        {
+            if (!deviceSpecifiers.push_back())
+                return ValueOrError<bool>::CreateError();
+                
+            if (deviceSpecifiers.back().assign(value).HasError())
+                return ValueOrError<bool>::CreateError();
+                
+            return ValueOrError<bool>(true);
+        });
+        if (parseResult.HasError())
+        {
+            FINJIN_SET_ERROR(error, "There was an error parsing sound adapter device specifiers.");
+            return;
+        }
         if (deviceSpecifiers.empty())
         {
             FINJIN_SET_ERROR(error, "No sound adapters detected.");

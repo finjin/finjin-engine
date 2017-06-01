@@ -69,7 +69,7 @@ namespace Finjin { namespace Engine {
 
         virtual bool WindowOnDropFiles(OSWindow* osWindow, const Path* fileNames, size_t count) { return false; }
 
-        static int PackMouseButtons(bool left, bool right, bool middle, bool extended1 = false, bool extended2 = false)
+        inline int PackMouseButtons(bool left, bool right, bool middle, bool extended1 = false, bool extended2 = false)
         {
             int buttons = 0;
             if (left)
