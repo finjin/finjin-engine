@@ -442,7 +442,7 @@ void AssetReadQueue::AddRequest(AssetReadHandle& assetReadHandle, const AssetRea
             {
                 ContinueStreaming(internalAssetReadRequest, maxReadByteCount, error);
                 if (error)
-                    FINJIN_SET_ERROR(error, "Error continuing the streaming of asset streaming text.");
+                    FINJIN_SET_ERROR(error, "Error continuing the streaming of asset data.");
             }
 
             return this->dataChunkReaders[internalAssetReadRequest.streamingFileFormat]->GetReaderInput()->GetTotalBytesRead() - totalBytesReadBefore;
