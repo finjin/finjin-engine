@@ -1,21 +1,8 @@
 #!/usr/bin/env python3
 
-#Copyright (c) 2017 Finjin
-#
-#This file is part of Finjin Engine (finjin-engine).
-#
-#Finjin Engine is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-#
-#This Source Code Form is subject to the terms of the Mozilla Public
-#License, v. 2.0. If a copy of the MPL was not distributed with this
-#file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-
-#------------------------------------------------------------------------------
+#------------------------------------------------
 #Before running this script, modify configure.cfg
-#Then run this script without arguments
+#Then run this script without arguments 
 
 import os
 import os.path
@@ -67,7 +54,7 @@ if __name__ == '__main__':
 
                     #Possibly override destination with environment variable defined by section
                     source_to_destination_values[1] = os.getenv(section, source_to_destination_values[1])
-
+                    
                     temp_lookup = lookup_by_section.get(section, OrderedDict())
                     temp_lookup[platform] = source_to_destination_values
                     lookup_by_section[section] = temp_lookup
@@ -87,21 +74,18 @@ if __name__ == '__main__':
         for filename in files:
             file_path = normalize_path(os.path.join(root, filename))
             if file_path != this_file_path and file_path != config_file_path:
-                content = None
                 content_changed = False
 
-                with open(file_path, 'rb') as content_file:
-                    content = str(content_file.read().decode('utf-8', 'ignore'))
+                content = read_text_file(file_path)
+                if find_path is not None and find_path != replace_with_path and find_path in content:
+                    content = content.replace(find_path, replace_with_path)
+                    content_changed = True
 
-                    if find_path is not None and find_path != replace_with_path and find_path in content:
-                        content = content.replace(find_path, replace_with_path)
+                for section in lookup_by_section:
+                    section_platform_value = lookup_by_section[section].get(platform_name, None)
+                    if section_platform_value is not None and section_platform_value[0] != section_platform_value[1] and section_platform_value[0] in content:
+                        content = content.replace(section_platform_value[0], section_platform_value[1])
                         content_changed = True
-
-                    for section in lookup_by_section:
-                        section_platform_value = lookup_by_section[section].get(platform_name, None)
-                        if section_platform_value is not None and section_platform_value[0] != section_platform_value[1] and section_platform_value[0] in content:
-                            content = content.replace(section_platform_value[0], section_platform_value[1])
-                            content_changed = True
 
                 if content_changed:
                     if log_progress:
