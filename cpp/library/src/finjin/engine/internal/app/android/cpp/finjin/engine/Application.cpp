@@ -314,7 +314,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
     FINJIN_DECLARE_ERROR(error);
 
     auto windowedApp = reinterpret_cast<Application*>(androidApp->userData);
-    
+
     static int windowInitCount = 0;
     static OSWindowSize oldWindowSize(0, 0);
 
@@ -458,7 +458,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
 static int32_t OnAndroidApplicationInputCommand(android_app* androidApp, AInputEvent* event)
 {
     auto windowedApp = reinterpret_cast<Application*>(androidApp->userData);
-    
+
     auto& inputSystem = windowedApp->GetInputSystem();
     return inputSystem.HandleApplicationInputEvent(event);
 }

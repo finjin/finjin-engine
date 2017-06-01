@@ -107,7 +107,7 @@ namespace Finjin { namespace Engine {
         virtual ApplicationViewportDelegate* CreateApplicationViewportDelegate(Allocator* allocator, size_t index);
 
         virtual void OnInitializedApplicationViewportsController(ApplicationViewportsController& appViewportsController) {}
-        
+
         virtual void OnTickApplicationViewports(ApplicationViewportsController& appViewportsController, Error& error);
     };
 

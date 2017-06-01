@@ -68,7 +68,9 @@ if __name__ == '__main__':
                     #Possibly override destination with environment variable defined by section
                     source_to_destination_values[1] = os.getenv(section, source_to_destination_values[1])
 
-                    lookup_by_section.get(section, OrderedDict())[platform] = source_to_destination_values
+                    temp_lookup = lookup_by_section.get(section, OrderedDict())
+                    temp_lookup[platform] = source_to_destination_values
+                    lookup_by_section[section] = temp_lookup
                 else:
                     lookup[platform] = platform_value
 
@@ -88,8 +90,8 @@ if __name__ == '__main__':
                 content = None
                 content_changed = False
 
-                with open(file_path, 'r') as content_file:
-                    content = content_file.read()
+                with open(file_path, 'rb') as content_file:
+                    content = str(content_file.read().decode('utf-8', 'ignore'))
 
                     if find_path is not None and find_path != replace_with_path and find_path in content:
                         content = content.replace(find_path, replace_with_path)
@@ -107,7 +109,7 @@ if __name__ == '__main__':
 
                     updated_count += 1
 
-                    with open(file_path, 'w') as content_file:
+                    with open(file_path, 'wb') as content_file:
                         content_file.write(to_utf8(content))
 
     #Rewrite configuration file
@@ -121,7 +123,7 @@ if __name__ == '__main__':
                 section_platform_value[0] = section_platform_value[1]
 
         #Write updated lookup values to file
-        with open(config_file_path, 'w') as config_file:
+        with open(config_file_path, 'wb') as config_file:
             if len(lookup) > 0:
                 config_file.write(to_utf8('#Do not modify these------------------------------\n'))
                 config_file.write(to_utf8('#Appropriate values will be used automatically when running configure.py\n'))
@@ -136,7 +138,7 @@ if __name__ == '__main__':
                 for section in lookup_by_section:
                     config_file.write(to_utf8('[' + section + ']\n'))
                     for section_platform_key in lookup_by_section[section]:
-                        section_platform_value = section_lookup[section_platform_key]
+                        section_platform_value = lookup_by_section[section][section_platform_key]
                         config_file.write(to_utf8(section_platform_key + '=' + section_platform_value[0] + '->' + section_platform_value[1] + '\n'))
                     config_file.write(to_utf8('\n'))
 

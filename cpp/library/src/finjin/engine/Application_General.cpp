@@ -1095,7 +1095,7 @@ void Application::Destroy()
 {
     if (this->applicationDelegate != nullptr)
         this->applicationDelegate->OnDestroyStart();
-    
+
     this->assetReadQueue.Destroy();
     this->fileSystemOperationQueue.Destroy();
 
@@ -1118,7 +1118,7 @@ void Application::Destroy()
     this->inputSystem.Destroy();
 
     this->jobSystem.Destroy();
-    
+
     if (this->applicationDelegate != nullptr)
         this->applicationDelegate->OnDestroyFinish();
 }
