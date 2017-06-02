@@ -14,7 +14,12 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/engine/FinjinEngineLibrary.hpp"
 #import "FinjinNSWindowController.h"
+#define FINJIN_APPLE_OBJCPP_UTILITIES 1
+#include "finjin/common/AppleUtilities.hpp"
+#include "finjin/engine/OSWindowDefs.hpp"
 #import "FinjinNSViewController.h"
+
+using namespace Finjin::Common;
 
 
 //Implementation----------------------------------------------------------------
@@ -47,9 +52,10 @@
 
 + (FinjinNSWindowController*)createFromWindowFrame:(NSRect)frameRect withTitle:(NSString*)title withWindowStyle:(NSUInteger)windowStyle withScreen:(NSScreen*)screen
 {
+    AppleUtilities::PositionWindowRect(frameRect, [NSScreen mainScreen].visibleFrame, FINJIN_OS_WINDOW_COORDINATE_DEFAULT);
+    
     auto contentRect = [NSWindow contentRectForFrameRect:frameRect styleMask:windowStyle];
-    contentRect.origin.x = 0;
-    contentRect.origin.y = 0;
+    contentRect.origin = frameRect.origin;
 
     auto windowController = [[FinjinNSWindowController alloc] init];
     windowController.window = [[NSWindow alloc] initWithContentRect:contentRect styleMask:windowStyle backing:NSBackingStoreBuffered defer:YES screen:screen];

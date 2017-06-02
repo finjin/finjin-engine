@@ -14,6 +14,8 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "OSWindow.hpp"
+#define FINJIN_APPLE_OBJCPP_UTILITIES 1
+#include "finjin/common/AppleUtilities.hpp"
 #include "finjin/common/DynamicVector.hpp"
 #include "OSWindowImpl.hpp"
 #import "FinjinNSWindowController.h"
@@ -22,6 +24,7 @@
 #import <AppKit/NSScreen.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+using namespace Finjin::Common;
 using namespace Finjin::Engine;
 
 
@@ -613,11 +616,14 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
         bounds.width = bounds.clientWidth = frame.size.width;
         bounds.height = bounds.clientHeight = frame.size.height;
     }
-
-    auto constrained = [impl->windowController.window constrainFrameRect:CGRectMake(bounds.x, bounds.y, bounds.width, bounds.height) toScreen:screen];
-    bounds.x = constrained.origin.x;
-    bounds.y = constrained.origin.y;
-    bounds.AdjustSize(constrained.size.width, constrained.size.height);
+    
+    auto nsbounds = CGRectMake(bounds.x, bounds.y, bounds.width, bounds.height);
+    AppleUtilities::PositionWindowRect(nsbounds, screen.visibleFrame, FINJIN_OS_WINDOW_COORDINATE_DEFAULT);
+    
+    auto constrainedBounds = [impl->windowController.window constrainFrameRect:nsbounds toScreen:screen];
+    bounds.x = constrainedBounds.origin.x;
+    bounds.y = constrainedBounds.origin.y;
+    bounds.AdjustSize(constrainedBounds.size.width, constrainedBounds.size.height);
 }
 
 void OSWindow::GetMetalLayerSize(OSWindowCoordinate& width, OSWindowCoordinate& height)

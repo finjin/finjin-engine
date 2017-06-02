@@ -56,8 +56,7 @@ OSWindow::OSWindow(Allocator* allocator, void* clientData) : AllocatedClass(allo
 }
 
 OSWindow::~OSWindow()
-{
-    //std::cout << "Destructing window: " << this->internalName << std::endl;
+{    
 }
 
 void OSWindow::Create
@@ -72,16 +71,12 @@ void OSWindow::Create
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    //std::cout << "Creating window: " << internalName << std::endl;
-
     //Make copy of settings
     this->internalName = internalName;
 
     this->windowSize = windowSize;
     this->windowSize.SetWindow(this);
-
-    this->lastWindowRect = rect;
-
+    
     //Connection-----------------
     this->connection = XcbConnection::GetOrCreate(displayName, error);
     if (error)
@@ -90,10 +85,24 @@ void OSWindow::Create
         return;
     }
 
-    //Get the screen for the connection
-    this->screen = this->connection->GetDefaultScreen();
+    //Rectangle------------------
+    if (rect.HasDefaultCoordinate())
+    {
+        DisplayInfos displays;
+        displays.Enumerate();
+        for (auto& display : displays)
+        {
+            if (display.isPrimary)
+            {
+                rect.PositionWindowRect(display.clientFrame);
+                break;
+            }
+        }        
+    }
+    this->lastWindowRect = rect;
 
     //Create window--------------------
+    this->screen = this->connection->GetDefaultScreen();
     this->window = this->connection->GenerateID();
 
     const uint32_t valueList[] =
@@ -162,8 +171,6 @@ void OSWindow::Create
 
 void OSWindow::Destroy()
 {
-    //std::cout << "OSWindow::Destroy()" << std::endl;
-
     if (this->connection != nullptr)
     {
         if (this->blankCursor != 0)
@@ -591,6 +598,15 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
         case WindowSizeState::WINDOWED_NORMAL:
         {
             auto displayRect = GetDisplayVisibleRect();
+            
+            if (bounds.x == FINJIN_OS_WINDOW_COORDINATE_DEFAULT || bounds.y == FINJIN_OS_WINDOW_COORDINATE_DEFAULT)
+            {
+                OSWindowRect boundsRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                boundsRect.PositionWindowRect(displayRect);
+                
+                bounds.x = boundsRect.x;
+                bounds.y = boundsRect.y;
+            }
 
             auto newWidth = std::min(bounds.width, displayRect.GetWidth());
             auto newHeight = std::min(bounds.height, displayRect.GetHeight());
@@ -837,8 +853,6 @@ bool OSWindow::HandleEvent(const xcb_generic_event_t* ev)
             {
                 if (clientMessageEvent->data.data32[0] == this->connection->WM_DELETE_WINDOW)
                 {
-                    //std::cout << "Deleting window: " << this->internalName << std::endl;
-
                     for (auto listener : this->listeners)
                         listener->WindowClosing(this);
 

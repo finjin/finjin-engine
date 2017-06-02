@@ -14,6 +14,16 @@
 #pragma once
 
 
+//Macros------------------------------------------------------------------------
+#if FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_WINDOWS_WIN32 || \
+    FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_MACOS || \
+    (FINJIN_TARGET_PLATFORM == FINJIN_TARGET_PLATFORM_LINUX && !FINJIN_TARGET_PLATFORM_IS_ANDROID)
+    #define FINJIN_OS_WINDOW_COORDINATE_DEFAULT std::numeric_limits<Finjin::Engine::OSWindowCoordinate>::max()
+#else
+    #define FINJIN_OS_WINDOW_COORDINATE_DEFAULT 0
+#endif
+
+
 //Types-------------------------------------------------------------------------
 namespace Finjin { namespace Engine {
 
@@ -146,6 +156,21 @@ namespace Finjin { namespace Engine {
                 x <= (this->x + this->width) &&
                 y >= this->y &&
                 y <= (this->y + this->height);
+        }
+
+        bool HasDefaultCoordinate() const
+        {
+            return this->x == FINJIN_OS_WINDOW_COORDINATE_DEFAULT || this->y == FINJIN_OS_WINDOW_COORDINATE_DEFAULT;
+        }
+
+        void PositionWindowRect(const OSWindowRect& screenRect)
+        {
+            auto defaultWindowX = screenRect.x + screenRect.width / 2 - this->width / 2;
+            auto defaultWindowY = screenRect.y + screenRect.height / 2 - this->height / 2;
+            if (this->x == FINJIN_OS_WINDOW_COORDINATE_DEFAULT)
+                this->x = defaultWindowX;
+            if (this->y == FINJIN_OS_WINDOW_COORDINATE_DEFAULT)
+                this->y = defaultWindowY;
         }
 
         bool operator == (const OSWindowRect& other) const

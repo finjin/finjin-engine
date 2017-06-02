@@ -39,7 +39,7 @@ WindowSize::WindowSize()
     this->windowedState = WindowSizeState::WINDOWED_NORMAL; //WINDOWED_MAXIMIZED; //WINDOWED_NORMAL;
     this->state = this->windowedState;//this->windowedState; //this->fullScreenState;
 
-    this->bounds[WindowSizeState::WINDOWED_NORMAL].Set(0, 0, 800, 600, WindowBoundsFlags::BORDER | WindowBoundsFlags::LOCKED);
+    this->bounds[WindowSizeState::WINDOWED_NORMAL].Set(FINJIN_OS_WINDOW_COORDINATE_DEFAULT, FINJIN_OS_WINDOW_COORDINATE_DEFAULT, 800, 600, WindowBoundsFlags::BORDER | WindowBoundsFlags::LOCKED);
     this->bounds[WindowSizeState::WINDOWED_MAXIMIZED].Set(0, 0, 0, 0, WindowBoundsFlags::BORDER | WindowBoundsFlags::MAXIMIZED);
     this->bounds[WindowSizeState::BORDERLESS_FULLSCREEN].Set(0, 0, 0, 0, WindowBoundsFlags::NONE);
     this->bounds[WindowSizeState::EXCLUSIVE_FULLSCREEN].Set(0, 0, 1920, 1080, WindowBoundsFlags::NONE);

@@ -27,6 +27,7 @@
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/app/linux/finjin/engine/XcbWindow.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/app/linux/finjin/engine/InputContext.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/Application.hpp</file>
+            <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/ApplicationSettings.cpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/app/linux/finjin/engine/PlatformCapabilities.cpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.cpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/app/linux/finjin/engine/FinjinMain.cpp</file>
@@ -60,6 +61,7 @@
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/sound/openal/OpenALSoundGroup.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/GpuSystemCommonSettings.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/sound/openal/OpenALEffectSlot.cpp</file>
+            <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/Camera.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/CameraState.cpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/gpu/vulkan/VulkanPresentModes.cpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/app/linux/finjin/engine/DisplayInfo.hpp</file>
@@ -85,6 +87,7 @@
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/AssetReadHandle.cpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/gpu/vulkan/VulkanLight.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/app/linux/finjin/engine/GpuID.hpp</file>
+            <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/OSWindowDefs.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/InputBindings.hpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/Application_General.cpp</file>
             <file>file:/home/derek/git/nedelman/finjin-engine/cpp/library/src/finjin/engine/internal/app/linux/finjin/engine/SoundAdapterID.hpp</file>

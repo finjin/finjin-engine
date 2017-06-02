@@ -295,6 +295,20 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
         RegisterClassW(&wndClass);
     }
 
+    if (rect.HasDefaultCoordinate())
+    {
+        DisplayInfos displays;
+        displays.Enumerate();
+        for (auto& display : displays)
+        {
+            if (display.isPrimary)
+            {
+                rect.PositionWindowRect(display.clientFrame);
+                break;
+            }
+        }
+    }
+
     //Make copy of settings
     impl->internalName = internalName;
 
@@ -404,6 +418,15 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
         {
             case WindowSizeState::WINDOWED_NORMAL:
             {
+                if (bounds.x == FINJIN_OS_WINDOW_COORDINATE_DEFAULT || bounds.y == FINJIN_OS_WINDOW_COORDINATE_DEFAULT)
+                {
+                    OSWindowRect boundsRect(bounds.x, bounds.y, bounds.width, bounds.height);
+                    boundsRect.PositionWindowRect(displayRect);
+
+                    bounds.x = boundsRect.x;
+                    bounds.y = boundsRect.y;
+                }
+
                 auto newWidth = std::min(bounds.width, displayRect.GetWidth());
                 auto newHeight = std::min(bounds.height, displayRect.GetHeight());
                 bounds.AdjustSize(newWidth, newHeight);

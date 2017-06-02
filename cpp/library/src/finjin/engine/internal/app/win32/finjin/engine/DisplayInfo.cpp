@@ -14,6 +14,7 @@
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
 #include "DisplayInfo.hpp"
+#include "finjin/common/Utf8String.hpp"
 #include <Windows.h>
 
 using namespace Finjin::Engine;
@@ -26,39 +27,28 @@ struct EnumHelper
     {
         //Enumerates all the display names for subsequent monitor enumeration
 
-        this->outputNameToMonitorName.resize(EngineConstants::MAX_DISPLAYS);
+        this->outputNameToMonitorName.clear();
+
         DISPLAY_DEVICEW displayDevice;
 
-        size_t okCount = 0;
-        for (DWORD i = 0; okCount < this->outputNameToMonitorName.size(); i++)
+        for (DWORD monitorIndex = 0; !this->outputNameToMonitorName.full(); monitorIndex++)
         {
+            FINJIN_ZERO_ITEM(displayDevice);
             displayDevice.cb = sizeof(displayDevice);
-
-            //First call gets graphics card name
-            if (!EnumDisplayDevicesW(nullptr, i, &displayDevice, 0))
+            if (!EnumDisplayDevicesW(nullptr, monitorIndex, &displayDevice, 0))
                 break;
-            std::wstring graphicsCardNameW = displayDevice.DeviceName; //graphics card name (such as "GeForce GTX 980")
 
-            if (displayDevice.StateFlags & DISPLAY_DEVICE_ACTIVE)
+            if ((displayDevice.StateFlags & DISPLAY_DEVICE_ACTIVE) && this->outputNameToMonitorName.push_back())
             {
-                this->outputNameToMonitorName[okCount].first = displayDevice.DeviceName; //output name (such as "\\\\.\\DISPLAY1")
-
-                //Second call gets monitor name
-                if (!EnumDisplayDevicesW(graphicsCardNameW.c_str(), i, &displayDevice, 0))
-                    break;
-
-                this->outputNameToMonitorName[okCount].second = displayDevice.DeviceString; //monitor/device name (such as "Dell Ultrasharp")
-
-                okCount++;
+                auto& output = this->outputNameToMonitorName.back();
+                output.first = displayDevice.DeviceName; //output name (such as "\\\\.\\DISPLAY1")
+                output.second = displayDevice.DeviceString;
             }
         }
-        this->outputNameToMonitorName.resize(okCount);
     }
 
     const Utf8String* FindMonitorName(const Utf8String& outputName) const
     {
-        Utf8String result;
-
         for (size_t nameIndex = 0; nameIndex < this->outputNameToMonitorName.size(); nameIndex++)
         {
             if (this->outputNameToMonitorName[nameIndex].first == outputName)
@@ -85,35 +75,40 @@ static BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hDC, LPRECT rect, LP
     if (!GetMonitorInfoW(hMonitor, &monitorInfo))
         return FALSE;
 
-    DisplayInfo display;
-    display.name = monitorInfo.szDevice; //output name (such as "\\\\.\\DISPLAY1")
+    Utf8String displayName(monitorInfo.szDevice); //output name (such as "\\\\.\\DISPLAY1")
 
     auto continueEnumeration = TRUE;
 
     //If the monitor's name can be found in the helper, then the monitor is connected and its info should be stored
-    auto monitorName = helper->FindMonitorName(display.name);
+    auto monitorName = helper->FindMonitorName(displayName);
     if (monitorName != nullptr)
     {
-        display.index = helper->displays->size();
-
-        display.isPrimary = (monitorInfo.dwFlags & MONITORINFOF_PRIMARY) != 0;
-
-        display.frame.x = monitorInfo.rcMonitor.left;
-        display.frame.y = monitorInfo.rcMonitor.top;
-        display.frame.width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
-        display.frame.height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
-
-        display.clientFrame.x = monitorInfo.rcWork.left;
-        display.clientFrame.y = monitorInfo.rcWork.top;
-        display.clientFrame.width = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
-        display.clientFrame.height = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
-
-        display.deviceName = *monitorName; //monitor/device name (such as "Dell Ultrasharp")
-
-        display.monitorHandle = hMonitor;
-
-        if (helper->displays->push_back(display).HasErrorOrValue(false))
+        if (!helper->displays->push_back())
             continueEnumeration = FALSE;
+        else
+        {
+            auto index = helper->displays->size();
+
+            auto& display = helper->displays->back();
+
+            display.index = index;
+
+            display.isPrimary = (monitorInfo.dwFlags & MONITORINFOF_PRIMARY) != 0;
+
+            display.frame.x = monitorInfo.rcMonitor.left;
+            display.frame.y = monitorInfo.rcMonitor.top;
+            display.frame.width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
+            display.frame.height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+
+            display.clientFrame.x = monitorInfo.rcWork.left;
+            display.clientFrame.y = monitorInfo.rcWork.top;
+            display.clientFrame.width = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+            display.clientFrame.height = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
+
+            display.deviceName = *monitorName; //monitor/device name (such as "Dell Ultrasharp")
+
+            display.monitorHandle = hMonitor;
+        }
     }
 
     return continueEnumeration;
