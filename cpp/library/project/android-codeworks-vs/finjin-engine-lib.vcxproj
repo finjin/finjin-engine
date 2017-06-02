@@ -18,6 +18,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\finjin\engine\GenericVRInputDevice.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\GpuContextCommonImpl.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSimpleWork.cpp" />
@@ -1107,6 +1108,7 @@
     <ClCompile Include="..\..\src\finjin\engine\WindowSize.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\finjin\engine\GenericVRInputDevice.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonImpl.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanSimpleWork.hpp" />

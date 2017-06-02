@@ -13,46 +13,9 @@
 
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
-#include "JobPipelineStage.hpp"
+#include "GenericVRInputDevice.hpp"
 
 using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-JobPipelineStage::JobPipelineStage()
-{
-    this->index = 0;
-}
-
-JobPipelineStage::~JobPipelineStage()
-{
-}
-
-size_t JobPipelineStage::GetIndex() const
-{
-    return this->index;
-}
-
-bool JobPipelineStage::IsStarted() const
-{
-    return this->simulateAndRenderFuture.valid();
-}
-
-void JobPipelineStage::Start(future<void>&& f)
-{
-    this->simulateAndRenderFuture = std::move(f);
-}
-
-void JobPipelineStage::Finish(Error& error)
-{
-    FINJIN_ERROR_METHOD_START(error);
-    
-    try
-    {
-        this->simulateAndRenderFuture.get();
-    }
-    catch (...)
-    {
-        FINJIN_SET_ERROR(error, "An exception was thrown while getting simulation/render future.");
-    }
-}

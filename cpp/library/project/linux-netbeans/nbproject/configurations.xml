@@ -655,6 +655,8 @@
         <logicalFolder name="f4" displayName="input" projectFiles="true">
           <itemPath>../../src/finjin/engine/FlyingCameraInputBindings.cpp</itemPath>
           <itemPath>../../src/finjin/engine/FlyingCameraInputBindings.hpp</itemPath>
+          <itemPath>../../src/finjin/engine/GenericVRInputDevice.cpp</itemPath>
+          <itemPath>../../src/finjin/engine/GenericVRInputDevice.hpp</itemPath>
           <itemPath>../../src/finjin/engine/InputBindings.hpp</itemPath>
           <itemPath>../../src/finjin/engine/InputBindingsSerializer.hpp</itemPath>
           <itemPath>../../src/finjin/engine/InputComponents.cpp</itemPath>
@@ -1229,6 +1231,16 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/GenericGpuNumericStructs.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericVRInputDevice.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericVRInputDevice.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5036,6 +5048,16 @@
             flavor2="0">
       </item>
       <item path="../../src/finjin/engine/GenericGpuNumericStructs.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericVRInputDevice.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../src/finjin/engine/GenericVRInputDevice.hpp"
             ex="false"
             tool="3"
             flavor2="0">

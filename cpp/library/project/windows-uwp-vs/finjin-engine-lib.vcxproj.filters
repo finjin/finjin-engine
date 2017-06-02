@@ -1583,6 +1583,10 @@
     <ClInclude Include="..\..\src\finjin\engine\RenderStatus.hpp">
       <Filter>Source Files\common\gpu</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\GenericVRInputDevice.hpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\internal\input\uwpinput\WindowsUWPInputDevice.cpp">
@@ -2478,6 +2482,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\ScreenCapture.cpp">
       <Filter>Source Files\common\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\GenericVRInputDevice.cpp">
+      <Filter>Source Files\common\input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

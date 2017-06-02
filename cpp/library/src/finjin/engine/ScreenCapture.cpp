@@ -111,7 +111,7 @@ ScreenCapture::WriteResult ScreenCapture::WriteToRawFile(Path& filePath) const
 {
     auto result = WriteResult::UNSUPPORTED_PIXEL_FORMAT;
 
-    if (!filePath.append("raw").HasError())
+    if (!filePath.append(".raw").HasError())
     {
         FileAccessor file;
         if (file.OpenForWrite(filePath))
@@ -146,12 +146,12 @@ ScreenCapture::WriteResult ScreenCapture::WriteToRawFile(Path& filePath) const
     return result;
 }
 
-ScreenCapture::WriteResult ScreenCapture::WriteToFile(Path& filePath, const ScreenCaptureWriteSettings& settings) const
+ScreenCapture::WriteResult ScreenCapture::WriteToFile(Path& filePathNoExtension, const ScreenCaptureWriteSettings& settings) const
 {
     auto result = WriteResult::UNSUPPORTED_PIXEL_FORMAT;
 
     if (settings.forceRaw)
-        result = WriteToRawFile(filePath);
+        result = WriteToRawFile(filePathNoExtension);
     else if (IsIntPixelFormat())
     {
         PNGWriter pngWriter;
@@ -184,10 +184,10 @@ ScreenCapture::WriteResult ScreenCapture::WriteToFile(Path& filePath, const Scre
             auto writeResult = pngWriter.Write(this->image, this->width, this->height, this->rowStride, *pngOutputBuffer);
             if (writeResult == PNGWriter::WriteResult::SUCCESS)
             {
-                if (!filePath.append("png").HasError())
+                if (!filePathNoExtension.append(".png").HasError())
                 {
                     FileAccessor file;
-                    if (file.OpenForWrite(filePath))
+                    if (file.OpenForWrite(filePathNoExtension))
                     {
                         if (file.Write(pngOutputBuffer->data(), pngOutputBuffer->size()) == pngOutputBuffer->size())
                             result = WriteResult::SUCCESS;
@@ -208,7 +208,7 @@ ScreenCapture::WriteResult ScreenCapture::WriteToFile(Path& filePath, const Scre
     }
 
     if (result == WriteResult::UNSUPPORTED_PIXEL_FORMAT && settings.writeUnsupportedFormatAsRaw)
-        result = WriteToRawFile(filePath);
+        result = WriteToRawFile(filePathNoExtension);
 
     return result;
 }

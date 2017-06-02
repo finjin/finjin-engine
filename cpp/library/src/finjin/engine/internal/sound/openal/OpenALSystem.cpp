@@ -76,10 +76,10 @@ void OpenALSystem::Create(const Settings& settings, Error& error)
         {
             if (!deviceSpecifiers.push_back())
                 return ValueOrError<bool>::CreateError();
-                
+
             if (deviceSpecifiers.back().assign(value).HasError())
                 return ValueOrError<bool>::CreateError();
-                
+
             return ValueOrError<bool>(true);
         });
         if (parseResult.HasError())

@@ -1083,6 +1083,9 @@
     <ClCompile Include="..\..\src\finjin\engine\ScreenCapture.cpp">
       <Filter>Source Files\common\utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\finjin\engine\GenericVRInputDevice.cpp">
+      <Filter>Source Files\common\input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\finjin\engine\WAVReader.hpp">
@@ -2464,6 +2467,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\RenderStatus.hpp">
       <Filter>Source Files\common\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\GenericVRInputDevice.hpp">
+      <Filter>Source Files\common\input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

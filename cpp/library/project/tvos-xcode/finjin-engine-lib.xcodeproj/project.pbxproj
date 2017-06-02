@@ -79,6 +79,7 @@
 		657359CD1ED3CD12009FA3E6 /* GpuContextCommonImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657359CB1ED3CD12009FA3E6 /* GpuContextCommonImpl.cpp */; };
 		657AA1601E420EBA004ADA22 /* ShaderFeatures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA15E1E420EBA004ADA22 /* ShaderFeatures.cpp */; };
 		657AA1721E44AAFE004ADA22 /* ShaderFeatureFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA1701E44AAFE004ADA22 /* ShaderFeatureFlag.cpp */; };
+		6586C4C01EE12E9B00F797E5 /* GenericVRInputDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6586C4BE1EE12E9B00F797E5 /* GenericVRInputDevice.cpp */; };
 		65A312361EC7CADA0068F9BC /* b3DynamicBvh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A3122E1EC7CADA0068F9BC /* b3DynamicBvh.cpp */; };
 		65A312381EC7CADA0068F9BC /* b3DynamicBvhBroadphase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A312301EC7CADA0068F9BC /* b3DynamicBvhBroadphase.cpp */; };
 		65A3123B1EC7CADA0068F9BC /* b3OverlappingPairCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A312331EC7CADA0068F9BC /* b3OverlappingPairCache.cpp */; };
@@ -498,6 +499,8 @@
 		657AA1701E44AAFE004ADA22 /* ShaderFeatureFlag.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatureFlag.cpp; path = ../../src/finjin/engine/ShaderFeatureFlag.cpp; sourceTree = SOURCE_ROOT; };
 		657AA1711E44AAFE004ADA22 /* ShaderFeatureFlag.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ShaderFeatureFlag.hpp; path = ../../src/finjin/engine/ShaderFeatureFlag.hpp; sourceTree = SOURCE_ROOT; };
 		657AA17A1E47FA43004ADA22 /* AssetCreationCapability.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetCreationCapability.hpp; path = ../../src/finjin/engine/AssetCreationCapability.hpp; sourceTree = SOURCE_ROOT; };
+		6586C4BE1EE12E9B00F797E5 /* GenericVRInputDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GenericVRInputDevice.cpp; path = ../../src/finjin/engine/GenericVRInputDevice.cpp; sourceTree = SOURCE_ROOT; };
+		6586C4BF1EE12E9B00F797E5 /* GenericVRInputDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GenericVRInputDevice.hpp; path = ../../src/finjin/engine/GenericVRInputDevice.hpp; sourceTree = SOURCE_ROOT; };
 		65A312291EC7CABF0068F9BC /* btBulletCollisionCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = btBulletCollisionCommon.h; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/btBulletCollisionCommon.h"; sourceTree = "<unknown>"; };
 		65A3122A1EC7CABF0068F9BC /* btBulletDynamicsCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = btBulletDynamicsCommon.h; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/btBulletDynamicsCommon.h"; sourceTree = "<unknown>"; };
 		65A3122D1EC7CADA0068F9BC /* b3BroadphaseCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = b3BroadphaseCallback.h; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/Bullet3Collision/BroadPhaseCollision/b3BroadphaseCallback.h"; sourceTree = "<unknown>"; };
@@ -1306,6 +1309,8 @@
 			children = (
 				6512851D1D0B818E0041C324 /* FlyingCameraInputBindings.cpp */,
 				6512851E1D0B818E0041C324 /* FlyingCameraInputBindings.hpp */,
+				6586C4BE1EE12E9B00F797E5 /* GenericVRInputDevice.cpp */,
+				6586C4BF1EE12E9B00F797E5 /* GenericVRInputDevice.hpp */,
 				651285201D0B818E0041C324 /* InputBindings.hpp */,
 				651285211D0B818E0041C324 /* InputBindingsSerializer.hpp */,
 				651285221D0B818E0041C324 /* InputComponents.cpp */,
@@ -2328,6 +2333,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6586C4C01EE12E9B00F797E5 /* GenericVRInputDevice.cpp in Sources */,
 				65D15B1E1ED8E406003B0959 /* ScreenCapture.cpp in Sources */,
 				65D15B1F1ED8E406003B0959 /* ScreenCapture.hpp in Sources */,
 				657359CD1ED3CD12009FA3E6 /* GpuContextCommonImpl.cpp in Sources */,
@@ -2667,7 +2673,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = appletvos;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
 			};
 			name = Debug;
 		};
@@ -2705,7 +2711,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = appletvos;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -2734,7 +2740,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
 			};
 			name = Debug;
 		};
@@ -2759,7 +2765,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
 			};
 			name = Release;
 		};

@@ -78,6 +78,7 @@
 		657359C91ED3CCE1009FA3E6 /* GpuContextCommonImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657359C71ED3CCE1009FA3E6 /* GpuContextCommonImpl.cpp */; };
 		657AA15C1E420E7E004ADA22 /* ShaderFeatures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA15A1E420E7E004ADA22 /* ShaderFeatures.cpp */; };
 		657AA1761E44AB26004ADA22 /* ShaderFeatureFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA1741E44AB26004ADA22 /* ShaderFeatureFlag.cpp */; };
+		6586C4BC1EE12E6A00F797E5 /* GenericVRInputDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6586C4BA1EE12E6A00F797E5 /* GenericVRInputDevice.cpp */; };
 		65A30E2C1EC7C40C0068F9BC /* btAxisSweep3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A30E181EC7C40C0068F9BC /* btAxisSweep3.cpp */; };
 		65A30E2F1EC7C40C0068F9BC /* btBroadphaseProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A30E1B1EC7C40C0068F9BC /* btBroadphaseProxy.cpp */; };
 		65A30E311EC7C40C0068F9BC /* btCollisionAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A30E1D1EC7C40C0068F9BC /* btCollisionAlgorithm.cpp */; };
@@ -500,6 +501,8 @@
 		657AA1741E44AB26004ADA22 /* ShaderFeatureFlag.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatureFlag.cpp; path = ../../src/finjin/engine/ShaderFeatureFlag.cpp; sourceTree = SOURCE_ROOT; };
 		657AA1751E44AB26004ADA22 /* ShaderFeatureFlag.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ShaderFeatureFlag.hpp; path = ../../src/finjin/engine/ShaderFeatureFlag.hpp; sourceTree = SOURCE_ROOT; };
 		657AA17B1E47FA5B004ADA22 /* AssetCreationCapability.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetCreationCapability.hpp; path = ../../src/finjin/engine/AssetCreationCapability.hpp; sourceTree = SOURCE_ROOT; };
+		6586C4BA1EE12E6A00F797E5 /* GenericVRInputDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GenericVRInputDevice.cpp; path = ../../src/finjin/engine/GenericVRInputDevice.cpp; sourceTree = SOURCE_ROOT; };
+		6586C4BB1EE12E6A00F797E5 /* GenericVRInputDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GenericVRInputDevice.hpp; path = ../../src/finjin/engine/GenericVRInputDevice.hpp; sourceTree = SOURCE_ROOT; };
 		65A30E181EC7C40C0068F9BC /* btAxisSweep3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = btAxisSweep3.cpp; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp"; sourceTree = "<absolute>"; };
 		65A30E191EC7C40C0068F9BC /* btAxisSweep3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = btAxisSweep3.h; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.h"; sourceTree = "<absolute>"; };
 		65A30E1A1EC7C40C0068F9BC /* btBroadphaseInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = btBroadphaseInterface.h; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h"; sourceTree = "<absolute>"; };
@@ -1368,6 +1371,8 @@
 			children = (
 				651283D01D0B79B50041C324 /* FlyingCameraInputBindings.cpp */,
 				651283D11D0B79B50041C324 /* FlyingCameraInputBindings.hpp */,
+				6586C4BA1EE12E6A00F797E5 /* GenericVRInputDevice.cpp */,
+				6586C4BB1EE12E6A00F797E5 /* GenericVRInputDevice.hpp */,
 				651283D31D0B79B50041C324 /* InputBindings.hpp */,
 				651283D41D0B79B50041C324 /* InputBindingsSerializer.hpp */,
 				651283D51D0B79B50041C324 /* InputComponents.cpp */,
@@ -2471,6 +2476,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6586C4BC1EE12E6A00F797E5 /* GenericVRInputDevice.cpp in Sources */,
 				65D15B1A1ED8E3CE003B0959 /* ScreenCapture.cpp in Sources */,
 				657359C91ED3CCE1009FA3E6 /* GpuContextCommonImpl.cpp in Sources */,
 				657359A51ECFFC78009FA3E6 /* imgui_draw.cpp in Sources */,
@@ -2811,7 +2817,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2851,7 +2857,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -2879,7 +2885,7 @@
 					../../src/finjin/engine/internal/app/ios,
 					../../src/finjin/engine/internal,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2904,7 +2910,7 @@
 					../../src/finjin/engine/internal/app/ios,
 					../../src/finjin/engine/internal,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
