@@ -1290,12 +1290,12 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
     //VR
     auto isVRInitialized = false;
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
-    if (this->applicationDelegate->GetApplicationSettings().IsVRRequired() && !this->vrSystem.IsAvailable())
+    if (this->applicationDelegate->GetApplicationSettings().vrRequired && !this->vrSystem.IsAvailable())
     {
         FINJIN_SET_ERROR(error, "VR is requred by the application settings but is unavailable. Try installing the necessary drivers and turning on the hardware.");
         return;
     }
-    if (appViewport->IsMain() && this->applicationDelegate->GetApplicationSettings().IsVRRequested())
+    if (appViewport->IsMain())
     {
         this->vrContextSettings.addDeviceHandler = [this, appViewport](VRContext* vrContext, size_t vrDeviceIndex)
         {
@@ -1375,7 +1375,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
             return;
         }
         isVRInitialized = vrContext->GetInitializationStatus() == VRContextInitializationStatus::INITIALIZED;
-        if (this->applicationDelegate->GetApplicationSettings().IsVRRequired() && !isVRInitialized)
+        if (this->applicationDelegate->GetApplicationSettings().vrRequired && !isVRInitialized)
         {
             this->vrSystem.DestroyContext(vrContext.release());
             FINJIN_SET_ERROR(error, "VR is requred by the application settings but failed to initialize. Ensure the hardware is turned on and recognized by the system.");
@@ -1406,7 +1406,7 @@ void Application::HandleApplicationViewportCreated(ApplicationViewport* appViewp
     #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
         this->gpuContextSettings.vrContext = appViewport->GetVRContext(); //Needs to be set for a possible mode change later
     #endif
-        if (isVRInitialized && this->applicationDelegate->GetApplicationSettings().StartInVR())
+        if (isVRInitialized && this->applicationDelegate->GetApplicationSettings().startInVR)
         {
         #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
             auto preferredDimensions = appViewport->GetVRContext()->GetPreferredRenderTargetDimensions();

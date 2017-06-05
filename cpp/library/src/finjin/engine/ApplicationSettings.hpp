@@ -35,10 +35,6 @@ namespace Finjin { namespace Engine {
 
         void ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
 
-        bool IsVRRequested() const { return true; }
-        bool IsVRRequired() const { return this->vrRequired; }
-        bool StartInVR() const { return this->startInVR; }
-
     public:
         Setting<Path> additionalReadApplicationAssetsDirectory; //Additional directory for ApplicationFileSystem::READ_APPLICATION_ASSETS
         Setting<OSWindowDimension> windowWidth;
