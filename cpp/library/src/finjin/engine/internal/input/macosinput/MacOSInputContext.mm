@@ -62,14 +62,21 @@ struct MacOSInputContext::Impl : public AllocatedClass, public OSWindowEventList
 //Implementation----------------------------------------------------------------
 
 //MacOSInputContext::Impl
-MacOSInputContext::Impl::Impl(Allocator* allocator, MacOSInputSystem* inputSystem) : AllocatedClass(allocator), settings(allocator)
+MacOSInputContext::Impl::Impl(Allocator* allocator, MacOSInputSystem* inputSystem) :
+    AllocatedClass(allocator),
+    settings(allocator),
+    mouse(allocator),
+    keyboard(allocator)
 {
     this->inputSystem = inputSystem;
 
     this->gameControllerUpdateCount = 0;
     this->nongameControllerUpdateCount = 0;
-
-    this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, allocator);
+    
+    this->gameControllers.maximize();
+    for (auto& gameController : this->gameControllers)
+        gameController.SetAllocator(allocator);
+    this->gameControllers.clear();
 }
 
 void MacOSInputContext::Impl::WindowOnKeyDown(OSWindow* osWindow, int softwareKey, int hardwareCode, bool controlDown, bool shiftDown, bool altDown)
@@ -171,9 +178,14 @@ void MacOSInputContext::Create(const Settings& settings, Error& error)
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
-    //Copy settings---------------------------------------------
     impl->settings = settings;
-
+    
+    if (!impl->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate config buffer.");
+        return;
+    }
+    
     impl->inputDevicesAssetReader.Create(*impl->settings.assetFileReader, impl->settings.initialAssetFileSelector, AssetClass::INPUT_DEVICE, GetAllocator(), error);
     if (error)
     {
@@ -200,11 +212,11 @@ void MacOSInputContext::Create(const Settings& settings, Error& error)
     //Enumerate the devices-------------------------------------
 
     //Mice
-    impl->mouse.Create(this, 0);
+    impl->mouse.Create(0);
     ConfigureInputDevice(impl->mouse, impl->mouse.GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
 
     //Keyboard
-    impl->keyboard.Create(this, 0);
+    impl->keyboard.Create(0);
     ConfigureInputDevice(impl->keyboard, impl->keyboard.GetProductDescriptor(), impl->inputDevicesAssetReader, impl->configFileBuffer);
 
     impl->gameControllerUpdateCount = 0;

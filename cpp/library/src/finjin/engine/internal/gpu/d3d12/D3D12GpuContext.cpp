@@ -136,21 +136,21 @@ bool D3D12GpuContext::ToggleFullScreenExclusive(Error& error)
     return result;
 }
 
-bool D3D12GpuContext::StartResizeTargets(bool minimized, Error& error)
+bool D3D12GpuContext::StartModifyScreenRenderTargets(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    auto result = impl->StartResizeTargets(minimized, error);
+    auto result = impl->StartModifyScreenRenderTargets(error);
     if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
     return result;
 }
 
-void D3D12GpuContext::FinishResizeTargets(Error& error)
+void D3D12GpuContext::FinishModifyScreenRenderTargets(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    impl->FinishResizeTargets(error);
+    impl->FinishModifyScreenRenderTargets(error);
     if (error)
         FINJIN_SET_ERROR_NO_MESSAGE(error);
 }

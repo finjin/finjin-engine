@@ -18,7 +18,7 @@
 #include "finjin/common/CommandLineArgsProcessor.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/DefaultAllocator.hpp"
-#include "finjin/common/PassthroughSystemAllocator.hpp"
+#include "finjin/common/SystemAllocator.hpp"
 #include "finjin/engine/Application.hpp"
 #include "finjin/engine/ApplicationDelegate.hpp"
 
@@ -45,7 +45,7 @@ static CVReturn DispatchTickLoop
 //Implementation----------------------------------------------------------------
 @implementation FinjinNSApplicationDelegate
 {
-    DefaultAllocator<PassthroughSystemAllocator> _defaultAllocator;
+    DefaultAllocator<SystemAllocator> _defaultAllocator;
 
     CVDisplayLinkRef _displayLink;
     dispatch_source_t _displaySource;
@@ -107,7 +107,7 @@ static CVReturn DispatchTickLoop
     {
         FINJIN_DECLARE_ERROR(error);
 
-        _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::RESUME), error);
+        _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::RESUME), error);
         if (error)
         {
             auto errorString = error.ToString();
@@ -126,7 +126,7 @@ static CVReturn DispatchTickLoop
 
         FINJIN_DECLARE_ERROR(error);
 
-        _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::PAUSE), error);
+        _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::PAUSE), error);
         if (error)
         {
             auto errorString = error.ToString();

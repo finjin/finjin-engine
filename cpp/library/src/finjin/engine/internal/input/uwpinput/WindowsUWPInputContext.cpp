@@ -53,7 +53,7 @@ struct WindowsUWPInputContext::Impl : public AllocatedClass, public OSWindowEven
 
     std::array<XInputGameController, XUSER_MAX_COUNT> gameControllers;
 
-    StaticVector<InputGenericGameController*, GameControllerConstants::MAX_GAME_CONTROLLERS - XUSER_MAX_COUNT> externalGameControllers;
+    StaticVector<ExternalGameController*, GameControllerConstants::MAX_GAME_CONTROLLERS - XUSER_MAX_COUNT> externalGameControllers;
 
     WindowsUWPMouse mouse;
 
@@ -75,8 +75,6 @@ WindowsUWPInputContext::Impl::Impl(Allocator* allocator, WindowsUWPInputSystem* 
     this->gameControllerID = 0;
 
     this->updateCount = 0;
-
-    this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, allocator);
 }
 
 void WindowsUWPInputContext::Impl::WindowOnKeyDown(OSWindow* osWindow, int softwareKey, int hardwareCode, bool controlDown, bool shiftDown, bool altDown)
@@ -197,8 +195,13 @@ void WindowsUWPInputContext::Create(const Settings& settings, Error& error)
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
-    //Copy settings---------------------------------------------
     impl->settings = settings;
+    
+    if (!impl->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate config buffer.");
+        return;
+    }
 
     impl->inputDevicesAssetReader.Create(*impl->settings.assetFileReader, impl->settings.initialAssetFileSelector, AssetClass::INPUT_DEVICE, GetAllocator(), error);
     if (error)
@@ -435,7 +438,7 @@ bool WindowsUWPInputContext::IsDeviceConnected(InputDeviceClass deviceClass, siz
     return false;
 }
 
-void WindowsUWPInputContext::AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedbackSettings* forces, size_t count)
+void WindowsUWPInputContext::AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedback* forces, size_t count)
 {
     if (deviceClass == InputDeviceClass::GAME_CONTROLLER)
     {
@@ -504,7 +507,7 @@ XInputGameController* WindowsUWPInputContext::GetXInputGameController(size_t ind
     return &impl->gameControllers[index];
 }
 
-void WindowsUWPInputContext::AddExternalGameController(InputGenericGameController* gameController, bool configure, Error& error)
+void WindowsUWPInputContext::AddExternalGameController(ExternalGameController* gameController, bool configure, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -532,7 +535,7 @@ void WindowsUWPInputContext::AddExternalGameController(InputGenericGameControlle
     }
 }
 
-void WindowsUWPInputContext::RemoveExternalGameController(InputGenericGameController* gameController)
+void WindowsUWPInputContext::RemoveExternalGameController(ExternalGameController* gameController)
 {
     auto foundAt = impl->externalGameControllers.find(gameController);
     if (foundAt != impl->externalGameControllers.end())
@@ -544,7 +547,7 @@ size_t WindowsUWPInputContext::GetExternalGameControllerCount() const
     return impl->externalGameControllers.size();
 }
 
-InputGenericGameController* WindowsUWPInputContext::GetExternalGameController(size_t index)
+ExternalGameController* WindowsUWPInputContext::GetExternalGameController(size_t index)
 {
     return impl->externalGameControllers[index];
 }
@@ -579,11 +582,11 @@ InputTouchScreen* WindowsUWPInputContext::GetTouchScreen(size_t index)
     return &impl->touchScreen;
 }
 
-void WindowsUWPInputContext::AddExternalHeadset(InputGenericHeadset* headset, bool configure, Error& error)
+void WindowsUWPInputContext::AddExternalHeadset(ExternalHeadset* headset, bool configure, Error& error)
 {
 }
 
-void WindowsUWPInputContext::RemoveExternalHeadset(InputGenericHeadset* headset)
+void WindowsUWPInputContext::RemoveExternalHeadset(ExternalHeadset* headset)
 {
 }
 
@@ -592,7 +595,7 @@ size_t WindowsUWPInputContext::GetExternalHeadsetCount() const
     return 0;
 }
 
-InputGenericHeadset* WindowsUWPInputContext::GetExternalHeadset(size_t index)
+ExternalHeadset* WindowsUWPInputContext::GetExternalHeadset(size_t index)
 {
     return nullptr;
 }

@@ -618,7 +618,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
     }
     
     auto nsbounds = CGRectMake(bounds.x, bounds.y, bounds.width, bounds.height);
-    AppleUtilities::PositionWindowRect(nsbounds, screen.visibleFrame, FINJIN_OS_WINDOW_COORDINATE_DEFAULT);
+    AppleUtilities::CenterDefaultsInParent(nsbounds, screen.visibleFrame, FINJIN_OS_WINDOW_COORDINATE_DEFAULT);
     
     auto constrainedBounds = [impl->windowController.window constrainFrameRect:nsbounds toScreen:screen];
     bounds.x = constrainedBounds.origin.x;

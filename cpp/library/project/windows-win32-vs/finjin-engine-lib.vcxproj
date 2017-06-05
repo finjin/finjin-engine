@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\finjin\engine\GenericVRInputDevice.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\GenericInputDevice.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonImpl.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12RootSignatureBuilder.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.hpp" />
@@ -531,7 +531,7 @@
     <ClInclude Include="..\..\src\finjin\engine\WindowSize.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\finjin\engine\GenericVRInputDevice.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\GenericInputDevice.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\GpuContextCommonImpl.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\d3d12\D3D12RootSignatureBuilder.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.cpp" />

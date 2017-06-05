@@ -47,8 +47,6 @@ struct Win32InputContext::Impl : public AllocatedClass
         this->updateCount = 0;
 
         this->dinputGameControllerCount = 0;
-
-        this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, allocator);
     }
 
     Win32InputSystem* inputSystem;
@@ -69,7 +67,7 @@ struct Win32InputContext::Impl : public AllocatedClass
     std::array<DInputGameController, MAX_DINPUT_GAME_CONTROLLER_COUNT> dinputGameControllers;
     size_t dinputGameControllerCount;
 
-    StaticVector<InputGenericGameController*, MAX_EXTERNAL_GAME_CONTROLLER_COUNT> externalGameControllers;
+    StaticVector<ExternalGameController*, MAX_EXTERNAL_GAME_CONTROLLER_COUNT> externalGameControllers;
 
     StaticVector<DInputDeviceConfiguration, MouseConstants::MAX_MICE> mouseFoundConfigs;
     StaticVector<DInputMouse, MouseConstants::MAX_MICE> mice;
@@ -77,7 +75,7 @@ struct Win32InputContext::Impl : public AllocatedClass
     StaticVector<DInputDeviceConfiguration, KeyboardConstants::MAX_KEYBOARDS> keyboardFoundConfigs;
     StaticVector<DInputKeyboard, KeyboardConstants::MAX_KEYBOARDS> keyboards;
 
-    StaticVector<InputGenericHeadset*, HeadsetConstants::MAX_HEADSETS> externalHeadsets;
+    StaticVector<ExternalHeadset*, HeadsetConstants::MAX_HEADSETS> externalHeadsets;
 
     ByteBuffer configFileBuffer;
 };
@@ -210,8 +208,13 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
-    //Copy settings---------------------------------------------
     impl->settings = settings;
+    
+    if (!impl->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate config buffer.");
+        return;
+    }
 
     auto devicesAssetSelector = impl->settings.initialAssetFileSelector;
     devicesAssetSelector.Set(AssetPathComponent::INPUT_API, XInputSystem::GetSystemInternalName()); //xinput
@@ -546,7 +549,7 @@ bool Win32InputContext::IsDeviceConnected(InputDeviceClass deviceClass, size_t i
     return false;
 }
 
-void Win32InputContext::AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedbackSettings* forces, size_t count)
+void Win32InputContext::AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedback* forces, size_t count)
 {
     if (deviceClass == InputDeviceClass::GAME_CONTROLLER)
     {
@@ -637,7 +640,7 @@ DInputGameController* Win32InputContext::GetDInputGameController(size_t index)
     return &impl->dinputGameControllers[index];
 }
 
-void Win32InputContext::AddExternalGameController(InputGenericGameController* gameController, bool configure, Error& error)
+void Win32InputContext::AddExternalGameController(ExternalGameController* gameController, bool configure, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -664,7 +667,7 @@ void Win32InputContext::AddExternalGameController(InputGenericGameController* ga
     }
 }
 
-void Win32InputContext::RemoveExternalGameController(InputGenericGameController* gameController)
+void Win32InputContext::RemoveExternalGameController(ExternalGameController* gameController)
 {
     auto foundAt = impl->externalGameControllers.find(gameController);
     if (foundAt != impl->externalGameControllers.end())
@@ -676,7 +679,7 @@ size_t Win32InputContext::GetExternalGameControllerCount() const
     return impl->externalGameControllers.size();
 }
 
-InputGenericGameController* Win32InputContext::GetExternalGameController(size_t index)
+ExternalGameController* Win32InputContext::GetExternalGameController(size_t index)
 {
     return impl->externalGameControllers[index];
 }
@@ -741,7 +744,7 @@ InputDeviceSemantic Win32InputContext::GetKeyboardSemantic(size_t index) const
     return impl->keyboards[index].GetSemantic();
 }
 
-void Win32InputContext::AddExternalHeadset(InputGenericHeadset* headset, bool configure, Error& error)
+void Win32InputContext::AddExternalHeadset(ExternalHeadset* headset, bool configure, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -752,7 +755,7 @@ void Win32InputContext::AddExternalHeadset(InputGenericHeadset* headset, bool co
     }
 }
 
-void Win32InputContext::RemoveExternalHeadset(InputGenericHeadset* headset)
+void Win32InputContext::RemoveExternalHeadset(ExternalHeadset* headset)
 {
     auto foundAt = impl->externalHeadsets.find(headset);
     if (foundAt != impl->externalHeadsets.end())
@@ -764,7 +767,7 @@ size_t Win32InputContext::GetExternalHeadsetCount() const
     return impl->externalHeadsets.size();
 }
 
-InputGenericHeadset* Win32InputContext::GetExternalHeadset(size_t index)
+ExternalHeadset* Win32InputContext::GetExternalHeadset(size_t index)
 {
     return impl->externalHeadsets[index];
 }

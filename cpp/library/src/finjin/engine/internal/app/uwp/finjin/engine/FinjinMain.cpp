@@ -17,7 +17,7 @@
 #include "finjin/engine/Application.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/DefaultAllocator.hpp"
-#include "finjin/common/PassthroughSystemAllocator.hpp"
+#include "finjin/common/SystemAllocator.hpp"
 #include <ppltasks.h>
 
 using namespace Finjin::Engine;

@@ -236,7 +236,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //Implementation----------------------------------------------------------------
 
 //OSWindow::Impl
-OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData) : AllocatedClass(allocator)
+OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData) : AllocatedClass(allocator), internalName(allocator)
 {
     this->osWindow = osWindow;
     this->windowHandle = nullptr;
@@ -284,7 +284,8 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
         {
             CS_HREDRAW | CS_VREDRAW,
             WndProc,
-            0, 0,
+            0, 
+            0,
             hInstance,
             LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APPLICATION)),
             LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW)),
@@ -303,21 +304,37 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
         {
             if (display.isPrimary)
             {
-                rect.PositionWindowRect(display.clientFrame);
+                rect.CenterDefaultsInParent(display.clientFrame);
                 break;
             }
         }
     }
 
-    //Make copy of settings
-    impl->internalName = internalName;
+    if (impl->internalName.assign(internalName).HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign internal name.");
+        return;
+    }
 
     impl->windowSize = windowSize;
     impl->windowSize.SetWindow(this);
 
     //Create the window
     Utf8StringToWideString internalNameW(internalName);
-    impl->windowHandle = CreateWindowW(WINDOW_CLASS_NAME, internalNameW.c_str(), BORDERED_STYLE, rect.GetX(), rect.GetY(), static_cast<int>(rect.GetWidth()), static_cast<int>(rect.GetHeight()), 0L, 0L, hInstance, this);
+    impl->windowHandle = CreateWindowW
+        (
+        WINDOW_CLASS_NAME, 
+        internalNameW.c_str(), 
+        BORDERED_STYLE, 
+        rect.GetX(), 
+        rect.GetY(), 
+        static_cast<int>(rect.GetWidth()), 
+        static_cast<int>(rect.GetHeight()), 
+        0, 
+        0, 
+        hInstance, 
+        this
+        );
     if (impl->windowHandle == nullptr)
     {
         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to create window '%1%'.", internalName.c_str()));
@@ -421,7 +438,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
                 if (bounds.x == FINJIN_OS_WINDOW_COORDINATE_DEFAULT || bounds.y == FINJIN_OS_WINDOW_COORDINATE_DEFAULT)
                 {
                     OSWindowRect boundsRect(bounds.x, bounds.y, bounds.width, bounds.height);
-                    boundsRect.PositionWindowRect(displayRect);
+                    boundsRect.CenterDefaultsInParent(displayRect);
 
                     bounds.x = boundsRect.x;
                     bounds.y = boundsRect.y;

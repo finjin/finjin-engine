@@ -44,7 +44,7 @@
 #include "finjin/engine/StringTable.hpp"
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     #include "finjin/engine/VRSystem.hpp"
-    #include "GenericVRInputDevice.hpp"
+    #include "GenericInputDevice.hpp"
 #endif
 
 
@@ -59,7 +59,7 @@ namespace Finjin { namespace Engine {
     class ApplicationSystemMessage
     {
     public:
-        enum MessageType
+        enum Type
         {
             SAVE_STATE,
             PAUSE,
@@ -67,18 +67,12 @@ namespace Finjin { namespace Engine {
             LOW_MEMORY_WARNING
         };
 
-        ApplicationSystemMessage(MessageType messageType)
-        {
-            this->messageType = messageType;
-        }
+        ApplicationSystemMessage(Type type) { this->type = type; }
 
-        MessageType GetMessageType() const
-        {
-            return this->messageType;
-        }
+        Type GetType() const { return this->type; }
 
     private:
-        MessageType messageType;
+        Type type;
     };
 
     class Application :
@@ -89,6 +83,21 @@ namespace Finjin { namespace Engine {
     public:
         Application(Allocator* allocator, ApplicationDelegate* applicationDelegate, void* applicationHandle = nullptr);
         ~Application();
+
+        ReadCommandLineResult ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
+        
+        bool Run(Error& error);
+        bool Run(CommandLineArgsProcessor& argsProcessor, Error& error);
+        
+        void Create(Error& error);
+        void Destroy();
+        
+        bool MainLoop(Error& error); //Platform-specific
+        
+        void ReportError(const Error& error); //Platform-specific
+        
+        void OnSystemMessage(const ApplicationSystemMessage& message, Error& error);
+        void Tick(Error& error);
 
         ApplicationDelegate* GetDelegate();
 
@@ -101,22 +110,10 @@ namespace Finjin { namespace Engine {
         InputSystem& GetInputSystem();
         ApplicationViewportsController& GetViewportsController();
 
-        bool Run(Error& error);
-        bool Run(CommandLineArgsProcessor& argsProcessor, Error& error);
+        void HandleApplicationViewportsCreated(Error& error);
+        void HandleApplicationViewportEndOfLife(ApplicationViewport* appViewport, bool isPermanent);
 
-        ReadCommandLineResult ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
-
-        void OnSystemMessage(const ApplicationSystemMessage& message, Error& error);
-        void Tick(Error& error);
-
-        void Create(Error& error);
-        void Destroy();
-
-        bool MainLoop(Error& error); //Platform-specific
-
-        void ReportError(const Error& error); //Platform-specific
-
-    protected:
+    private:
         //OSWindowEventListener callbacks
         void WindowMoved(OSWindow* osWindow) override;
         void WindowResized(OSWindow* osWindow) override;
@@ -130,25 +127,20 @@ namespace Finjin { namespace Engine {
         void ShowTheCursor(); //Platform-specific
         void HideTheCursor(); //Platform-specific
 
-    public:
         void GetConfiguredApplicationViewportSize(WindowSize& windowSize, const Setting<OSWindowRect>& windowFrame);
 
         void HandleApplicationViewportLostFocus(ApplicationViewport* appViewport);
         void HandleApplicationViewportGainedFocus(ApplicationViewport* appViewport);
 
-        void HandleApplicationViewportsCreated(Error& error);
         void HandleApplicationViewportCreated(ApplicationViewport* appViewport, const ApplicationViewportDescription& windowDescription, Error& error);
-
-        void HandleApplicationViewportEndOfLife(ApplicationViewport* appViewport, bool isPermanent);
 
         ApplicationViewport* OSWindowToApplicationViewport(OSWindow* osWindow);
 
-    private:
         void ReadBootFile(Error& error);
         size_t GetBytesUsed();
 
     private:
-        void* applicationHandle; //Platform-specific pointer to the application
+        void* applicationHandle; //Platform-specific pointer to the application. Might be null
 
         size_t estimatedBytesFreeAtInitialization; //Might be MemorySize::UNKNOWN_SIZE
 
@@ -202,17 +194,9 @@ namespace Finjin { namespace Engine {
         VRContext::Settings vrContextSettings;
         VRSystem::Settings vrSystemSettings;
         VRSystem vrSystem;
-        UsableStaticVector<VRGameControllerForInputSystem, GameControllerConstants::MAX_GAME_CONTROLLERS> vrGameControllersForInputSystem;
-        UsableStaticVector<VRHeadsetForInputSystem, HeadsetConstants::MAX_HEADSETS> vrHeadsetsForInputSystem;
+        UsableStaticVector<VRGameControllerForInputContext<VRContext>, GameControllerConstants::MAX_GAME_CONTROLLERS> vrGameControllersForInputSystem;
+        UsableStaticVector<VRHeadsetForInputContext<VRContext>, HeadsetConstants::MAX_HEADSETS> vrHeadsetsForInputSystem;
     #endif
-
-        //PhysicsContext::Settings physicsContextSettings;
-        //PhysicsSystem::Settings physicsSystemSettings;
-        //PhysicsSystem physicsSystem;
-
-        //PathfindingContext::Settings pathfindingContextSettings;
-        //PathfindingSystem::Settings pathfindingSystemSettings;
-        //PathfindingSystem pathfindingSystem;
 
         ApplicationViewportsController appViewportsController;
         Utf8String workingWindowInternalName;

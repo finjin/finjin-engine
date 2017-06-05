@@ -75,8 +75,8 @@ namespace Finjin { namespace Engine {
         ScreenCaptureResult GetScreenCapture(ScreenCapture& screenCapture, D3D12FrameStage& frameStage);
 
         bool ToggleFullScreenExclusive(Error& error);
-        bool StartResizeTargets(bool minimized, Error& error);
-        void FinishResizeTargets(Error& error);
+        bool StartModifyScreenRenderTargets(Error& error);
+        void FinishModifyScreenRenderTargets(Error& error);
 
     private:
         void* CreateMaterial(ID3D12GraphicsCommandList* commandList, FinjinMaterial* material, Error& error);

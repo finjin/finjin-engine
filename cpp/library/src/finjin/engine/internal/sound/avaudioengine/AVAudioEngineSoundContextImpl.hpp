@@ -18,7 +18,6 @@
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/DynamicVector.hpp"
 #include "finjin/common/Error.hpp"
-#include "finjin/common/OperationStatus.hpp"
 #include "finjin/common/UsableDynamicVector.hpp"
 #include "finjin/engine/AssetFileReader.hpp"
 #include "AVAudioEngineSoundBuffer.hpp"

@@ -22,16 +22,13 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-LinuxMouse::LinuxMouse()
-{
-    this->context = nullptr;
-
-    Reset();
+LinuxMouse::LinuxMouse(Allocator* allocator) : Super(allocator)    
+{    
 }
 
 void LinuxMouse::Reset()
 {
-    this->semantic = InputDeviceSemantic::NONE;
+    Super::Reset();
 
     this->state.Reset();
 }
@@ -109,36 +106,6 @@ bool LinuxMouse::IsConnected() const
 bool LinuxMouse::GetConnectionChanged() const
 {
     return false;
-}
-
-const Utf8String& LinuxMouse::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void LinuxMouse::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic LinuxMouse::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void LinuxMouse::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& LinuxMouse::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& LinuxMouse::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t LinuxMouse::GetButtonCount() const

@@ -18,8 +18,6 @@
 #include "finjin/engine/InputContextCommonSettings.hpp"
 #include "../gcinput/GCInputGameController.hpp"
 #include "finjin/common/Error.hpp"
-#include "finjin/common/Chrono.hpp"
-#include "finjin/common/OperationStatus.hpp"
 
 
 //Types-------------------------------------------------------------------------

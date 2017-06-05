@@ -30,16 +30,13 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-LinuxKeyboard::LinuxKeyboard()
-{
-    this->context = nullptr;
-
-    Reset();
+LinuxKeyboard::LinuxKeyboard(Allocator* allocator) : Super(allocator)
+{    
 }
 
 void LinuxKeyboard::Reset()
 {
-    this->semantic = InputDeviceSemantic::NONE;
+    Super::Reset();
 
     this->state.Reset();
 }
@@ -129,36 +126,6 @@ bool LinuxKeyboard::IsConnected() const
 bool LinuxKeyboard::GetConnectionChanged() const
 {
     return false;
-}
-
-const Utf8String& LinuxKeyboard::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void LinuxKeyboard::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic LinuxKeyboard::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void LinuxKeyboard::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& LinuxKeyboard::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& LinuxKeyboard::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t LinuxKeyboard::GetButtonCount() const

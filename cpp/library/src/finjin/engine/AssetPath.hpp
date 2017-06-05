@@ -66,7 +66,7 @@ namespace Finjin { namespace Engine {
         INPUT_SYSTEM, //win32input, uwpinput, iosinput, macosinput, linuxinput
         INPUT_API, //xinput, dinput, gcinput
         INPUT_DEVICE_DESCRIPTOR, //inputdevice_<product descriptor>. Example: inputdevice_4c05c405_0000_0000_0000_504944564944, inputdevice_vid2341_pid1000
-        VR_SYSTEM, //win32vr, linuxvr
+        VR_SYSTEM, //openvr
         VR_API, //openvr
         DEVICE_MODEL, //The computer on which this application is running. device_<model>. Example: device_nexus6, device_ipad, etc...
 

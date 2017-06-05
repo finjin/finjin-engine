@@ -15,8 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/engine/InputComponents.hpp"
-#include "finjin/engine/InputSource.hpp"
+#include "finjin/engine/GenericInputDevice.hpp"
 
 
 //Types-------------------------------------------------------------------------

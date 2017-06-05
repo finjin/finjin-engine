@@ -26,6 +26,8 @@ WindowsUWPKeyboard::WindowsUWPKeyboard()
 
 void WindowsUWPKeyboard::Reset()
 {
+    Super::Reset();
+
     this->state.Reset();
 }
 
@@ -54,7 +56,6 @@ bool WindowsUWPKeyboard::Create(size_t index)
         try
         {
             auto virtualKey = (Windows::System::VirtualKey)buttonIndex;
-
             switch (virtualKey)
             {
                 case Windows::System::VirtualKey::Up: inputSemantic = InputComponentSemantic::TOGGLE_UP; break;
@@ -75,7 +76,7 @@ bool WindowsUWPKeyboard::Create(size_t index)
 
         this->state.buttons[buttonIndex]
             .SetIndex(buttonIndex)
-            .SetCode(buttonIndex)
+            .SetCode(static_cast<int>(buttonIndex))
             .SetDisplayName(keyName)
             .SetSemantic(inputSemantic)
             .SetProcessing(InputButtonProcessing::EVENT_DRIVEN)
@@ -108,36 +109,6 @@ bool WindowsUWPKeyboard::IsConnected() const
 bool WindowsUWPKeyboard::GetConnectionChanged() const
 {
     return false;
-}
-
-const Utf8String& WindowsUWPKeyboard::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void WindowsUWPKeyboard::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic WindowsUWPKeyboard::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void WindowsUWPKeyboard::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& WindowsUWPKeyboard::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& WindowsUWPKeyboard::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t WindowsUWPKeyboard::GetButtonCount() const

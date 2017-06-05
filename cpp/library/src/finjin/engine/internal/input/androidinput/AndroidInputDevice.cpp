@@ -20,8 +20,6 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-
-//AndroidInputDevice
 AndroidInputDevice::AndroidInputDevice()
 {
     Reset();
@@ -29,17 +27,9 @@ AndroidInputDevice::AndroidInputDevice()
 
 void AndroidInputDevice::Reset()
 {
+    Super::Reset();
+
     this->id = 0;
-
-    this->semantic = InputDeviceSemantic::NONE;
-
-    this->displayName.clear();
-
-    this->productName.clear();
-    this->instanceName.clear();
-
-    this->productDescriptor.clear();
-    this->instanceDescriptor.clear();
 
     this->isVirtual = false;
 }
@@ -47,66 +37,6 @@ void AndroidInputDevice::Reset()
 int AndroidInputDevice::GetID() const
 {
     return this->id;
-}
-
-const Utf8String& AndroidInputDevice::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void AndroidInputDevice::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic AndroidInputDevice::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void AndroidInputDevice::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& AndroidInputDevice::GetProductName() const
-{
-    return this->productName;
-}
-
-void AndroidInputDevice::SetProductName(const Utf8String& value)
-{
-    this->productName = value;
-}
-
-const Utf8String& AndroidInputDevice::GetInstanceName() const
-{
-    return this->instanceName;
-}
-
-void AndroidInputDevice::SetInstanceName(const Utf8String& value)
-{
-    this->instanceName = value;
-}
-
-const Utf8String& AndroidInputDevice::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-void AndroidInputDevice::SetProductDescriptor(const Utf8String& value)
-{
-    this->productDescriptor = value;
-}
-
-const Utf8String& AndroidInputDevice::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
-}
-
-void AndroidInputDevice::SetInstanceDescriptor(const Utf8String& value)
-{
-    this->instanceDescriptor = value;
 }
 
 size_t AndroidInputDevice::GetLocatorCount() const

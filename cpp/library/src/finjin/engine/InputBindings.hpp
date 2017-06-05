@@ -390,7 +390,7 @@ namespace Finjin { namespace Engine {
         }
 
         template <typename InputCommands>
-        void AddHapticFeedback(InputCommands& inputCommands, const HapticFeedbackSettings& force, InputDeviceClass deviceClass, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
+        void AddHapticFeedback(InputCommands& inputCommands, const HapticFeedback& force, InputDeviceClass deviceClass, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             std::array<BitArray<InputDeviceConstants::MAX_DEVICES>, InputDeviceClassUtilities::COUNT> triggeredDevices;
 

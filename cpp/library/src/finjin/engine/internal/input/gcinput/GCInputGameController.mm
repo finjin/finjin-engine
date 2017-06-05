@@ -269,20 +269,17 @@ static void Update(GCInputGameController& gameController, SimpleTimeDelta elapse
 //Implementation----------------------------------------------------------------
 
 //GCInputGameController
-GCInputGameController::GCInputGameController()
+GCInputGameController::GCInputGameController(Allocator* allocator) : Super(allocator)
 {
-    Reset();
+    this->index = 0;
+    this->isNewConnection = false;
 }
 
 void GCInputGameController::Reset()
 {
+    Super::Reset();
+    
     this->index = 0;
-    this->semantic = InputDeviceSemantic::NONE;
-    this->displayName.clear();
-    this->instanceName.clear();
-    this->productName.clear();
-    this->instanceDescriptor.clear();
-    this->productDescriptor.clear();
     this->state.Reset();
     this->isNewConnection = false;
 }
@@ -318,36 +315,6 @@ bool GCInputGameController::IsNewConnection() const
 size_t GCInputGameController::GetIndex() const
 {
     return this->index;
-}
-
-const Utf8String& GCInputGameController::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void GCInputGameController::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic GCInputGameController::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void GCInputGameController::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& GCInputGameController::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& GCInputGameController::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t GCInputGameController::GetAxisCount() const
@@ -400,7 +367,7 @@ InputLocator* GCInputGameController::GetLocator(size_t locatorIndex)
     return nullptr;
 }
 
-void GCInputGameController::AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count)
+void GCInputGameController::AddHapticFeedback(const HapticFeedback* forces, size_t count)
 {
 }
 

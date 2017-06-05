@@ -16,7 +16,7 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/DefaultAllocator.hpp"
-#include "finjin/common/PassthroughSystemAllocator.hpp"
+#include "finjin/common/SystemAllocator.hpp"
 
 
 //Macros------------------------------------------------------------------------
@@ -25,6 +25,6 @@
     {\
         int FinjinMain(ApplicationDelegate* del, int argc, char* argv[]);\
         \
-        Finjin::Common::DefaultAllocator<Finjin::Common::PassthroughSystemAllocator> defaultAllocator;\
+        Finjin::Common::DefaultAllocator<Finjin::Common::SystemAllocator> defaultAllocator;\
         return FinjinMain(Finjin::Common::AllocatedClass::New<AppDelegate>(defaultAllocator, FINJIN_CALLER_ARGUMENTS), argc, argv);\
     }

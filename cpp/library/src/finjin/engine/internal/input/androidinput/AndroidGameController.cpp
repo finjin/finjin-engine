@@ -87,7 +87,7 @@ AndroidGameController::AndroidGameController()
 
 void AndroidGameController::Reset()
 {
-    AndroidInputDevice::Reset();
+    Super::Reset();
 
     this->connectedButtons.clear();
     this->connectedAxes.clear();

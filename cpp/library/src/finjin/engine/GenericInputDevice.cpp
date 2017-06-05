@@ -13,7 +13,7 @@
 
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
-#include "GenericVRInputDevice.hpp"
+#include "GenericInputDevice.hpp"
 
 using namespace Finjin::Engine;
 

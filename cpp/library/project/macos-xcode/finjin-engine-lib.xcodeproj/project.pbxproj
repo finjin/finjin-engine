@@ -88,7 +88,7 @@
 		657359961ECFFBD1009FA3E6 /* imgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6573598E1ECFFBD1009FA3E6 /* imgui.cpp */; };
 		657AA1641E420EE8004ADA22 /* ShaderFeatures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA1621E420EE8004ADA22 /* ShaderFeatures.cpp */; };
 		657AA16E1E44AACE004ADA22 /* ShaderFeatureFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */; };
-		6586C4B81EE12D7400F797E5 /* GenericVRInputDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6586C4B61EE12D7400F797E5 /* GenericVRInputDevice.cpp */; };
+		6586C4B81EE12D7400F797E5 /* GenericInputDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6586C4B61EE12D7400F797E5 /* GenericInputDevice.cpp */; };
 		65A30A901EC7A9930068F9BC /* btAxisSweep3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A30A7C1EC7A9930068F9BC /* btAxisSweep3.cpp */; };
 		65A30A931EC7A9930068F9BC /* btBroadphaseProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A30A7F1EC7A9930068F9BC /* btBroadphaseProxy.cpp */; };
 		65A30A951EC7A9930068F9BC /* btCollisionAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65A30A811EC7A9930068F9BC /* btCollisionAlgorithm.cpp */; };
@@ -518,8 +518,8 @@
 		657AA16C1E44AACE004ADA22 /* ShaderFeatureFlag.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderFeatureFlag.cpp; path = ../../src/finjin/engine/ShaderFeatureFlag.cpp; sourceTree = SOURCE_ROOT; };
 		657AA16D1E44AACE004ADA22 /* ShaderFeatureFlag.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ShaderFeatureFlag.hpp; path = ../../src/finjin/engine/ShaderFeatureFlag.hpp; sourceTree = SOURCE_ROOT; };
 		657AA1781E47FA21004ADA22 /* AssetCreationCapability.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = AssetCreationCapability.hpp; path = ../../src/finjin/engine/AssetCreationCapability.hpp; sourceTree = SOURCE_ROOT; };
-		6586C4B61EE12D7400F797E5 /* GenericVRInputDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GenericVRInputDevice.cpp; path = ../../src/finjin/engine/GenericVRInputDevice.cpp; sourceTree = SOURCE_ROOT; };
-		6586C4B71EE12D7400F797E5 /* GenericVRInputDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GenericVRInputDevice.hpp; path = ../../src/finjin/engine/GenericVRInputDevice.hpp; sourceTree = SOURCE_ROOT; };
+		6586C4B61EE12D7400F797E5 /* GenericInputDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GenericInputDevice.cpp; path = ../../src/finjin/engine/GenericInputDevice.cpp; sourceTree = SOURCE_ROOT; };
+		6586C4B71EE12D7400F797E5 /* GenericInputDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GenericInputDevice.hpp; path = ../../src/finjin/engine/GenericInputDevice.hpp; sourceTree = SOURCE_ROOT; };
 		65A30A6A1EC7A8710068F9BC /* btBulletCollisionCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = btBulletCollisionCommon.h; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/btBulletCollisionCommon.h"; sourceTree = "<absolute>"; };
 		65A30A6B1EC7A8710068F9BC /* btBulletDynamicsCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = btBulletDynamicsCommon.h; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/btBulletDynamicsCommon.h"; sourceTree = "<absolute>"; };
 		65A30A7C1EC7A9930068F9BC /* btAxisSweep3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = btAxisSweep3.cpp; path = "/Users/derek/finjin-3rd-party/cpp/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp"; sourceTree = "<absolute>"; };
@@ -1409,8 +1409,8 @@
 			children = (
 				651282791D0B60C60041C324 /* FlyingCameraInputBindings.cpp */,
 				6512827A1D0B60C60041C324 /* FlyingCameraInputBindings.hpp */,
-				6586C4B61EE12D7400F797E5 /* GenericVRInputDevice.cpp */,
-				6586C4B71EE12D7400F797E5 /* GenericVRInputDevice.hpp */,
+				6586C4B61EE12D7400F797E5 /* GenericInputDevice.cpp */,
+				6586C4B71EE12D7400F797E5 /* GenericInputDevice.hpp */,
 				6512827C1D0B60C60041C324 /* InputBindings.hpp */,
 				6512827D1D0B60C60041C324 /* InputBindingsSerializer.hpp */,
 				6512827E1D0B60C60041C324 /* InputComponents.cpp */,
@@ -2375,7 +2375,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6586C4B81EE12D7400F797E5 /* GenericVRInputDevice.cpp in Sources */,
+				6586C4B81EE12D7400F797E5 /* GenericInputDevice.cpp in Sources */,
 				65D15B161ED8E384003B0959 /* ScreenCapture.cpp in Sources */,
 				65A8A4481ED5534C00791962 /* GpuContextCommonImpl.cpp in Sources */,
 				657359941ECFFBD1009FA3E6 /* imgui_draw.cpp in Sources */,

@@ -23,9 +23,11 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class WindowsUWPKeyboard
+    class WindowsUWPKeyboard : public GenericInputDeviceImpl
     {
     public:
+        using Super = GenericInputDeviceImpl;
+
         WindowsUWPKeyboard();
 
         void Reset();
@@ -37,15 +39,6 @@ namespace Finjin { namespace Engine {
 
         bool IsConnected() const;
         bool GetConnectionChanged() const;
-
-        const Utf8String& GetDisplayName() const;
-        void SetDisplayName(const Utf8String& value);
-
-        InputDeviceSemantic GetSemantic() const;
-        void SetSemantic(InputDeviceSemantic value);
-
-        const Utf8String& GetProductDescriptor() const;
-        const Utf8String& GetInstanceDescriptor() const;
 
         size_t GetButtonCount() const;
         InputButton* GetButton(size_t index);
@@ -60,16 +53,6 @@ namespace Finjin { namespace Engine {
         InputLocator* GetLocator(size_t index);
 
     private:
-        Utf8String displayName;
-
-        InputDeviceSemantic semantic;
-
-        Utf8String instanceName;
-        Utf8String productName;
-
-        Utf8String instanceDescriptor;
-        Utf8String productDescriptor;
-
         InputDeviceState<InputButton, InputAxis, InputPov, KeyboardConstants::MAX_BUTTON_COUNT> state;
     };
 

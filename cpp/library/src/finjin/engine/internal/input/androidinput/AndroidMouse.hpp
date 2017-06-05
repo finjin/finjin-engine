@@ -16,7 +16,6 @@
 
 //Includes----------------------------------------------------------------------
 #include "AndroidInputDevice.hpp"
-#include "finjin/common/StaticVector.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -27,6 +26,8 @@ namespace Finjin { namespace Engine {
     class AndroidMouse : public AndroidInputDevice
     {
     public:
+        using Super = AndroidInputDevice;
+
         AndroidMouse();
 
         void Reset();

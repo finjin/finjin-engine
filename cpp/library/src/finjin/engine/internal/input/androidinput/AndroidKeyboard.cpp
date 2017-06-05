@@ -30,7 +30,7 @@ AndroidKeyboard::AndroidKeyboard()
 
 void AndroidKeyboard::Reset()
 {
-    AndroidInputDevice::Reset();
+    Super::Reset();
 
     this->state.Reset();
 

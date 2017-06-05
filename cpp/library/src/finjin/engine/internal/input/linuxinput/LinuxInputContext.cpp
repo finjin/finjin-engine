@@ -56,13 +56,16 @@ struct LinuxInputContext::Impl : public AllocatedClass, public OSWindowEventList
 //Implementation----------------------------------------------------------------
 
 //LinuxInputContext::Impl
-LinuxInputContext::Impl::Impl(Allocator* allocator, LinuxInputSystem* inputSystem) : AllocatedClass(allocator), settings(allocator)
+LinuxInputContext::Impl::Impl(Allocator* allocator, LinuxInputSystem* inputSystem) : AllocatedClass(allocator), settings(allocator), mouse(allocator), keyboard(allocator)
 {
     this->inputSystem = inputSystem;
 
     this->updateCount = 0;
-
-    this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, allocator);
+    
+    this->gameControllers.maximize();
+    for (auto& gameController : this->gameControllers)
+        gameController.SetAllocator(allocator);
+    this->gameControllers.clear();
 }
 
 void LinuxInputContext::Impl::WindowOnKeyDown(OSWindow* osWindow, int softwareKey, int hardwareCode, bool controlDown, bool shiftDown, bool altDown)
@@ -164,8 +167,13 @@ void LinuxInputContext::Create(const Settings& settings, Error& error)
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
-    //Copy settings---------------------------------------------
     impl->settings = settings;
+    
+    if (!impl->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, impl->GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate config buffer.");
+        return;
+    }
 
     impl->inputDevicesAssetReader.Create(*impl->settings.assetFileReader, impl->settings.initialAssetFileSelector, AssetClass::INPUT_DEVICE, impl->GetAllocator(), error);
     if (error)

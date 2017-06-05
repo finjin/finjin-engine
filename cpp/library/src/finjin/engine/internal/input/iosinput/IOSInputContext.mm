@@ -65,8 +65,11 @@ IOSInputContext::Impl::Impl(Allocator* allocator, IOSInputSystem* inputSystem) :
 
     this->gameControllerUpdateCount = 0;
     this->nongameControllerUpdateCount = 0;
-
-    this->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, allocator);
+    
+    this->gameControllers.maximize();
+    for (auto& gameController : this->gameControllers)
+        gameController.SetAllocator(allocator);
+    this->gameControllers.clear();
 }
 
 void IOSInputContext::Impl::WindowOnPointerMove(OSWindow* osWindow, PointerType pointerType, int pointerID, InputCoordinate x, InputCoordinate y, Buttons buttons)
@@ -121,8 +124,13 @@ void IOSInputContext::Create(const Settings& settings, Error& error)
 
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
-    //Copy settings---------------------------------------------
     impl->settings = settings;
+    
+    if (!impl->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator()))
+    {
+        FINJIN_SET_ERROR(error, "Failed to allocate config buffer.");
+        return;
+    }
 
     impl->inputDevicesAssetReader.Create(*impl->settings.assetFileReader, impl->settings.initialAssetFileSelector, AssetClass::INPUT_DEVICE, GetAllocator(), error);
     if (error)

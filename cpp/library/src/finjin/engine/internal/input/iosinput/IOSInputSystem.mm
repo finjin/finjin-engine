@@ -89,11 +89,7 @@ IOSInputContext* IOSInputSystem::CreateContext(const IOSInputContext::Settings& 
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    if (impl == nullptr)
-    {
-        FINJIN_SET_ERROR(error, "IOSInputSystem is not in an initialized state.");
-        return nullptr;
-    }
+    FINJIN_ENGINE_CHECK_IMPL_NOT_NULL_RETURN(impl, error, nullptr)
 
     if (impl->contexts.full())
     {

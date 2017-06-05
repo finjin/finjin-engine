@@ -30,7 +30,7 @@ AndroidMouse::AndroidMouse()
 
 void AndroidMouse::Reset()
 {
-    AndroidInputDevice::Reset();
+    Super::Reset();
 
     this->connectedButtons.clear();
     this->connectedAxes.clear();

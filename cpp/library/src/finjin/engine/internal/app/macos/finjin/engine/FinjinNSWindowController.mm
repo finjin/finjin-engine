@@ -52,7 +52,7 @@ using namespace Finjin::Common;
 
 + (FinjinNSWindowController*)createFromWindowFrame:(NSRect)frameRect withTitle:(NSString*)title withWindowStyle:(NSUInteger)windowStyle withScreen:(NSScreen*)screen
 {
-    AppleUtilities::PositionWindowRect(frameRect, [NSScreen mainScreen].visibleFrame, FINJIN_OS_WINDOW_COORDINATE_DEFAULT);
+    AppleUtilities::CenterDefaultsInParent(frameRect, [NSScreen mainScreen].visibleFrame, FINJIN_OS_WINDOW_COORDINATE_DEFAULT);
     
     auto contentRect = [NSWindow contentRectForFrameRect:frameRect styleMask:windowStyle];
     contentRect.origin = frameRect.origin;

@@ -749,10 +749,10 @@ namespace Finjin { namespace Engine {
         StaticVector<Axis, maxAxisCount> axes;
         StaticVector<Pov, maxPovCount> povs;
     };
-
-    struct HapticFeedbackSettings
+        
+    struct HapticFeedback
     {
-        HapticFeedbackSettings()
+        HapticFeedback()
         {
             Reset();
         }
@@ -783,67 +783,7 @@ namespace Finjin { namespace Engine {
         float decayRate; //Decay per unit of time
         SimpleTimeDelta duration; //Length of time for the effect
     };
-
-    class InputGenericGameController
-    {
-    public:
-        virtual ~InputGenericGameController() {}
-
-        virtual const Utf8String& GetSystemInternalName() const = 0;
-
-        virtual const Utf8String& GetProductDescriptor() const = 0;
-        virtual const Utf8String& GetInstanceDescriptor() const = 0;
-
-        virtual InputDeviceSemantic GetSemantic() const = 0;
-        virtual void SetSemantic(InputDeviceSemantic value) = 0;
-
-        virtual const Utf8String& GetDisplayName() const = 0;
-        virtual void SetDisplayName(const Utf8String& value) = 0;
-
-        virtual bool IsConnected() const = 0;
-        virtual bool ConnectionChanged() const = 0;
-        virtual bool IsNewConnection() const = 0;
-
-        virtual size_t GetAxisCount() const = 0;
-        virtual InputAxis* GetAxis(size_t index) = 0;
-
-        virtual size_t GetPovCount() const = 0;
-        virtual InputPov* GetPov(size_t index) = 0;
-
-        virtual size_t GetButtonCount() const = 0;
-        virtual InputButton* GetButton(size_t index) = 0;
-
-        virtual size_t GetLocatorCount() const = 0;
-        virtual InputLocator* GetLocator(size_t index) = 0;
-
-        virtual void AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count) = 0;
-        virtual void StopHapticFeedback() = 0;
-    };
-
-    class InputGenericHeadset
-    {
-    public:
-        virtual ~InputGenericHeadset() {}
-
-        virtual const Utf8String& GetSystemInternalName() const = 0;
-
-        virtual const Utf8String& GetProductDescriptor() const = 0;
-        virtual const Utf8String& GetInstanceDescriptor() const = 0;
-
-        virtual InputDeviceSemantic GetSemantic() const = 0;
-        virtual void SetSemantic(InputDeviceSemantic value) = 0;
-
-        virtual const Utf8String& GetDisplayName() const = 0;
-        virtual void SetDisplayName(const Utf8String& value) = 0;
-
-        virtual bool IsConnected() const = 0;
-        virtual bool ConnectionChanged() const = 0;
-        virtual bool IsNewConnection() const = 0;
-
-        virtual size_t GetLocatorCount() const = 0;
-        virtual InputLocator* GetLocator(size_t index) = 0;
-    };
-
+    
 } }
 
 

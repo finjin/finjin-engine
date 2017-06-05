@@ -72,9 +72,31 @@ namespace Finjin { namespace Engine {
             return path.EndsWith(ToDirectoryName(assetClass));
         }
 
-        static AssetClass ParseFromExtension(const Utf8String& extension);
+        template <typename T>
+        static AssetClass ParseFromExtension(const T& extension)
+        {
+            for (size_t assetClass = 0; assetClass < (size_t)AssetClass::COUNT; assetClass++)
+            {
+                if (extension.EndsWith(ToString(assetClass)))
+                    return static_cast<AssetClass>(assetClass);
+            }
+            
+            return AssetClass::COUNT;
+        }
 
-        static bool IsHandwrittenExtension(const Utf8String& extension);
+        template <typename T>
+        static bool IsHandwrittenExtension(const T& extension)
+        {
+            auto hyphenFoundAt = extension.find('-');
+            if (hyphenFoundAt != Utf8String::npos)
+            {
+                Utf8StringView sub;
+                extension.substr(sub, hyphenFoundAt + 1, 4);
+                return sub == "hand";
+            }
+            else
+                return extension.StartsWith("hand");
+        }
 
         static Utf8String ToHandwrittenString(AssetClass assetClass);
 

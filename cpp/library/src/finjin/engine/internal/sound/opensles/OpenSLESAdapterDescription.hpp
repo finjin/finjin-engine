@@ -16,7 +16,6 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/StaticVector.hpp"
-#include "finjin/common/Utf8String.hpp"
 #include "OpenSLESAdapterID.hpp"
 
 

@@ -56,7 +56,7 @@ struct DInputGameController::Impl : public DInputDevice
     //Force feedback
     LPDIRECTINPUTEFFECT forceEffect;
     size_t forceFeedbackAxisCount;
-    HapticFeedbackSettings forceFeedback;
+    HapticFeedback forceFeedback;
 };
 
 //Local functions---------------------------------------------------------------
@@ -354,7 +354,7 @@ InputLocator* DInputGameController::GetLocator(size_t locatorIndex)
     return nullptr;
 }
 
-void DInputGameController::AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count)
+void DInputGameController::AddHapticFeedback(const HapticFeedback* forces, size_t count)
 {
     //Modifying an effect is basically the same as creating a new one, except you need only specify the parameters you are modifying
 
@@ -381,7 +381,7 @@ DInputGameController::Impl* DInputGameController::GetImpl()
     return impl.get();
 }
 
-void DInputGameController::_SetForce(HapticFeedbackSettings& force)
+void DInputGameController::_SetForce(HapticFeedback& force)
 {
     DICONSTANTFORCE constantForce = {};
     constantForce.lMagnitude = long(force.intensity * DI_FFNOMINALMAX);
@@ -400,7 +400,7 @@ void DInputGameController::_SetForce(HapticFeedbackSettings& force)
     impl->forceEffect->Start(1, 0); //Start the effect
 }
 
-void DInputGameController::_StopForce(HapticFeedbackSettings& force)
+void DInputGameController::_StopForce(HapticFeedback& force)
 {
     impl->dinputDevice->SendForceFeedbackCommand(DISFFC_STOPALL);
 

@@ -60,7 +60,7 @@ struct AndroidInputContext::Impl : public AllocatedClass
     StaticVector<AndroidGameController, AndroidGameControllerConstants::MAX_NATIVE_GAME_CONTROLLERS> gameControllers;
     StaticVector<AndroidGameController, AndroidGameControllerConstants::MAX_NATIVE_GAME_CONTROLLERS> gameControllersBuffer;
 
-    StaticVector<InputGenericGameController*, MAX_EXTERNAL_GAME_CONTROLLER_COUNT> externalGameControllers;
+    StaticVector<ExternalGameController*, MAX_EXTERNAL_GAME_CONTROLLER_COUNT> externalGameControllers;
 
     StaticVector<AndroidMouse, MouseConstants::MAX_MICE> mice;
     StaticVector<AndroidMouse, MouseConstants::MAX_MICE> miceBuffer;
@@ -353,7 +353,7 @@ bool AndroidInputContext::IsDeviceConnected(InputDeviceClass deviceClass, size_t
     return false;
 }
 
-void AndroidInputContext::AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedbackSettings* forces, size_t count)
+void AndroidInputContext::AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedback* forces, size_t count)
 {
 }
 
@@ -371,7 +371,7 @@ AndroidGameController* AndroidInputContext::GetGameController(size_t index)
     return &impl->gameControllers[index];
 }
 
-void AndroidInputContext::AddExternalGameController(InputGenericGameController* gameController, bool configure, Error& error)
+void AndroidInputContext::AddExternalGameController(ExternalGameController* gameController, bool configure, Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -398,7 +398,7 @@ void AndroidInputContext::AddExternalGameController(InputGenericGameController* 
     }
 }
 
-void AndroidInputContext::RemoveExternalGameController(InputGenericGameController* gameController)
+void AndroidInputContext::RemoveExternalGameController(ExternalGameController* gameController)
 {
     auto foundAt = impl->externalGameControllers.find(gameController);
     if (foundAt != impl->externalGameControllers.end())
@@ -410,7 +410,7 @@ size_t AndroidInputContext::GetExternalGameControllerCount() const
     return impl->externalGameControllers.size();
 }
 
-InputGenericGameController* AndroidInputContext::GetExternalGameController(size_t index)
+ExternalGameController* AndroidInputContext::GetExternalGameController(size_t index)
 {
     return impl->externalGameControllers[index];
 }

@@ -16,9 +16,8 @@
 
 //Includes----------------------------------------------------------------------
 #include "finjin/common/AllocatedClass.hpp"
-#include "finjin/common/Error.hpp"
 #include "finjin/common/Chrono.hpp"
-#include "finjin/common/OperationStatus.hpp"
+#include "finjin/common/Error.hpp"
 #include "finjin/engine/InputContextCommonSettings.hpp"
 #include "../gcinput/GCInputGameController.hpp"
 #include "MacOSKeyboard.hpp"

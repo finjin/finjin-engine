@@ -36,11 +36,6 @@ namespace Finjin { namespace Engine {
 
     struct WindowBounds
     {
-        OSWindowCoordinate x, y;
-        OSWindowDimension width, height;
-        OSWindowDimension clientWidth, clientHeight;
-        WindowBoundsFlags flags;
-
         WindowBounds();
         WindowBounds(OSWindowCoordinate x, OSWindowCoordinate y, OSWindowDimension width, OSWindowDimension height, OSWindowDimension clientWidth = 0, OSWindowDimension clientHeight = 0);
 
@@ -60,6 +55,11 @@ namespace Finjin { namespace Engine {
         void AdjustSize(OSWindowDimension newWidth, OSWindowDimension newHeight);
 
         void Scale(float value);
+        
+        OSWindowCoordinate x, y;
+        OSWindowDimension width, height;
+        OSWindowDimension clientWidth, clientHeight;
+        WindowBoundsFlags flags;
     };
 
 } }

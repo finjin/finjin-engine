@@ -21,7 +21,6 @@
 #include "finjin/common/Error.hpp"
 #include "finjin/common/FiberSpinLock.hpp"
 #include "finjin/engine/GpuContextCommonSettings.hpp"
-#include "finjin/common/OperationStatus.hpp"
 #include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/AssetClassFileReader.hpp"
 #include "finjin/engine/Camera.hpp"

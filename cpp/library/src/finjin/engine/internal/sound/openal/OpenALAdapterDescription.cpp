@@ -26,7 +26,7 @@ void OpenALAdapterDescriptions::SortBestToWorst()
 
 const OpenALAdapterDescription* OpenALAdapterDescriptions::GetByAdapterID(const OpenALAdapterID& adapterID) const
 {
-    for (const auto& item : *this)
+    for (auto& item : *this)
     {
         if (item.adapterID == adapterID)
             return &item;

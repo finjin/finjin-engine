@@ -15,12 +15,8 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/Chrono.hpp"
 #include "finjin/common/Path.hpp"
-#include "finjin/common/StaticVector.hpp"
-#include "finjin/common/Utf8String.hpp"
-#include "finjin/engine/InputComponents.hpp"
-#include "finjin/engine/InputSource.hpp"
+#include "LinuxInputDevice.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -28,11 +24,15 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class LinuxGameController
+    class LinuxGameController : public LinuxInputDevice
     {
     public:
-        LinuxGameController();
+        using Super = LinuxInputDevice;
+        
+        LinuxGameController(Allocator* allocator = nullptr);
 
+        void SetAllocator(Allocator* allocator);
+        
         void Reset();
 
         void Create(size_t index, int fd, const Path& devicePath);
@@ -46,15 +46,6 @@ namespace Finjin { namespace Engine {
         bool IsNewConnection() const;
 
         size_t GetIndex() const;
-
-        const Utf8String& GetDisplayName() const;
-        void SetDisplayName(const Utf8String& value);
-
-        InputDeviceSemantic GetSemantic() const;
-        void SetSemantic(InputDeviceSemantic value);
-
-        const Utf8String& GetProductDescriptor() const;
-        const Utf8String& GetInstanceDescriptor() const;
 
         size_t GetAxisCount() const;
         InputAxis* GetAxis(size_t axisIndex);
@@ -82,16 +73,6 @@ namespace Finjin { namespace Engine {
         Path devicePath;
 
         size_t index;
-
-        InputDeviceSemantic semantic;
-
-        Utf8String displayName;
-
-        Utf8String instanceName;
-        Utf8String productName;
-
-        Utf8String instanceDescriptor;
-        Utf8String productDescriptor;
 
         InputDeviceState<InputButton, InputAxis, InputPov, GameControllerConstants::MAX_BUTTON_COUNT, GameControllerConstants::MAX_AXIS_COUNT> state;
 

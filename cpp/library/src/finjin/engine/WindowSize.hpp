@@ -103,7 +103,6 @@ namespace Finjin { namespace Engine {
         WindowSizeState windowedState;
         EnumArray<WindowSizeState, WindowSizeState::COUNT, WindowBounds> bounds;
 
-        //---------------
         OSWindow* window;
         bool applyingToWindow;
     };

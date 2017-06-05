@@ -112,7 +112,7 @@ InputLocator* OpenVRDevice::GetLocator(size_t index)
     return &impl->locators[index];
 }
 
-void OpenVRDevice::AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count)
+void OpenVRDevice::AddHapticFeedback(const HapticFeedback* forces, size_t count)
 {
     if (count > 0 && forces != nullptr)
         impl->forceFeedback = forces[0];

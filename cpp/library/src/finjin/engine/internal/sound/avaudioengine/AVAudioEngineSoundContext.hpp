@@ -18,8 +18,6 @@
 #include "finjin/common/AllocatedClass.hpp"
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
-#include "finjin/common/OperationStatus.hpp"
-#include "finjin/common/Path.hpp"
 #include "finjin/engine/SoundContextCommonSettings.hpp"
 #include "finjin/engine/SoundFormat.hpp"
 #include "finjin/engine/SoundSorter.hpp"

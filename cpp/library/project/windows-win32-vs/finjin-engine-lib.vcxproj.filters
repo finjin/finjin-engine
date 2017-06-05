@@ -1726,7 +1726,7 @@
     <ClInclude Include="..\..\src\finjin\engine\RenderStatus.hpp">
       <Filter>Source Files\common\gpu</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\GenericVRInputDevice.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\GenericInputDevice.hpp">
       <Filter>Source Files\common\input</Filter>
     </ClInclude>
   </ItemGroup>
@@ -2754,7 +2754,7 @@
     <ClCompile Include="..\..\src\finjin\engine\ScreenCapture.cpp">
       <Filter>Source Files\common\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\GenericVRInputDevice.cpp">
+    <ClCompile Include="..\..\src\finjin\engine\GenericInputDevice.cpp">
       <Filter>Source Files\common\input</Filter>
     </ClCompile>
   </ItemGroup>

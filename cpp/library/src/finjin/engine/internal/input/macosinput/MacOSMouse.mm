@@ -23,24 +23,19 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-MacOSMouse::MacOSMouse()
+MacOSMouse::MacOSMouse(Allocator* allocator) : Super(allocator)
 {
-    this->context = nullptr;
-
-    Reset();
 }
 
 void MacOSMouse::Reset()
 {
-    this->semantic = InputDeviceSemantic::NONE;
+    Super::Reset();
 
     this->state.Reset();
 }
 
-bool MacOSMouse::Create(MacOSInputContext* context, size_t index)
+bool MacOSMouse::Create(size_t index)
 {
-    this->context = context;
-
     this->instanceName = "Mouse ";
     this->instanceName += Convert::ToString(index + 1);
 
@@ -53,17 +48,18 @@ bool MacOSMouse::Create(MacOSInputContext* context, size_t index)
     this->productDescriptor = "generic-mouse";
 
     this->state.buttons.resize(8);
-    this->state.buttons[0].SetIndex(0).SetSemantic(InputComponentSemantic::ACCEPT).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Left mouse button");
-    this->state.buttons[1].SetIndex(1).SetSemantic(InputComponentSemantic::CANCEL).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Right mouse button");
-    this->state.buttons[2].SetIndex(2).SetSemantic(InputComponentSemantic::SETTINGS).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Middle mouse button");
-    this->state.buttons[3].SetIndex(3).SetSemantic(InputComponentSemantic::SHIFT_LEFT).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Mouse button 4");
-    this->state.buttons[4].SetIndex(4).SetSemantic(InputComponentSemantic::SHIFT_RIGHT).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Mouse button 5");
+    size_t buttonIndex = 0;
+    this->state.buttons[buttonIndex++].SetIndex(0).SetSemantic(InputComponentSemantic::ACCEPT).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Left mouse button");
+    this->state.buttons[buttonIndex++].SetIndex(1).SetSemantic(InputComponentSemantic::CANCEL).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Right mouse button");
+    this->state.buttons[buttonIndex++].SetIndex(2).SetSemantic(InputComponentSemantic::SETTINGS).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Middle mouse button");
+    this->state.buttons[buttonIndex++].SetIndex(3).SetSemantic(InputComponentSemantic::SHIFT_LEFT).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Mouse button 4");
+    this->state.buttons[buttonIndex++].SetIndex(4).SetSemantic(InputComponentSemantic::SHIFT_RIGHT).SetProcessing(InputButtonProcessing::EVENT_DRIVEN).SetDisplayName("Mouse button 5");
     Utf8String buttonName;
-    for (size_t i = 5; i < this->state.buttons.size(); i++)
+    for (; buttonIndex < this->state.buttons.size(); buttonIndex++)
     {
         buttonName = "Mouse button ";
-        buttonName += Convert::ToString(i + 1);
-        this->state.buttons[i].SetIndex(i).SetDisplayName(displayName);
+        buttonName += Convert::ToString(buttonIndex + 1);
+        this->state.buttons[buttonIndex].SetIndex(buttonIndex).SetDisplayName(displayName);
     }
 
     this->state.axes.resize(3);
@@ -110,36 +106,6 @@ bool MacOSMouse::IsConnected() const
 bool MacOSMouse::GetConnectionChanged() const
 {
     return false;
-}
-
-const Utf8String& MacOSMouse::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void MacOSMouse::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic MacOSMouse::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void MacOSMouse::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& MacOSMouse::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& MacOSMouse::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t MacOSMouse::GetButtonCount() const

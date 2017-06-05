@@ -75,26 +75,16 @@ namespace Finjin { namespace Engine {
         bool ExitApplicationRequested() const;
         void RequestApplicationExit();
 
-        bool NeedsToModifyRenderTarget() const;
-        void ApplyModifyRenderTarget(Error& error);
-
-        void ApplyRenderTargetsResize(Error& error);
-
-        void ApplyFullScreenToggle(Error& error);
-        void ApplyFullScreenToggle(bool needsExclusiveToggle, Error& error);
-
         void OnTick(JobSystem& jobSystem, Error& error);
         void FinishWork(const RenderStatus& renderStatus);
 
         int Update(JobSystem& jobSystem, Error& error);
         void FinishFrame(const RenderStatus& renderStatus, size_t presentSyncIntervalOverride, Error& error);
 
-        virtual bool StartResizeTargets(Error& error);
-        virtual void FinishResizeTargets(Error& error);
-
     private:
-        void Init();
-
+        bool NeedsToModifyScreenRenderTargets() const;
+        void ApplyModifyScreenRenderTargets(Error& error);
+        
         void SetOSWindow(std::unique_ptr<OSWindow>&& osWindow);
 
         void ConfigureJobPipeline(size_t renderBuffering, size_t pipelineSize);
@@ -105,8 +95,6 @@ namespace Finjin { namespace Engine {
             std::unique_ptr<ApplicationViewportUpdateContext>&& updateContext,
             std::unique_ptr<ApplicationViewportRenderContext>&& renderContext
             );
-
-        void ResetUpdateAndRenderingCounters();
 
     private:
         struct Impl;

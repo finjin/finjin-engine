@@ -21,24 +21,19 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-MacOSKeyboard::MacOSKeyboard()
+MacOSKeyboard::MacOSKeyboard(Allocator* allocator) : Super(allocator)
 {
-    this->context = nullptr;
-
-    Reset();
 }
 
 void MacOSKeyboard::Reset()
 {
-    this->semantic = InputDeviceSemantic::NONE;
+    Super::Reset();
 
     this->state.Reset();
 }
 
-bool MacOSKeyboard::Create(MacOSInputContext* context, size_t index)
+bool MacOSKeyboard::Create(size_t index)
 {
-    this->context = context;
-
     this->instanceName = "Keyboard ";
     this->instanceName += Convert::ToString(index + 1);
 
@@ -184,36 +179,6 @@ bool MacOSKeyboard::IsConnected() const
 bool MacOSKeyboard::GetConnectionChanged() const
 {
     return false;
-}
-
-const Utf8String& MacOSKeyboard::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void MacOSKeyboard::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic MacOSKeyboard::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void MacOSKeyboard::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& MacOSKeyboard::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& MacOSKeyboard::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t MacOSKeyboard::GetButtonCount() const

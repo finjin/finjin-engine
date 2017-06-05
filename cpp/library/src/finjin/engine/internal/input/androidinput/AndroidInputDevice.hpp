@@ -17,8 +17,7 @@
 //Includes----------------------------------------------------------------------
 #include <android/input.h>
 #include "finjin/common/NvAndroidNativeAppGlue.h"
-#include "finjin/common/Utf8String.hpp"
-#include "finjin/engine/InputComponents.hpp"
+#include "finjin/engine/GenericInputDevice.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -26,32 +25,16 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class AndroidInputDevice
+    class AndroidInputDevice : public GenericInputDeviceImpl
     {
     public:
+        using Super = GenericInputDeviceImpl;
+
         AndroidInputDevice();
 
         void Reset();
 
         int GetID() const;
-
-        const Utf8String& GetDisplayName() const;
-        void SetDisplayName(const Utf8String& value);
-
-        InputDeviceSemantic GetSemantic() const;
-        void SetSemantic(InputDeviceSemantic value);
-
-        const Utf8String& GetProductName() const;
-        void SetProductName(const Utf8String& value);
-
-        const Utf8String& GetInstanceName() const;
-        void SetInstanceName(const Utf8String& value);
-
-        const Utf8String& GetProductDescriptor() const;
-        void SetProductDescriptor(const Utf8String& value);
-
-        const Utf8String& GetInstanceDescriptor() const;
-        void SetInstanceDescriptor(const Utf8String& value);
 
         size_t GetLocatorCount() const;
         InputLocator* GetLocator(size_t locatorIndex);
@@ -61,16 +44,6 @@ namespace Finjin { namespace Engine {
 
     protected:
         int id;
-
-        InputDeviceSemantic semantic;
-
-        Utf8String displayName;
-
-        Utf8String productName;
-        Utf8String instanceName;
-
-        Utf8String productDescriptor;
-        Utf8String instanceDescriptor;
 
         bool isVirtual;
     };

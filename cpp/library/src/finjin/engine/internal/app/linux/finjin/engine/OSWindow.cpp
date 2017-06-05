@@ -43,7 +43,7 @@ static OSWindowEventListener::Buttons XcbMouseButtonToOSWindowEventListenerButto
 }
 
 //Implementation----------------------------------------------------------------
-OSWindow::OSWindow(Allocator* allocator, void* clientData) : AllocatedClass(allocator)
+OSWindow::OSWindow(Allocator* allocator, void* clientData) : AllocatedClass(allocator), internalName(allocator)
 {
     this->window = 0;
     this->dndProxy = 0;
@@ -71,8 +71,11 @@ void OSWindow::Create
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    //Make copy of settings
-    this->internalName = internalName;
+    if (this->internalName.assign(internalName).HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign internal name.");
+        return;
+    }
 
     this->windowSize = windowSize;
     this->windowSize.SetWindow(this);
@@ -94,7 +97,7 @@ void OSWindow::Create
         {
             if (display.isPrimary)
             {
-                rect.PositionWindowRect(display.clientFrame);
+                rect.CenterDefaultsInParent(display.clientFrame);
                 break;
             }
         }        
@@ -127,7 +130,10 @@ void OSWindow::Create
         XCB_COPY_FROM_PARENT,
         this->window,
         this->screen->root,
-        rect.x, rect.y, rect.width, rect.height,
+        rect.x, 
+        rect.y, 
+        rect.width, 
+        rect.height,
         0,
         XCB_WINDOW_CLASS_INPUT_OUTPUT,
         this->screen->root_visual,
@@ -602,7 +608,7 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
             if (bounds.x == FINJIN_OS_WINDOW_COORDINATE_DEFAULT || bounds.y == FINJIN_OS_WINDOW_COORDINATE_DEFAULT)
             {
                 OSWindowRect boundsRect(bounds.x, bounds.y, bounds.width, bounds.height);
-                boundsRect.PositionWindowRect(displayRect);
+                boundsRect.CenterDefaultsInParent(displayRect);
                 
                 bounds.x = boundsRect.x;
                 bounds.y = boundsRect.y;

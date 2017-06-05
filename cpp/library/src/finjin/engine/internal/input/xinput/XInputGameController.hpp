@@ -67,7 +67,7 @@ namespace Finjin { namespace Engine {
         size_t GetLocatorCount() const;
         InputLocator* GetLocator(size_t locatorIndex);
 
-        void AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count);
+        void AddHapticFeedback(const HapticFeedback* forces, size_t count);
         void StopHapticFeedback();
 
         static size_t CreateGameControllers(XInputGameController* gameControllers, size_t gameControllerCount);

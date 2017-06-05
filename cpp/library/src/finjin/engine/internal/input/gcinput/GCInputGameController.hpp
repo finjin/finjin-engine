@@ -15,11 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/Chrono.hpp"
-#include "finjin/common/StaticVector.hpp"
-#include "finjin/common/Utf8String.hpp"
-#include "finjin/engine/InputComponents.hpp"
-#include "finjin/engine/InputSource.hpp"
+#include "finjin/engine/GenericInputDevice.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -27,13 +23,15 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class GCInputGameController
+    class GCInputGameController : public GenericInputDeviceImpl
     {
     public:
+        using Super = GenericInputDeviceImpl;
+        
         enum { MAX_GAME_CONTROLLERS = 5 }; //4 game controllers + 1 remote
 
     public:
-        GCInputGameController();
+        GCInputGameController(Allocator* allocator = nullptr);
 
         void Reset();
 
@@ -46,15 +44,6 @@ namespace Finjin { namespace Engine {
         bool IsNewConnection() const;
 
         size_t GetIndex() const;
-
-        const Utf8String& GetDisplayName() const;
-        void SetDisplayName(const Utf8String& value);
-
-        InputDeviceSemantic GetSemantic() const;
-        void SetSemantic(InputDeviceSemantic value);
-
-        const Utf8String& GetProductDescriptor() const;
-        const Utf8String& GetInstanceDescriptor() const;
 
         size_t GetAxisCount() const;
         InputAxis* GetAxis(size_t axisIndex);
@@ -71,7 +60,7 @@ namespace Finjin { namespace Engine {
         size_t GetLocatorCount() const;
         InputLocator* GetLocator(size_t locatorIndex);
 
-        void AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count);
+        void AddHapticFeedback(const HapticFeedback* forces, size_t count);
         void StopHapticFeedback();
 
         static void CreateGameControllers(StaticVector<GCInputGameController, GameControllerConstants::MAX_GAME_CONTROLLERS>& gameControllers);
@@ -82,16 +71,6 @@ namespace Finjin { namespace Engine {
 
         int id;
         size_t index;
-
-        InputDeviceSemantic semantic;
-
-        Utf8String displayName;
-
-        Utf8String instanceName;
-        Utf8String productName;
-
-        Utf8String instanceDescriptor;
-        Utf8String productDescriptor;
 
         InputDeviceState<InputButton, InputAxis, InputPov, GameControllerConstants::MAX_BUTTON_COUNT, GameControllerConstants::MAX_AXIS_COUNT> state;
         InputAccelerometer accelerometer;

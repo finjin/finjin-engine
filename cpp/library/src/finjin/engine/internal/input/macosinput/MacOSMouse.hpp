@@ -15,9 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/Chrono.hpp"
-#include "finjin/engine/InputComponents.hpp"
-#include "finjin/engine/InputSource.hpp"
+#include "finjin/engine/GenericInputDevice.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -25,16 +23,16 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class MacOSInputContext;
-
-    class MacOSMouse
+    class MacOSMouse : public GenericInputDeviceImpl
     {
     public:
-        MacOSMouse();
+        using Super = GenericInputDeviceImpl;
+        
+        MacOSMouse(Allocator* allocator);
 
         void Reset();
 
-        bool Create(MacOSInputContext* context, size_t index);
+        bool Create(size_t index);
         void Destroy();
 
         void Update(SimpleTimeDelta elapsedTime, bool isFirstUpdate);
@@ -42,15 +40,6 @@ namespace Finjin { namespace Engine {
 
         bool IsConnected() const;
         bool GetConnectionChanged() const;
-
-        const Utf8String& GetDisplayName() const;
-        void SetDisplayName(const Utf8String& value);
-
-        InputDeviceSemantic GetSemantic() const;
-        void SetSemantic(InputDeviceSemantic value);
-
-        const Utf8String& GetProductDescriptor() const;
-        const Utf8String& GetInstanceDescriptor() const;
 
         size_t GetButtonCount() const;
         InputButton* GetButton(size_t index);
@@ -65,18 +54,6 @@ namespace Finjin { namespace Engine {
         InputLocator* GetLocator(size_t locatorIndex);
 
     private:
-        MacOSInputContext* context;
-
-        InputDeviceSemantic semantic;
-
-        Utf8String displayName;
-
-        Utf8String instanceName;
-        Utf8String productName;
-
-        Utf8String instanceDescriptor;
-        Utf8String productDescriptor;
-
         InputDeviceState<InputButton, InputAxis, InputPov, MouseConstants::MAX_BUTTON_COUNT, MouseConstants::MAX_AXIS_COUNT> state;
     };
 

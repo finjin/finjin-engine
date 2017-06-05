@@ -130,7 +130,7 @@ bool VulkanGpuContext::ToggleFullScreenExclusive(Error& error)
     return false;
 }
 
-bool VulkanGpuContext::StartResizeTargets(bool minimized, Error& error)
+bool VulkanGpuContext::StartModifyScreenRenderTargets(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -139,7 +139,7 @@ bool VulkanGpuContext::StartResizeTargets(bool minimized, Error& error)
     return true;
 }
 
-void VulkanGpuContext::FinishResizeTargets(Error& error)
+void VulkanGpuContext::FinishModifyScreenRenderTargets(Error& error)
 {
     impl->CreateScreenSizeDependentResources(error);
     if (error)

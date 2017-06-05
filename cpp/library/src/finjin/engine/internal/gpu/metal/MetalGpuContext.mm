@@ -115,7 +115,7 @@ bool MetalGpuContext::ToggleFullScreenExclusive(Error& error)
     return false;
 }
 
-bool MetalGpuContext::StartResizeTargets(bool minimized, Error& error)
+bool MetalGpuContext::StartModifyScreenRenderTargets(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
@@ -124,7 +124,7 @@ bool MetalGpuContext::StartResizeTargets(bool minimized, Error& error)
     return true;
 }
 
-void MetalGpuContext::FinishResizeTargets(Error& error)
+void MetalGpuContext::FinishModifyScreenRenderTargets(Error& error)
 {
     impl->CreateScreenSizeDependentResources(error);
     if (error)

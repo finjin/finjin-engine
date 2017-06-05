@@ -11,26 +11,30 @@
 //file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+#pragma once
+
+
 //Includes----------------------------------------------------------------------
-#include "FinjinPrecompiled.hpp"
-#include "OpenSLESAdapterDescription.hpp"
-
-using namespace Finjin::Engine;
+#include "finjin/engine/GenericInputDevice.hpp"
 
 
-//Implementation----------------------------------------------------------------
-void OpenSLESAdapterDescriptions::SortBestToWorst()
-{
-    //Do nothing. Assume the descriptions are already in the best order
-}
+//Types-------------------------------------------------------------------------
+namespace Finjin { namespace Engine {
 
-const OpenSLESAdapterDescription* OpenSLESAdapterDescriptions::GetByAdapterID(const OpenSLESAdapterID& adapterID) const
-{
-    for (auto& item : *this)
+    using namespace Finjin::Common;
+
+    class LinuxInputContext;
+
+    class LinuxInputDevice : public GenericInputDeviceImpl
     {
-        if (item.adapterID == adapterID)
-            return &item;
-    }
+    public:
+        using Super = GenericInputDeviceImpl;
+        
+        LinuxInputDevice(Allocator* allocator);
+        ~LinuxInputDevice();        
+        
+    public:
+        LinuxInputContext* context;
+    };
 
-    return nullptr;
-}
+} }

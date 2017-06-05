@@ -15,11 +15,9 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/EnumBitwise.hpp"
-#include "finjin/common/StaticVector.hpp"
 #include "finjin/engine/AssetFileReader.hpp"
 #include "finjin/engine/ContextEventInfo.hpp"
-#include "finjin/engine/InputComponents.hpp"
+#include "finjin/engine/InputSource.hpp"
 #include "finjin/engine/PerFrameObjectAllocator.hpp"
 #include <boost/thread/null_mutex.hpp>
 
@@ -95,7 +93,7 @@ namespace Finjin { namespace Engine {
 
         InputDeviceClass deviceClass;
         size_t deviceIndex;
-        HapticFeedbackSettings force;
+        HapticFeedback force;
     };
 
     class InputCommands : public PerFrameObjectAllocator<InputCommand, boost::null_mutex>
@@ -112,7 +110,7 @@ namespace Finjin { namespace Engine {
         const_iterator end() const { return this->commands.end(); }
         iterator end() { return this->commands.end(); }
 
-        bool AddHapticFeedback(InputDeviceClass deviceClass, size_t deviceIndex, const HapticFeedbackSettings& force, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
+        bool AddHapticFeedback(InputDeviceClass deviceClass, size_t deviceIndex, const HapticFeedback& force, const ContextEventInfo& eventInfo = ContextEventInfo::GetEmpty())
         {
             auto command = NewObject<InputCommand>(FINJIN_CALLER_ARGUMENTS);
             if (command == nullptr)

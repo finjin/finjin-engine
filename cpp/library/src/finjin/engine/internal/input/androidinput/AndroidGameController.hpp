@@ -31,6 +31,8 @@ namespace Finjin { namespace Engine {
     class AndroidGameController : public AndroidInputDevice
     {
     public:
+        using Super = AndroidInputDevice;
+
         AndroidGameController();
 
         void Reset();

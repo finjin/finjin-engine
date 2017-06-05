@@ -18,7 +18,7 @@
 #include "finjin/common/CommandLineArgsProcessor.hpp"
 #include "finjin/common/DebugLog.hpp"
 #include "finjin/common/DefaultAllocator.hpp"
-#include "finjin/common/PassthroughSystemAllocator.hpp"
+#include "finjin/common/SystemAllocator.hpp"
 #include "finjin/engine/Application.hpp"
 #include "finjin/engine/ApplicationDelegate.hpp"
 
@@ -28,7 +28,7 @@ using namespace Finjin::Engine;
 //Implementation----------------------------------------------------------------
 @implementation FinjinUIApplicationDelegate
 {
-    DefaultAllocator<PassthroughSystemAllocator> _defaultAllocator;
+    DefaultAllocator<SystemAllocator> _defaultAllocator;
 
     CADisplayLink* _tickTimer;
     Finjin::Common::Error _tickError;
@@ -90,7 +90,7 @@ using namespace Finjin::Engine;
 
     FINJIN_DECLARE_ERROR(error);
 
-    _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::RESUME), error);
+    _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::RESUME), error);
     if (error)
     {
         _app->ReportError(error);
@@ -107,7 +107,7 @@ using namespace Finjin::Engine;
 
     FINJIN_DECLARE_ERROR(error);
 
-    _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::PAUSE), error);
+    _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::PAUSE), error);
     if (error)
     {
         auto errorString = error.ToString();
@@ -143,7 +143,7 @@ using namespace Finjin::Engine;
 {
     FINJIN_DECLARE_ERROR(error);
 
-    _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::MessageType::LOW_MEMORY_WARNING), error);
+    _app->OnSystemMessage(ApplicationSystemMessage(ApplicationSystemMessage::LOW_MEMORY_WARNING), error);
     if (error)
     {
         auto errorString = error.ToString();

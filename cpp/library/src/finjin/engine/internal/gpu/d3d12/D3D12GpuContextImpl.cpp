@@ -2022,9 +2022,9 @@ bool D3D12GpuContextImpl::ToggleFullScreenExclusive(Error& error)
 #endif
 }
 
-bool D3D12GpuContextImpl::StartResizeTargets(bool minimized, Error& error)
+bool D3D12GpuContextImpl::StartModifyScreenRenderTargets(Error& error)
 {
-    FINJIN_DEBUG_LOG_INFO("D3D12GpuContextImpl::StartResizeTargets");
+    FINJIN_DEBUG_LOG_INFO("D3D12GpuContextImpl::StartModifyScreenRenderTargets");
 
     FINJIN_ERROR_METHOD_START(error);
 
@@ -2070,7 +2070,7 @@ bool D3D12GpuContextImpl::StartResizeTargets(bool minimized, Error& error)
     {
         FINJIN_DEBUG_LOG_INFO("  Finishing resize targets");
 
-        FinishResizeTargets(error);
+        FinishModifyScreenRenderTargets(error);
         if (error)
         {
             FINJIN_SET_ERROR(error, "Failed to finish resizing swap chain target.");
@@ -2081,14 +2081,14 @@ bool D3D12GpuContextImpl::StartResizeTargets(bool minimized, Error& error)
     return callerNeedsToFinishResize;
 }
 
-void D3D12GpuContextImpl::FinishResizeTargets(Error& error)
+void D3D12GpuContextImpl::FinishModifyScreenRenderTargets(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
 
     auto resizeWidth = static_cast<UINT>(this->windowPixelBounds.GetClientWidth());
     auto resizeHeight = static_cast<UINT>(this->windowPixelBounds.GetClientHeight());
 
-    FINJIN_DEBUG_LOG_INFO("D3D12GpuContextImpl::FinishResizeTargets: %1% x %2%", resizeWidth, resizeHeight);
+    FINJIN_DEBUG_LOG_INFO("D3D12GpuContextImpl::FinishModifyScreenRenderTargets: %1% x %2%", resizeWidth, resizeHeight);
 
     //Resize swap chain buffers
     DXGI_SWAP_CHAIN_DESC swapDesc = {};

@@ -16,7 +16,7 @@
 #include "XInputGameController.hpp"
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/Math.hpp"
-#include "finjin/engine/InputComponents.hpp"
+#include "finjin/engine/GenericInputDevice.hpp"
 #include <Windows.h>
 #include <Xinput.h>
 
@@ -88,33 +88,36 @@ static Utf8String XInputSubtypeToString(BYTE subtype)
 
 
 //Local types-------------------------------------------------------------------
-struct XInputGameController::Impl
+struct XInputGameController::Impl : public GenericInputDeviceImpl
 {
+    using Super = GenericInputDeviceImpl;
+
     Impl()
     {
         this->index = 0;
 
-        this->semantic = InputDeviceSemantic::NONE;
+        FINJIN_ZERO_ITEM(this->xinputState);
+    }
+
+    void Reset()
+    {
+        Super::Reset();
+
+        this->index = 0;        
+        
+        FINJIN_ZERO_ITEM(this->xinputState);
+        
+        this->state.Reset();
     }
 
     size_t index;
-
-    InputDeviceSemantic semantic;
-
-    Utf8String displayName;
-
-    Utf8String instanceName;
-    Utf8String productName;
-
-    Utf8String instanceDescriptor;
-    Utf8String productDescriptor;
 
     XINPUT_CAPABILITIES xinputCapabilities;
     XINPUT_STATE xinputState;
 
     InputDeviceState<InputButton, InputAxis, InputPov, GameControllerConstants::MAX_BUTTON_COUNT, GameControllerConstants::MAX_AXIS_COUNT> state;
 
-    HapticFeedbackSettings forceFeedback[2]; //0 = left motor, 1 = right motor
+    std::array<HapticFeedback, 2> forceFeedback; //0 = left motor, 1 = right motor
 };
 
 
@@ -132,14 +135,7 @@ XInputGameController::~XInputGameController()
 
 void XInputGameController::Reset()
 {
-    impl->index = 0;
-    impl->displayName.clear();
-    impl->instanceName.clear();
-    impl->productName.clear();
-    impl->instanceDescriptor.clear();
-    impl->productDescriptor.clear();
-    FINJIN_ZERO_ITEM(impl->xinputState);
-    impl->state.Reset();
+    impl->Reset();
 }
 
 bool XInputGameController::Create(size_t index)
@@ -226,10 +222,8 @@ void XInputGameController::Update(SimpleTimeDelta elapsedTime, bool isFirstUpdat
 
             _SetForce();
 
-            for (size_t forceFeedbackIndex = 0; forceFeedbackIndex < 2; forceFeedbackIndex++)
+            for (auto& forceFeedback : impl->forceFeedback)
             {
-                auto& forceFeedback = impl->forceFeedback[forceFeedbackIndex];
-
                 if (forceFeedback.IsActive())
                     forceFeedback.Update(elapsedTime);
             }
@@ -370,7 +364,7 @@ InputLocator* XInputGameController::GetLocator(size_t locatorIndex)
     return nullptr;
 }
 
-void XInputGameController::AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count)
+void XInputGameController::AddHapticFeedback(const HapticFeedback* forces, size_t count)
 {
     for (size_t forceIndex = 0; forceIndex < count; forceIndex++)
     {

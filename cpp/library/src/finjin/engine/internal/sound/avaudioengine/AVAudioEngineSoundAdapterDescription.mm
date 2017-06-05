@@ -26,7 +26,7 @@ void AVAudioEngineSoundAdapterDescriptions::SortBestToWorst()
 
 const AVAudioEngineSoundAdapterDescription* AVAudioEngineSoundAdapterDescriptions::GetByAdapterID(const AVAudioEngineSoundAdapterID& adapterID) const
 {
-    for (const auto& item : *this)
+    for (auto& item : *this)
     {
         if (item.adapterID == adapterID)
             return &item;

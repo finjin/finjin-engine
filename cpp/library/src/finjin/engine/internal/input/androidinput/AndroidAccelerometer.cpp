@@ -17,9 +17,11 @@
 #include "finjin/common/Convert.hpp"
 #include "finjin/common/DebugLog.hpp"
 
-#define ACCELEROMETER_UPDATES_PER_SECOND 60 //Desired updates per second for the accelerometer
-
 using namespace Finjin::Engine;
+
+
+//Macros------------------------------------------------------------------------
+#define ACCELEROMETER_UPDATES_PER_SECOND 60 //Desired updates per second for the accelerometer
 
 
 //Implementation----------------------------------------------------------------

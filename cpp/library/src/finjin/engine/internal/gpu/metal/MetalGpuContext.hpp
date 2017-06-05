@@ -18,7 +18,6 @@
 #include "finjin/common/Allocator.hpp"
 #include "finjin/common/Chrono.hpp"
 #include "finjin/common/Error.hpp"
-#include "finjin/common/OperationStatus.hpp"
 #include "finjin/engine/AssetCreationCapability.hpp"
 #include "MetalGpuContextSettings.hpp"
 
@@ -55,8 +54,8 @@ namespace Finjin { namespace Engine {
         ScreenCaptureResult GetScreenCapture(ScreenCapture& screenCapture, JobPipelineStage& frameStage);
 
         bool ToggleFullScreenExclusive(Error& error);
-        bool StartResizeTargets(bool minimized, Error& error);
-        void FinishResizeTargets(Error& error);
+        bool StartModifyScreenRenderTargets(Error& error);
+        void FinishModifyScreenRenderTargets(Error& error);
 
         void CreateMeshFromMainThread(FinjinMesh& mesh, Error& error);
         void CreateTextureFromMainThread(FinjinTexture& texture, Error& error);

@@ -39,7 +39,7 @@ namespace Finjin { namespace Engine {
         GpuRenderTargetSizeType GetType() const;
         void SetType(GpuRenderTargetSizeType value);
 
-        void SetExplicit(double width, double height); //Sets type
+        void SetExplicit(double width, double height); //Sets type to GpuRenderTargetSizeType::EXPLICIT_SIZE
 
         double GetMinScale() const;
         double GetMaxScale() const;

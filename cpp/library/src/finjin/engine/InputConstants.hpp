@@ -104,18 +104,19 @@ namespace Finjin { namespace Engine {
 
     struct InputTriggerCriteria
     {
-        InputTriggerFlag flags;
-
-        size_t count; //Not currently used for anything
-
         InputTriggerCriteria() : flags(InputTriggerFlag::PRESSED | InputTriggerFlag::HOLDING | InputTriggerFlag::RELEASED), count(1) {}
         InputTriggerCriteria(InputTriggerFlag f) : flags(f), count(1) {}
         InputTriggerCriteria(InputTriggerFlag f, size_t c) : flags(f), count(c) {}
+        
+        InputTriggerFlag flags;
+        
+        size_t count; //Not currently used for anything
     };
 
     class InputDeviceUtilities
     {
     public:
+        static Utf8String MakeInputDeviceIdentifier(const Utf8StringView& identifierString);
         static Utf8String MakeInputDeviceIdentifier(const Utf8String& identifierString);
     };
 

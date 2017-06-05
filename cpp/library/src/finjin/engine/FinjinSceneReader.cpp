@@ -18,37 +18,48 @@
 #include "finjin/engine/StandardAssetDocumentChunkNames.hpp"
 #include "finjin/engine/StandardAssetDocumentPropertyValues.hpp"
 
+#if FINJIN_DEBUG
+    #define PRINT_DATA 0 //Can be useful to set this to 0 during development to clean up output
+#else
+    #define PRINT_DATA 0 //Can be useful to set this to 1 when testing a release build
+#endif
+#if PRINT_DATA
+    #if defined(FINJIN_ENABLE_DEBUG_LOG)
+        #undef FINJIN_ENABLE_DEBUG_LOG
+    #endif
+
+    //Force FINJIN_DEBUG_LOG_INFO to be available
+    #define FINJIN_ENABLE_DEBUG_LOG 1
+#endif
+#include "finjin/common/DebugLog.hpp"
+
 using namespace Finjin::Engine;
 
 
 //Macros------------------------------------------------------------------------
-#if FINJIN_DEBUG
-    #define PRINT_DATA 0
-#else
-    #define PRINT_DATA 0 //Can still be useful to set this to 1 when testing a release build
-#endif
-
 #if PRINT_DATA
-    #define PRINT_CHUNK(depth, displayName, isStart) std::cout << Indent(depth - 1) << displayName << " " << (isStart ? "Start" : "End") << "-----------" << std::endl;
-    #define PRINT_VALUE(depth, displayName, value) std::cout << Indent(depth) << displayName << ": " << value << std::endl;
-    #define PRINT_VALUE2(depth, displayName, v0, v1) std::cout << Indent(depth) << displayName << ": " << v0 << " " << v1 << std::endl;
-    #define PRINT_VALUE3(depth, displayName, v0, v1, v2) std::cout << Indent(depth) << displayName << ": " << v0 << " " << v1 << " " << v2 << std::endl;
-    #define PRINT_VALUE4(depth, displayName, v0, v1, v2, v3) std::cout << Indent(depth) << displayName << ": " << v0 << " " << v1 << " " << v2 << " " << v3 << std::endl;
-    #define PRINT_VALUES(depth, displayName, values)\
-        {\
-        std::cout << Indent(depth) << displayName << ":";\
-        for (auto val : values)\
-            std::cout << " " << val;\
-        std::cout << std::endl;\
+    #define PRINT_CHUNK(depth, displayName, isStart) FINJIN_DEBUG_LOG_INFO("%1%%2% %3%-----------", Indent(depth - 1), displayName, (isStart ? "Start" : "End"));
+    #define PRINT_VALUE(depth, displayName, value) FINJIN_DEBUG_LOG_INFO("%1%%2%: %3%", Indent(depth), displayName, value);
+    #define PRINT_VALUE2(depth, displayName, v0, v1) FINJIN_DEBUG_LOG_INFO("%1%%2%: %3% %4%", Indent(depth), displayName, v0, v1);
+    #define PRINT_VALUE3(depth, displayName, v0, v1, v2) FINJIN_DEBUG_LOG_INFO("%1%%2%: %3% %4% %5%", Indent(depth), displayName, v0, v1, v2);
+    #define PRINT_VALUE4(depth, displayName, v0, v1, v2, v3) FINJIN_DEBUG_LOG_INFO("%1%%2%: %3% %4% %5% %6%", Indent(depth), displayName, v0, v1, v2, v3);
+    #define PRINT_VALUES(depth, displayName, values) \
+        { \
+            std::stringstream valueString; \
+            valueString << Indent(depth) << displayName << ":"; \
+            for (auto val : values) \
+                valueString << " " << val; \
+            FINJIN_DEBUG_LOG_INFO("%1%", valueString.str().c_str()); \
         }
-    #define PRINT_VALUES_ITEM(depth, displayName, values, item)\
-        {\
-        std::cout << Indent(depth) << displayName << ":";\
-        for (auto val : values)\
-            std::cout << " " << val.item;\
-        std::cout << std::endl;\
+    #define PRINT_VALUES_ITEM(depth, displayName, values, item) \
+        { \
+            std::stringstream valueString; \
+            valueString << Indent(depth) << displayName << ":"; \
+            for (auto val : values) \
+                valueString << " " << val.item; \
+            FINJIN_DEBUG_LOG_INFO("%1%", valueString.str().c_str()); \
         }
-    #define PRINT_CALLBACKS_COUNT(name, collection) std::cout << name << " callbacks using " << collection.GetMappings().size() << " out of " << collection.GetMappings().max_size() << " mapping slots." << std::endl;
+    #define PRINT_CALLBACKS_COUNT(name, collection) FINJIN_DEBUG_LOG_INFO("%1% callbacks using %2% out of %3% mapping slots.", name, collection.GetMappings().size(), collection.GetMappings().max_size());
 #else
     #define PRINT_CHUNK(depth, displayName, isStart) DoesNothingToAvoidCompilerWarning();
     #define PRINT_VALUE(depth, displayName, value) DoesNothingToAvoidCompilerWarning();
@@ -6677,7 +6688,7 @@ void AddMaterialMappings
                 if (error)
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float property '%1%'.", StandardAssetDocumentPropertyNames::AMOUNT.name));
                 else
-                    PRINT_VALUE(state.GetDepth(), "amount", textureRotation);
+                    PRINT_VALUE(state.GetDepth(), "amount", map.amount);
             }
             else if (propertyName == StandardAssetDocumentPropertyNames::TEXTURE_REF)
             {
@@ -7908,7 +7919,7 @@ void FinjinSceneDataChunkReaderCallbacks::Create(const Settings& settings, Error
                 else if (!isValueDone)
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to read float array property '%1%' in a single read.", StandardAssetDocumentPropertyNames::AMBIENT_COLOR.name));
                 else
-                    PRINT_VALUE4(state.GetDepth(), "ambient color", subscene.environment.ambientColor(0), subscene.environment.ambientColor(1), subscene.environment.ambientColor(2), subscene.environment.ambientColor(3));
+                    PRINT_VALUE4(state.GetDepth(), "ambient color", subscene.environment.ambientLight.color(0), subscene.environment.ambientLight.color(1), subscene.environment.ambientLight.color(2), subscene.environment.ambientLight.color(3));
             }
             else if (propertyName == StandardAssetDocumentPropertyNames::BACKGROUND_COLOR)
             {
@@ -8709,7 +8720,7 @@ void HandwrittenUserDataTypesReader::ParseInclude(State& state, ConfigDocumentRe
             }
             case ConfigDocumentLine::Type::KEY_AND_VALUE:
             {
-                Utf8String key, value;
+                Utf8StringView key, value;
                 line->GetKeyAndValue(key, value);
                 if (currentSectionName == initialSectionName)
                 {
@@ -8832,7 +8843,8 @@ void HandwrittenUserDataTypesReader::ParseEnum(State& state, UserDataTypes* user
             {
                 auto sectionName = sections.back();
 
-                Utf8String key, value;
+                Utf8StringView key;
+                Utf8String value;
                 line->GetKeyAndValue(key, value);
                 if (currentSectionName == initialSectionName)
                 {
@@ -9047,7 +9059,8 @@ void HandwrittenUserDataTypesReader::ParseClass(State& state, UserDataTypes* use
             {
                 auto sectionName = sections.back();
 
-                Utf8String key, value;
+                Utf8StringView key;
+                Utf8String value;
                 line->GetKeyAndValue(key, value);
                 if (currentSectionName == initialSectionName)
                 {
@@ -9818,7 +9831,7 @@ bool FinjinSceneReader::RequestRead(const AssetReference& assetRef, bool addToEn
         }
     }
 
-    Utf8String assetExtension;
+    Utf8StringView assetExtension;
     assetRef.filePath.GetExtension(assetExtension, false);
     auto assetClass = AssetClassUtilities::ParseFromExtension(assetExtension);
     if (assetClass == AssetClass::TEXTURE || this->settings.externalTextureExtensions.contains(assetExtension))

@@ -61,7 +61,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/8ec51d02/FinjinSceneReader.o \
 	${OBJECTDIR}/_ext/8ec51d02/FlyingCameraInputBindings.o \
 	${OBJECTDIR}/_ext/8ec51d02/GenericGpuNumericStructs.o \
-	${OBJECTDIR}/_ext/8ec51d02/GenericVRInputDevice.o \
+	${OBJECTDIR}/_ext/8ec51d02/GenericInputDevice.o \
 	${OBJECTDIR}/_ext/8ec51d02/GpuContextCommonImpl.o \
 	${OBJECTDIR}/_ext/8ec51d02/GpuContextCommonSettings.o \
 	${OBJECTDIR}/_ext/8ec51d02/GpuRenderTargetSize.o \
@@ -136,6 +136,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/f85409f3/VulkanUtilities.o \
 	${OBJECTDIR}/_ext/32e60500/LinuxGameController.o \
 	${OBJECTDIR}/_ext/32e60500/LinuxInputContext.o \
+	${OBJECTDIR}/_ext/32e60500/LinuxInputDevice.o \
 	${OBJECTDIR}/_ext/32e60500/LinuxInputSystem.o \
 	${OBJECTDIR}/_ext/32e60500/LinuxKeyboard.o \
 	${OBJECTDIR}/_ext/32e60500/LinuxMouse.o \
@@ -495,10 +496,10 @@ ${OBJECTDIR}/_ext/8ec51d02/GenericGpuNumericStructs.o: ../../src/finjin/engine/G
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/8ec51d02/GenericGpuNumericStructs.o ../../src/finjin/engine/GenericGpuNumericStructs.cpp
 
-${OBJECTDIR}/_ext/8ec51d02/GenericVRInputDevice.o: ../../src/finjin/engine/GenericVRInputDevice.cpp 
+${OBJECTDIR}/_ext/8ec51d02/GenericInputDevice.o: ../../src/finjin/engine/GenericInputDevice.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/8ec51d02
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/8ec51d02/GenericVRInputDevice.o ../../src/finjin/engine/GenericVRInputDevice.cpp
+	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/8ec51d02/GenericInputDevice.o ../../src/finjin/engine/GenericInputDevice.cpp
 
 ${OBJECTDIR}/_ext/8ec51d02/GpuContextCommonImpl.o: ../../src/finjin/engine/GpuContextCommonImpl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/8ec51d02
@@ -869,6 +870,11 @@ ${OBJECTDIR}/_ext/32e60500/LinuxInputContext.o: ../../src/finjin/engine/internal
 	${MKDIR} -p ${OBJECTDIR}/_ext/32e60500
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/32e60500/LinuxInputContext.o ../../src/finjin/engine/internal/input/linuxinput/LinuxInputContext.cpp
+
+${OBJECTDIR}/_ext/32e60500/LinuxInputDevice.o: ../../src/finjin/engine/internal/input/linuxinput/LinuxInputDevice.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/32e60500
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DVK_NO_PROTOTYPES -DVK_USE_PLATFORM_XCB_KHR -I/home/build/finjin-3rd-party/cpp/boost -I/home/build/finjin-3rd-party/cpp/eigen -I/home/build/finjin-3rd-party/cpp/bullet/src -I/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include -I/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include -I../../../../../finjin-common/cpp/library/include -I../../src -I../../src/finjin/engine -I../../src/finjin/engine/internal/app/linux -I../../src/finjin/engine/internal -std=c++14 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/32e60500/LinuxInputDevice.o ../../src/finjin/engine/internal/input/linuxinput/LinuxInputDevice.cpp
 
 ${OBJECTDIR}/_ext/32e60500/LinuxInputSystem.o: ../../src/finjin/engine/internal/input/linuxinput/LinuxInputSystem.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/32e60500

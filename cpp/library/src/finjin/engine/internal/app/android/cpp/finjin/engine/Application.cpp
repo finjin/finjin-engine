@@ -72,7 +72,7 @@ public:
         }
     }
 
-    EnumerationResult Enumerate(FileSystemEntries& items, FileSystemEntryType types, Error& error) override
+    EnumerationResult Enumerate(FileSystemEntries& entries, FileSystemEntryType types, Error& error) override
     {
         FINJIN_ERROR_METHOD_START(error);
 
@@ -94,16 +94,16 @@ public:
                 auto type = apkAssetPathType == 0 ? FileSystemEntryType::FILE : FileSystemEntryType::DIRECTORY;
                 if (AnySet(type & types))
                 {
-                    auto fileSystemEntry = items.Add();
+                    auto fileSystemEntry = entries.Add();
                     if (fileSystemEntry == nullptr)
                     {
-                        FINJIN_SET_ERROR(error, "Failed to get free free database entry for Android APK path.");
+                        FINJIN_SET_ERROR(error, "Failed to get free database entry for Android APK path.");
                         return EnumerationResult::INCOMPLETE;
                     }
 
                     if (!jniUtils.GetStringArrayFieldElement(fileSystemEntry->relativePath, "apkAssetPaths", i))
                     {
-                        items.CancelAdd(fileSystemEntry);
+                        entries.CancelAdd(fileSystemEntry);
 
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path for item at index %1%.", i));
                         return EnumerationResult::INCOMPLETE;
@@ -112,7 +112,7 @@ public:
                     int64_t apkAssetPathSize;
                     if (!jniUtils.GetLongArrayFieldElement(apkAssetPathSize, "apkAssetPathSizes", i))
                     {
-                        items.CancelAdd(fileSystemEntry);
+                        entries.CancelAdd(fileSystemEntry);
 
                         FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to get APK asset path size for item at index %1%.", i));
                         return EnumerationResult::INCOMPLETE;
@@ -160,12 +160,12 @@ public:
                 return FileOperationResult::FAILURE;
             }
 
-            auto res = AAsset_read(asset, buffer.data(), byteCount);
-            if (res < 0)
+            auto result = AAsset_read(asset, buffer.data(), byteCount);
+            if (result < 0)
             {
                 AAsset_close(asset);
 
-                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("There was an error while reading asset '%1%': %2%", relativeFilePath, res));
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("There was an error while reading asset '%1%': %2%", relativeFilePath, result));
                 return FileOperationResult::FAILURE;
             }
         }
@@ -241,10 +241,13 @@ public:
         {
             auto asset = static_cast<AAsset*>(fileHandle.ptr);
 
-            auto bytesSkipped = AAsset_seek(asset, byteCount, SEEK_CUR);
-            if (bytesSkipped < 0)
-                bytesSkipped = 0;
+            auto oldPosition = AAsset_seek64(asset, 0, SEEK_CUR);
+            
+            auto newPosition = AAsset_seek64(asset, byteCount, SEEK_CUR);
+            if (newPosition < 0)
+                return newPosition = oldPosition;
 
+            auto bytesSkipped = newPosition - oldPosition;
             return bytesSkipped;
         }
 
@@ -354,6 +357,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to finish initializing windows.");
+                FINJIN_DEBUG_LOG_ERROR("Error in OnAndroidApplicationCommand(): %1%", error.ToString());
                 break;
             }
 
@@ -376,6 +380,7 @@ static void OnAndroidApplicationCommand(android_app* androidApp, int32_t cmd)
             if (error)
             {
                 FINJIN_SET_ERROR(error, "Failed to start job system.");
+                FINJIN_DEBUG_LOG_ERROR("Error in OnAndroidApplicationCommand(): %1%", error.ToString());
                 break;
             }
 
@@ -597,7 +602,8 @@ bool Application::MainLoop(Error& error)
     int ident;
     int events;
     android_poll_source* source;
-    for (;;)
+    auto done = false;
+    while (!done)
     {
         //Handle queued events-----------------
         auto hadFocus = IsAppFocused(androidApp);
@@ -612,33 +618,39 @@ bool Application::MainLoop(Error& error)
 
             //Exit main loop if app is no longer running (APP_CMD_DESTROY was received)
             if (!nv_app_status_running(androidApp))
+            {
+                done = true;
                 break;
+            }
         }
 
         //Perform update----------------------
-        if (!this->appViewportsController.empty())
+        if (!done)
         {
-            auto hasFocus = IsAppFocused(androidApp);
-
-            if (hadFocus && !hasFocus)
-                HandleApplicationViewportLostFocus(this->appViewportsController[0].get());
-            else if (!hadFocus && hasFocus)
-                HandleApplicationViewportGainedFocus(this->appViewportsController[0].get());
-
-            if (hasFocus)
+            if (!error && !this->appViewportsController.empty())
             {
-                Tick(error);
-                if (error)
+                auto hasFocus = IsAppFocused(androidApp);
+
+                if (hadFocus && !hasFocus)
+                    HandleApplicationViewportLostFocus(this->appViewportsController[0].get());
+                else if (!hadFocus && hasFocus)
+                    HandleApplicationViewportGainedFocus(this->appViewportsController[0].get());
+
+                if (hasFocus)
                 {
-                    FINJIN_SET_ERROR(error, "Error processing tick.");
-                    ANativeActivity_finish(androidApp->activity);
+                    Tick(error);
+                    if (error)
+                    {
+                        FINJIN_SET_ERROR(error, "Error processing tick.");
+                        ANativeActivity_finish(androidApp->activity);
+                    }
                 }
             }
-        }
-        else
-        {
-            //No more windows, time to exit
-            ANativeActivity_finish(androidApp->activity);
+            else
+            {
+                //An error occurred or there are no more windows, time to exit
+                ANativeActivity_finish(androidApp->activity);
+            }
         }
     }
 

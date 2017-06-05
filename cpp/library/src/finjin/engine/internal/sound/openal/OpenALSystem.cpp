@@ -24,8 +24,17 @@ using namespace Finjin::Engine;
 //Local types-------------------------------------------------------------------
 struct OpenALSystem::Impl : public AllocatedClass
 {
-    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator)
+    Impl(Allocator* allocator) : AllocatedClass(allocator), settings(allocator), defaultDeviceSpecifier(allocator)
     {
+        this->adapterDescriptions.maximize();
+        for (auto& adapterDescription : this->adapterDescriptions)
+        {
+            adapterDescription.vendor.SetAllocator(allocator);
+            adapterDescription.renderer.SetAllocator(allocator);
+            adapterDescription.versionText.SetAllocator(allocator);
+            adapterDescription.extensionsText.SetAllocator(allocator);
+        }
+        this->adapterDescriptions.clear();
     }
 
     OpenALSystem::Settings settings;
@@ -93,15 +102,29 @@ void OpenALSystem::Create(const Settings& settings, Error& error)
             return;
         }
 
-        impl->defaultDeviceSpecifier = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        if (impl->defaultDeviceSpecifier.assign(alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER)).HasError())
+        {
+            FINJIN_SET_ERROR(error, "Failed to assign default device specifier.");
+            return;
+        }
 
-        OpenALAdapterDescription adapterDescription;
-        impl->adapterDescriptions.clear();
         for (size_t i = 0; i < deviceSpecifiers.size() && !impl->adapterDescriptions.full(); i++)
         {
-            adapterDescription.adapterID = deviceSpecifiers[i];
+            impl->adapterDescriptions.push_back();
+            auto& adapterDescription = impl->adapterDescriptions.back();
+            
+            if (adapterDescription.adapterID.assign(deviceSpecifiers[i]).HasError())
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign device specifier '%1%'.", deviceSpecifiers[i]));
+                return;
+            }
 
             auto aldevice = alcOpenDevice(deviceSpecifiers[i].c_str());
+            if (aldevice == nullptr)
+            {
+                FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to open device '%1%'.", deviceSpecifiers[i]));
+                return;
+            }
 
             alcGetIntegerv(aldevice, ALC_MAJOR_VERSION, 1, &adapterDescription.versionMajor);
             alcGetIntegerv(aldevice, ALC_MINOR_VERSION, 1, &adapterDescription.versionMinor);
@@ -116,15 +139,32 @@ void OpenALSystem::Create(const Settings& settings, Error& error)
                 auto alcontext = alcCreateContext(aldevice, nullptr);
                 alcMakeContextCurrent(alcontext);
 
-                adapterDescription.vendor = alGetString(AL_VENDOR);
-                adapterDescription.renderer = alGetString(AL_RENDERER);
-                adapterDescription.versionText = alGetString(AL_VERSION);
-                adapterDescription.extensionsText = alGetString(AL_EXTENSIONS);
+                if (adapterDescription.vendor.assign(alGetString(AL_VENDOR)).HasError())
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign vendor name for device '%1%'.", deviceSpecifiers[i]));
+                    return;
+                }
+                
+                if (adapterDescription.renderer.assign(alGetString(AL_RENDERER)).HasError())
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign renderer name for device '%1%'.", deviceSpecifiers[i]));
+                    return;
+                }
+                
+                if (adapterDescription.versionText.assign(alGetString(AL_VERSION)).HasError())
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign version for device '%1%'.", deviceSpecifiers[i]));
+                    return;
+                }
+                
+                if (adapterDescription.extensionsText.assign(alGetString(AL_EXTENSIONS)).HasError())
+                {
+                    FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign extensions name for device '%1%'.", deviceSpecifiers[i]));
+                    return;
+                }
 
                 alcMakeContextCurrent(nullptr);
                 alcDestroyContext(alcontext);
-
-                impl->adapterDescriptions.push_back(adapterDescription);
             }
 
             alcCloseDevice(aldevice);

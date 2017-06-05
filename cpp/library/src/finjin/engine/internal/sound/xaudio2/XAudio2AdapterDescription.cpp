@@ -26,7 +26,7 @@ void XAudio2AdapterDescriptions::SortBestToWorst()
 
 const XAudio2AdapterDescription* XAudio2AdapterDescriptions::GetByAdapterID(const XAudio2AdapterID& adapterID) const
 {
-    for (const auto& item : *this)
+    for (auto& item : *this)
     {
         if (item.adapterID == adapterID)
             return &item;

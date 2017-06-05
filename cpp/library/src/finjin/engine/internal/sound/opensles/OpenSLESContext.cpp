@@ -524,6 +524,7 @@ void OpenSLESContext::Create(const Settings& settings, Error& error)
 
             impl->info.extensions[index].resize(nameLength);
             result = (*impl->engineInterface)->QuerySupportedExtension(impl->engineInterface, index, reinterpret_cast<SLchar*>(impl->info.extensions[index].begin()), &nameLength);
+            impl->info.extensions[index].RepairLength(nameLength - 1); //Returned length includes the null terminator
 
             FINJIN_DEBUG_LOG_INFO("OpenSL extension %1%: %2%", index, impl->info.extensions[index]);
 
@@ -531,7 +532,7 @@ void OpenSLESContext::Create(const Settings& settings, Error& error)
             {
                 Utf8StringView numberString;
                 impl->info.extensions[index].substr(numberString, strlen("ANDROID_SDK_LEVEL_"));
-                impl->info.androidSdkLevelExtension = Convert::ToInteger(numberString, 0);
+                impl->info.androidSdkLevelExtension = Convert::ToInteger(numberString, 0);                
             }
         }
     }

@@ -50,30 +50,6 @@ const char* AssetClassUtilities::ToString(AssetClass value, bool directoryName)
     }
 }
 
-AssetClass AssetClassUtilities::ParseFromExtension(const Utf8String& extension)
-{
-    for (size_t assetClass = 0; assetClass < (size_t)AssetClass::COUNT; assetClass++)
-    {
-        if (extension.EndsWith(ToString(assetClass)))
-            return static_cast<AssetClass>(assetClass);
-    }
-
-    return AssetClass::COUNT;
-}
-
-bool AssetClassUtilities::IsHandwrittenExtension(const Utf8String& extension)
-{
-    auto hyphenFoundAt = extension.find('-');
-    if (hyphenFoundAt != Utf8String::npos)
-    {
-        Utf8StringView sub;
-        extension.substr(sub, hyphenFoundAt + 1, 4);
-        return sub == "hand";
-    }
-    else
-        return extension.StartsWith("hand");
-}
-
 Utf8String AssetClassUtilities::ToHandwrittenString(AssetClass assetClass)
 {
     Utf8String result;

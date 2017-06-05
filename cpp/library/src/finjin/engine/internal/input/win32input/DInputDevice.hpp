@@ -120,7 +120,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         DInputDevice();
-        virtual ~DInputDevice();
+        ~DInputDevice();
 
         void Create(Win32InputContext* context, const DInputDeviceConfiguration& config, Error& error);
         void Destroy();

@@ -26,6 +26,8 @@ WindowsUWPMouse::WindowsUWPMouse()
 
 void WindowsUWPMouse::Reset()
 {
+    Super::Reset();
+
     this->state.Reset();
 }
 
@@ -179,36 +181,6 @@ bool WindowsUWPMouse::IsConnected() const
 bool WindowsUWPMouse::GetConnectionChanged() const
 {
     return false;
-}
-
-const Utf8String& WindowsUWPMouse::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void WindowsUWPMouse::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic WindowsUWPMouse::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void WindowsUWPMouse::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& WindowsUWPMouse::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& WindowsUWPMouse::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t WindowsUWPMouse::GetButtonCount() const

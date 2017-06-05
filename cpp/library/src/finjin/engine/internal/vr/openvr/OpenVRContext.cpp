@@ -1107,7 +1107,7 @@ InputLocator* OpenVRContext::GetLocator(size_t index, size_t locatorIndex)
     return impl->devices[index].GetLocator(locatorIndex);
 }
 
-void OpenVRContext::AddHapticFeedback(size_t index, const HapticFeedbackSettings* forces, size_t count)
+void OpenVRContext::AddHapticFeedback(size_t index, const HapticFeedback* forces, size_t count)
 {
     impl->devices[index].AddHapticFeedback(forces, count);
 }

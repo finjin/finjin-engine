@@ -64,15 +64,15 @@ namespace Finjin { namespace Engine {
         size_t GetLocatorCount() const;
         InputLocator* GetLocator(size_t locatorIndex);
 
-        void AddHapticFeedback(const HapticFeedbackSettings* forces, size_t count);
+        void AddHapticFeedback(const HapticFeedback* forces, size_t count);
         void StopHapticFeedback();
 
         struct Impl;
         Impl* GetImpl();
 
     private:
-        void _SetForce(HapticFeedbackSettings& force);
-        void _StopForce(HapticFeedbackSettings& force);
+        void _SetForce(HapticFeedback& force);
+        void _StopForce(HapticFeedback& force);
 
     public:
         std::unique_ptr<Impl> impl;

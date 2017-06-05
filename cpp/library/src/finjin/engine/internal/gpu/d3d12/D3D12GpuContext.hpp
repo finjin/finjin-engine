@@ -55,8 +55,8 @@ namespace Finjin { namespace Engine {
         ScreenCaptureResult GetScreenCapture(ScreenCapture& screenCapture, JobPipelineStage& frameStage);
 
         bool ToggleFullScreenExclusive(Error& error);
-        bool StartResizeTargets(bool minimized, Error& error);
-        void FinishResizeTargets(Error& error);
+        bool StartModifyScreenRenderTargets(Error& error);
+        void FinishModifyScreenRenderTargets(Error& error);
 
         void CreateMeshFromMainThread(FinjinMesh& mesh, Error& error);
         void CreateTextureFromMainThread(FinjinTexture& texture, Error& error);

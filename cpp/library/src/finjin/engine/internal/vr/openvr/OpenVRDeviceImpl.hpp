@@ -74,7 +74,7 @@ namespace Finjin { namespace Engine {
         vr::TrackedDevicePose_t controllerPoseState;
         vr::VRControllerState_t controllerState;
 
-        HapticFeedbackSettings forceFeedback;
+        HapticFeedback forceFeedback;
 
         StaticVector<InputLocator, HeadsetConstants::MAX_LOCATOR_COUNT> locators;
 

@@ -17,7 +17,7 @@
 //Includes----------------------------------------------------------------------
 #include "finjin/common/DefaultAllocator.hpp"
 #include "finjin/common/NvAndroidNativeAppGlue.h"
-#include "finjin/common/PassthroughSystemAllocator.hpp"
+#include "finjin/common/SystemAllocator.hpp"
 
 
 //Macros------------------------------------------------------------------------
@@ -26,6 +26,6 @@
     {\
         void FinjinMain(ApplicationDelegate* del, android_app* androidApp);\
         \
-        Finjin::Common::DefaultAllocator<Finjin::Common::PassthroughSystemAllocator> defaultAllocator;\
+        Finjin::Common::DefaultAllocator<Finjin::Common::SystemAllocator> defaultAllocator;\
         FinjinMain(Finjin::Common::AllocatedClass::New<AppDelegate>(defaultAllocator, FINJIN_CALLER_ARGUMENTS), androidApp);\
     }

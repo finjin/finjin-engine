@@ -20,6 +20,7 @@
 #include "finjin/common/Error.hpp"
 #include "finjin/common/OperationStatus.hpp"
 #include "finjin/common/Path.hpp"
+#include "finjin/engine/GenericInputDevice.hpp"
 #include "finjin/engine/InputContextCommonSettings.hpp"
 #include "finjin/engine/InputSource.hpp"
 #include "../xinput/XInputGameController.hpp"
@@ -69,7 +70,7 @@ namespace Finjin { namespace Engine {
         InputDeviceSemantic GetDeviceSemantic(InputDeviceClass deviceClass, size_t index) const;
         bool IsDeviceConnected(InputDeviceClass deviceClass, size_t index) const;
 
-        void AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedbackSettings* forces, size_t count);
+        void AddHapticFeedback(InputDeviceClass deviceClass, size_t index, const HapticFeedback* forces, size_t count);
         void StopHapticFeedback(InputDeviceClass deviceClass, size_t index);
 
         size_t GetGameControllerCount() const;
@@ -81,10 +82,10 @@ namespace Finjin { namespace Engine {
         size_t GetXInputGameControllerCount() const;
         XInputGameController* GetXInputGameController(size_t index);
 
-        void AddExternalGameController(InputGenericGameController* gameController, bool configure, Error& error);
-        void RemoveExternalGameController(InputGenericGameController* gameController);
+        void AddExternalGameController(ExternalGameController* gameController, bool configure, Error& error);
+        void RemoveExternalGameController(ExternalGameController* gameController);
         size_t GetExternalGameControllerCount() const;
-        InputGenericGameController* GetExternalGameController(size_t index);
+        ExternalGameController* GetExternalGameController(size_t index);
 
         size_t GetMouseCount() const;
         WindowsUWPMouse* GetMouse(size_t index);
@@ -95,10 +96,10 @@ namespace Finjin { namespace Engine {
         size_t GetTouchScreenCount() const;
         InputTouchScreen* GetTouchScreen(size_t index);
 
-        void AddExternalHeadset(InputGenericHeadset* headset, bool configure, Error& error);
-        void RemoveExternalHeadset(InputGenericHeadset* headset);
+        void AddExternalHeadset(ExternalHeadset* headset, bool configure, Error& error);
+        void RemoveExternalHeadset(ExternalHeadset* headset);
         size_t GetExternalHeadsetCount() const;
-        InputGenericHeadset* GetExternalHeadset(size_t index);
+        ExternalHeadset* GetExternalHeadset(size_t index);
 
         FileOperationResult ReadInputBinding(InputDeviceClass deviceClass, size_t deviceIndex, const AssetReference& configAssetRef, ByteBuffer& fileBuffer);
 

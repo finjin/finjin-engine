@@ -54,21 +54,27 @@ static LinuxGameController* GetGameControllerByDevicePath
 //Implementation----------------------------------------------------------------
 
 //LinuxGameController
-LinuxGameController::LinuxGameController()
+LinuxGameController::LinuxGameController(Allocator* allocator) : Super(allocator)
 {
-    Reset();
+    this->fd = -1;
+    this->index = 0;
+    this->isNewConnection = false;
+}
+
+void LinuxGameController::SetAllocator(Allocator* allocator)
+{
+    Super::SetAllocator(allocator);
+    
+    this->devicePath.SetAllocator(allocator);
 }
 
 void LinuxGameController::Reset()
 {
+    Super::Reset();
+    
     this->fd = -1;
+    this->devicePath.clear();
     this->index = 0;
-    this->semantic = InputDeviceSemantic::NONE;
-    this->displayName.clear();
-    this->instanceName.clear();
-    this->productName.clear();
-    this->instanceDescriptor.clear();
-    this->productDescriptor.clear();
     this->state.Reset();
     this->isNewConnection = false;
 }
@@ -245,36 +251,6 @@ bool LinuxGameController::IsNewConnection() const
 size_t LinuxGameController::GetIndex() const
 {
     return this->index;
-}
-
-const Utf8String& LinuxGameController::GetDisplayName() const
-{
-    return this->displayName;
-}
-
-void LinuxGameController::SetDisplayName(const Utf8String& value)
-{
-    this->displayName = value;
-}
-
-InputDeviceSemantic LinuxGameController::GetSemantic() const
-{
-    return this->semantic;
-}
-
-void LinuxGameController::SetSemantic(InputDeviceSemantic value)
-{
-    this->semantic = value;
-}
-
-const Utf8String& LinuxGameController::GetProductDescriptor() const
-{
-    return this->productDescriptor;
-}
-
-const Utf8String& LinuxGameController::GetInstanceDescriptor() const
-{
-    return this->instanceDescriptor;
 }
 
 size_t LinuxGameController::GetAxisCount() const

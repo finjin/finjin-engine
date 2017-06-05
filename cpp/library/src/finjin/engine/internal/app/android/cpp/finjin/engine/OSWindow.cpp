@@ -23,7 +23,7 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-OSWindow::OSWindow(Allocator* allocator, void* clientData) : AllocatedClass(allocator)
+OSWindow::OSWindow(Allocator* allocator, void* clientData) : AllocatedClass(allocator), internalName(allocator)
 {
     this->windowHandle = nullptr;
     this->clientData = clientData;
@@ -38,7 +38,11 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
 {
     FINJIN_ERROR_METHOD_START(error);
 
-    this->internalName = internalName;
+    if (this->internalName.assign(internalName).HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign internal name.");
+        return;
+    }
 
     this->windowSize = windowSize;
     this->windowSize.SetWindow(this);
@@ -60,13 +64,13 @@ void OSWindow::ShowMessage(const Utf8String& message, const Utf8String& title)
 {
     //TODO: Implement this
     //std::cout << title << ": " << message << std::endl;
-    FINJIN_DEBUG_LOG_INFO("%s: %s", title.c_str(), message.c_str());
+    FINJIN_DEBUG_LOG_INFO("%1%: %2%", title.c_str(), message.c_str());
 }
 
 void OSWindow::ShowErrorMessage(const Utf8String& message, const Utf8String& title)
 {
     //TODO: Implement this
-    FINJIN_DEBUG_LOG_ERROR("Error - %s: %s", title.c_str(), message.c_str());
+    FINJIN_DEBUG_LOG_ERROR("Error - %1%: %2%", title.c_str(), message.c_str());
 }
 
 void OSWindow::ApplyWindowSize()

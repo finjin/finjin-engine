@@ -15,9 +15,7 @@
 
 
 //Includes----------------------------------------------------------------------
-#include "finjin/common/Chrono.hpp"
-#include "finjin/engine/InputComponents.hpp"
-#include "finjin/engine/InputSource.hpp"
+#include "LinuxInputDevice.hpp"
 
 
 //Types-------------------------------------------------------------------------
@@ -25,12 +23,12 @@ namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
 
-    class LinuxInputContext;
-
-    class LinuxMouse
+    class LinuxMouse : public LinuxInputDevice
     {
     public:
-        LinuxMouse();
+        using Super = LinuxInputDevice;
+        
+        LinuxMouse(Allocator* allocator = nullptr);
 
         void Reset();
 
@@ -42,15 +40,6 @@ namespace Finjin { namespace Engine {
 
         bool IsConnected() const;
         bool GetConnectionChanged() const;
-
-        const Utf8String& GetDisplayName() const;
-        void SetDisplayName(const Utf8String& value);
-
-        InputDeviceSemantic GetSemantic() const;
-        void SetSemantic(InputDeviceSemantic value);
-
-        const Utf8String& GetProductDescriptor() const;
-        const Utf8String& GetInstanceDescriptor() const;
 
         size_t GetButtonCount() const;
         InputButton* GetButton(size_t index);
@@ -65,18 +54,6 @@ namespace Finjin { namespace Engine {
         InputLocator* GetLocator(size_t locatorIndex);
 
     private:
-        LinuxInputContext* context;
-
-        InputDeviceSemantic semantic;
-
-        Utf8String displayName;
-
-        Utf8String instanceName;
-        Utf8String productName;
-
-        Utf8String instanceDescriptor;
-        Utf8String productDescriptor;
-
         InputDeviceState<InputButton, InputAxis, InputPov, MouseConstants::MAX_BUTTON_COUNT, MouseConstants::MAX_AXIS_COUNT> state;
     };
 

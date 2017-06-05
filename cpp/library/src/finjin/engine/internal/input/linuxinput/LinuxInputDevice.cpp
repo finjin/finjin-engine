@@ -13,24 +13,20 @@
 
 //Includes----------------------------------------------------------------------
 #include "FinjinPrecompiled.hpp"
-#include "OpenSLESAdapterDescription.hpp"
+#include "LinuxInputDevice.hpp"
+#include "finjin/common/Convert.hpp"
+#include "finjin/engine/OSWindow.hpp"
+#include "LinuxInputContext.hpp"
 
 using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-void OpenSLESAdapterDescriptions::SortBestToWorst()
+LinuxInputDevice::LinuxInputDevice(Allocator* allocator) : Super(allocator)
 {
-    //Do nothing. Assume the descriptions are already in the best order
+    this->context = nullptr;
 }
 
-const OpenSLESAdapterDescription* OpenSLESAdapterDescriptions::GetByAdapterID(const OpenSLESAdapterID& adapterID) const
-{
-    for (auto& item : *this)
-    {
-        if (item.adapterID == adapterID)
-            return &item;
-    }
-
-    return nullptr;
+LinuxInputDevice::~LinuxInputDevice()
+{    
 }

@@ -120,7 +120,7 @@ struct OSWindow::Impl : public AllocatedClass
 {
     Impl(Allocator* allocator, OSWindow* osWindow, void* clientData);
 
-    void Create(const Utf8String& internalName, const Utf8String& titleOrSubtitle, const Utf8String& displayName, OSWindowRect rect, const WindowSize& windowSize, CoreWindow^ window, bool isMainWindow);
+    void Create(const Utf8String& internalName, const Utf8String& titleOrSubtitle, OSWindowRect rect, const WindowSize& windowSize, CoreWindow^ window, bool isMainWindow, Error& error);
     void Destroy();
 
     bool IsMaximized() const;
@@ -391,7 +391,11 @@ void OSWindowHandlers::OnKeyUp(CoreWindow^ sender, KeyEventArgs^ args)
 }
 
 //OSWindow::Impl
-OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData) : AllocatedClass(allocator), handlers(ref new OSWindowHandlers(reinterpret_cast<uintptr_t>(this)))
+OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData) : 
+    AllocatedClass(allocator), 
+    handlers(ref new OSWindowHandlers(reinterpret_cast<uintptr_t>(this))),
+    subtitle(allocator),
+    internalName(allocator)
 {
     this->osWindow = osWindow;
     this->windowHandle = nullptr;
@@ -400,10 +404,21 @@ OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData)
     this->clientData = clientData;
 }
 
-void OSWindow::Impl::Create(const Utf8String& internalName, const Utf8String& titleOrSubtitle, const Utf8String& displayName, OSWindowRect rect, const WindowSize& windowSize, CoreWindow^ window, bool isMainWindow)
+void OSWindow::Impl::Create(const Utf8String& internalName, const Utf8String& titleOrSubtitle, OSWindowRect rect, const WindowSize& windowSize, CoreWindow^ window, bool isMainWindow, Error& error)
 {
-    this->subtitle = titleOrSubtitle;
-    this->internalName = internalName;
+    FINJIN_ERROR_METHOD_START(error);
+
+    if (this->subtitle.assign(titleOrSubtitle).HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign subtitle.");
+        return;
+    }
+
+    if (this->internalName.assign(internalName).HasError())
+    {
+        FINJIN_SET_ERROR(error, "Failed to assign internal name.");
+        return;
+    }
 
     this->windowSize = windowSize;
     this->windowSize.SetWindow(this->osWindow);
@@ -502,7 +517,12 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
     auto window = CoreWindow::GetForCurrentThread();
     auto isMainWindow = CoreApplication::GetCurrentView()->CoreWindow == window && CoreApplication::GetCurrentView()->IsMain;
 
-    impl->Create(internalName, titleOrSubtitle, displayName, rect, windowSize, window, isMainWindow);
+    impl->Create(internalName, titleOrSubtitle, rect, windowSize, window, isMainWindow, error);
+    if (error)
+    {
+        FINJIN_SET_ERROR(error, "Failed to create window implementation.");
+        return;
+    }
 
     //applicationView->SetDesiredBoundsMode(ApplicationViewBoundsMode::UseCoreWindow);
 
