@@ -181,11 +181,13 @@ static Utf8String Indent(size_t depth)
 
 static void PRINT_TRANSFORM(size_t depth, const MathMatrix4& value)
 {
-    std::cout << Indent(depth) << "transform: " << value(0, 0) << " " << value(0, 1) << " " << value(0, 2) << " " << value(0, 3) << std::endl
+    std::stringstream valueString;
+    valueString << Indent(depth) << "transform: " << value(0, 0) << " " << value(0, 1) << " " << value(0, 2) << " " << value(0, 3) << std::endl
         << Indent(depth) << value(1, 0) << " " << value(1, 1) << " " << value(1, 2) << " " << value(1, 3) << std::endl
         << Indent(depth) << value(2, 0) << " " << value(2, 1) << " " << value(2, 2) << " " << value(2, 3) << std::endl
         << Indent(depth) << value(3, 0) << " " << value(3, 1) << " " << value(3, 2) << " " << value(3, 3) << std::endl
         ;
+    FINJIN_DEBUG_LOG_INFO("%1%", valueString.str().c_str());
 }
 #else
 inline void PRINT_TRANSFORM(size_t depth, const MathMatrix4& value)

@@ -1020,12 +1020,12 @@
     <ClCompile Include="..\..\src\finjin\engine\GpuContextCommonSettings.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\GpuRenderTargetSize.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\InputContextCommonSettings.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\PlatformCapabilities.cpp" />
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\Application.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\ApplicationGlobals.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\DisplayInfo.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\FinjinMain.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\OSWindow.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\PlatformCapabilities.cpp" />
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\Application.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\FinjinPrecompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">FinjinPrecompiled.cpp</PrecompiledHeaderFile>
@@ -1454,20 +1454,20 @@
     <ClInclude Include="..\..\src\finjin\engine\GpuRenderTargetSize.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\GpuSystemCommonSettings.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\InputSystemCommonSettings.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuContext.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuDescription.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuID.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuSystem.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputContext.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputSystem.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterDescription.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterID.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundContext.hpp" />
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\ApplicationGlobals.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\DisplayInfo.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\FinjinMain.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuDescription.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuID.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\InputContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\InputSystem.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\OSWindow.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundAdapterDescription.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundAdapterID.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundContext.hpp" />
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundSystem.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FinjinPrecompiled.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\EventCollection.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\FinjinEngineLibrary.hpp" />
@@ -1609,7 +1609,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -1622,7 +1622,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -1635,7 +1635,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android/cpp;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>

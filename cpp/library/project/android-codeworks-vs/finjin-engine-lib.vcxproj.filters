@@ -258,25 +258,25 @@
     <ClCompile Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESContext.cpp">
       <Filter>Source Files\internal\sound\opensles</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.cpp">
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\ApplicationGlobals.cpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.cpp">
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\DisplayInfo.cpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.cpp">
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\FinjinMain.cpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.cpp">
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\OSWindow.cpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\FinjinPrecompiled.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\PlatformCapabilities.cpp">
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\PlatformCapabilities.cpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\Application.cpp">
+    <ClCompile Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\Application.cpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\GenericGpuNumericStructs.cpp">
@@ -1223,46 +1223,46 @@
     <ClInclude Include="..\..\src\finjin\engine\internal\sound\opensles\OpenSLESAdapterID.hpp">
       <Filter>Source Files\internal\sound\opensles</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\ApplicationGlobals.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\ApplicationGlobals.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\DisplayInfo.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\DisplayInfo.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\FinjinMain.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\FinjinMain.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuContext.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuContext.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuDescription.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuDescription.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuID.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuID.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\GpuSystem.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\GpuSystem.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputContext.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\InputContext.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\InputSystem.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\InputSystem.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\OSWindow.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\OSWindow.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterDescription.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundAdapterDescription.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundAdapterID.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundAdapterID.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundContext.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundContext.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\cpp\finjin\engine\SoundSystem.hpp">
+    <ClInclude Include="..\..\src\finjin\engine\internal\app\android\finjin\engine\SoundSystem.hpp">
       <Filter>Source Files\internal\app\android</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\finjin\engine\FinjinPrecompiled.hpp">
