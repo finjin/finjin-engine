@@ -64,5 +64,6 @@ cpp/library/                   Main source tree.
         xaudio2/               XAudio2-specific implementation. Used on Windows.
       vr/                      Virtual reality system implementation.
         openvr/                OpenVR-specific implementation.
+java/android/library/          Java/Android source tree.
 tools/                         Various utility scripts.
 ```
