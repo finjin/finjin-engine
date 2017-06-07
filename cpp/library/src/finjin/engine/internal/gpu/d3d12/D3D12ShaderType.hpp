@@ -43,7 +43,7 @@ namespace Finjin { namespace Engine {
 
     struct D3D12ShaderTypeUtilities
     {
-        static Utf8String ToString(D3D12ShaderType value)
+        static const char* ToString(D3D12ShaderType value)
         {
             switch (value)
             {

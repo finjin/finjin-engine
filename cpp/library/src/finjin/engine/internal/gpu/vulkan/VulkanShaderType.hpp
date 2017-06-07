@@ -37,7 +37,7 @@ namespace Finjin { namespace Engine {
 
     struct VulkanShaderTypeUtilities
     {
-        static Utf8String ToString(VulkanShaderType value)
+        static const char* ToString(VulkanShaderType value)
         {
             switch (value)
             {
