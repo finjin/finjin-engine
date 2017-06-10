@@ -283,28 +283,28 @@ ChangedInputSource::ChangedInputSource()
     this->inputSource.deviceIndex = (size_t)-1;
 }
 
-ChangedInputSource::ChangedInputSource(InputSource inputSource, Utf8String name)
+ChangedInputSource::ChangedInputSource(InputSource inputSource, const Utf8String& name)
 {
     this->inputSource = inputSource;
     this->name = name;
     this->value = 0.0f;
 }
 
-ChangedInputSource::ChangedInputSource(InputSource inputSource, Utf8String name, bool value)
+ChangedInputSource::ChangedInputSource(InputSource inputSource, const Utf8String& name, bool value)
 {
     this->inputSource = inputSource;
     this->name = name;
     this->value = value ? 1.0f : 0.0f;
 }
 
-ChangedInputSource::ChangedInputSource(InputSource inputSource, Utf8String name, float value)
+ChangedInputSource::ChangedInputSource(InputSource inputSource, const Utf8String& name, float value)
 {
     this->inputSource = inputSource;
     this->name = name;
     this->value = value;
 }
 
-ChangedInputSource::ChangedInputSource(InputSource inputSource, Utf8String name, PovDirection value)
+ChangedInputSource::ChangedInputSource(InputSource inputSource, const Utf8String& name, PovDirection value)
 {
     this->inputSource = inputSource;
     this->name = name;

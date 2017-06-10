@@ -185,10 +185,10 @@ namespace Finjin { namespace Engine {
     struct ChangedInputSource
     {
         ChangedInputSource();
-        ChangedInputSource(InputSource inputSource, Utf8String name);
-        ChangedInputSource(InputSource inputSource, Utf8String name, bool value);
-        ChangedInputSource(InputSource inputSource, Utf8String name, float value);
-        ChangedInputSource(InputSource inputSource, Utf8String name, PovDirection value);
+        ChangedInputSource(InputSource inputSource, const Utf8String& name);
+        ChangedInputSource(InputSource inputSource, const Utf8String& name, bool value);
+        ChangedInputSource(InputSource inputSource, const Utf8String& name, float value);
+        ChangedInputSource(InputSource inputSource, const Utf8String& name, PovDirection value);
 
         operator bool() const;
 
