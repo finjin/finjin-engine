@@ -118,7 +118,9 @@ namespace Finjin { namespace Engine {
         bool Create(Allocator* allocator);
 
         const Utf8String& Get(AssetPathComponent type) const;
+        void Set(AssetPathComponent type, const char* value);
         void Set(AssetPathComponent type, const Utf8String& value);
+        void Set(AssetPathComponent type, const Utf8StringView& value);
         void Set(AssetPathComponent type, ByteOrder value);
         void Set(AssetPathComponent type, LayoutDirection value);
         void SetAssetClassDirectoryName(AssetClass assetClass);
@@ -248,11 +250,11 @@ namespace Finjin { namespace Engine {
         }
 
     private:
-        void SetPreformatted(AssetPathComponent type, const Utf8String& value);
-        void FormatAndSetSize(AssetPathComponent type, const char* prefix, const Utf8String& value);
+        void SetPreformatted(AssetPathComponent type, const Utf8StringView& value);
+        void FormatAndSetSize(AssetPathComponent type, const char* prefix, const Utf8StringView& value);
 
-        void SetSafeLowerAscii(AssetPathComponent type, const char* prefix, const Utf8String& value);
-        void SetSafeLowerAlphaNumeric(AssetPathComponent type, const char* prefix, const Utf8String& value);
+        void SetSafeLowerAscii(AssetPathComponent type, const char* prefix, const Utf8StringView& value);
+        void SetSafeLowerAlphaNumeric(AssetPathComponent type, const char* prefix, const Utf8StringView& value);
 
     private:
         struct Component

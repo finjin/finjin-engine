@@ -499,6 +499,12 @@
           <itemPath>/home/build/finjin-3rd-party/cpp/imgui/stb_textedit.h</itemPath>
           <itemPath>/home/build/finjin-3rd-party/cpp/imgui/stb_truetype.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="f4" displayName="ogg" projectFiles="true">
+          <itemPath>/home/build/finjin-3rd-party/cpp/libogg/src/bitwise.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libogg/src/framing.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libogg/include/ogg/ogg.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libogg/include/ogg/os_types.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="f2" displayName="recast" projectFiles="true">
           <logicalFolder name="f1" displayName="Detour" projectFiles="true">
             <itemPath>/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Source/DetourAlloc.cpp</itemPath>
@@ -554,6 +560,53 @@
             <itemPath>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Source/RecastRasterization.cpp</itemPath>
             <itemPath>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Source/RecastRegion.cpp</itemPath>
           </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="f5" displayName="vorbis" projectFiles="true">
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/analysis.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/backends.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/bitrate.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/bitrate.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/block.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/codebook.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/codebook.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/codec.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/codec_internal.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/envelope.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/envelope.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/floor0.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/floor1.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/highlevel.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/info.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup_data.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/lpc.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/lpc.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/lsp.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/lsp.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/mapping0.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/masking.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/mdct.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/mdct.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/misc.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/os.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/psy.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/psy.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/registry.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/registry.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/res0.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/scales.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/sharedbook.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/smallft.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/smallft.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/synthesis.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/tone.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/vorbisenc.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisenc.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/vorbisfile.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisfile.h</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/window.c</itemPath>
+          <itemPath>/home/build/finjin-3rd-party/cpp/libvorbis/lib/window.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="common" projectFiles="true">
@@ -907,6 +960,10 @@
     <Elem>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include</Elem>
     <Elem>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Source</Elem>
     <Elem>/home/build/finjin-3rd-party/cpp/imgui</Elem>
+    <Elem>/home/build/finjin-3rd-party/cpp/libogg/include</Elem>
+    <Elem>/home/build/finjin-3rd-party/cpp/libogg/src</Elem>
+    <Elem>/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis</Elem>
+    <Elem>/home/build/finjin-3rd-party/cpp/libvorbis/lib</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -917,20 +974,30 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <cTool>
+          <architecture>2</architecture>
+          <incDir>
+            <pElem>/home/build/finjin-3rd-party/cpp/libogg/include</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/libvorbis/include</pElem>
+          </incDir>
+        </cTool>
         <ccTool>
           <architecture>2</architecture>
           <standard>11</standard>
           <incDir>
             <pElem>/home/build/finjin-3rd-party/cpp/boost</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/nowide_standalone</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/eigen</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/libogg/include</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/libvorbis/include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/bullet/src</pElem>
-            <pElem>../../../../../finjin-common/cpp/library/include</pElem>
-            <pElem>../../src</pElem>
-            <pElem>../../src/finjin/engine</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/recastnavigation/DetourCrowd/Include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/recastnavigation/DetourTileCache/Include</pElem>
+            <pElem>../../../../../finjin-common/cpp/library/include</pElem>
+            <pElem>../../src</pElem>
+            <pElem>../../src/finjin/engine</pElem>
             <pElem>../../src/finjin/engine/internal/app/linux</pElem>
             <pElem>../../src/finjin/engine/internal</pElem>
           </incDir>
@@ -4497,6 +4564,251 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/include/ogg/ogg.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/include/ogg/os_types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/src/bitwise.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/src/framing.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/codec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisenc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisfile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/analysis.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/backends.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/bitrate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/bitrate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/block.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/codebook.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/codebook.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/codec_internal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/envelope.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/envelope.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/floor0.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/floor1.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/highlevel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/info.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup_data.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lpc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lpc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lsp.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lsp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/mapping0.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/masking.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/mdct.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/mdct.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/misc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/os.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/psy.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/psy.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/registry.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/registry.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/res0.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/scales.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/sharedbook.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/smallft.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/smallft.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/synthesis.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/tone.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/vorbisenc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/vorbisfile.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/window.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/window.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include/DetourAlloc.h"
             ex="false"
             tool="3"
@@ -4737,6 +5049,11 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <architecture>2</architecture>
+          <incDir>
+            <pElem>/home/build/finjin-3rd-party/cpp/libogg/include</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/libvorbis/include</pElem>
+          </incDir>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -4744,7 +5061,10 @@
           <standard>11</standard>
           <incDir>
             <pElem>/home/build/finjin-3rd-party/cpp/boost</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/nowide_standalone</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/eigen</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/libogg/include</pElem>
+            <pElem>/home/build/finjin-3rd-party/cpp/libvorbis/include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/bullet/src</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Recast/Include</pElem>
             <pElem>/home/build/finjin-3rd-party/cpp/recastnavigation/Detour/Include</pElem>
@@ -8320,6 +8640,251 @@
             flavor2="0">
       </item>
       <item path="/home/build/finjin-3rd-party/cpp/imgui/stb_truetype.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/include/ogg/ogg.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/include/ogg/os_types.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/src/bitwise.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libogg/src/framing.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/codec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisenc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisfile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/analysis.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/backends.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/bitrate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/bitrate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/block.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/codebook.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/codebook.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/codec_internal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/envelope.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/envelope.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/floor0.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/floor1.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/highlevel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/info.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lookup_data.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lpc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lpc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lsp.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/lsp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/mapping0.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/masking.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/mdct.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/mdct.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/misc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/os.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/psy.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/psy.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/registry.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/registry.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/res0.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/scales.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/sharedbook.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/smallft.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/smallft.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/synthesis.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/tone.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/vorbisenc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/vorbisfile.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/window.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="/home/build/finjin-3rd-party/cpp/libvorbis/lib/window.h"
             ex="false"
             tool="3"
             flavor2="0">

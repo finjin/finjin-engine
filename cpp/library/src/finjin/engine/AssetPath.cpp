@@ -532,7 +532,19 @@ const Utf8String& AssetPathSelector::Get(AssetPathComponent type) const
     return component.value;
 }
 
+void AssetPathSelector::Set(AssetPathComponent type, const char* value)
+{
+    Utf8StringView valueView(value);
+    Set(type, valueView);
+}
+
 void AssetPathSelector::Set(AssetPathComponent type, const Utf8String& value)
+{
+    Utf8StringView valueView(value);
+    Set(type, valueView);
+}
+
+void AssetPathSelector::Set(AssetPathComponent type, const Utf8StringView& value)
 {
     switch (type)
     {
@@ -602,7 +614,7 @@ void AssetPathSelector::SetCpuByteOrder()
     Set(AssetPathComponent::CPU_BYTE_ORDER, GetByteOrder());
 }
 
-void AssetPathSelector::SetPreformatted(AssetPathComponent type, const Utf8String& value)
+void AssetPathSelector::SetPreformatted(AssetPathComponent type, const Utf8StringView& value)
 {
     if (type == AssetPathComponent::NONE)
         return;
@@ -613,7 +625,7 @@ void AssetPathSelector::SetPreformatted(AssetPathComponent type, const Utf8Strin
     //FINJIN_DEBUG_LOG_INFO("preformatted: %1%", component.value);
 }
 
-void AssetPathSelector::FormatAndSetSize(AssetPathComponent type, const char* prefix, const Utf8String& value)
+void AssetPathSelector::FormatAndSetSize(AssetPathComponent type, const char* prefix, const Utf8StringView& value)
 {
     if (type == AssetPathComponent::NONE)
         return;
@@ -630,7 +642,7 @@ void AssetPathSelector::FormatAndSetSize(AssetPathComponent type, const char* pr
     }
 }
 
-void AssetPathSelector::SetSafeLowerAscii(AssetPathComponent type, const char* prefix, const Utf8String& value)
+void AssetPathSelector::SetSafeLowerAscii(AssetPathComponent type, const char* prefix, const Utf8StringView& value)
 {
     if (type == AssetPathComponent::NONE)
         return;
@@ -646,14 +658,14 @@ void AssetPathSelector::SetSafeLowerAscii(AssetPathComponent type, const char* p
         component.value.RemoveWhitespace();
         component.value.ReplaceAll('.', '_');
         component.value.ReplaceAll('-', '_');
-        component.value.ReplaceAll("(r)", "");
-        component.value.ReplaceAll("(tm)", "");
+        component.value.ReplaceAll("(r)", Utf8StringView::GetEmpty());
+        component.value.ReplaceAll("(tm)", Utf8StringView::GetEmpty());
     }
 
     //FINJIN_DEBUG_LOG_INFO("safe lower ascii: %1%", component.value);
 }
 
-void AssetPathSelector::SetSafeLowerAlphaNumeric(AssetPathComponent type, const char* prefix, const Utf8String& value)
+void AssetPathSelector::SetSafeLowerAlphaNumeric(AssetPathComponent type, const char* prefix, const Utf8StringView& value)
 {
     if (type == AssetPathComponent::NONE)
         return;

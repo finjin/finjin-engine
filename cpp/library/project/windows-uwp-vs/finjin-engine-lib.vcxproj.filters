@@ -176,6 +176,12 @@
     <Filter Include="Source Files\3rd-party\imgui">
       <UniqueIdentifier>{4f7dc76a-bd02-4663-8605-c07ec484236f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\3rd-party\ogg">
+      <UniqueIdentifier>{303ac514-b794-4b7b-b815-c10d3e702491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rd-party\vorbis">
+      <UniqueIdentifier>{0d589f22-f2f9-4a34-91e8-69687ecda58a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\finjin\engine\internal\input\uwpinput\WindowsUWPInputContext.hpp">
@@ -1587,6 +1593,79 @@
     <ClInclude Include="..\..\src\finjin\engine\GenericInputDevice.hpp">
       <Filter>Source Files\common\input</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\finjin\engine\Application.hpp" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\backends.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\bitrate.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\codebook.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\codec_internal.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\envelope.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\highlevel.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lookup.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lookup_data.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lpc.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lsp.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\masking.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\mdct.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\misc.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\os.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\psy.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\registry.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\scales.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\smallft.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\window.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\include\vorbis\codec.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\include\vorbis\vorbisenc.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\include\vorbis\vorbisfile.h">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libogg\include\ogg\ogg.h">
+      <Filter>Source Files\3rd-party\ogg</Filter>
+    </ClInclude>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libogg\include\ogg\os_types.h">
+      <Filter>Source Files\3rd-party\ogg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\finjin\engine\internal\input\uwpinput\WindowsUWPInputDevice.cpp">
@@ -2485,6 +2564,78 @@
     </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\GenericInputDevice.cpp">
       <Filter>Source Files\common\input</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\mapping0.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\mdct.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\psy.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\registry.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\res0.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\sharedbook.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\smallft.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\synthesis.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\vorbisenc.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\vorbisfile.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\window.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\analysis.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\bitrate.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\block.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\codebook.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\envelope.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\floor0.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\floor1.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\info.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lookup.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lpc.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lsp.c">
+      <Filter>Source Files\3rd-party\vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libogg\src\bitwise.c">
+      <Filter>Source Files\3rd-party\ogg</Filter>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libogg\src\framing.c">
+      <Filter>Source Files\3rd-party\ogg</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -18,6 +18,131 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libogg\src\bitwise.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libogg\src\framing.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\analysis.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\bitrate.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\block.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\codebook.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\envelope.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\floor0.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\floor1.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\info.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lookup.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lpc.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lsp.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\mapping0.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\mdct.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\psy.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\registry.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\res0.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\sharedbook.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\smallft.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\synthesis.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\tone.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\vorbisenc.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\vorbisfile.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="c:\finjin-3rd-party\cpp\libvorbis\lib\window.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Shipping|Tegra-Android'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Tegra-Android'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\src\finjin\engine\GenericInputDevice.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\GpuContextCommonImpl.cpp" />
     <ClCompile Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.cpp" />
@@ -1108,6 +1233,27 @@
     <ClCompile Include="..\..\src\finjin\engine\WindowSize.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libogg\include\ogg\ogg.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libogg\include\ogg\os_types.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\backends.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\bitrate.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\codebook.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\codec_internal.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\envelope.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\highlevel.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lookup.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lookup_data.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lpc.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\lsp.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\masking.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\mdct.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\misc.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\os.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\psy.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\registry.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\scales.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\smallft.h" />
+    <ClInclude Include="c:\finjin-3rd-party\cpp\libvorbis\lib\window.h" />
     <ClInclude Include="..\..\src\finjin\engine\GenericInputDevice.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\GpuContextCommonImpl.hpp" />
     <ClInclude Include="..\..\src\finjin\engine\internal\gpu\vulkan\VulkanPipelineBuilder.hpp" />
@@ -1609,7 +1755,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\nowide_standalone;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libogg\include;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libogg\include;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -1622,7 +1768,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\nowide_standalone;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libogg\include;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libogg\include;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -1635,7 +1781,7 @@
       <CppLanguageStandard>
       </CppLanguageStandard>
       <PreprocessorDefinitions>VK_USE_PLATFORM_ANDROID_KHR;VK_NO_PROTOTYPES</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\finjin-3rd-party\cpp\boost;C:\finjin-3rd-party\cpp\nowide_standalone;C:\finjin-3rd-party\cpp\eigen;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libogg\include;C:\finjin-3rd-party\cpp\bullet\src;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libvorbis\include;C:\finjin-3rd-party\cpp\libogg\include;C:\finjin-3rd-party\cpp\recastnavigation\Recast\Include;C:\finjin-3rd-party\cpp\recastnavigation\Detour\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourCrowd\Include;C:\finjin-3rd-party\cpp\recastnavigation\DetourTileCache\Include;../../../../../finjin-common/cpp/library/include;../../src;../../src/finjin/engine;../../src/finjin/engine/internal/app/android;../../src/finjin/engine/internal</AdditionalIncludeDirectories>
       <GccExceptionHandling>true</GccExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalOptions>-std=c++14 %(AdditionalOptions)</AdditionalOptions>

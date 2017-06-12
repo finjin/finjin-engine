@@ -23,6 +23,9 @@
 #include "finjin/common/ThisThread.hpp"
 #include "finjin/engine/OSWindow.hpp"
 #include "ApplicationDelegate.hpp"
+#if FINJIN_TARGET_PLATFORM_IS_DESKTOP_OR_SERVER
+    #include <nowide/iostream.hpp>
+#endif
 
 using namespace Finjin::Engine;
 
@@ -237,7 +240,15 @@ bool Application::Run(CommandLineArgsProcessor& argsProcessor, Error& error)
         Utf8String usage;
         this->applicationDelegate->GetCommandLineUsage(usage);
         if (!usage.empty())
-            std::cout << usage << std::endl;
+        {            
+        #if FINJIN_TARGET_PLATFORM_IS_DESKTOP_OR_SERVER
+            //Outputting to the console is only meaningful in a desktop/server environment
+            nowide::cout << usage << std::endl;
+        #else
+            //Output to debug log. Depending on settings, this output may not appear anywhere
+            FINJIN_DEBUG_LOG_INFO("%1%", usage);
+        #endif
+        }            
         return true;
     }
     

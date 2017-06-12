@@ -621,7 +621,7 @@ namespace Finjin { namespace Engine {
             bool GetBool() const override { return Convert::ToBool(this->value, false); }
             MathVector4 GetRGBA() const override
             {
-                MathVector4 values = { 0, 0, 0, 1 };
+                MathVector4 values(0, 0, 0, 1);
 
                 size_t count = 0;
                 Split(this->value, ' ', [&values, &count](Utf8StringView& value)
@@ -647,7 +647,7 @@ namespace Finjin { namespace Engine {
             int GetInt() const override { return this->value; }
             float GetFloat() const override { return RoundToFloat(this->value); }
             bool GetBool() const override { return this->value ? true : false; }
-            MathVector4 GetRGBA() const override { auto f = GetFloat(); return { f, f, f, 1.0f }; }
+            MathVector4 GetRGBA() const override { auto f = GetFloat(); return MathVector4(f, f, f, 1.0f); }
 
             void SetValue(const Utf8String& s) override { this->value = Convert::ToInteger(s, (int)0); }
 
@@ -661,7 +661,7 @@ namespace Finjin { namespace Engine {
             int GetInt() const override { return RoundToInt(this->value); }
             float GetFloat() const override { return this->value; }
             bool GetBool() const override { return this->value != 0.0f ? true : false; }
-            MathVector4 GetRGBA() const override { return{ this->value, this->value, this->value, 1.0f }; }
+            MathVector4 GetRGBA() const override { return MathVector4(this->value, this->value, this->value, 1.0f); }
 
             void SetValue(const Utf8String& s) override { this->value = Convert::ToNumber(s, 0.0f); }
 
@@ -675,7 +675,7 @@ namespace Finjin { namespace Engine {
             int GetInt() const override { return this->value ? 1 : 0; }
             float GetFloat() const override { return this->value ? 1.0f : 0.0f; }
             bool GetBool() const override { return this->value; }
-            MathVector4 GetRGBA() const override { auto f = GetFloat(); return { f, f, f, 1.0f }; }
+            MathVector4 GetRGBA() const override { auto f = GetFloat(); return MathVector4(f, f, f, 1.0f); }
 
             void SetValue(const Utf8String& s) override { this->value = Convert::ToBool(s, false); }
 
@@ -683,7 +683,7 @@ namespace Finjin { namespace Engine {
         };
         struct RGBAPropertyInstance : public PropertyInstance
         {
-            RGBAPropertyInstance(Allocator* allocator, UserDataClass::Item* prop) : PropertyInstance(allocator, prop), value{ 0,0,0,1 } {}
+            RGBAPropertyInstance(Allocator* allocator, UserDataClass::Item* prop) : PropertyInstance(allocator, prop), value(0.0f, 0.0f, 0.0f, 1.0f) {}
 
             ValueOrError<void> GetString(Utf8String& result) const override
             {

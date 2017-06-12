@@ -80,6 +80,34 @@
 		65430DD41DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430DCE1DF1B66D00588409 /* StandardAssetDocumentPropertyValues.cpp */; };
 		65430E6A1DF9AF5D00588409 /* Asset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E671DF9AF5D00588409 /* Asset.cpp */; };
 		65430E6B1DF9AF5D00588409 /* AssetReference.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65430E681DF9AF5D00588409 /* AssetReference.cpp */; };
+		655797021EEEC718003FC0AF /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797001EEEC718003FC0AF /* bitwise.c */; };
+		655797031EEEC718003FC0AF /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797011EEEC718003FC0AF /* framing.c */; };
+		655797341EEEC78D003FC0AF /* analysis.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797081EEEC78C003FC0AF /* analysis.c */; };
+		655797361EEEC78D003FC0AF /* bitrate.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557970A1EEEC78D003FC0AF /* bitrate.c */; };
+		655797381EEEC78D003FC0AF /* block.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557970C1EEEC78D003FC0AF /* block.c */; };
+		655797391EEEC78D003FC0AF /* codebook.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557970D1EEEC78D003FC0AF /* codebook.c */; };
+		6557973C1EEEC78D003FC0AF /* envelope.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797101EEEC78D003FC0AF /* envelope.c */; };
+		6557973E1EEEC78D003FC0AF /* floor0.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797121EEEC78D003FC0AF /* floor0.c */; };
+		6557973F1EEEC78D003FC0AF /* floor1.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797131EEEC78D003FC0AF /* floor1.c */; };
+		655797411EEEC78D003FC0AF /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797151EEEC78D003FC0AF /* info.c */; };
+		655797431EEEC78D003FC0AF /* lookup.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797171EEEC78D003FC0AF /* lookup.c */; };
+		655797451EEEC78D003FC0AF /* lpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797191EEEC78D003FC0AF /* lpc.c */; };
+		655797471EEEC78D003FC0AF /* lsp.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557971B1EEEC78D003FC0AF /* lsp.c */; };
+		6557974B1EEEC78D003FC0AF /* mapping0.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557971F1EEEC78D003FC0AF /* mapping0.c */; };
+		6557974D1EEEC78D003FC0AF /* mdct.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797211EEEC78D003FC0AF /* mdct.c */; };
+		655797511EEEC78D003FC0AF /* psy.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797251EEEC78D003FC0AF /* psy.c */; };
+		655797531EEEC78D003FC0AF /* registry.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797271EEEC78D003FC0AF /* registry.c */; };
+		655797551EEEC78D003FC0AF /* res0.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797291EEEC78D003FC0AF /* res0.c */; };
+		655797571EEEC78D003FC0AF /* sharedbook.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557972B1EEEC78D003FC0AF /* sharedbook.c */; };
+		655797581EEEC78D003FC0AF /* smallft.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557972C1EEEC78D003FC0AF /* smallft.c */; };
+		6557975A1EEEC78D003FC0AF /* synthesis.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557972E1EEEC78D003FC0AF /* synthesis.c */; };
+		6557975B1EEEC78D003FC0AF /* tone.c in Sources */ = {isa = PBXBuildFile; fileRef = 6557972F1EEEC78D003FC0AF /* tone.c */; };
+		6557975C1EEEC78D003FC0AF /* vorbisenc.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797301EEEC78D003FC0AF /* vorbisenc.c */; };
+		6557975D1EEEC78D003FC0AF /* vorbisfile.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797311EEEC78D003FC0AF /* vorbisfile.c */; };
+		6557975E1EEEC78D003FC0AF /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 655797321EEEC78D003FC0AF /* window.c */; };
+		655797631EEEC7E6003FC0AF /* codec.h in Headers */ = {isa = PBXBuildFile; fileRef = 655797601EEEC7E6003FC0AF /* codec.h */; };
+		655797641EEEC7E6003FC0AF /* vorbisenc.h in Headers */ = {isa = PBXBuildFile; fileRef = 655797611EEEC7E6003FC0AF /* vorbisenc.h */; };
+		655797651EEEC7E6003FC0AF /* vorbisfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 655797621EEEC7E6003FC0AF /* vorbisfile.h */; };
 		655881E01EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */; };
 		655881E61EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */; };
 		655AA7501EB80E8C00C9F22E /* MetalPipelineState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 655AA74E1EB80E8C00C9F22E /* MetalPipelineState.mm */; };
@@ -498,6 +526,55 @@
 		65430E691DF9AF5D00588409 /* AssetReference.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = AssetReference.hpp; path = ../../src/finjin/engine/AssetReference.hpp; sourceTree = SOURCE_ROOT; };
 		654C061D1EDCFAB3005A4556 /* RenderStatus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RenderStatus.hpp; path = ../../src/finjin/engine/RenderStatus.hpp; sourceTree = SOURCE_ROOT; };
 		6552804D1E39EDB00057B5A4 /* MetalRenderTarget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MetalRenderTarget.hpp; path = ../../src/finjin/engine/internal/gpu/metal/MetalRenderTarget.hpp; sourceTree = SOURCE_ROOT; };
+		655797001EEEC718003FC0AF /* bitwise.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = bitwise.c; path = "/Users/derek/finjin-3rd-party/cpp/libogg/src/bitwise.c"; sourceTree = "<absolute>"; };
+		655797011EEEC718003FC0AF /* framing.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = framing.c; path = "/Users/derek/finjin-3rd-party/cpp/libogg/src/framing.c"; sourceTree = "<absolute>"; };
+		655797041EEEC74D003FC0AF /* ogg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ogg.h; path = "/Users/derek/finjin-3rd-party/cpp/libogg/include/ogg/ogg.h"; sourceTree = "<absolute>"; };
+		655797051EEEC74D003FC0AF /* os_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = os_types.h; path = "/Users/derek/finjin-3rd-party/cpp/libogg/include/ogg/os_types.h"; sourceTree = "<absolute>"; };
+		655797081EEEC78C003FC0AF /* analysis.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = analysis.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/analysis.c"; sourceTree = "<absolute>"; };
+		655797091EEEC78D003FC0AF /* backends.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = backends.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/backends.h"; sourceTree = "<absolute>"; };
+		6557970A1EEEC78D003FC0AF /* bitrate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = bitrate.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/bitrate.c"; sourceTree = "<absolute>"; };
+		6557970B1EEEC78D003FC0AF /* bitrate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bitrate.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/bitrate.h"; sourceTree = "<absolute>"; };
+		6557970C1EEEC78D003FC0AF /* block.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = block.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/block.c"; sourceTree = "<absolute>"; };
+		6557970D1EEEC78D003FC0AF /* codebook.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = codebook.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/codebook.c"; sourceTree = "<absolute>"; };
+		6557970E1EEEC78D003FC0AF /* codebook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = codebook.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/codebook.h"; sourceTree = "<absolute>"; };
+		6557970F1EEEC78D003FC0AF /* codec_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = codec_internal.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/codec_internal.h"; sourceTree = "<absolute>"; };
+		655797101EEEC78D003FC0AF /* envelope.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = envelope.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/envelope.c"; sourceTree = "<absolute>"; };
+		655797111EEEC78D003FC0AF /* envelope.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = envelope.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/envelope.h"; sourceTree = "<absolute>"; };
+		655797121EEEC78D003FC0AF /* floor0.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = floor0.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/floor0.c"; sourceTree = "<absolute>"; };
+		655797131EEEC78D003FC0AF /* floor1.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = floor1.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/floor1.c"; sourceTree = "<absolute>"; };
+		655797141EEEC78D003FC0AF /* highlevel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = highlevel.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/highlevel.h"; sourceTree = "<absolute>"; };
+		655797151EEEC78D003FC0AF /* info.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = info.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/info.c"; sourceTree = "<absolute>"; };
+		655797161EEEC78D003FC0AF /* lookup_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lookup_data.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/lookup_data.h"; sourceTree = "<absolute>"; };
+		655797171EEEC78D003FC0AF /* lookup.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = lookup.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/lookup.c"; sourceTree = "<absolute>"; };
+		655797181EEEC78D003FC0AF /* lookup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lookup.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/lookup.h"; sourceTree = "<absolute>"; };
+		655797191EEEC78D003FC0AF /* lpc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = lpc.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/lpc.c"; sourceTree = "<absolute>"; };
+		6557971A1EEEC78D003FC0AF /* lpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lpc.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/lpc.h"; sourceTree = "<absolute>"; };
+		6557971B1EEEC78D003FC0AF /* lsp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = lsp.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/lsp.c"; sourceTree = "<absolute>"; };
+		6557971C1EEEC78D003FC0AF /* lsp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lsp.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/lsp.h"; sourceTree = "<absolute>"; };
+		6557971F1EEEC78D003FC0AF /* mapping0.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mapping0.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/mapping0.c"; sourceTree = "<absolute>"; };
+		655797201EEEC78D003FC0AF /* masking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = masking.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/masking.h"; sourceTree = "<absolute>"; };
+		655797211EEEC78D003FC0AF /* mdct.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mdct.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/mdct.c"; sourceTree = "<absolute>"; };
+		655797221EEEC78D003FC0AF /* mdct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mdct.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/mdct.h"; sourceTree = "<absolute>"; };
+		655797231EEEC78D003FC0AF /* misc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = misc.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/misc.h"; sourceTree = "<absolute>"; };
+		655797241EEEC78D003FC0AF /* os.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = os.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/os.h"; sourceTree = "<absolute>"; };
+		655797251EEEC78D003FC0AF /* psy.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = psy.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/psy.c"; sourceTree = "<absolute>"; };
+		655797261EEEC78D003FC0AF /* psy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = psy.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/psy.h"; sourceTree = "<absolute>"; };
+		655797271EEEC78D003FC0AF /* registry.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = registry.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/registry.c"; sourceTree = "<absolute>"; };
+		655797281EEEC78D003FC0AF /* registry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = registry.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/registry.h"; sourceTree = "<absolute>"; };
+		655797291EEEC78D003FC0AF /* res0.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = res0.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/res0.c"; sourceTree = "<absolute>"; };
+		6557972A1EEEC78D003FC0AF /* scales.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = scales.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/scales.h"; sourceTree = "<absolute>"; };
+		6557972B1EEEC78D003FC0AF /* sharedbook.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sharedbook.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/sharedbook.c"; sourceTree = "<absolute>"; };
+		6557972C1EEEC78D003FC0AF /* smallft.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = smallft.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/smallft.c"; sourceTree = "<absolute>"; };
+		6557972D1EEEC78D003FC0AF /* smallft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = smallft.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/smallft.h"; sourceTree = "<absolute>"; };
+		6557972E1EEEC78D003FC0AF /* synthesis.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = synthesis.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/synthesis.c"; sourceTree = "<absolute>"; };
+		6557972F1EEEC78D003FC0AF /* tone.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = tone.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/tone.c"; sourceTree = "<absolute>"; };
+		655797301EEEC78D003FC0AF /* vorbisenc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = vorbisenc.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/vorbisenc.c"; sourceTree = "<absolute>"; };
+		655797311EEEC78D003FC0AF /* vorbisfile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = vorbisfile.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/vorbisfile.c"; sourceTree = "<absolute>"; };
+		655797321EEEC78D003FC0AF /* window.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = window.c; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/window.c"; sourceTree = "<absolute>"; };
+		655797331EEEC78D003FC0AF /* window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = window.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/lib/window.h"; sourceTree = "<absolute>"; };
+		655797601EEEC7E6003FC0AF /* codec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = codec.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/include/vorbis/codec.h"; sourceTree = "<absolute>"; };
+		655797611EEEC7E6003FC0AF /* vorbisenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vorbisenc.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisenc.h"; sourceTree = "<absolute>"; };
+		655797621EEEC7E6003FC0AF /* vorbisfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vorbisfile.h; path = "/Users/derek/finjin-3rd-party/cpp/libvorbis/include/vorbis/vorbisfile.h"; sourceTree = "<absolute>"; };
 		655881DF1EBED27C0071C1BF /* AVAudioEngineSoundBufferImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundBufferImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundBufferImpl.mm; sourceTree = SOURCE_ROOT; };
 		655881E51EBED5360071C1BF /* AVAudioEngineSoundSourceImpl.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVAudioEngineSoundSourceImpl.mm; path = ../../src/finjin/engine/internal/sound/avaudioengine/AVAudioEngineSoundSourceImpl.mm; sourceTree = SOURCE_ROOT; };
 		655AA74E1EB80E8C00C9F22E /* MetalPipelineState.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = MetalPipelineState.mm; path = ../../src/finjin/engine/internal/gpu/metal/MetalPipelineState.mm; sourceTree = SOURCE_ROOT; };
@@ -1488,6 +1565,69 @@
 			name = application;
 			sourceTree = "<group>";
 		};
+		655796FE1EEEC65E003FC0AF /* ogg */ = {
+			isa = PBXGroup;
+			children = (
+				655797001EEEC718003FC0AF /* bitwise.c */,
+				655797011EEEC718003FC0AF /* framing.c */,
+				655797041EEEC74D003FC0AF /* ogg.h */,
+				655797051EEEC74D003FC0AF /* os_types.h */,
+			);
+			name = ogg;
+			sourceTree = "<group>";
+		};
+		655796FF1EEEC665003FC0AF /* vorbis */ = {
+			isa = PBXGroup;
+			children = (
+				655797601EEEC7E6003FC0AF /* codec.h */,
+				655797611EEEC7E6003FC0AF /* vorbisenc.h */,
+				655797621EEEC7E6003FC0AF /* vorbisfile.h */,
+				655797081EEEC78C003FC0AF /* analysis.c */,
+				655797091EEEC78D003FC0AF /* backends.h */,
+				6557970A1EEEC78D003FC0AF /* bitrate.c */,
+				6557970B1EEEC78D003FC0AF /* bitrate.h */,
+				6557970C1EEEC78D003FC0AF /* block.c */,
+				6557970D1EEEC78D003FC0AF /* codebook.c */,
+				6557970E1EEEC78D003FC0AF /* codebook.h */,
+				6557970F1EEEC78D003FC0AF /* codec_internal.h */,
+				655797101EEEC78D003FC0AF /* envelope.c */,
+				655797111EEEC78D003FC0AF /* envelope.h */,
+				655797121EEEC78D003FC0AF /* floor0.c */,
+				655797131EEEC78D003FC0AF /* floor1.c */,
+				655797141EEEC78D003FC0AF /* highlevel.h */,
+				655797151EEEC78D003FC0AF /* info.c */,
+				655797161EEEC78D003FC0AF /* lookup_data.h */,
+				655797171EEEC78D003FC0AF /* lookup.c */,
+				655797181EEEC78D003FC0AF /* lookup.h */,
+				655797191EEEC78D003FC0AF /* lpc.c */,
+				6557971A1EEEC78D003FC0AF /* lpc.h */,
+				6557971B1EEEC78D003FC0AF /* lsp.c */,
+				6557971C1EEEC78D003FC0AF /* lsp.h */,
+				6557971F1EEEC78D003FC0AF /* mapping0.c */,
+				655797201EEEC78D003FC0AF /* masking.h */,
+				655797211EEEC78D003FC0AF /* mdct.c */,
+				655797221EEEC78D003FC0AF /* mdct.h */,
+				655797231EEEC78D003FC0AF /* misc.h */,
+				655797241EEEC78D003FC0AF /* os.h */,
+				655797251EEEC78D003FC0AF /* psy.c */,
+				655797261EEEC78D003FC0AF /* psy.h */,
+				655797271EEEC78D003FC0AF /* registry.c */,
+				655797281EEEC78D003FC0AF /* registry.h */,
+				655797291EEEC78D003FC0AF /* res0.c */,
+				6557972A1EEEC78D003FC0AF /* scales.h */,
+				6557972B1EEEC78D003FC0AF /* sharedbook.c */,
+				6557972C1EEEC78D003FC0AF /* smallft.c */,
+				6557972D1EEEC78D003FC0AF /* smallft.h */,
+				6557972E1EEEC78D003FC0AF /* synthesis.c */,
+				6557972F1EEEC78D003FC0AF /* tone.c */,
+				655797301EEEC78D003FC0AF /* vorbisenc.c */,
+				655797311EEEC78D003FC0AF /* vorbisfile.c */,
+				655797321EEEC78D003FC0AF /* window.c */,
+				655797331EEEC78D003FC0AF /* window.h */,
+			);
+			name = vorbis;
+			sourceTree = "<group>";
+		};
 		6573598A1ECFFB9C009FA3E6 /* imgui */ = {
 			isa = PBXGroup;
 			children = (
@@ -1508,7 +1648,9 @@
 			children = (
 				65A30A601EC7A7070068F9BC /* bullet3 */,
 				6573598A1ECFFB9C009FA3E6 /* imgui */,
+				655796FE1EEEC65E003FC0AF /* ogg */,
 				65F309071ECC08BA0089D82D /* recast */,
+				655796FF1EEEC665003FC0AF /* vorbis */,
 			);
 			name = "3rd-party";
 			sourceTree = "<group>";
@@ -2316,6 +2458,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				655797641EEEC7E6003FC0AF /* vorbisenc.h in Headers */,
+				655797631EEEC7E6003FC0AF /* codec.h in Headers */,
+				655797651EEEC7E6003FC0AF /* vorbisfile.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2375,6 +2520,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				655797341EEEC78D003FC0AF /* analysis.c in Sources */,
+				655797361EEEC78D003FC0AF /* bitrate.c in Sources */,
+				655797381EEEC78D003FC0AF /* block.c in Sources */,
+				655797391EEEC78D003FC0AF /* codebook.c in Sources */,
+				6557973C1EEEC78D003FC0AF /* envelope.c in Sources */,
+				6557973E1EEEC78D003FC0AF /* floor0.c in Sources */,
+				6557973F1EEEC78D003FC0AF /* floor1.c in Sources */,
+				655797411EEEC78D003FC0AF /* info.c in Sources */,
+				655797431EEEC78D003FC0AF /* lookup.c in Sources */,
+				655797451EEEC78D003FC0AF /* lpc.c in Sources */,
+				655797471EEEC78D003FC0AF /* lsp.c in Sources */,
+				6557974B1EEEC78D003FC0AF /* mapping0.c in Sources */,
+				6557974D1EEEC78D003FC0AF /* mdct.c in Sources */,
+				655797511EEEC78D003FC0AF /* psy.c in Sources */,
+				655797531EEEC78D003FC0AF /* registry.c in Sources */,
+				655797551EEEC78D003FC0AF /* res0.c in Sources */,
+				655797571EEEC78D003FC0AF /* sharedbook.c in Sources */,
+				655797581EEEC78D003FC0AF /* smallft.c in Sources */,
+				6557975A1EEEC78D003FC0AF /* synthesis.c in Sources */,
+				6557975B1EEEC78D003FC0AF /* tone.c in Sources */,
+				6557975C1EEEC78D003FC0AF /* vorbisenc.c in Sources */,
+				6557975D1EEEC78D003FC0AF /* vorbisfile.c in Sources */,
+				6557975E1EEEC78D003FC0AF /* window.c in Sources */,
+				655797021EEEC718003FC0AF /* bitwise.c in Sources */,
+				655797031EEEC718003FC0AF /* framing.c in Sources */,
 				6586C4B81EE12D7400F797E5 /* GenericInputDevice.cpp in Sources */,
 				65D15B161ED8E384003B0959 /* ScreenCapture.cpp in Sources */,
 				65A8A4481ED5534C00791962 /* GpuContextCommonImpl.cpp in Sources */,
@@ -2776,7 +2946,10 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"/Users/derek/finjin-3rd-party/cpp/boost",
+					"/Users/derek/finjin-3rd-party/cpp/nowide_standalone",
 					"/Users/derek/finjin-3rd-party/cpp/eigen",
+					"/Users/derek/finjin-3rd-party/cpp/libogg/include",
+					"/Users/derek/finjin-3rd-party/cpp/libvorbis/include",
 					"/Users/derek/finjin-3rd-party/cpp/bullet/src",
 					"/Users/derek/finjin-3rd-party/cpp/recastnavigation/Recast/Include",
 					"/Users/derek/finjin-3rd-party/cpp/recastnavigation/Detour/Include",
@@ -2799,7 +2972,10 @@
 				GCC_PREPROCESSOR_DEFINITIONS = USE_SIMD;
 				HEADER_SEARCH_PATHS = (
 					"/Users/derek/finjin-3rd-party/cpp/boost",
+					"/Users/derek/finjin-3rd-party/cpp/nowide_standalone",
 					"/Users/derek/finjin-3rd-party/cpp/eigen",
+					"/Users/derek/finjin-3rd-party/cpp/libogg/include",
+					"/Users/derek/finjin-3rd-party/cpp/libvorbis/include",
 					"/Users/derek/finjin-3rd-party/cpp/bullet/src",
 					"/Users/derek/finjin-3rd-party/cpp/recastnavigation/Recast/Include",
 					"/Users/derek/finjin-3rd-party/cpp/recastnavigation/Detour/Include",
