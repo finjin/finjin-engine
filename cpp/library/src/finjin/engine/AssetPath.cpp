@@ -16,6 +16,7 @@
 #include "AssetPath.hpp"
 #include "finjin/common/BitArray.hpp"
 #include "finjin/common/DebugLog.hpp"
+#include "finjin/common/StaticUnorderedSet.hpp"
 
 using namespace Finjin::Engine;
 
@@ -69,10 +70,12 @@ static Utf8String GetCpuArchitectureInternalString()
 
 static bool IsLayoutDirection(const Utf8StringView& componentString)
 {
-    return
-        componentString == "ldltr" ||
-        componentString == "ldrtl"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(2) lookup
+        (
+        "ldltr",
+        "ldrtl"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsSize(const Utf8StringView& componentString, const char* prefix, const char* suffix)
@@ -109,33 +112,39 @@ static bool IsHeight(const Utf8StringView& componentString)
 
 static bool IsScreenSize(const Utf8StringView& componentString)
 {
-    return
-        componentString == "small" ||
-        componentString == "normal" ||
-        componentString == "large" ||
-        componentString == "xlarge"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(4) lookup
+        (
+        "small",
+        "normal",
+        "large",
+        "xlarge"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsScreenOrientation(const Utf8StringView& componentString)
 {
-    return
-        componentString == "land" ||
-        componentString == "port"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(2) lookup
+        (
+        "land",
+        "port"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsScreenDensity(const Utf8StringView& componentString)
 {
-    return
-        componentString == "ldpi" ||
-        componentString == "mdpi" ||
-        componentString == "hdpi" ||
-        componentString == "xhdpi" ||
-        componentString == "nodpi" ||
-        componentString == "tvdpi" ||
-        componentString == "anydpi"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(7) lookup
+        (
+        "ldpi",
+        "mdpi",
+        "hdpi",
+        "xhdpi",
+        "nodpi",
+        "tvdpi",
+        "anydpi"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsCpuArchitecture(const Utf8StringView& componentString)
@@ -145,23 +154,27 @@ static bool IsCpuArchitecture(const Utf8StringView& componentString)
 
 static bool IsCpuByteOrder(const Utf8StringView& componentString)
 {
-    return
-        componentString == "bigendian" ||
-        componentString == "littleendian"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(2) lookup
+        (
+        "bigendian",
+        "littleendian"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsOperatingSystem(const Utf8StringView& componentString)
 {
-    return
-        componentString == "windows" ||
-        componentString == "macos" ||
-        componentString == "ios" ||
-        componentString == "tvos" ||
-        componentString == "carplay" ||
-        componentString == "android" ||
-        componentString == "linux"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(7) lookup
+        (
+        "windows",
+        "macos",
+        "ios",
+        "tvos",
+        "carplay",
+        "android",
+        "linux"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsOperatingSystemVersion(const Utf8StringView& componentString)
@@ -175,10 +188,12 @@ static bool IsOperatingSystemVersion(const Utf8StringView& componentString)
 
 static bool IsApplicationPlatform(const Utf8StringView& componentString)
 {
-    return
-        componentString == "win32" ||
-        componentString == "uwp"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(2) lookup
+        (
+        "win32",
+        "uwp"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsDeviceModel(const Utf8StringView& componentString)
@@ -193,11 +208,13 @@ static bool IsGpuManufacturerModel(const Utf8StringView& componentString)
 
 static bool IsGpuSystem(const Utf8StringView& componentString)
 {
-    return
-        componentString == "d3d12" ||
-        componentString == "metal" ||
-        componentString == "vulkan"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(3) lookup
+        (
+        "d3d12",
+        "metal",
+        "vulkan"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsGpuFeatureLevel(const Utf8StringView& componentString)
@@ -212,32 +229,38 @@ static bool IsGpuShaderModel(const Utf8StringView& componentString)
 
 static bool IsPreferredTextureFormat(const Utf8StringView& componentString)
 {
-    return
-        componentString == "astc" ||
-        componentString == "etc2" ||
-        componentString == "bc"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(3) lookup
+        (
+        "astc",
+        "etc2",
+        "bc"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsSoundSystem(const Utf8StringView& componentString)
 {
-    return
-        componentString == "xaudio2" ||
-        componentString == "avaudioengine" ||
-        componentString == "opensles" ||
-        componentString == "openal"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(4) lookup
+        (
+        "xaudio2",
+        "avaudioengine",
+        "opensles",
+        "openal"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsInputDevice(const Utf8StringView& componentString)
 {
-    return
-        componentString == "gamecontroller" ||
-        componentString == "keyboard" ||
-        componentString == "mouse" ||
-        componentString == "touchscreen" ||
-        componentString == "accelerometer"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(5) lookup
+        (
+        "gamecontroller",
+        "keyboard",
+        "mouse",
+        "touchscreen",
+        "accelerometer"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsInputDeviceDescriptor(const Utf8StringView& componentString)
@@ -247,30 +270,36 @@ static bool IsInputDeviceDescriptor(const Utf8StringView& componentString)
 
 static bool IsInputSystem(const Utf8StringView& componentString)
 {
-    return
-        componentString == "win32input" ||
-        componentString == "uwpinput" ||
-        componentString == "iosinput" ||
-        componentString == "macosinput" ||
-        componentString == "linuxinput"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(5) lookup
+        (
+        "win32input",
+        "uwpinput",
+        "iosinput",
+        "macosinput",
+        "linuxinput"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsInputApi(const Utf8StringView& componentString)
 {
-    return
-        componentString == "xinput" ||
-        componentString == "dinput" ||
-        componentString == "gcinput"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(3) lookup
+        (
+        "xinput",
+        "dinput",
+        "gcinput"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsVRSystem(const Utf8StringView& componentString)
 {
-    return
-        componentString == "win32vr" ||
-        componentString == "linuxvr"
-        ;
+    static const FINJIN_LITERAL_STRING_STATIC_UNORDERED_SET(2) lookup
+        (
+        "win32vr",
+        "linuxvr"
+        );
+    return lookup.contains(componentString);
 }
 
 static bool IsVRApi(const Utf8StringView& componentString)
@@ -659,6 +688,7 @@ void AssetPathSelector::SetSafeLowerAscii(AssetPathComponent type, const char* p
         component.value.ReplaceAll('.', '_');
         component.value.ReplaceAll('-', '_');
         component.value.ReplaceAll("(r)", Utf8StringView::GetEmpty());
+        component.value.ReplaceAll("(R)", Utf8StringView::GetEmpty());
         component.value.ReplaceAll("(tm)", Utf8StringView::GetEmpty());
     }
 
@@ -677,8 +707,9 @@ void AssetPathSelector::SetSafeLowerAlphaNumeric(AssetPathComponent type, const 
     {
         component.value = prefix;
         component.value += value;
-        component.value.ReplaceAll("(r)", "");
-        component.value.ReplaceAll("(R)", "");
+        component.value.ReplaceAll("(r)", Utf8StringView::GetEmpty());
+        component.value.ReplaceAll("(R)", Utf8StringView::GetEmpty());
+        component.value.ReplaceAll("(tm)", Utf8StringView::GetEmpty());
         component.value.ToLowerAlphaNumeric();
 
         //FINJIN_DEBUG_LOG_INFO("safe lower alnum: %1%", component.value);
