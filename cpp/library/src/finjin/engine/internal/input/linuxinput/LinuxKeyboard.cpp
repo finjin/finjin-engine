@@ -31,7 +31,7 @@ using namespace Finjin::Engine;
 
 //Implementation----------------------------------------------------------------
 LinuxKeyboard::LinuxKeyboard(Allocator* allocator) : Super(allocator)
-{    
+{
 }
 
 void LinuxKeyboard::Reset()

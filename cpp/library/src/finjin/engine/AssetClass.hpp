@@ -80,7 +80,7 @@ namespace Finjin { namespace Engine {
                 if (extension.EndsWith(ToString(assetClass)))
                     return static_cast<AssetClass>(assetClass);
             }
-            
+
             return AssetClass::COUNT;
         }
 

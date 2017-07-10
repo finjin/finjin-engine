@@ -22,8 +22,8 @@ using namespace Finjin::Engine;
 
 
 //Implementation----------------------------------------------------------------
-LinuxMouse::LinuxMouse(Allocator* allocator) : Super(allocator)    
-{    
+LinuxMouse::LinuxMouse(Allocator* allocator) : Super(allocator)
+{
 }
 
 void LinuxMouse::Reset()

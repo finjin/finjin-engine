@@ -767,7 +767,7 @@ def main(args = None):
 
         raise RuntimeError('Not implemented!')
     elif shader_api == ShaderAPI.VULKAN:
-        compiler_path = 'C:/VulkanSDK/1.0.49.0/Bin32/glslangvalidator'
+        compiler_path = 'C:/VulkanSDK/1.0.51.0/Bin32/glslangvalidator'
         shader_input_directory = '/Users/derek/git/nedelman/finjin-viewer/assets/shaders/vulkan'
         shader_input_file_extension = 'vulkan'
         vulkan_shader_model_version = '450'

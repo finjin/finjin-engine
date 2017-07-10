@@ -29,14 +29,14 @@ namespace Finjin { namespace Engine {
     public:
         JobPipelineStage();
         ~JobPipelineStage();
-        
+
         size_t GetIndex() const;
-        
+
         bool IsStarted() const;
-        
+
         void Start(future<void>&& f);
         void Finish(Error& error);
-        
+
     public:
         size_t index;
 

@@ -31,12 +31,12 @@ struct ApplicationViewport::Impl : public AllocatedClass
     Impl(Allocator* allocator) : AllocatedClass(allocator)
     {
     }
-    
+
     void ResetUpdateAndRenderingCounters()
     {
         this->frameTimeStamp = this->frameTimeClock.Now();
         this->leftoverFrameTimeNanoseconds = 0;
-        
+
         this->renderTickCount = 0;
         this->jobPipelineStageUpdateIndex = 0;
         this->jobPipelineStageRenderIndex = 0;
@@ -98,9 +98,9 @@ ApplicationViewport::ApplicationViewport(Allocator* allocator) :
     impl->closeRequested = false;
     impl->exitApplicationRequested = false;
     impl->finishModifyScreenRenderTargets = false;
-    
+
     impl->targetFramesPerSecond = 1000;
-    
+
     impl->jobProcessingPipelineSize = 1;
     impl->ResetUpdateAndRenderingCounters();
 }
@@ -458,7 +458,7 @@ void ApplicationViewport::FinishFrame(const RenderStatus& renderStatus, size_t p
     if (stage.hasFrame)
     {
         stage.hasFrame = false;
-        
+
         impl->windowDelegate->FinishFrame(renderContext, error);
         if (error)
             FINJIN_SET_ERROR(error, "Failed to finish frame.");
@@ -473,17 +473,17 @@ bool ApplicationViewport::NeedsToModifyScreenRenderTargets() const
 void ApplicationViewport::ApplyModifyScreenRenderTargets(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     impl->ResetUpdateAndRenderingCounters();
-    
+
     if (impl->modifyScreenRenderTarget.HasModification(ModifyScreenRenderTargetFlag::TOGGLE_FULL_SCREEN))
     {
         auto needsExclusiveToggle = impl->modifyScreenRenderTarget.IsFullScreenExclusive();
-        
+
         FINJIN_DEBUG_LOG_INFO("ApplicationViewport::ApplyModifyRenderTarget - ApplyFullScreenToggle(%1%)", (int)needsExclusiveToggle);
-        
+
         impl->modifyScreenRenderTarget.ClearModification(ModifyScreenRenderTargetFlag::TOGGLE_FULL_SCREEN);
-        
+
         //Toggle device exclusive full screen state if necessary
         if (needsExclusiveToggle)
         {
@@ -494,12 +494,12 @@ void ApplicationViewport::ApplyModifyScreenRenderTargets(Error& error)
                 return;
             }
         }
-        
+
         //Change to next state
         FINJIN_DEBUG_LOG_INFO("  Changing to next");
         GetOSWindow()->GetWindowSize().Next();
         FINJIN_DEBUG_LOG_INFO("  Changed to next");
-        
+
         if (PlatformCapabilities::GetInstance().hasDelayedWindowSizeChangeNotification)
         {
             //A window size change will come in later and trigger WINDOW_RESIZED
@@ -521,14 +521,14 @@ void ApplicationViewport::ApplyModifyScreenRenderTargets(Error& error)
         impl->finishModifyScreenRenderTargets)
     {
         FINJIN_DEBUG_LOG_INFO("ApplicationViewport::ApplyModifyRenderTarget - ApplyRenderTargetsResize");
-        
+
         impl->modifyScreenRenderTarget.ClearModification(ModifyScreenRenderTargetFlag::WINDOW_RESIZED | ModifyScreenRenderTargetFlag::WAITING_FOR_WINDOW_RESIZED_NOTIFICATION);
-        
+
         if (impl->finishModifyScreenRenderTargets)
         {
             //Finish modifying render targets
             impl->finishModifyScreenRenderTargets = false;
-            
+
             impl->gpuContext->FinishModifyScreenRenderTargets(error);
             if (error)
             {

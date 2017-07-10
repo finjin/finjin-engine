@@ -616,10 +616,10 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
         bounds.width = bounds.clientWidth = frame.size.width;
         bounds.height = bounds.clientHeight = frame.size.height;
     }
-    
+
     auto nsbounds = CGRectMake(bounds.x, bounds.y, bounds.width, bounds.height);
     AppleUtilities::CenterDefaultsInParent(nsbounds, screen.visibleFrame, FINJIN_OS_WINDOW_COORDINATE_DEFAULT);
-    
+
     auto constrainedBounds = [impl->windowController.window constrainFrameRect:nsbounds toScreen:screen];
     bounds.x = constrainedBounds.origin.x;
     bounds.y = constrainedBounds.origin.y;

@@ -38,7 +38,7 @@ static void RemoveLeadingManufacturerDuplicate(Utf8String& productName)
 
 //Implementation----------------------------------------------------------------
 Utf8String InputDeviceUtilities::MakeInputDeviceIdentifier(const Utf8StringView& identifierString)
-{   
+{
     Utf8String safe;
 
     int consecutiveSpaces = 0;

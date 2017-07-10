@@ -22,7 +22,7 @@
 namespace Finjin { namespace Engine {
 
     using namespace Finjin::Common;
-    
+
     /**
      * Basic values for an input device. Its use is not required, depending on the needs of the input system/device.
      */
@@ -39,114 +39,114 @@ namespace Finjin { namespace Engine {
         }
 
         ~GenericInputDeviceImpl() {} //Intentionally not virtual
-        
+
         void SetAllocator(Allocator* allocator)
         {
             this->displayName.SetAllocator(allocator);
-            
+
             this->instanceName.SetAllocator(allocator);
             this->productName.SetAllocator(allocator);
-            
+
             this->instanceDescriptor.SetAllocator(allocator);
             this->productDescriptor.SetAllocator(allocator);
         }
-        
+
         void Reset()
         {
             this->semantic = InputDeviceSemantic::NONE;
-            
+
             this->displayName.clear();
-            
+
             this->instanceName.clear();
             this->productName.clear();
-            
+
             this->instanceDescriptor.clear();
             this->productDescriptor.clear();
         }
-        
+
         InputDeviceSemantic GetSemantic() const { return this->semantic; }
         void SetSemantic(InputDeviceSemantic value) { this->semantic = value; }
-        
+
         const Utf8String& GetDisplayName() const { return this->displayName; }
         void SetDisplayName(const Utf8String& value) { this->displayName = value; }
-        
+
         const Utf8String& GetInstanceName() const { return this->instanceName; }
         const Utf8String& GetProductName() const { return this->productName; }
-        
+
         const Utf8String& GetInstanceDescriptor() const { return this->instanceDescriptor; }
         const Utf8String& GetProductDescriptor() const { return this->productDescriptor; }
-        
+
         InputDeviceSemantic semantic;
-        
+
         Utf8String displayName;
-        
+
         Utf8String instanceName;
         Utf8String productName;
-        
+
         Utf8String instanceDescriptor;
         Utf8String productDescriptor;
     };
-    
+
     class ExternalGameController
     {
     public:
         virtual ~ExternalGameController() {}
-        
+
         virtual const Utf8String& GetSystemInternalName() const = 0;
-        
+
         virtual const Utf8String& GetProductDescriptor() const = 0;
         virtual const Utf8String& GetInstanceDescriptor() const = 0;
-        
+
         virtual InputDeviceSemantic GetSemantic() const = 0;
         virtual void SetSemantic(InputDeviceSemantic value) = 0;
-        
+
         virtual const Utf8String& GetDisplayName() const = 0;
         virtual void SetDisplayName(const Utf8String& value) = 0;
-        
+
         virtual bool IsConnected() const = 0;
         virtual bool ConnectionChanged() const = 0;
         virtual bool IsNewConnection() const = 0;
-        
+
         virtual size_t GetAxisCount() const = 0;
         virtual InputAxis* GetAxis(size_t index) = 0;
-        
+
         virtual size_t GetPovCount() const = 0;
         virtual InputPov* GetPov(size_t index) = 0;
-        
+
         virtual size_t GetButtonCount() const = 0;
         virtual InputButton* GetButton(size_t index) = 0;
-        
+
         virtual size_t GetLocatorCount() const = 0;
         virtual InputLocator* GetLocator(size_t index) = 0;
-        
+
         virtual void AddHapticFeedback(const HapticFeedback* forces, size_t count) = 0;
         virtual void StopHapticFeedback() = 0;
     };
-    
+
     class ExternalHeadset
     {
     public:
         virtual ~ExternalHeadset() {}
-        
+
         virtual const Utf8String& GetSystemInternalName() const = 0;
-        
+
         virtual const Utf8String& GetProductDescriptor() const = 0;
         virtual const Utf8String& GetInstanceDescriptor() const = 0;
-        
+
         virtual InputDeviceSemantic GetSemantic() const = 0;
         virtual void SetSemantic(InputDeviceSemantic value) = 0;
-        
+
         virtual const Utf8String& GetDisplayName() const = 0;
         virtual void SetDisplayName(const Utf8String& value) = 0;
-        
+
         virtual bool IsConnected() const = 0;
         virtual bool ConnectionChanged() const = 0;
         virtual bool IsNewConnection() const = 0;
-        
+
         virtual size_t GetLocatorCount() const = 0;
         virtual InputLocator* GetLocator(size_t index) = 0;
     };
-    
+
 #if FINJIN_TARGET_VR_SYSTEM != FINJIN_TARGET_VR_SYSTEM_NONE
     template <typename VRContext>
     class VRGameControllerForInputContext : public ExternalGameController

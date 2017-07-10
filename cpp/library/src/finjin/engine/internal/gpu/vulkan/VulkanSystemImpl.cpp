@@ -184,7 +184,7 @@ void VulkanSystemImpl::GetInstanceLayerNames(VulkanNamePointers& names, VulkanNa
     static const char* desiredDebugLayers[] =
         {
         //This order matters!
-        //https://vulkan.lunarg.com/doc/sdk/1.0.49.0/windows/getting_started.html
+        //https://vulkan.lunarg.com/doc/sdk/1.0.51.0/windows/getting_started.html
         //"VK_LAYER_GOOGLE_threading", //Disabled since the latest Vulkan update seems to cause a problem (https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/commit/a00917b8295326a0c0501aefe5ab4c12a501a4c5)
         "VK_LAYER_LUNARG_parameter_validation",
         "VK_LAYER_LUNARG_param_checker",

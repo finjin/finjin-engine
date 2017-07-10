@@ -209,7 +209,7 @@ void Win32InputContext::Create(const Settings& settings, Error& error)
     FINJIN_ENGINE_CHECK_IMPL_NOT_NULL(impl, error);
 
     impl->settings = settings;
-    
+
     if (!impl->configFileBuffer.Create(EngineConstants::DEFAULT_CONFIGURATION_BUFFER_SIZE, GetAllocator()))
     {
         FINJIN_SET_ERROR(error, "Failed to allocate config buffer.");

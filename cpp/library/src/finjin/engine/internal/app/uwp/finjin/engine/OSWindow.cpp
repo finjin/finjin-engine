@@ -391,8 +391,8 @@ void OSWindowHandlers::OnKeyUp(CoreWindow^ sender, KeyEventArgs^ args)
 }
 
 //OSWindow::Impl
-OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData) : 
-    AllocatedClass(allocator), 
+OSWindow::Impl::Impl(Allocator* allocator, OSWindow* osWindow, void* clientData) :
+    AllocatedClass(allocator),
     handlers(ref new OSWindowHandlers(reinterpret_cast<uintptr_t>(this))),
     subtitle(allocator),
     internalName(allocator)

@@ -64,14 +64,14 @@ LinuxGameController::LinuxGameController(Allocator* allocator) : Super(allocator
 void LinuxGameController::SetAllocator(Allocator* allocator)
 {
     Super::SetAllocator(allocator);
-    
+
     this->devicePath.SetAllocator(allocator);
 }
 
 void LinuxGameController::Reset()
 {
     Super::Reset();
-    
+
     this->fd = -1;
     this->devicePath.clear();
     this->index = 0;

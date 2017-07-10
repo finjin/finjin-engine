@@ -46,7 +46,7 @@ void JobPipelineStage::Start(future<void>&& f)
 void JobPipelineStage::Finish(Error& error)
 {
     FINJIN_ERROR_METHOD_START(error);
-    
+
     try
     {
         this->simulateAndRenderFuture.get();

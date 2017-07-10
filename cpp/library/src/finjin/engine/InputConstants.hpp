@@ -48,7 +48,7 @@ namespace Finjin { namespace Engine {
     {
         enum { MAX_MICE = 16 };
         enum { MAX_BUTTON_COUNT = 300 }; //Large for Android
-        enum { MAX_AXIS_COUNT = 50 }; //Android has a ton
+        enum { MAX_AXIS_COUNT = 50 }; //Large for Android
 
         enum { WHEEL_STEP_SIZE = 10};
     };
@@ -107,9 +107,9 @@ namespace Finjin { namespace Engine {
         InputTriggerCriteria() : flags(InputTriggerFlag::PRESSED | InputTriggerFlag::HOLDING | InputTriggerFlag::RELEASED), count(1) {}
         InputTriggerCriteria(InputTriggerFlag f) : flags(f), count(1) {}
         InputTriggerCriteria(InputTriggerFlag f, size_t c) : flags(f), count(c) {}
-        
+
         InputTriggerFlag flags;
-        
+
         size_t count; //Not currently used for anything
     };
 

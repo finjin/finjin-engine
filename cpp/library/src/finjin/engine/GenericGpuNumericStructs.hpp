@@ -162,7 +162,6 @@ namespace Finjin { namespace Engine {
                 "map-environment-amount", ElementID::MAP_ENVIRONMENT_AMOUNT,
                 "map-shininess-amount", ElementID::MAP_SHININESS_AMOUNT
                 );
-
             return lookup;
         }
 
@@ -300,7 +299,6 @@ namespace Finjin { namespace Engine {
                 "tex-coord-6", ElementID::TEX_COORD_6,
                 "tex-coord-7", ElementID::TEX_COORD_7
                 );
-
             return lookup;
         }
 

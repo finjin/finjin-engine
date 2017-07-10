@@ -27,7 +27,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = GenericInputDeviceImpl;
-        
+
         enum { MAX_GAME_CONTROLLERS = 5 }; //4 game controllers + 1 remote
 
     public:

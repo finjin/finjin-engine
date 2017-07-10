@@ -28,5 +28,5 @@ LinuxInputDevice::LinuxInputDevice(Allocator* allocator) : Super(allocator)
 }
 
 LinuxInputDevice::~LinuxInputDevice()
-{    
+{
 }

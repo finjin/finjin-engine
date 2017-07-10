@@ -27,7 +27,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = GenericInputDeviceImpl;
-        
+
         MacOSMouse(Allocator* allocator);
 
         void Reset();

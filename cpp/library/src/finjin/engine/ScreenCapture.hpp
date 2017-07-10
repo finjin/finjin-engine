@@ -96,7 +96,7 @@ namespace Finjin { namespace Engine {
         };
 
         WriteResult WriteToRawFile(Path& filePath) const;
-        WriteResult WriteToFile(Path& filePathNoExtension, const ScreenCaptureWriteSettings& settings) const;
+        WriteResult WriteToFile(Path& filePathNoExtension, const ScreenCaptureWriteSettings& settings) const; //filePathNoExtension receives the extension that was used
         Utf8String GetWriteResultString(WriteResult result) const;
 
         void* image;

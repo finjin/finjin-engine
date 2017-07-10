@@ -84,7 +84,7 @@ namespace Finjin { namespace Engine {
     private:
         bool NeedsToModifyScreenRenderTargets() const;
         void ApplyModifyScreenRenderTargets(Error& error);
-        
+
         void SetOSWindow(std::unique_ptr<OSWindow>&& osWindow);
 
         void ConfigureJobPipeline(size_t renderBuffering, size_t pipelineSize);

@@ -919,7 +919,7 @@ void VulkanGpuContextImpl::CreateDeviceSupportObjects(Error& error)
                 dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
                 dependency.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
             }
-             
+
             //Second dependency at the end the renderpass
             //The transition from the initial to the final layout
             {
@@ -2601,7 +2601,7 @@ void VulkanGpuContextImpl::CreateSwapChain(Error& error)
         }
     }
     swapChainInfo.imageArrayLayers = 1;
-    swapChainInfo.swapChainPresentMode = this->presentModes.GetBest(this->settings.swapChainPresentMode);
+    swapChainInfo.presentMode = this->presentModes.GetBest(this->settings.swapChainPresentMode);
     swapChainInfo.oldSwapchain = oldSwapChain;
     swapChainInfo.clipped = VK_TRUE;
     swapChainInfo.imageColorSpace = this->settings.colorSpace.actual;

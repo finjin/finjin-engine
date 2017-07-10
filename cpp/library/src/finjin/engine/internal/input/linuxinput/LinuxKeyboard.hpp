@@ -29,7 +29,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = LinuxInputDevice;
-        
+
         LinuxKeyboard(Allocator* allocator = nullptr);
 
         void Reset();

@@ -103,10 +103,10 @@ struct XInputGameController::Impl : public GenericInputDeviceImpl
     {
         Super::Reset();
 
-        this->index = 0;        
-        
+        this->index = 0;
+
         FINJIN_ZERO_ITEM(this->xinputState);
-        
+
         this->state.Reset();
     }
 

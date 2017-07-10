@@ -85,17 +85,17 @@ namespace Finjin { namespace Engine {
         ~Application();
 
         ReadCommandLineResult ReadCommandLineSettings(CommandLineArgsProcessor& argsProcessor, Error& error);
-        
+
         bool Run(Error& error);
         bool Run(CommandLineArgsProcessor& argsProcessor, Error& error);
-        
+
         void Create(Error& error);
         void Destroy();
-        
+
         bool MainLoop(Error& error); //Platform-specific
-        
+
         void ReportError(const Error& error); //Platform-specific
-        
+
         void OnSystemMessage(const ApplicationSystemMessage& message, Error& error);
         void Tick(Error& error);
 

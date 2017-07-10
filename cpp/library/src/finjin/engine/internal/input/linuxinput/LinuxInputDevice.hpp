@@ -29,10 +29,10 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = GenericInputDeviceImpl;
-        
+
         LinuxInputDevice(Allocator* allocator);
-        ~LinuxInputDevice();        
-        
+        ~LinuxInputDevice();
+
     public:
         LinuxInputContext* context;
     };

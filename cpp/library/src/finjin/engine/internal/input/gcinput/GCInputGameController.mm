@@ -278,7 +278,7 @@ GCInputGameController::GCInputGameController(Allocator* allocator) : Super(alloc
 void GCInputGameController::Reset()
 {
     Super::Reset();
-    
+
     this->index = 0;
     this->state.Reset();
     this->isNewConnection = false;

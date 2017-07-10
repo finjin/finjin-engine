@@ -749,7 +749,7 @@ namespace Finjin { namespace Engine {
         StaticVector<Axis, maxAxisCount> axes;
         StaticVector<Pov, maxPovCount> povs;
     };
-        
+
     struct HapticFeedback
     {
         HapticFeedback()
@@ -783,7 +783,7 @@ namespace Finjin { namespace Engine {
         float decayRate; //Decay per unit of time
         SimpleTimeDelta duration; //Length of time for the effect
     };
-    
+
 } }
 
 

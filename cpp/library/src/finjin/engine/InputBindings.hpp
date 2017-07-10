@@ -179,7 +179,7 @@ namespace Finjin { namespace Engine {
             this->type = Type::SCALAR;
         }
 
-        InputBindingValue(float value)
+        explicit InputBindingValue(float value)
         {
             this->scalar = value;
             this->type = Type::SCALAR;
@@ -1228,10 +1228,12 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(axisRelativeValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount =
+            InputBindingValue amount
+                (
                 axisRelativeValue *
                 BestDirection(binding.inputSource.directionFloat) *
-                this->mouseAxisSensitivity[binding.inputSource.axisIndex];
+                this->mouseAxisSensitivity[binding.inputSource.axisIndex]
+                );
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::MOUSE_RELATIVE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
@@ -1255,10 +1257,12 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(absoluteValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount =
+            InputBindingValue amount
+                (
                 absoluteValue *
                 BestDirection(binding.inputSource.directionFloat) *
-                this->mouseAxisSensitivity[binding.inputSource.axisIndex];
+                this->mouseAxisSensitivity[binding.inputSource.axisIndex]
+                );
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::MOUSE_ABSOLUTE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
@@ -1307,10 +1311,12 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(absoluteValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount =
+            InputBindingValue amount
+                (
                 absoluteValue *
                 BestDirection(binding.inputSource.directionFloat) *
-                this->gameControllerAxisSensitivity[binding.inputSource.axisIndex];
+                this->gameControllerAxisSensitivity[binding.inputSource.axisIndex]
+                );
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown(deadZone))
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::GAME_CONTROLLER_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
@@ -1380,7 +1386,7 @@ namespace Finjin { namespace Engine {
             auto touchCount = touchScreen.GetTouchCount();
             auto previousTouchCount = touchScreen.GetPreviousTouchCount();
 
-            InputBindingValue amount = RoundToFloat(touchCount);
+            InputBindingValue amount(RoundToFloat(touchCount));
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && (touchCount > previousTouchCount) && IsInRange(binding.inputSource.touchCount, previousTouchCount, touchCount))
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::TOUCH_COUNT, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
@@ -1401,7 +1407,7 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(relativeValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * relativeValue;
+            InputBindingValue amount(BestDirection(binding.inputSource.directionFloat) * relativeValue);
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::TOUCH_RELATIVE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
@@ -1422,7 +1428,7 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(absoluteValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * absoluteValue;
+            InputBindingValue amount(BestDirection(binding.inputSource.directionFloat) * absoluteValue);
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::TOUCH_RELATIVE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
@@ -1443,7 +1449,7 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(relativeValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * relativeValue;
+            InputBindingValue amount(BestDirection(binding.inputSource.directionFloat) * relativeValue);
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && radius.IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::MULTITOUCH_RELATIVE_RADIUS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);
@@ -1464,7 +1470,7 @@ namespace Finjin { namespace Engine {
             if (!TestValueAgainstDirection(relativeValue, binding.inputSource.directionFloat))
                 return;
 
-            InputBindingValue amount = BestDirection(binding.inputSource.directionFloat) * relativeValue;
+            InputBindingValue amount(BestDirection(binding.inputSource.directionFloat) * relativeValue);
 
             if (AnySet(binding.triggerCriteria.flags & InputTriggerFlag::PRESSED) && axis->IsFirstDown())
                 _ProcessInputAction(actions, binding.action, InputDeviceComponent::MULTITOUCH_RELATIVE_AXIS, InputTriggerFlag::PRESSED, amount, elapsedTimeSeconds);

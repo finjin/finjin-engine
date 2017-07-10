@@ -532,7 +532,7 @@ void OpenSLESContext::Create(const Settings& settings, Error& error)
             {
                 Utf8StringView numberString;
                 impl->info.extensions[index].substr(numberString, strlen("ANDROID_SDK_LEVEL_"));
-                impl->info.androidSdkLevelExtension = Convert::ToInteger(numberString, 0);                
+                impl->info.androidSdkLevelExtension = Convert::ToInteger(numberString, 0);
             }
         }
     }

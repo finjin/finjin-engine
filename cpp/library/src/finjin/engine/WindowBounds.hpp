@@ -55,7 +55,7 @@ namespace Finjin { namespace Engine {
         void AdjustSize(OSWindowDimension newWidth, OSWindowDimension newHeight);
 
         void Scale(float value);
-        
+
         OSWindowCoordinate x, y;
         OSWindowDimension width, height;
         OSWindowDimension clientWidth, clientHeight;

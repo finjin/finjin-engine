@@ -133,7 +133,6 @@ const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceClass, InputDeviceCl
         "headset", InputDeviceClass::HEADSET,
         "all", InputDeviceClass::ALL
         );
-
     return lookup;
 }
 
@@ -192,7 +191,6 @@ const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceComponent, InputDevi
 
         "locator", InputDeviceComponent::LOCATOR
         );
-
     return lookup;
 }
 
@@ -318,7 +316,6 @@ const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputDeviceSemantic, InputDevic
         "left-hand", InputDeviceSemantic::LEFT_HAND,
         "right-hand", InputDeviceSemantic::RIGHT_HAND
         );
-
     return lookup;
 }
 
@@ -418,7 +415,6 @@ const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(InputComponentSemantic, InputCo
 
         "locator", InputComponentSemantic::LOCATOR
         );
-
     return lookup;
 }
 
@@ -471,7 +467,6 @@ const FINJIN_LITERAL_STRING_STATIC_UNORDERED_MAP(PovDirection, PovDirectionUtili
         "left", PovDirection::LEFT,
         "up-left", PovDirection::UP_LEFT
         );
-
     return lookup;
 }
 

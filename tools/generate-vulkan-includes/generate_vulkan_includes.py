@@ -437,9 +437,9 @@ def main(args = None):
     result = 0 #Assume success
 
     if sys.platform == 'win32':
-        vulkan_include_directory = r'C:\VulkanSDK\1.0.49.0\Include\vulkan'
+        vulkan_include_directory = r'C:\VulkanSDK\1.0.51.0\Include\vulkan'
     else:
-        vulkan_include_directory = r'/home/derek/Downloads/VulkanSDK/1.0.49.0/x86_64/include/vulkan'
+        vulkan_include_directory = r'/home/derek/Downloads/VulkanSDK/1.0.51.0/x86_64/include/vulkan'
     extensions, vk_formats, vk_results = parse_vulkan_header(os.path.join(vulkan_include_directory, 'vulkan.h'))
 
     print_results = False

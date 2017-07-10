@@ -112,7 +112,7 @@ void OpenALSystem::Create(const Settings& settings, Error& error)
         {
             impl->adapterDescriptions.push_back();
             auto& adapterDescription = impl->adapterDescriptions.back();
-            
+
             if (adapterDescription.adapterID.assign(deviceSpecifiers[i]).HasError())
             {
                 FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign device specifier '%1%'.", deviceSpecifiers[i]));
@@ -144,19 +144,19 @@ void OpenALSystem::Create(const Settings& settings, Error& error)
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign vendor name for device '%1%'.", deviceSpecifiers[i]));
                     return;
                 }
-                
+
                 if (adapterDescription.renderer.assign(alGetString(AL_RENDERER)).HasError())
                 {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign renderer name for device '%1%'.", deviceSpecifiers[i]));
                     return;
                 }
-                
+
                 if (adapterDescription.versionText.assign(alGetString(AL_VERSION)).HasError())
                 {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign version for device '%1%'.", deviceSpecifiers[i]));
                     return;
                 }
-                
+
                 if (adapterDescription.extensionsText.assign(alGetString(AL_EXTENSIONS)).HasError())
                 {
                     FINJIN_SET_ERROR(error, FINJIN_FORMAT_ERROR_MESSAGE("Failed to assign extensions name for device '%1%'.", deviceSpecifiers[i]));

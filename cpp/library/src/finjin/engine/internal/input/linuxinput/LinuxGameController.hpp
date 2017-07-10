@@ -28,11 +28,11 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = LinuxInputDevice;
-        
+
         LinuxGameController(Allocator* allocator = nullptr);
 
         void SetAllocator(Allocator* allocator);
-        
+
         void Reset();
 
         void Create(size_t index, int fd, const Path& devicePath);

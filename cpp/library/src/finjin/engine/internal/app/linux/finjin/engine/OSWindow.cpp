@@ -56,7 +56,7 @@ OSWindow::OSWindow(Allocator* allocator, void* clientData) : AllocatedClass(allo
 }
 
 OSWindow::~OSWindow()
-{    
+{
 }
 
 void OSWindow::Create
@@ -79,7 +79,7 @@ void OSWindow::Create
 
     this->windowSize = windowSize;
     this->windowSize.SetWindow(this);
-    
+
     //Connection-----------------
     this->connection = XcbConnection::GetOrCreate(displayName, error);
     if (error)
@@ -100,7 +100,7 @@ void OSWindow::Create
                 rect.CenterDefaultsInParent(display.clientFrame);
                 break;
             }
-        }        
+        }
     }
     this->lastWindowRect = rect;
 
@@ -130,9 +130,9 @@ void OSWindow::Create
         XCB_COPY_FROM_PARENT,
         this->window,
         this->screen->root,
-        rect.x, 
-        rect.y, 
-        rect.width, 
+        rect.x,
+        rect.y,
+        rect.width,
         rect.height,
         0,
         XCB_WINDOW_CLASS_INPUT_OUTPUT,
@@ -604,12 +604,12 @@ void OSWindow::LimitBounds(WindowBounds& bounds) const
         case WindowSizeState::WINDOWED_NORMAL:
         {
             auto displayRect = GetDisplayVisibleRect();
-            
+
             if (bounds.x == FINJIN_OS_WINDOW_COORDINATE_DEFAULT || bounds.y == FINJIN_OS_WINDOW_COORDINATE_DEFAULT)
             {
                 OSWindowRect boundsRect(bounds.x, bounds.y, bounds.width, bounds.height);
                 boundsRect.CenterDefaultsInParent(displayRect);
-                
+
                 bounds.x = boundsRect.x;
                 bounds.y = boundsRect.y;
             }

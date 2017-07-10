@@ -72,7 +72,7 @@ public:
         }
     }
 
-    EnumerationResult Enumerate(FileSystemEntries& entries, FileSystemEntryType types, Error& error) override
+    EnumerationResult Enumerate(FileSystemEntries& entries, FileSystemEntryType findTypes, size_t maxDepth, Error& error) override
     {
         FINJIN_ERROR_METHOD_START(error);
 
@@ -92,7 +92,7 @@ public:
 
                 assert(apkAssetPathType == 0 || apkAssetPathType == 1); //Values are defined in FinjinNativeActivity.java
                 auto type = apkAssetPathType == 0 ? FileSystemEntryType::FILE : FileSystemEntryType::DIRECTORY;
-                if (AnySet(type & types))
+                if (AnySet(type & findTypes))
                 {
                     auto fileSystemEntry = entries.Add();
                     if (fileSystemEntry == nullptr)
@@ -242,7 +242,7 @@ public:
             auto asset = static_cast<AAsset*>(fileHandle.ptr);
 
             auto oldPosition = AAsset_seek64(asset, 0, SEEK_CUR);
-            
+
             auto newPosition = AAsset_seek64(asset, byteCount, SEEK_CUR);
             if (newPosition < 0)
                 return newPosition = oldPosition;

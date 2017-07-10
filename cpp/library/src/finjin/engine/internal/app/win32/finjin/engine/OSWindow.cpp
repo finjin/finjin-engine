@@ -284,7 +284,7 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
         {
             CS_HREDRAW | CS_VREDRAW,
             WndProc,
-            0, 
+            0,
             0,
             hInstance,
             LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APPLICATION)),
@@ -323,16 +323,16 @@ void OSWindow::Create(const Utf8String& internalName, const Utf8String& titleOrS
     Utf8StringToWideString internalNameW(internalName);
     impl->windowHandle = CreateWindowW
         (
-        WINDOW_CLASS_NAME, 
-        internalNameW.c_str(), 
-        BORDERED_STYLE, 
-        rect.GetX(), 
-        rect.GetY(), 
-        static_cast<int>(rect.GetWidth()), 
-        static_cast<int>(rect.GetHeight()), 
-        0, 
-        0, 
-        hInstance, 
+        WINDOW_CLASS_NAME,
+        internalNameW.c_str(),
+        BORDERED_STYLE,
+        rect.GetX(),
+        rect.GetY(),
+        static_cast<int>(rect.GetWidth()),
+        static_cast<int>(rect.GetHeight()),
+        0,
+        0,
+        hInstance,
         this
         );
     if (impl->windowHandle == nullptr)

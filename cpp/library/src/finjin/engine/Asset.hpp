@@ -27,6 +27,6 @@
 namespace Finjin { namespace Engine {
 
     //Generic pointer to corresponding "hardware" asset, if there is one
-    typedef void VoidHardwareAsset;
+    using VoidHardwareAsset = void;
 
 } }

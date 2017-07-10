@@ -27,7 +27,7 @@ namespace Finjin { namespace Engine {
     {
     public:
         using Super = LinuxInputDevice;
-        
+
         LinuxMouse(Allocator* allocator = nullptr);
 
         void Reset();

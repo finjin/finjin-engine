@@ -63,7 +63,6 @@ namespace Finjin { namespace Engine {
                 "application-data", ApplicationFileSystem::READ_WRITE_APPLICATION_DATA,
                 "user-application-data", ApplicationFileSystem::READ_WRITE_USER_APPLICATION_DATA
                 );
-
             return lookup;
         }
 

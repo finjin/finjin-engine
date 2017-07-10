@@ -157,13 +157,13 @@ ScreenCapture::WriteResult ScreenCapture::WriteToFile(Path& filePathNoExtension,
         PNGWriter pngWriter;
 
         if (IsBGRPixelFormat())
-            pngWriter.SetReverseRGB(true);
+            pngWriter.SetOutputReverseRGB(true);
 
         if (IsSRGBPixelFormat())
-            pngWriter.SetSRGB(true);
+            pngWriter.SetInputSRGB(true);
 
-        pngWriter.SetChannelCount(GetChannelCount());
-        pngWriter.SetBytesPerChannel(GetBytesPerChannel());
+        pngWriter.SetInputChannelCount(GetChannelCount());
+        pngWriter.SetInputBytesPerChannel(GetBytesPerChannel());
 
         auto outputBufferSize = this->width * this->height * GetChannelCount() * 2; //Allocate enough for PNG header and temp data
         ByteBuffer* pngOutputBuffer = nullptr;
